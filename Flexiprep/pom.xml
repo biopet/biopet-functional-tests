@@ -15,7 +15,7 @@
         <dependency>
             <groupId>nl.lumc.sasc.test</groupId>
             <artifactId>Common</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
