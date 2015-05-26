@@ -6,22 +6,12 @@
 
     <groupId>nl.lumc.sasc.test</groupId>
     <artifactId>Biopet-FunctionalTests</artifactId>
+    <packaging>pom</packaging>
     <version>0.1-SNAPSHOT</version>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.8</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.11</artifactId>
-            <version>2.2.1</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>Flexiprep</module>
+        <module>Common</module>
+    </modules>
 
     <build>
         <sourceDirectory>${basedir}/src/main/scala</sourceDirectory>
