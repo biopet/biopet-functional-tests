@@ -1,5 +1,7 @@
 package nl.lumc.biopet.sasc.test.flexiprep
 
+import java.io.File
+
 import nl.lumc.sasc.biopet.test.Biopet
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
@@ -12,9 +14,16 @@ import scala.sys.process._
  */
 class FlexiprepTest extends TestNGSuite with Matchers {
   @Test
-  def basicTest: Unit = {
-    val cmd = Seq("java", "-jar", Biopet.getBiopetJar.toString, "pipeline", "flexiprep", "-l", "debug")
-    val process = Process(cmd).run(ProcessLogger(println(_)))
-    println("exit: " + process.exitValue())
+  def basicDryTest: Unit = {
+
+    println(new File(".").getAbsolutePath)
+
+    val cmd = Seq("java", "-jar", Biopet.getBiopetJar.toString, "pipeline", "flexiprep", "-R1", "bla.fq.gz")
+    val process = Process(cmd).run()
+    val exitValue = process.exitValue()
+
+    println("exit: " + exitValue)
+
+    exitValue shouldBe 0
   }
 }
