@@ -1,6 +1,6 @@
 package nl.lumc.sasc.biopet.test
 
-import java.io.File
+import java.io.{ PrintWriter, File }
 
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
@@ -18,15 +18,27 @@ trait Pipeline extends TestNGSuite with Matchers {
 
   def args: Seq[String]
 
-  def pipelineCmd = Seq("java", "-jar", Biopet.getBiopetJar.toString, "pipeline", pipelineName) ++ args ++ Biopet.queueArgs
   private var _exitValue = -1
   def exitValue = _exitValue
 
   @BeforeClass
   def beforeTest: Unit = {
     // Running pipeline
+    _exitValue = Pipeline.runPipeline(pipelineName, outputDir, args)
+  }
+}
+
+object Pipeline {
+  def runPipeline(pipelineName: String, outputDir: File, args: Seq[String]) = {
+    val cmd = Seq("java", "-Xmx512m", "-jar", Biopet.getBiopetJar.toString, "pipeline", pipelineName) ++ args ++ Biopet.queueArgs
     outputDir.mkdir()
-    val process = Process(pipelineCmd, outputDir).run()
-    _exitValue = process.exitValue()
+
+    val logFile = new File(outputDir, "run.log")
+    val writer = new PrintWriter(logFile)
+    val process = Process(cmd, outputDir).run(ProcessLogger(writer.println(_)))
+    val exitValue = process.exitValue()
+    writer.close()
+
+    exitValue
   }
 }
