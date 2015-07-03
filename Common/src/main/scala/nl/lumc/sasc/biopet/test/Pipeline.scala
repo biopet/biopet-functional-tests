@@ -31,9 +31,10 @@ trait Pipeline extends TestNGSuite with Matchers {
 object Pipeline {
   def runPipeline(pipelineName: String, outputDir: File, args: Seq[String]) = {
     val cmd = Seq("java", "-Xmx512m", "-jar", Biopet.getBiopetJar.toString, "pipeline", pipelineName) ++ args ++ Biopet.queueArgs
-    outputDir.mkdir()
+    if (!outputDir.exists()) outputDir.mkdir()
 
     val logFile = new File(outputDir, "run.log")
+    if (logFile.exists()) logFile.delete()
     val writer = new PrintWriter(logFile)
     val process = Process(cmd, outputDir).run(ProcessLogger(writer.println(_)))
     val exitValue = process.exitValue()
