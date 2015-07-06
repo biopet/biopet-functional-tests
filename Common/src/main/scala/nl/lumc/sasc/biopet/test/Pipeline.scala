@@ -4,7 +4,7 @@ import java.io.{ PrintWriter, File }
 
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
-import org.testng.annotations.BeforeClass
+import org.testng.annotations.{ Test, BeforeClass }
 
 import scala.sys.process._
 
@@ -26,6 +26,11 @@ trait Pipeline extends TestNGSuite with Matchers {
     // Running pipeline
     _exitValue = Pipeline.runPipeline(pipelineName, outputDir, args)
   }
+
+  @Test(priority = -1) def exitcode = exitValue shouldBe 0
+  @Test def outputDirExist = assert(outputDir.exists())
+  @Test def logFileExist = assert(new File(outputDir, "run.log").exists())
+
 }
 
 object Pipeline {
