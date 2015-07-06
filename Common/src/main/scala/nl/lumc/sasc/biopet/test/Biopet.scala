@@ -6,7 +6,7 @@ import java.io.File
  * Created by pjvan_thof on 5/26/15.
  */
 object Biopet {
-  def getBiopetJar: File = {
+  lazy val getBiopetJar: File = {
     System.getProperties.getProperty("biopet.jar") match {
       case s: String => {
         val file = new File(s)
@@ -17,17 +17,35 @@ object Biopet {
     }
   }
 
-  def getOutputDir: File = {
+  lazy val getOutputDir: File = {
     System.getProperties.getProperty("biopet.output_dir") match {
       case s: String => new File(s)
       case _         => throw new IllegalArgumentException("No output_dir found, please set the 'biopet.output_dir' property")
     }
   }
 
-  def queueArgs: Seq[String] = {
+  lazy val queueArgs: Seq[String] = {
     System.getProperties.getProperty("biopet.queueArgs") match {
       case s: String => s.split(" ").toSeq
       case _         => Nil
     }
+  }
+
+  lazy val fixtureDir: File = {
+    System.getProperties.getProperty("biopet.fixture_dir") match {
+      case s: String => {
+        val dir = new File(s)
+        require(dir.exists(), "Fixture directory does not exist: " + s)
+        require(dir.isDirectory, "Fixture directory is not a directory: " + s)
+        dir
+      }
+      case _ => throw new IllegalArgumentException("No output_dir found, please set the 'biopet.fixture_dir' property")
+    }
+  }
+
+  def fixtureFile(path: String): File = {
+    val file = new File(fixtureDir, path)
+    require(file.exists(), "Fixture file does not exist: " + file)
+    file
   }
 }
