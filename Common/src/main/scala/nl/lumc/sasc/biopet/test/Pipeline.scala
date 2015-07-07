@@ -12,7 +12,7 @@ import scala.sys.process._
  * Created by pjvan_thof on 6/30/15.
  */
 trait Pipeline extends TestNGSuite with Matchers {
-  val outputDir = new File(Biopet.getOutputDir, getClass.getName)
+  val outputDir = new File(Biopet.getOutputDir, this.getClass.getName)
 
   def pipelineName: String
 
@@ -41,7 +41,11 @@ object Pipeline {
     val logFile = new File(outputDir, "run.log")
     if (logFile.exists()) logFile.delete()
     val writer = new PrintWriter(logFile)
-    val process = Process(cmd, outputDir).run(ProcessLogger(writer.println(_)))
+    def writeLine(line: String): Unit = {
+      writer.println(line)
+      writer.flush()
+    }
+    val process = Process(cmd, outputDir).run(ProcessLogger(writeLine(_)))
     val exitValue = process.exitValue()
     writer.close()
 
