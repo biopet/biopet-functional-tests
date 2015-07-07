@@ -38,6 +38,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18.1</version>
                 <configuration>
+                    <forkCount>4</forkCount>
+                    <reuseForks>true</reuseForks>
                     <workingDirectory>${project.build.directory}</workingDirectory>
                 </configuration>
             </plugin>
