@@ -1,22 +1,13 @@
 package nl.lumc.sasc.biopet.test.flexiprep
 
+import java.io.File
+
+import nl.lumc.sasc.biopet.test.Biopet
 import org.scalatest.Matchers
-import org.scalatest.testng.TestNGSuite
-import org.testng.annotations.{ Factory, Test }
 
 /**
  * Created by pjvan_thof on 7/6/15.
  */
-class FlexiprepTest extends TestNGSuite with Matchers {
-  @Factory def blabla: Array[Object] = {
-    val bla = new AbstractFlexiprepTest {
-
-    }
-
-    val bla2 = new AbstractFlexiprepTest {
-
-    }
-
-    Array(bla, bla2)
-  }
+class FlexiprepSingleTest extends AbstractFlexiprep with Matchers {
+  override def args = super.args ++ Seq("-R1", Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz").getAbsolutePath)
 }
