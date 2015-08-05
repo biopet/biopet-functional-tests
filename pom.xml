@@ -9,8 +9,15 @@
     <packaging>pom</packaging>
     <version>0.5.0-DEV</version>
     <modules>
-        <module>Flexiprep</module>
         <module>Common</module>
+        <module>Flexiprep</module>
+        <module>Mapping</module>
+        <module>BamMetrics</module>
+        <module>Basty</module>
+        <module>Carp</module>
+        <module>Gentrap</module>
+        <module>Kopisu</module>
+        <module>Shiva</module>
     </modules>
 
     <build>
