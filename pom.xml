@@ -18,6 +18,7 @@
         <module>Gentrap</module>
         <module>Kopisu</module>
         <module>Shiva</module>
+        <module>Toucan</module>
     </modules>
 
     <build>
