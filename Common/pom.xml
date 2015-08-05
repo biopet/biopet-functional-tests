@@ -13,11 +13,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>nl.lumc.sasc</groupId>
-            <artifactId>BiopetFramework</artifactId>
-            <version>0.5.0-DEV</version>
-        </dependency>
-        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.8</version>
