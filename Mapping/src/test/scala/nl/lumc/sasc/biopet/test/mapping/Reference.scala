@@ -17,7 +17,7 @@ class ReferenceSingleTemplate(aln: String, rs: String, rn: String) extends Abstr
   override def referenceName = Some(rn)
 
   //TODO: add files
-  override def args = super.args ++ Seq("-run",
+  override def args = super.args ++ Seq("-run", "-cv", "skip_flexiprep=true",
     "-R1", Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz").getAbsolutePath
   )
 }
@@ -29,7 +29,7 @@ class ReferencePairedTemplate(aln: String, rs: String, rn: String) extends Abstr
   override def referenceName = Some(rn)
 
   //TODO: add files
-  override def args = super.args ++ Seq("-run",
+  override def args = super.args ++ Seq("-run", "-cv", "skip_flexiprep=true",
     "-R1", Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz").getAbsolutePath,
     "-R2", Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz").getAbsolutePath
   )
