@@ -5,9 +5,7 @@ import java.io.{ PrintWriter, File }
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
 import org.testng.annotations.{ Test, BeforeClass }
-import sun.rmi.log.ReliableLog.LogFile
 
-import scala.io.Source
 import scala.sys.process._
 
 /**
@@ -15,9 +13,9 @@ import scala.sys.process._
  */
 
 trait Pipeline extends TestNGSuite with Matchers {
-  val outputDir = new File(Biopet.getOutputDir, this.getClass.getName)
+  def outputDir = new File(Biopet.getOutputDir, this.getClass.getName)
 
-  val logFile = new File(outputDir, "run.log")
+  def logFile = new File(outputDir, "run.log")
 
   def pipelineName: String
 
