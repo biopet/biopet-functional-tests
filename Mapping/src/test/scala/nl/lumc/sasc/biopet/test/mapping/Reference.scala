@@ -11,25 +11,25 @@ import org.testng.annotations.{ Test, BeforeClass, Factory }
  * Created by pjvanthof on 06/08/15.
  */
 class ReferenceSingleTemplate(aln: String, rs: String, rn: String) extends AbstractMapping {
-  override def outputDir = new File(super.outputDir, s"$aln+$rs+$rn")
+  override def outputDir = new File(super.outputDir, s"$aln-$rs-$rn")
   override def aligner = Some(aln)
   override def referenceSpecies = Some(rs)
   override def referenceName = Some(rn)
 
   //TODO: add files
-  override def args = super.args ++ Seq(
+  override def args = super.args ++ Seq("-run",
     "-R1", Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz").getAbsolutePath
   )
 }
 
 class ReferencePairedTemplate(aln: String, rs: String, rn: String) extends AbstractMapping {
-  override def outputDir = new File(super.outputDir, s"$aln+$rs+$rn")
+  override def outputDir = new File(super.outputDir, s"$aln-$rs-$rn")
   override def aligner = Some(aln)
   override def referenceSpecies = Some(rs)
   override def referenceName = Some(rn)
 
   //TODO: add files
-  override def args = super.args ++ Seq(
+  override def args = super.args ++ Seq("-run",
     "-R1", Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz").getAbsolutePath,
     "-R2", Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz").getAbsolutePath
   )
@@ -55,7 +55,7 @@ class ReferencePairedTest extends TestNGSuite with Matchers {
 
 object Reference {
   //FIXME: not a correct list yet
-  val aligners = List("bwa", "bowtie", "stampy", "tophead", "gmap")
+  val aligners = List("bwa", "bowtie", "stampy", "tophat", "gmap")
   val genomes: Map[String, List[String]] = Map(
     "H.Sapiens" -> List("hg19"),
     "M.Musculus" -> List("mm10"),
