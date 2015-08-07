@@ -43,7 +43,7 @@ object Pipeline {
                   logFile: File,
                   memoryArg: String) = {
     val cmd = Seq("java", memoryArg, "-jar", Biopet.getBiopetJar.toString, "pipeline", pipelineName) ++ args ++ Biopet.queueArgs
-    if (!outputDir.exists()) outputDir.mkdir()
+    if (!outputDir.exists()) outputDir.mkdirs()
 
     if (logFile.exists()) logFile.delete()
     val writer = new PrintWriter(logFile)
