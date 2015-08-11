@@ -23,14 +23,7 @@ abstract class AbstractMapping extends Pipeline {
   def aligner: Option[String] = None
 
   def args = Seq("-sample", sampleId, "-library", libId, "-cv", s"output_dir=$outputDir") ++
-    (referenceSpecies match {
-      case Some(species) => Seq("-cv", s"reference_species=$species")
-      case _             => Seq()
-    }) ++ (referenceName match {
-      case Some(name) => Seq("-cv", s"reference_name=$name")
-      case _          => Seq()
-    }) ++ (aligner match {
-      case Some(aln) => Seq("-cv", s"aligner=$aln")
-      case _         => Seq()
-    })
+    referenceSpecies.collect { case species => Seq("-cv", s"reference_species=$species") }.getOrElse(Seq()) ++
+    referenceName.collect { case name => Seq("-cv", s"reference_name=$name") }.getOrElse(Seq()) ++
+    aligner.collect { case aligner => Seq("-cv", s"aligner=$aligner") }.getOrElse(Seq())
 }
