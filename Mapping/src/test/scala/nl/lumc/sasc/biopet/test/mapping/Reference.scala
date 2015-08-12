@@ -57,7 +57,7 @@ object Reference {
   //FIXME: not a correct list yet
   val aligners = List("bwa-mem", "bowtie", "stampy", "tophat", "gsnap")
   val genomes: Map[String, List[String]] = Map(
-    "H.Sapiens" -> List("hg19"),
+    "H.Sapiens" -> List("hg19", "GRCh38", "GRCh37"),
     "M.Musculus" -> List("mm10"),
     "R.norvegicus" -> List("rn5")
   )
