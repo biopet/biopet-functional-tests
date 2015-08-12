@@ -59,6 +59,7 @@ object Reference {
   val genomes: Map[String, List[String]] = Map(
     "H.Sapiens" -> List("hg19", "GRCh38", "GRCh37"),
     "M.Musculus" -> List("mm10"),
-    "R.norvegicus" -> List("rn5")
+    "R.norvegicus" -> List("rn5"),
+    "C.elegans" -> List("WBcel235")
   )
 }
