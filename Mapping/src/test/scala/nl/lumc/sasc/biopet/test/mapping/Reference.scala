@@ -5,7 +5,7 @@ import java.io.File
 import nl.lumc.sasc.biopet.test.Biopet
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
-import org.testng.annotations.{ Test, BeforeClass, Factory }
+import org.testng.annotations.{ DataProvider, Test, BeforeClass, Factory }
 
 /**
  * Created by pjvanthof on 06/08/15.
@@ -36,21 +36,25 @@ class ReferencePairedTemplate(aln: String, rs: String, rn: String) extends Abstr
 }
 
 class ReferenceSingleTest extends TestNGSuite with Matchers {
-  @Factory
-  def createSingleClasses = {
-    (for (aln <- Reference.aligners; (species, genomes) <- Reference.genomes; genome <- genomes) yield {
-      new ReferenceSingleTemplate(aln, species, genome)
-    }).toArray
+  @DataProvider(name = "alningers-geomes", parallel = true)
+  def provider = {
+    (for (aln <- Reference.aligners; (species, genomes) <- Reference.genomes; genome <- genomes) yield Array(aln, species, genome)).toArray
   }
+
+  @Factory(dataProvider = "alningers-geomes")
+  def createPairedClasses(aln: String, species: String, genome: String) =
+    Array(new ReferenceSingleTemplate(aln, species, genome))
 }
 
 class ReferencePairedTest extends TestNGSuite with Matchers {
-  @Factory
-  def createPairedClasses = {
-    (for (aln <- Reference.aligners; (species, genomes) <- Reference.genomes; genome <- genomes) yield {
-      new ReferencePairedTemplate(aln, species, genome)
-    }).toArray
+  @DataProvider(name = "alningers-geomes", parallel = true)
+  def provider = {
+    (for (aln <- Reference.aligners; (species, genomes) <- Reference.genomes; genome <- genomes) yield Array(aln, species, genome)).toArray
   }
+
+  @Factory(dataProvider = "alningers-geomes")
+  def createPairedClasses(aln: String, species: String, genome: String) =
+    Array(new ReferencePairedTemplate(aln, species, genome))
 }
 
 object Reference {
