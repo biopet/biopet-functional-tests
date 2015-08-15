@@ -59,11 +59,11 @@ class ReferencePairedTest extends TestNGSuite with Matchers {
 
 object Reference {
   //FIXME: not a correct list yet
-  val aligners = List("bwa-mem", "bowtie", "stampy", "tophat", "gsnap")
+  val aligners = List("bwa-mem", "bowtie", "tophat", "gsnap", "star")
   val genomes: Map[String, List[String]] = Map(
-    "H.Sapiens" -> List("hg19", "GRCh38", "GRCh37"),
-    "M.Musculus" -> List("mm10"),
-    "R.norvegicus" -> List("rn5"),
+    "H.sapiens" -> List("GRCh38", "GRCh37"),
+    "M.musculus" -> List("GRCm38"),
+    "R.norvegicus" -> List("Rnor_6.0"),
     "C.elegans" -> List("WBcel235")
   )
 }
