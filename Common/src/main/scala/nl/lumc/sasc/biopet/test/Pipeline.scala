@@ -24,7 +24,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   private var _exitValue = -1
   def exitValue = _exitValue
 
-  def memoryArg = "-Xmx200m"
+  def memoryArg = "-Xmx150m"
 
   @BeforeClass
   def beforeTest: Unit = {
