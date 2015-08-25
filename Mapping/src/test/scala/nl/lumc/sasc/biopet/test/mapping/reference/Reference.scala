@@ -12,7 +12,6 @@ import org.testng.annotations.{DataProvider, Factory}
  * Created by pjvanthof on 06/08/15.
  */
 class ReferenceSingleTemplate(aln: String, rs: String, rn: String) extends AbstractMapping {
-  override def outputDir = new File(super.outputDir, s"$aln-$rs-$rn")
   override def aligner = Some(aln)
   override def referenceSpecies = Some(rs)
   override def referenceName = Some(rn)
@@ -24,7 +23,6 @@ class ReferenceSingleTemplate(aln: String, rs: String, rn: String) extends Abstr
 }
 
 class ReferencePairedTemplate(aln: String, rs: String, rn: String) extends AbstractMapping {
-  override def outputDir = new File(super.outputDir, s"$aln-$rs-$rn")
   override def aligner = Some(aln)
   override def referenceSpecies = Some(rs)
   override def referenceName = Some(rn)
