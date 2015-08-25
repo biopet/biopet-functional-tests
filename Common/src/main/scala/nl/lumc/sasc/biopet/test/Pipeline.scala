@@ -13,7 +13,7 @@ import scala.sys.process._
  */
 
 trait Pipeline extends TestNGSuite with Matchers {
-  def outputDir = new File(Biopet.getOutputDir, this.getClass.getName)
+  def outputDir = new File(Biopet.getOutputDir, this.getClass.getName.stripPrefix("nl.lumc.sasc.biopet.test."))
 
   def logFile = new File(outputDir, "run.log")
 
@@ -26,10 +26,12 @@ trait Pipeline extends TestNGSuite with Matchers {
 
   def memoryArg = "-Xmx150m"
 
+  def retries = Option(5)
+
   @BeforeClass
   def beforeTest: Unit = {
     // Running pipeline
-    _exitValue = Pipeline.runPipeline(pipelineName, outputDir, args, logFile, memoryArg)
+    _exitValue = Pipeline.runPipeline(pipelineName, outputDir, args, logFile, memoryArg, retries)
   }
 
   @Test(priority = -1) def exitcode = exitValue shouldBe 0
@@ -41,8 +43,10 @@ object Pipeline {
   def runPipeline(pipelineName: String,
                   outputDir: File, args: Seq[String],
                   logFile: File,
-                  memoryArg: String) = {
-    val cmd = Seq("java", memoryArg, "-jar", Biopet.getBiopetJar.toString, "pipeline", pipelineName) ++ args ++ Biopet.queueArgs
+                  memoryArg: String,
+                   retries: Option[Int]) = {
+    val cmd = Seq("java", memoryArg, "-jar", Biopet.getBiopetJar.toString, "pipeline", pipelineName) ++
+      args ++ Biopet.queueArgs ++ retries.map(r => Seq("-retry", r.toString)).getOrElse(Seq())
     if (!outputDir.exists()) outputDir.mkdirs()
 
     if (logFile.exists()) logFile.delete()
