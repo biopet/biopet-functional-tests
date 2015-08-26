@@ -77,13 +77,13 @@ class SingleBowtieCelegansWBcel235Test extends ReferenceSingleTemplate("bowtie")
 
 class SingleTophatHsapiensGRCh38Test extends ReferenceSingleTemplate("tophat") with HsapiensGRCh38
 class SingleTophatHsapiensGRCh37Test extends ReferenceSingleTemplate("tophat") with HsapiensGRCh37
-class SingleTophatMmusculusGRCm38Test extends ReferenceSingleTemplate("tophat") with MmusculusGRCm38
+//class SingleTophatMmusculusGRCm38Test extends ReferenceSingleTemplate("tophat") with MmusculusGRCm38
 class SingleTophatRnorvegicusRnor_6Test extends ReferenceSingleTemplate("tophat") with RnorvegicusRnor_6
 class SingleTophatCelegansWBcel235Test extends ReferenceSingleTemplate("tophat") with CelegansWBcel235
 
 class SingleGsnapHsapiensGRCh38Test extends ReferenceSingleTemplate("gsnap") with HsapiensGRCh38
 class SingleGsnapHsapiensGRCh37Test extends ReferenceSingleTemplate("gsnap") with HsapiensGRCh37
-class SingleGsnapMmusculusGRCm38Test extends ReferenceSingleTemplate("gsnap") with MmusculusGRCm38
+//class SingleGsnapMmusculusGRCm38Test extends ReferenceSingleTemplate("gsnap") with MmusculusGRCm38
 class SingleGsnapRnorvegicusRnor_6Test extends ReferenceSingleTemplate("gsnap") with RnorvegicusRnor_6
 class SingleGsnapCelegansWBcel235Test extends ReferenceSingleTemplate("gsnap") with CelegansWBcel235
 
@@ -107,13 +107,13 @@ class PairedBowtieCelegansWBcel235Test extends ReferencePairedTemplate("bowtie")
 
 class PairedTophatHsapiensGRCh38Test extends ReferencePairedTemplate("tophat") with HsapiensGRCh38
 class PairedTophatHsapiensGRCh37Test extends ReferencePairedTemplate("tophat") with HsapiensGRCh37
-class PairedTophatMmusculusGRCm38Test extends ReferencePairedTemplate("tophat") with MmusculusGRCm38
+//class PairedTophatMmusculusGRCm38Test extends ReferencePairedTemplate("tophat") with MmusculusGRCm38
 class PairedTophatRnorvegicusRnor_6Test extends ReferencePairedTemplate("tophat") with RnorvegicusRnor_6
 class PairedTophatCelegansWBcel235Test extends ReferencePairedTemplate("tophat") with CelegansWBcel235
 
 class PairedGsnapHsapiensGRCh38Test extends ReferencePairedTemplate("gsnap") with HsapiensGRCh38
 class PairedGsnapHsapiensGRCh37Test extends ReferencePairedTemplate("gsnap") with HsapiensGRCh37
-class PairedGsnapMmusculusGRCm38Test extends ReferencePairedTemplate("gsnap") with MmusculusGRCm38
+//class PairedGsnapMmusculusGRCm38Test extends ReferencePairedTemplate("gsnap") with MmusculusGRCm38
 class PairedGsnapRnorvegicusRnor_6Test extends ReferencePairedTemplate("gsnap") with RnorvegicusRnor_6
 class PairedGsnapCelegansWBcel235Test extends ReferencePairedTemplate("gsnap") with CelegansWBcel235
 
