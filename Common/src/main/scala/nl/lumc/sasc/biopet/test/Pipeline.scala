@@ -4,8 +4,9 @@ import java.io.{ PrintWriter, File }
 
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
-import org.testng.annotations.{ Test, BeforeClass }
+import org.testng.annotations.{DataProvider, Test, BeforeClass}
 
+import scala.io.Source
 import scala.sys.process._
 
 /**
@@ -27,11 +28,25 @@ trait Pipeline extends TestNGSuite with Matchers {
   def memoryArg = "-Xmx150m"
 
   def retries = Option(5)
+  def allowRetries = 0
 
   @BeforeClass
   def beforeTest: Unit = {
     // Running pipeline
     _exitValue = Pipeline.runPipeline(pipelineName, outputDir, args, logFile, memoryArg, retries)
+  }
+
+  @DataProvider(name = "not_allowed_reties")
+  def notAllowedRetries = {
+    (for (i <- (allowRetries + 1) to retries.getOrElse(1)) yield {
+      Array("d", i)
+    }).toArray
+  }
+
+  @Test(dataProvider = "not_allowed_reties")
+  def testRetry(dummy:String, retry: Int): Unit = {
+    val s = s"Reset for retry attempt $retry of ${retries.getOrElse(0)}"
+    require(!Source.fromFile(logFile).getLines().exists(_.contains(s)), s"${retry}e retry found but not allowed")
   }
 
   @Test(priority = -1) def exitcode = exitValue shouldBe 0
