@@ -79,7 +79,7 @@ class SingleTophatHsapiensGRCh38Test extends ReferenceSingleTemplate("tophat") w
 class SingleTophatHsapiensGRCh37Test extends ReferenceSingleTemplate("tophat") with HsapiensGRCh37
 //class SingleTophatMmusculusGRCm38Test extends ReferenceSingleTemplate("tophat") with MmusculusGRCm38
 class SingleTophatRnorvegicusRnor_6Test extends ReferenceSingleTemplate("tophat") with RnorvegicusRnor_6
-class SingleTophatCelegansWBcel235Test extends ReferenceSingleTemplate("tophat") with CelegansWBcel235
+//class SingleTophatCelegansWBcel235Test extends ReferenceSingleTemplate("tophat") with CelegansWBcel235
 
 class SingleGsnapHsapiensGRCh38Test extends ReferenceSingleTemplate("gsnap") with HsapiensGRCh38
 class SingleGsnapHsapiensGRCh37Test extends ReferenceSingleTemplate("gsnap") with HsapiensGRCh37
@@ -109,7 +109,7 @@ class PairedTophatHsapiensGRCh38Test extends ReferencePairedTemplate("tophat") w
 class PairedTophatHsapiensGRCh37Test extends ReferencePairedTemplate("tophat") with HsapiensGRCh37
 //class PairedTophatMmusculusGRCm38Test extends ReferencePairedTemplate("tophat") with MmusculusGRCm38
 class PairedTophatRnorvegicusRnor_6Test extends ReferencePairedTemplate("tophat") with RnorvegicusRnor_6
-class PairedTophatCelegansWBcel235Test extends ReferencePairedTemplate("tophat") with CelegansWBcel235
+//class PairedTophatCelegansWBcel235Test extends ReferencePairedTemplate("tophat") with CelegansWBcel235
 
 class PairedGsnapHsapiensGRCh38Test extends ReferencePairedTemplate("gsnap") with HsapiensGRCh38
 class PairedGsnapHsapiensGRCh37Test extends ReferencePairedTemplate("gsnap") with HsapiensGRCh37
