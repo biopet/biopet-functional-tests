@@ -10,11 +10,19 @@ import org.scalatest.Matchers
  */
 class MappingSingleTest extends AbstractMapping {
   override def args = super.args ++ Seq("-run")
+
+  //TODO: change reference to test reference
+  override def referenceSpecies = Some("H.sapiens")
+  override def referenceName = Some("GRCh38")
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
 }
 
 class MappingPairedTest extends AbstractMapping {
   override def args = super.args ++ Seq("-run")
+
+  //TODO: change reference to test reference
+  override def referenceSpecies = Some("H.sapiens")
+  override def referenceName = Some("GRCh38")
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
 }
