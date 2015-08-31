@@ -4,7 +4,7 @@ import java.io.{ PrintWriter, File }
 
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
-import org.testng.annotations.{DataProvider, Test, BeforeClass}
+import org.testng.annotations.{ DataProvider, Test, BeforeClass }
 
 import scala.io.Source
 import scala.sys.process._
@@ -44,7 +44,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   }
 
   @Test(dataProvider = "not_allowed_reties")
-  def testRetry(dummy:String, retry: Int): Unit = {
+  def testRetry(dummy: String, retry: Int): Unit = {
     val s = s"Reset for retry attempt $retry of ${retries.getOrElse(0)}"
     require(!Source.fromFile(logFile).getLines().exists(_.contains(s)), s"${retry}e retry found but not allowed")
   }
@@ -59,7 +59,7 @@ object Pipeline {
                   outputDir: File, args: Seq[String],
                   logFile: File,
                   memoryArg: String,
-                   retries: Option[Int]) = {
+                  retries: Option[Int]) = {
     val cmd = Seq("java", memoryArg, "-jar", Biopet.getBiopetJar.toString, "pipeline", pipelineName) ++
       args ++ Biopet.queueArgs ++ retries.map(r => Seq("-retry", r.toString)).getOrElse(Seq())
     if (!outputDir.exists()) outputDir.mkdirs()

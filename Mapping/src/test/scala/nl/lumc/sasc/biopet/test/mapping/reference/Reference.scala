@@ -6,7 +6,7 @@ import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.mapping.AbstractMapping
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
-import org.testng.annotations.{DataProvider, Factory}
+import org.testng.annotations.{ DataProvider, Factory }
 
 /**
  * Created by pjvanthof on 06/08/15.
