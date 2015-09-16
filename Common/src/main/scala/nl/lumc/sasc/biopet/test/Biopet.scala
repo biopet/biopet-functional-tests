@@ -35,7 +35,7 @@ object Biopet {
     System.getProperties.getProperty("biopet.functionalTests") match {
       case "false" => false
       case null    => false
-      case _ => true
+      case _       => true
     }
   }
 
