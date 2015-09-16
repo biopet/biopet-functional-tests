@@ -31,7 +31,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   def retries = Option(5)
   def allowRetries = 0
 
-  val functionalTest = true
+  val functionalTest = false
 
   @BeforeClass
   def beforeTest: Unit = {
