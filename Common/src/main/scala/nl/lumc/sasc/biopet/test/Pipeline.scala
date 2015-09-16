@@ -30,7 +30,9 @@ trait Pipeline extends TestNGSuite with Matchers {
   def retries = Option(5)
   def allowRetries = 0
 
-  @BeforeClass
+  def functionalTest = true
+
+  @BeforeClass(enabled = (!functionalTest || Biopet.functionalTests))
   def beforeTest: Unit = {
     // Running pipeline
     _exitValue = Pipeline.runPipeline(pipelineName, outputDir, args, logFile, memoryArg, retries)
