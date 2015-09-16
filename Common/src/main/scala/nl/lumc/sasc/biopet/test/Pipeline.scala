@@ -4,6 +4,7 @@ import java.io.{ PrintWriter, File }
 
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
+import org.testng.SkipException
 import org.testng.annotations.{ DataProvider, Test, BeforeClass }
 
 import scala.io.Source
@@ -30,8 +31,11 @@ trait Pipeline extends TestNGSuite with Matchers {
   def retries = Option(5)
   def allowRetries = 0
 
+  val functionalTest = false
+
   @BeforeClass
   def beforeTest: Unit = {
+    if (functionalTest && !Biopet.functionalTests) throw new SkipException("Functional tests are disabled")
     // Running pipeline
     _exitValue = Pipeline.runPipeline(pipelineName, outputDir, args, logFile, memoryArg, retries)
   }
