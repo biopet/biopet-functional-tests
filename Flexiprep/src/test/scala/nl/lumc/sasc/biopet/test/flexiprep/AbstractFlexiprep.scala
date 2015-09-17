@@ -13,5 +13,5 @@ abstract class AbstractFlexiprep extends Pipeline {
 
   def libId = "libName"
 
-  override def args = super.args ++ Seq("-sample", sampleId, "-library", libId, "-cv", "output_dir=" + outputDir, "-run")
+  def args = Seq("-sample", sampleId, "-library", libId, "-cv", "output_dir=" + outputDir, "-run")
 }

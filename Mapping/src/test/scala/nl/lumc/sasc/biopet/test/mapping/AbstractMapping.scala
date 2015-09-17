@@ -28,7 +28,7 @@ abstract class AbstractMapping extends Pipeline {
 
   def paired = false
 
-  override def args = super.args ++ Seq("-sample", sampleId, "-library", libId, "-cv", s"output_dir=$outputDir") ++
+  def args = Seq("-sample", sampleId, "-library", libId, "-cv", s"output_dir=$outputDir") ++
     referenceSpecies.collect { case species => Seq("-cv", s"species=$species") }.getOrElse(Seq()) ++
     referenceName.collect { case name => Seq("-cv", s"reference_name=$name") }.getOrElse(Seq()) ++
     aligner.collect { case aligner => Seq("-cv", s"aligner=$aligner") }.getOrElse(Seq()) ++

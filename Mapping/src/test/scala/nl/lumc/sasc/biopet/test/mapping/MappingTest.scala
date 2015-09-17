@@ -4,6 +4,7 @@ import java.io.File
 
 import nl.lumc.sasc.biopet.test.{ TestReference, Biopet }
 import org.scalatest.Matchers
+import org.testng.annotations.BeforeClass
 
 /**
  * Created by pjvan_thof on 7/6/15.
