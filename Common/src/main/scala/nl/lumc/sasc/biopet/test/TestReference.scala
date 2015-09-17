@@ -5,7 +5,7 @@ package nl.lumc.sasc.biopet.test
  */
 trait TestReference extends Pipeline {
   override def args = super.args ++ Seq(
-    "-cv", s"reference_fasta=${Biopet.fixtureFile("reference/refrence.fasta")}",
-    "-cv", s"bwa:reference_fasta=${Biopet.fixtureFile("reference/bwa/refrence.fasta")}"
+    "-cv", s"reference_fasta=${Biopet.fixtureFile("reference/reference.fasta")}",
+    "-cv", s"bwa:reference_fasta=${Biopet.fixtureFile("reference/bwa/reference.fasta")}"
   )
 }
