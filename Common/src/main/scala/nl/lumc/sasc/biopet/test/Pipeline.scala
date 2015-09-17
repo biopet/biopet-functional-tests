@@ -21,7 +21,7 @@ trait Pipeline extends TestNGSuite with Matchers {
 
   def pipelineName: String
 
-  def args: Seq[String]
+  def args: Seq[String] = Seq()
 
   private var _exitValue = -1
   def exitValue = _exitValue
