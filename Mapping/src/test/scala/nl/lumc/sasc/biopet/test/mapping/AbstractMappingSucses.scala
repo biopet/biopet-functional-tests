@@ -34,4 +34,26 @@ class AbstractMappingSuccess extends AbstractMapping {
     assert(bamFile.length() > 0, s"$bamFile has size of 0 bytes")
     assert(baiFile.length() > 0, s"$baiFile has size of 0 bytes")
   }
+
+  @Test
+  def testSkipFlexiprep: Unit = {
+    val flexiprepDir = new File(outputDir, "flexiprep")
+    if (skipFlexiprep) {
+      assert(!flexiprepDir.exists(), "Flexiprep is skipped but directory exist")
+    } else {
+      assert(flexiprepDir.exists(), "Flexiprep directory should be there")
+      assert(flexiprepDir.isDirectory, s"'$flexiprepDir' should be a directory")
+    }
+  }
+
+  @Test
+  def testSkipMetrics: Unit = {
+    val metricsDir = new File(outputDir, "flexiprep")
+    if (skipMetrics) {
+      assert(!metricsDir.exists(), "Metrics are skipped but directory exist")
+    } else {
+      assert(metricsDir.exists(), "Metrics directory should be there")
+      assert(metricsDir.isDirectory, s"'$metricsDir' should be a directory")
+    }
+  }
 }
