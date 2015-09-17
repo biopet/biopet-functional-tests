@@ -9,14 +9,14 @@ import org.testng.annotations.BeforeClass
 /**
  * Created by pjvan_thof on 7/6/15.
  */
-class MappingSingleTest extends AbstractMapping with TestReference {
+class MappingSingleTest extends AbstractMappingSuccess with TestReference {
   override def args = super.args ++ Seq("-run")
 
   //TODO: change reference to test reference
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
 }
 
-class MappingPairedTest extends AbstractMapping with TestReference {
+class MappingPairedTest extends AbstractMappingSuccess with TestReference {
   override def args = super.args ++ Seq("-run")
 
   //TODO: change reference to test reference

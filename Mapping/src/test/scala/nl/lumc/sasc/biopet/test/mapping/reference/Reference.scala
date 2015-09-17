@@ -3,7 +3,7 @@ package nl.lumc.sasc.biopet.test.mapping.reference
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.Biopet
-import nl.lumc.sasc.biopet.test.mapping.AbstractMapping
+import nl.lumc.sasc.biopet.test.mapping.{AbstractMappingSuccess, AbstractMapping}
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
 import org.testng.annotations.{ DataProvider, Factory }
@@ -11,17 +11,20 @@ import org.testng.annotations.{ DataProvider, Factory }
 /**
  * Created by pjvanthof on 06/08/15.
  */
-class ReferenceSingleTemplate(aln: String) extends AbstractMapping {
+class ReferenceSingleTemplate(aln: String) extends AbstractMappingSuccess {
   override def aligner = Some(aln)
   override def functionalTest = true
-  override def args = super.args ++ Seq("-run", "-cv", "skip_flexiprep=true", "-cv", "skip_metrics=true"
-  )
+  override def skipFlexiprep = true
+  override def skipMetrics = true
+  override def args = super.args ++ Seq("-run")
 }
 
-class ReferencePairedTemplate(aln: String) extends AbstractMapping {
+class ReferencePairedTemplate(aln: String) extends AbstractMappingSuccess {
   override def aligner = Some(aln)
   override def functionalTest = true
-  override def args = super.args ++ Seq("-run", "-cv", "skip_flexiprep=true", "-cv", "skip_metrics=true")
+  override def skipFlexiprep = true
+  override def skipMetrics = true
+  override def args = super.args ++ Seq("-run")
 }
 
 trait HsapiensGRCh38 extends AbstractMapping {
