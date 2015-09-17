@@ -13,12 +13,14 @@ import org.testng.annotations.{ DataProvider, Factory }
  */
 class ReferenceSingleTemplate(aln: String) extends AbstractMapping {
   override def aligner = Some(aln)
+  override def functionalTest = true
   override def args = super.args ++ Seq("-run", "-cv", "skip_flexiprep=true", "-cv", "skip_metrics=true"
   )
 }
 
 class ReferencePairedTemplate(aln: String) extends AbstractMapping {
   override def aligner = Some(aln)
+  override def functionalTest = true
   override def args = super.args ++ Seq("-run", "-cv", "skip_flexiprep=true", "-cv", "skip_metrics=true")
 }
 
