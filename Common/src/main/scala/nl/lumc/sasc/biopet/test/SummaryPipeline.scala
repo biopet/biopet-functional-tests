@@ -23,4 +23,34 @@ trait SummaryPipeline extends Pipeline {
   def testSummaryFileExist: Unit = {
     assert(summaryFile.exists(), "Summary file does not exist")
   }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def summaryPipelineName: Unit = {
+    summary.getValue("meta", "pipeline_name") shouldBe Some(pipelineName.toLowerCase)
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def summaryPipelineVersion: Unit = {
+    summary.getValue("meta", "pipeline_version") should not be None
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def summaryCommitHash: Unit = {
+    summary.getValue("meta", "last_commit_hash") should not be None
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def summaryOutputDir: Unit = {
+    summary.getValue("meta", "output_dir") shouldBe Some(outputDir.getAbsolutePath)
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def summaryCreation: Unit = {
+    summary.getValue("meta", "summary_creation") should not be None
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def summaryRunName: Unit = {
+    summary.getValue("meta", "run_name") should not be None
+  }
 }
