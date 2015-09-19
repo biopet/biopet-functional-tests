@@ -21,4 +21,6 @@ class FlexiprepPairedTest extends AbstractFlexiprepSuccess {
   )
 }
 
-class FlexiprepNoR1Test extends AbstractFlexiprep with PipelineFail
+class FlexiprepNoR1Test extends AbstractFlexiprep with PipelineFail {
+  override def args = super.args ++ Seq("-run")
+}
