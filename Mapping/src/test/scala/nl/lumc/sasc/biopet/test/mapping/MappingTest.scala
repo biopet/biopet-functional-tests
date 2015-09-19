@@ -2,10 +2,7 @@ package nl.lumc.sasc.biopet.test.mapping
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.flexiprep.AbstractFlexiprep
-import nl.lumc.sasc.biopet.test.{PipelineFail, TestReference, Biopet}
-import org.scalatest.Matchers
-import org.testng.annotations.BeforeClass
+import nl.lumc.sasc.biopet.test.{ PipelineFail, TestReference, Biopet }
 
 /**
  * Created by pjvan_thof on 7/6/15.
