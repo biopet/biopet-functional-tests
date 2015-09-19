@@ -21,4 +21,4 @@ class FlexiprepPairedTest extends AbstractFlexiprepSuccess {
   )
 }
 
-class FlexiprepNoR1Test extends AbstractFlexiprepSuccess with PipelineFail
+class FlexiprepNoR1Test extends AbstractFlexiprep with PipelineFail
