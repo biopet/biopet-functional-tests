@@ -2,7 +2,7 @@ package nl.lumc.sasc.biopet.test.flexiprep
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.{PipelineFail, Biopet}
+import nl.lumc.sasc.biopet.test.{ PipelineFail, Biopet }
 import org.scalatest.Matchers
 
 /**
@@ -21,4 +21,4 @@ class FlexiprepPairedTest extends AbstractFlexiprepSuccess {
   )
 }
 
-class FlexiprepNoR1 extends AbstractFlexiprepSuccess with PipelineFail
+class FlexiprepNoR1Test extends AbstractFlexiprepSuccess with PipelineFail
