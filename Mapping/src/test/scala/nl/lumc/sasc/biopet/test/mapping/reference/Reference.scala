@@ -3,10 +3,7 @@ package nl.lumc.sasc.biopet.test.mapping.reference
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.Biopet
-import nl.lumc.sasc.biopet.test.mapping.{AbstractMappingSuccess, AbstractMapping}
-import org.scalatest.Matchers
-import org.scalatest.testng.TestNGSuite
-import org.testng.annotations.{ DataProvider, Factory }
+import nl.lumc.sasc.biopet.test.mapping.{ AbstractMappingSuccess, AbstractMapping }
 
 /**
  * Created by pjvanthof on 06/08/15.
