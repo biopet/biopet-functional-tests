@@ -24,16 +24,20 @@ trait SummaryPipeline extends Pipeline {
     assert(summaryFile.exists(), "Summary file does not exist")
   }
 
+  // Testing meta field of summary
+
   @Test(dependsOnGroups = Array("parseSummary"))
   def summaryPipelineName: Unit = {
     summary.getValue("meta", "pipeline_name") shouldBe Some(pipelineName.toLowerCase)
   }
 
+  //TODO: Add regex testing
   @Test(dependsOnGroups = Array("parseSummary"))
   def summaryPipelineVersion: Unit = {
     summary.getValue("meta", "pipeline_version") should not be None
   }
 
+  //TODO: Add regex testing
   @Test(dependsOnGroups = Array("parseSummary"))
   def summaryCommitHash: Unit = {
     summary.getValue("meta", "last_commit_hash") should not be None
