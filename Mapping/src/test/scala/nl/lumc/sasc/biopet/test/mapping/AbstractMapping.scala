@@ -2,13 +2,12 @@ package nl.lumc.sasc.biopet.test.mapping
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.{ Biopet, SummaryPipeline }
-import org.testng.annotations.Test
+import nl.lumc.sasc.biopet.test.Pipeline
 
 /**
  * Created by pjvan_thof on 5/26/15.
  */
-abstract class AbstractMapping extends SummaryPipeline {
+abstract class AbstractMapping extends Pipeline {
 
   def pipelineName = "mapping"
 

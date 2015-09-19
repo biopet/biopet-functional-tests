@@ -2,12 +2,13 @@ package nl.lumc.sasc.biopet.test.mapping
 
 import java.io.File
 
+import nl.lumc.sasc.biopet.test.SummaryPipeline
 import org.testng.annotations.Test
 
 /**
  * Created by pjvan_thof on 9/17/15.
  */
-class AbstractMappingSuccess extends AbstractMapping {
+class AbstractMappingSuccess extends AbstractMapping with SummaryPipeline {
   @Test
   def testFinalBamFile: Unit = {
     val bamFile = new File(outputDir, s"$sampleId-$libId.final.bam")
