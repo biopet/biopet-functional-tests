@@ -32,6 +32,11 @@
             <artifactId>json4s-jackson_2.11</artifactId>
             <version>3.2.11</version>
         </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
     </dependencies>
 
 </project>
