@@ -12,11 +12,16 @@ class AbstractMappingSuccess extends AbstractMapping with SummaryPipeline {
   @Test
   def testFinalBamFile: Unit = {
     val bamFile = new File(outputDir, s"$sampleId-$libId.final.bam")
-    val baiFile = new File(outputDir, s"$sampleId-$libId.final.bai")
 
     bamFile.exists() shouldBe true
-    baiFile.exists() shouldBe true
     assert(bamFile.length() > 0, s"$bamFile has size of 0 bytes")
+  }
+
+  @Test
+  def testFinalBaiFile: Unit = {
+    val baiFile = new File(outputDir, s"$sampleId-$libId.final.bai")
+
+    baiFile.exists() shouldBe true
     assert(baiFile.length() > 0, s"$baiFile has size of 0 bytes")
   }
 
