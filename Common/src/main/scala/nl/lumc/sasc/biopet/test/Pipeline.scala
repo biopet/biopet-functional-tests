@@ -1,9 +1,7 @@
 package nl.lumc.sasc.biopet.test
 
-import java.io.{ File, FileInputStream, PrintWriter }
-import java.util.zip.GZIPInputStream
+import java.io.{ File, PrintWriter }
 
-import org.apache.commons.codec.digest.DigestUtils
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
 import org.testng.SkipException
@@ -22,22 +20,6 @@ trait Pipeline extends TestNGSuite with Matchers {
   /** Given token(s) of a filesystem path that points to an output file, return its file object representation. */
   def getOutputFile(pathTokens: String*): File =
     new File(outputDir, pathTokens.mkString(File.separator))
-
-  /** Calculates the MD5 checksum of the given file. */
-  def calcMd5(file: File): String = {
-    val fis = new FileInputStream(file)
-    val md5 = DigestUtils.md5Hex(fis)
-    fis.close()
-    md5
-  }
-
-  /** Calculates the MD5 checksum of the unzipped contents of the given gzipped-file. */
-  def calcMd5Unzipped(file: File): String = {
-    val fis = new GZIPInputStream(new FileInputStream(file))
-    val md5 = DigestUtils.md5Hex(fis)
-    fis.close()
-    md5
-  }
 
   def logFile = new File(outputDir, "run.log")
 

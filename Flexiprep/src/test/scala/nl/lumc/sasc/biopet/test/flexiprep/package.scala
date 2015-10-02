@@ -3,6 +3,7 @@ package nl.lumc.sasc.biopet.test
 import java.io.File
 
 import org.testng.annotations.Test
+import nl.lumc.sasc.biopet.test.utils._
 
 package object flexiprep {
 

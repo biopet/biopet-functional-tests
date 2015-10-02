@@ -1,6 +1,7 @@
 package nl.lumc.sasc.biopet.test.flexiprep
 
 import org.testng.annotations.Test
+import nl.lumc.sasc.biopet.test.utils._
 
 class FlexiprepRunSingleTrimTest extends FlexiprepRunSingle {
 
