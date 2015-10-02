@@ -3,7 +3,7 @@ package nl.lumc.sasc.biopet.test.flexiprep
 import org.testng.annotations.Test
 import nl.lumc.sasc.biopet.test.utils._
 
-class FlexiprepRunSingleClipTrimTest extends FlexiprepRunSingle {
+class FlexiprepSingleClipTrimTest extends FlexiprepRunSingle {
 
   @Test def testOutputR1() = {
     val outputR1 = getOutputFile("ct_r1.qc.fq.gz")

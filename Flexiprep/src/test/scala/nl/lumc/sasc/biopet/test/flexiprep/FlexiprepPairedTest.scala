@@ -5,9 +5,8 @@ import java.io.File
 import org.testng.annotations.Test
 import nl.lumc.sasc.biopet.test.utils._
 import org.json4s._
-import org.json4s.jackson.JsonMethods._
 
-class FlexiprepRunPaired extends FlexiprepRunSingle {
+class FlexiprepPairedTest extends FlexiprepRunSingle {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testOutputR1() = {

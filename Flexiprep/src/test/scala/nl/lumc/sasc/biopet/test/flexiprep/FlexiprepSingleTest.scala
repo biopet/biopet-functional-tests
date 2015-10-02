@@ -2,7 +2,7 @@ package nl.lumc.sasc.biopet.test.flexiprep
 
 import org.testng.annotations.Test
 
-class FlexiprepRunSingleTest extends FlexiprepRunSingle {
+class FlexiprepSingleTest extends FlexiprepRunSingle {
 
   override def args = super.args ++ Seq("-cv", "skip_clip=true", "-cv", "skip_trim=true")
 

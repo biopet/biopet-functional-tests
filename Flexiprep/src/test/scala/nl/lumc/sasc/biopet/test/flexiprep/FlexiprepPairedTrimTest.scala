@@ -3,15 +3,15 @@ package nl.lumc.sasc.biopet.test.flexiprep
 import org.testng.annotations.Test
 import nl.lumc.sasc.biopet.test.utils._
 
-class FlexiprepRunPairedClipTrim extends FlexiprepRunSingle {
+class FlexiprepPairedTrimTest extends FlexiprepRunSingle {
 
   @Test def testOutputR1() = {
     val outputR1 = getOutputFile("ct_r1.qc.fq.gz")
-    assert(calcMd5Unzipped(outputR1) == "b88c68ac883086d558a76cd2fa9252fc")
+    assert(calcMd5Unzipped(outputR1) == "1a468148f163dfc8cd46e479706efadd")
   }
 
   @Test def testOutputR2() = {
     val outputR1 = getOutputFile("ct_r1.qc.fq.gz")
-    assert(calcMd5Unzipped(outputR1) == "2acfae7d3ead4c6054786a1b5eef2b17")
+    assert(calcMd5Unzipped(outputR1) == "13cc49a8e8203a634e7bbe07723f13b7")
   }
 }

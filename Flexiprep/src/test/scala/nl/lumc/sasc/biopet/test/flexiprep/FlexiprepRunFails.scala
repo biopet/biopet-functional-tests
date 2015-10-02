@@ -2,8 +2,6 @@ package nl.lumc.sasc.biopet.test.flexiprep
 
 import nl.lumc.sasc.biopet.test.PipelineFail
 
-trait FlexiprepRunFails extends FlexiprepRun with PipelineFail
-
-class FlexiprepNoR1Test extends FlexiprepRunFails {
+class FlexiprepNoR1Test extends FlexiprepRun with PipelineFail {
   override def args = super.args ++ Seq("-run")
 }
