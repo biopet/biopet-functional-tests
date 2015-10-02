@@ -3,7 +3,7 @@ package nl.lumc.sasc.biopet.test.flexiprep
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.{ Biopet, SummaryPipeline, Pipeline }
-import org.json4s.JsonAST.{ JObject, JNothing, JString }
+import org.json4s._
 import org.testng.annotations.Test
 import nl.lumc.sasc.biopet.test.utils._
 
