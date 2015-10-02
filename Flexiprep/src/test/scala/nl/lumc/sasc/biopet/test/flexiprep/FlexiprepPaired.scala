@@ -3,7 +3,7 @@ package nl.lumc.sasc.biopet.test.flexiprep
 /**
  * Created by pjvan_thof on 10/2/15.
  */
-class FlexiprepPairedClipTest extends FlexiprepRunSingle {
+class FlexiprepPairedClipTest extends FlexiprepPaired {
 
   override def args = super.args ++ Seq("-cv", "skip_clip=false", "-cv", "skip_trim=true")
 
@@ -12,7 +12,7 @@ class FlexiprepPairedClipTest extends FlexiprepRunSingle {
 
 }
 
-class FlexiprepPairedClipTrimTest extends FlexiprepRunSingle {
+class FlexiprepPairedClipTrimTest extends FlexiprepPaired {
 
   override def args = super.args ++ Seq("-cv", "skip_clip=false", "-cv", "skip_trim=false")
 
@@ -21,7 +21,7 @@ class FlexiprepPairedClipTrimTest extends FlexiprepRunSingle {
 
 }
 
-class FlexiprepPairedSkipAllTest extends FlexiprepRunSingle {
+class FlexiprepPairedSkipAllTest extends FlexiprepPaired {
 
   override def args = super.args ++ Seq("-cv", "skip_clip=true", "-cv", "skip_trim=true")
 
@@ -30,7 +30,7 @@ class FlexiprepPairedSkipAllTest extends FlexiprepRunSingle {
 
 }
 
-class FlexiprepPairedTrimTest extends FlexiprepRunSingle {
+class FlexiprepPairedTrimTest extends FlexiprepPaired {
 
   override def args = super.args ++ Seq("-cv", "skip_clip=true", "-cv", "skip_trim=false")
 
