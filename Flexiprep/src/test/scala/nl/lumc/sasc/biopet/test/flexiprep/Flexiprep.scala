@@ -1,7 +1,8 @@
-package nl.lumc.sasc.biopet.test
+package nl.lumc.sasc.biopet.test.flexiprep
 
 import java.io.File
 
+import nl.lumc.sasc.biopet.test.{ Biopet, SummaryPipeline, Pipeline }
 import org.testng.annotations.Test
 import nl.lumc.sasc.biopet.test.utils._
 
