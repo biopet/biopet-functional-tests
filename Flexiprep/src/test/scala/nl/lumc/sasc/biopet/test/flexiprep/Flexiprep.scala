@@ -60,9 +60,9 @@ trait SuccessfulFlexiprep extends FlexiprepRun with SummaryPipeline {
   @Test(dependsOnGroups = Array("parseSummary"))
   def testOutputR1 = {
     val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "output_R1"
-    summaryFile shouldBe JObject
-    (summaryFile \ "path") shouldBe JString
-    (summaryFile \ "md5") shouldBe JString
+    summaryFile.isInstanceOf[JObject] shouldBe true
+    (summaryFile \ "path").isInstanceOf[JObject] shouldBe true
+    (summaryFile \ "md5").isInstanceOf[JObject] shouldBe true
     val file = new File((summaryFile \ "path").extract[String])
     val md5 = calcMd5Unzipped(file)
 
@@ -74,9 +74,9 @@ trait SuccessfulFlexiprep extends FlexiprepRun with SummaryPipeline {
   def testOutputR2 = {
     val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "output_R2"
     if (r2.isDefined) {
-      summaryFile shouldBe JObject
-      (summaryFile \ "path") shouldBe JString
-      (summaryFile \ "md5") shouldBe JString
+      summaryFile.isInstanceOf[JObject] shouldBe true
+      (summaryFile \ "path").isInstanceOf[JObject] shouldBe true
+      (summaryFile \ "md5").isInstanceOf[JObject] shouldBe true
       val file = new File((summaryFile \ "path").extract[String])
 
       md5SumOutputR2.foreach(calcMd5Unzipped(file) shouldBe _)
