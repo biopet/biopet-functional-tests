@@ -3,6 +3,7 @@ package nl.lumc.sasc.biopet.test.flexiprep
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.{ Biopet, SummaryPipeline, Pipeline }
+import org.json4s.JsonAST.{ JObject, JNothing, JString }
 import org.testng.annotations.Test
 import nl.lumc.sasc.biopet.test.utils._
 
@@ -32,16 +33,59 @@ trait SuccessfulFlexiprep extends FlexiprepRun with SummaryPipeline {
   def md5SumInputR1: String
   def md5SumInputR2: Option[String] = None
 
-  @Test
-  def testInputFilesChecksum() = {
+  /** This is the uncompressed md5sum of the output R1 */
+  def md5SumOutputR1: Option[String] = None
+
+  /** This is the uncompressed md5sum of the output R2 */
+  def md5SumOutputR2: Option[String] = None
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testInputR1 = {
+    val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "input_R1"
+
     assert(calcMd5(r1.get) == md5SumInputR1)
-    r2 match {
-      case Some(r2File) if md5SumInputR2.isDefined => {
-        assert(calcMd5(r2File) == md5SumInputR2.get)
-      }
-      case _ =>
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testInputR2 = {
+    val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "input_R2"
+    if (r2.isDefined) {
+      if (md5SumInputR2.isDefined)
+        assert(calcMd5(r2.get) == md5SumInputR2.get)
+    } else {
+
     }
   }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testOutputR1 = {
+    val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "output_R1"
+    summaryFile shouldBe JObject
+    (summaryFile \ "path") shouldBe JString
+    (summaryFile \ "md5") shouldBe JString
+    val file = new File((summaryFile \ "path").extract[String])
+    val md5 = calcMd5Unzipped(file)
+
+    md5SumOutputR1.foreach(calcMd5Unzipped(file) shouldBe _)
+    calcMd5(file) shouldBe (summaryFile \ "md5").extract[String]
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testOutputR2 = {
+    val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "output_R2"
+    if (r2.isDefined) {
+      summaryFile shouldBe JObject
+      (summaryFile \ "path") shouldBe JString
+      (summaryFile \ "md5") shouldBe JString
+      val file = new File((summaryFile \ "path").extract[String])
+
+      md5SumOutputR2.foreach(calcMd5Unzipped(file) shouldBe _)
+      calcMd5(file) shouldBe (summaryFile \ "md5").extract[String]
+    } else {
+      summaryFile shouldBe JNothing
+    }
+  }
+
 }
 
 /** Trait for Flexiprep runs with single-end inputs. */

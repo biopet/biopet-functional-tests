@@ -5,11 +5,9 @@ import nl.lumc.sasc.biopet.test.utils._
 
 class FlexiprepSingleClipTest extends FlexiprepRunSingle {
 
-  override def args = super.args ++ Seq("-cv", "skip_trim=true")
+  override def args = super.args ++ Seq("-cv", "skip_clip=false", "-cv", "skip_trim=true")
 
-  @Test def testOutputR1() = {
-    val outputR1 = getOutputFile("ct_r1.qc.fq.gz")
-    assert(calcMd5Unzipped(outputR1) == "037aa58f60372c11037bef9ac157777e")
-  }
+  override def md5SumOutputR1 = Some("037aa58f60372c11037bef9ac157777e")
+
 }
 
