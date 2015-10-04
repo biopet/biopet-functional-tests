@@ -41,6 +41,6 @@ class FlexiprepPairedTrimTest extends FlexiprepPaired {
   override def md5SumOutputR2 = Some("13cc49a8e8203a634e7bbe07723f13b7")
 }
 
-class FlexiprepPairedRemoveOutput extends FlexiprepPairedClipTrimTest {
+class FlexiprepPairedRemoveOutputTest extends FlexiprepPairedClipTrimTest {
   override def keepQcFastqFiles = false
 }

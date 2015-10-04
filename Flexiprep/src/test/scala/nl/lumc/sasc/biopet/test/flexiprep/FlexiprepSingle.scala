@@ -36,6 +36,6 @@ class FlexiprepSingleTrimTest extends FlexiprepRunSingle {
   override def md5SumOutputR1 = Some("5001a539ca3cc3312835466bdb37b3d8")
 }
 
-class FlexiprepSingleRemoveOutput extends FlexiprepSingleClipTrimTest {
+class FlexiprepSingleRemoveOutputTest extends FlexiprepSingleClipTrimTest {
   override def keepQcFastqFiles = false
 }
