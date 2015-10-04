@@ -29,14 +29,16 @@ trait FlexiprepRun extends Pipeline {
     r2.collect { case r2 => Seq("-R2", r2.getAbsolutePath) }.getOrElse(Seq()) ++
     (if (keepQcFastqFiles) Seq("-cv", "keepQcFastqFiles=true") else Seq("-cv", "keepQcFastqFiles=false"))
 
-  def r1Name = r1 collect { case r1 => r1.getName
-    .stripSuffix(".gz").stripSuffix(".gzip")
-    .stripSuffix(".fq").stripSuffix(".fastq")
+  def r1Name = r1 collect {
+    case r1 => r1.getName
+      .stripSuffix(".gz").stripSuffix(".gzip")
+      .stripSuffix(".fq").stripSuffix(".fastq")
   }
 
-  def r2Name = r2 collect { case r2 => r2.getName
-    .stripSuffix(".gz").stripSuffix(".gzip")
-    .stripSuffix(".fq").stripSuffix(".fastq")
+  def r2Name = r2 collect {
+    case r2 => r2.getName
+      .stripSuffix(".gz").stripSuffix(".gzip")
+      .stripSuffix(".fq").stripSuffix(".fastq")
   }
 }
 
