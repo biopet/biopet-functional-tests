@@ -25,6 +25,16 @@ trait FlexiprepRun extends Pipeline {
   def args = Seq("-sample", sampleId, "-library", libId, "-cv", "output_dir=" + outputDir, "-run") ++
     r1.collect { case r1 => Seq("-R1", r1.getAbsolutePath) }.getOrElse(Seq()) ++
     r2.collect { case r2 => Seq("-R2", r2.getAbsolutePath) }.getOrElse(Seq())
+
+  def r1Name = r1 collect { case r1 => r1.getName
+    .stripSuffix(".gz").stripSuffix(".gzip")
+    .stripSuffix(".fq").stripSuffix(".fastq")
+  }
+
+  def r2Name = r2 collect { case r2 => r2.getName
+    .stripSuffix(".gz").stripSuffix(".gzip")
+    .stripSuffix(".fq").stripSuffix(".fastq")
+  }
 }
 
 /** Trait representing a successful Flexiprep test group. */
@@ -42,7 +52,8 @@ trait SuccessfulFlexiprep extends FlexiprepRun with SummaryPipeline {
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputR1File = {
     val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "input_R1"
-    validateSummaryFile(summaryFile)
+    validateSummaryFile(summaryFile, file = r1, md5 = Some(md5SumInputR1))
+    assert(r1.get.exists(), "Input file R1 does not exits anymore")
     assert(calcMd5(r1.get) == md5SumInputR1)
   }
 
@@ -50,32 +61,36 @@ trait SuccessfulFlexiprep extends FlexiprepRun with SummaryPipeline {
   def testInputR2File = {
     val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "input_R2"
     if (r2.isDefined) {
-      validateSummaryFile(summaryFile, md5 = md5SumInputR2)
+      validateSummaryFile(summaryFile, file = r2, md5 = md5SumInputR2)
+      assert(r2.get.exists(), "Input file R2 does not exits anymore")
       md5SumInputR2.foreach(md5 => assert(calcMd5(r2.get) == md5))
     } else summaryFile shouldBe JNothing
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testOutputR1File = {
+    val outputFile = new File(outputDir, r1Name.get + s".R1.qc${if (r2.isDefined) ".sync" else ""}.fq.gz")
     val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "output_R1"
     validateSummaryFile(summaryFile)
-    val file = new File((summaryFile \ "path").extract[String])
+    (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
 
-    md5SumOutputR1.foreach(calcMd5Unzipped(file) shouldBe _)
-    calcMd5(file) shouldBe (summaryFile \ "md5").extract[String]
+    md5SumOutputR1.foreach(calcMd5Unzipped(outputFile) shouldBe _)
+    calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testOutputR2File = {
     val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "output_R2"
     if (r2.isDefined) {
+      val outputFile = new File(outputDir, r2Name.get + s".R2.qc.sync.fq.gz")
       validateSummaryFile(summaryFile)
-      val file = new File((summaryFile \ "path").extract[String])
+      (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
 
-      md5SumOutputR2.foreach(calcMd5Unzipped(file) shouldBe _)
-      calcMd5(file) shouldBe (summaryFile \ "md5").extract[String]
+      md5SumOutputR2.foreach(calcMd5Unzipped(outputFile) shouldBe _)
+      calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
     } else {
       summaryFile shouldBe JNothing
+      assert(!outputDir.list().exists(x => x.contains(".R2.") || x.contains(".r2.")))
     }
   }
 
