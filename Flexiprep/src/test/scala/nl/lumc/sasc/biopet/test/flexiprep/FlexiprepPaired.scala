@@ -8,13 +8,7 @@ import nl.lumc.sasc.biopet.test.Biopet
  * Created by pjvan_thof on 10/2/15.
  */
 /** Trait for Flexiprep runs with paired-end inputs. */
-trait FlexiprepPaired extends SuccessfulFlexiprep {
-
-  /** Input file of this run. */
-  override def r1 = Some(new File(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz").getAbsolutePath))
-
-  /** MD5 checksum of the input file. */
-  def md5SumInputR1 = "8245507d70154d7921cd1bcce1ea344b"
+trait FlexiprepPaired extends FlexiprepRunSingle {
 
   /** Input read pair 2 for this run. */
   override def r2 = Some(new File(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz").getAbsolutePath))
