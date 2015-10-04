@@ -40,14 +40,14 @@ trait SuccessfulFlexiprep extends FlexiprepRun with SummaryPipeline {
   def md5SumOutputR2: Option[String] = None
 
   @Test(dependsOnGroups = Array("parseSummary"))
-  def testInputR1 = {
+  def testInputR1File = {
     val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "input_R1"
     validateSummaryFile(summaryFile)
     assert(calcMd5(r1.get) == md5SumInputR1)
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
-  def testInputR2 = {
+  def testInputR2File = {
     val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "input_R2"
     if (r2.isDefined) {
       validateSummaryFile(summaryFile, md5 = md5SumInputR2)
@@ -56,7 +56,7 @@ trait SuccessfulFlexiprep extends FlexiprepRun with SummaryPipeline {
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
-  def testOutputR1 = {
+  def testOutputR1File = {
     val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "output_R1"
     validateSummaryFile(summaryFile)
     val file = new File((summaryFile \ "path").extract[String])
@@ -66,7 +66,7 @@ trait SuccessfulFlexiprep extends FlexiprepRun with SummaryPipeline {
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
-  def testOutputR2 = {
+  def testOutputR2File = {
     val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "output_R2"
     if (r2.isDefined) {
       validateSummaryFile(summaryFile)
