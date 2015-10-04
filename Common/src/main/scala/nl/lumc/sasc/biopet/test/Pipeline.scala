@@ -9,6 +9,7 @@ import org.testng.annotations.{ DataProvider, Test, BeforeClass }
 
 import scala.io.Source
 import scala.sys.process._
+import scala.util.matching.Regex
 
 /**
  * Created by pjvan_thof on 6/30/15.
@@ -51,15 +52,47 @@ trait Pipeline extends TestNGSuite with Matchers {
     }).toArray
   }
 
-  @Test(dataProvider = "not_allowed_reties")
+  @Test(dataProvider = "not_allowed_reties", dependsOnGroups = Array("parseLog"))
   def testRetry(dummy: String, retry: Int): Unit = {
     val s = s"Reset for retry attempt $retry of ${retries.getOrElse(0)}"
-    require(!Source.fromFile(logFile).getLines().exists(_.contains(s)), s"${retry}e retry found but not allowed")
+    require(!logLines.exists(_.contains(s)), s"${retry}e retry found but not allowed")
   }
 
   @Test(priority = -1) def exitcode = exitValue shouldBe 0
   @Test def outputDirExist = assert(outputDir.exists())
-  @Test def logFileExist = assert(logFile.exists())
+
+  private var _logLines: List[String] = _
+  def logLines = _logLines
+
+  @Test(groups = Array("parseLog"))
+  def logFileExist = {
+    assert(logFile.exists())
+    _logLines = Source.fromFile(logFile).getLines().toList
+  }
+
+  private var logMustHave: List[Regex] = Nil
+  def logMustHave(r: Regex): Unit = logMustHave :+= r
+
+  @DataProvider(name = "log_must_have")
+  private def logMustHaveProvider = logMustHave.toArray
+
+  @Test(dataProvider = "log_must_have", dependsOnGroups = Array("parseLog"))
+  def testLogMustHave(r: Regex): Unit = {
+    assert(logLines.exists(r.findFirstMatchIn(_).isDefined), s"Logfile does not contains: $r")
+  }
+
+  private var logMustNotHave: List[Regex] = Nil
+  def logMustNotHave(r: Regex): Unit = logMustNotHave :+= r
+
+  @DataProvider(name = "log_must_not_have")
+  private def logMustNotHaveProvider = logMustNotHave.toArray
+
+  @Test(dataProvider = "log_must_not_have", dependsOnGroups = Array("parseLog"))
+  def testLogMustNotHave(r: Regex): Unit = {
+    val i = logLines.indexWhere(r.findFirstMatchIn(_).isDefined)
+    assert(i == -1, s"at line number ${i + 1} in logfile does contains: $r")
+  }
+
 }
 
 object Pipeline {
