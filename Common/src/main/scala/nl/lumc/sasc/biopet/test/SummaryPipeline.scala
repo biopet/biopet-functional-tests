@@ -51,4 +51,14 @@ trait SummaryPipeline extends Pipeline {
   @Test(dependsOnGroups = Array("parseSummary"))
   def summaryRunName(): Unit =
     (summary \ "meta" \ "run_name").extractOpt[String] shouldBe defined
+
+  def validateSummaryFile(summaryFile: JValue,
+                          file: Option[File] = None,
+                          md5: Option[String] = None): Unit = {
+    assert(summaryFile.isInstanceOf[JObject], s"summaryFile if not a JObject: $summaryFile")
+    assert((summaryFile \ "path").isInstanceOf[JString], s"path if not a JString: ${summaryFile \ "path"}")
+    assert((summaryFile \ "md5").isInstanceOf[JString], s"md5 if not a JString: ${summaryFile \ "md5"}")
+    file.foreach(_.getAbsolutePath shouldBe (summaryFile \ "path").extract[String])
+    md5.foreach(_ shouldBe (summaryFile \ "md5").extract[String])
+  }
 }
