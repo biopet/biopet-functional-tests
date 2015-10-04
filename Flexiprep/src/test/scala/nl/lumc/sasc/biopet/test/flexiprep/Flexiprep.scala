@@ -22,9 +22,12 @@ trait FlexiprepRun extends Pipeline {
 
   def r2: Option[File] = None
 
+  def keepQcFastqFiles = true
+
   def args = Seq("-sample", sampleId, "-library", libId, "-cv", "output_dir=" + outputDir, "-run") ++
     r1.collect { case r1 => Seq("-R1", r1.getAbsolutePath) }.getOrElse(Seq()) ++
-    r2.collect { case r2 => Seq("-R2", r2.getAbsolutePath) }.getOrElse(Seq())
+    r2.collect { case r2 => Seq("-R2", r2.getAbsolutePath) }.getOrElse(Seq()) ++
+    (if (keepQcFastqFiles) Seq("-cv", "keepQcFastqFiles=true") else Seq("-cv", "keepQcFastqFiles=false"))
 
   def r1Name = r1 collect { case r1 => r1.getName
     .stripSuffix(".gz").stripSuffix(".gzip")
@@ -74,8 +77,11 @@ trait SuccessfulFlexiprep extends FlexiprepRun with SummaryPipeline {
     validateSummaryFile(summaryFile)
     (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
 
-    md5SumOutputR1.foreach(calcMd5Unzipped(outputFile) shouldBe _)
-    calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
+    if (keepQcFastqFiles) {
+      assert(outputFile.exists(), "Output file R1 should exist while keepQcFastqFiles=true")
+      md5SumOutputR1.foreach(calcMd5Unzipped(outputFile) shouldBe _)
+      calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
+    } else assert(!outputFile.exists(), "Output file R1 should not exist while keepQcFastqFiles=false")
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
@@ -86,8 +92,11 @@ trait SuccessfulFlexiprep extends FlexiprepRun with SummaryPipeline {
       validateSummaryFile(summaryFile)
       (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
 
-      md5SumOutputR2.foreach(calcMd5Unzipped(outputFile) shouldBe _)
-      calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
+      if (keepQcFastqFiles) {
+        assert(outputFile.exists(), "Output file R2 should exist while keepQcFastqFiles=true")
+        md5SumOutputR2.foreach(calcMd5Unzipped(outputFile) shouldBe _)
+        calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
+      } else assert(!outputFile.exists(), "Output file R2 should not exist while keepQcFastqFiles=false")
     } else {
       summaryFile shouldBe JNothing
       assert(!outputDir.list().exists(x => x.contains(".R2.") || x.contains(".r2.")))
