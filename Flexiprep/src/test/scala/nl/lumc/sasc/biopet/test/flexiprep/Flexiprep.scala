@@ -43,7 +43,7 @@ trait FlexiprepRun extends Pipeline {
 }
 
 /** Trait representing a successful Flexiprep test group. */
-trait SuccessfulFlexiprep extends FlexiprepRun with SummaryPipeline {
+trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)

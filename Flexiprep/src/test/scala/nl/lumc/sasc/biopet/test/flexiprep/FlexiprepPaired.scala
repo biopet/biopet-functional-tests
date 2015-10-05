@@ -8,7 +8,7 @@ import nl.lumc.sasc.biopet.test.Biopet
  * Created by pjvan_thof on 10/2/15.
  */
 /** Trait for Flexiprep runs with paired-end inputs. */
-trait FlexiprepPaired extends FlexiprepRunSingle {
+trait FlexiprepPaired extends FlexiprepSingle {
 
   /** Input read pair 2 for this run. */
   override def r2 = Some(new File(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz").getAbsolutePath))
