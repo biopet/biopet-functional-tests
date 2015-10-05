@@ -13,7 +13,6 @@ class ReferenceSingleTemplate(aln: String) extends AbstractMappingSuccess {
   override def functionalTest = true
   override def skipFlexiprep = true
   override def skipMetrics = true
-  override def args = super.args ++ Seq("-run")
 }
 
 class ReferencePairedTemplate(aln: String) extends AbstractMappingSuccess {
@@ -21,7 +20,6 @@ class ReferencePairedTemplate(aln: String) extends AbstractMappingSuccess {
   override def functionalTest = true
   override def skipFlexiprep = true
   override def skipMetrics = true
-  override def args = super.args ++ Seq("-run")
 }
 
 trait HsapiensGRCh38 extends AbstractMapping {
