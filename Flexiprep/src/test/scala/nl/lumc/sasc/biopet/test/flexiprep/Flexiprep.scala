@@ -108,4 +108,36 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     }
   }
 
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testSeqstatR1: Unit = {
+    val seqstat = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "seqstat_R1"
+    assert(seqstat.isInstanceOf[JObject], s"summaryFile if not a JObject: $seqstat")
+    //TODO: check stats
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testSeqstatR2: Unit = {
+    val seqstat = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "seqstat_R2"
+    if (r2.isDefined) {
+      assert(seqstat.isInstanceOf[JObject], s"summaryFile if not a JObject: $seqstat")
+      //TODO: check stats
+    } else seqstat shouldBe JNothing
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testSeqstatR1Qc: Unit = {
+    val seqstat = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "seqstat_R1_qc"
+    assert(seqstat.isInstanceOf[JObject], s"summaryFile if not a JObject: $seqstat")
+    //TODO: check stats
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testSeqstatR2Qc: Unit = {
+    val seqstat = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "seqstat_R2_qc"
+    if (r2.isDefined) {
+      assert(seqstat.isInstanceOf[JObject], s"summaryFile if not a JObject: $seqstat")
+      //TODO: check stats
+    } else seqstat shouldBe JNothing
+  }
+
 }

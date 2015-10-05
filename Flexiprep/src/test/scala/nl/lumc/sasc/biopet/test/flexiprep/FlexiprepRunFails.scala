@@ -2,7 +2,7 @@ package nl.lumc.sasc.biopet.test.flexiprep
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.{Biopet, PipelineFail}
+import nl.lumc.sasc.biopet.test.{ Biopet, PipelineFail }
 import org.testng.annotations.Test
 
 class FlexiprepNoR1ArgTest extends FlexiprepRun with PipelineFail {
