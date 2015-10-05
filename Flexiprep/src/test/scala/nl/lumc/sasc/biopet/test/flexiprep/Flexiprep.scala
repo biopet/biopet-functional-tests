@@ -28,18 +28,6 @@ trait FlexiprepRun extends Pipeline {
     r1.collect { case r1 => Seq("-R1", r1.getAbsolutePath) }.getOrElse(Seq()) ++
     r2.collect { case r2 => Seq("-R2", r2.getAbsolutePath) }.getOrElse(Seq()) ++
     (if (keepQcFastqFiles) Seq("-cv", "keepQcFastqFiles=true") else Seq("-cv", "keepQcFastqFiles=false"))
-
-  def r1Name = r1 collect {
-    case r1 => r1.getName
-      .stripSuffix(".gz").stripSuffix(".gzip")
-      .stripSuffix(".fq").stripSuffix(".fastq")
-  }
-
-  def r2Name = r2 collect {
-    case r2 => r2.getName
-      .stripSuffix(".gz").stripSuffix(".gzip")
-      .stripSuffix(".fq").stripSuffix(".fastq")
-  }
 }
 
 /** Trait representing a successful Flexiprep test group. */
@@ -77,7 +65,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testOutputR1File = {
-    val outputFile = new File(outputDir, r1Name.get + s".R1.qc${if (r2.isDefined) ".sync" else ""}.fq.gz")
+    val outputFile = new File(outputDir, s"$sampleId-$libId.R1.qc${if (r2.isDefined) ".sync" else ""}.fq.gz")
     val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "output_R1"
     validateSummaryFile(summaryFile)
     (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
@@ -93,7 +81,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   def testOutputR2File = {
     val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "output_R2"
     if (r2.isDefined) {
-      val outputFile = new File(outputDir, r2Name.get + s".R2.qc.sync.fq.gz")
+      val outputFile = new File(outputDir, s"$sampleId-$libId.R2.qc.sync.fq.gz")
       validateSummaryFile(summaryFile)
       (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
 
