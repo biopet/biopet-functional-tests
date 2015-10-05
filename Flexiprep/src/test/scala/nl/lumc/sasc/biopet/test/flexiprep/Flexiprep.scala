@@ -141,4 +141,57 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     } else seqstat shouldBe JNothing
   }
 
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testClippingR1: Unit = {
+    val clipping = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "clipping_R1"
+    skipClip match {
+      case Some(true) | None =>
+        assert(clipping.isInstanceOf[JObject], s"summary if not a JObject: $clipping")
+      //TODO: check stats
+      case _ => clipping shouldBe JNothing
+    }
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testClippingR2: Unit = {
+    val clipping = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "clipping_R2"
+    skipClip match {
+      case Some(true) | None if r2.isDefined =>
+        assert(clipping.isInstanceOf[JObject], s"summary if not a JObject: $clipping")
+      //TODO: check stats
+      case _ => clipping shouldBe JNothing
+    }
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testTrimmingR1: Unit = {
+    val trimming = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "trimming_R1"
+    skipTrim match {
+      case Some(true) | None =>
+        assert(trimming.isInstanceOf[JObject], s"summary if not a JObject: $trimming")
+      //TODO: check stats
+      case _ => trimming shouldBe JNothing
+    }
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testTrimmingR2: Unit = {
+    val trimming = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "trimming_R2"
+    skipTrim match {
+      case Some(true) | None if r2.isDefined =>
+        assert(trimming.isInstanceOf[JObject], s"summary if not a JObject: $trimming")
+      //TODO: check stats
+      case _ => trimming shouldBe JNothing
+    }
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testFastqSync: Unit = {
+    val syncing = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastq_sync"
+    if (r2.isDefined) {
+      assert(syncing.isInstanceOf[JObject], s"summary if not a JObject: $syncing")
+      //TODO: check stats
+    } else syncing shouldBe JNothing
+  }
+
 }
