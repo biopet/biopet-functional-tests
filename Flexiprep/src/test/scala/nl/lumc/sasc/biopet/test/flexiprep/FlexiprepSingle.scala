@@ -18,22 +18,30 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
 }
 
 class FlexiprepSingleClipTest extends FlexiprepSingle {
-  override def args = super.args ++ Seq("-cv", "skip_clip=false", "-cv", "skip_trim=true")
+  override def skipClip = Some(false)
+  override def skipTrim = Some(true)
   override def md5SumOutputR1 = Some("037aa58f60372c11037bef9ac157777e")
 }
 
 class FlexiprepSingleClipTrimTest extends FlexiprepSingle {
-  override def args = super.args ++ Seq("-cv", "skip_clip=false", "-cv", "skip_trim=false")
+  override def skipClip = Some(false)
+  override def skipTrim = Some(false)
   override def md5SumOutputR1 = Some("5b7896e489a5aeb3d30cb11ea15a7be3")
 }
 
 class FlexiprepSingleSkipAllTest extends FlexiprepSingle {
-  override def args = super.args ++ Seq("-cv", "skip_clip=true", "-cv", "skip_trim=true")
+  override def skipClip = Some(false)
+  override def skipTrim = Some(false)
 }
 
 class FlexiprepSingleTrimTest extends FlexiprepSingle {
-  override def args = super.args ++ Seq("-cv", "skip_clip=true", "-cv", "skip_trim=false")
+  override def skipClip = Some(true)
+  override def skipTrim = Some(false)
   override def md5SumOutputR1 = Some("5001a539ca3cc3312835466bdb37b3d8")
+}
+
+class FlexiprepSingleDefaultTest extends FlexiprepSingle {
+  override def md5SumOutputR1 = Some("5b7896e489a5aeb3d30cb11ea15a7be3")
 }
 
 class FlexiprepSingleRemoveOutputTest extends FlexiprepSingleClipTrimTest {
