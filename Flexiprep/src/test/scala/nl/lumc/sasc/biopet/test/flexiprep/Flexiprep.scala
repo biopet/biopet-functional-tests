@@ -145,7 +145,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   def testClippingR1(): Unit = {
     val clipping = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "clipping_R1"
     skipClip match {
-      case Some(true) | None =>
+      case Some(false) | None =>
         assert(clipping.isInstanceOf[JObject], s"summary if not a JObject: $clipping")
       //TODO: check stats
       case _ => clipping shouldBe JNothing
@@ -156,7 +156,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   def testClippingR2(): Unit = {
     val clipping = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "clipping_R2"
     skipClip match {
-      case Some(true) | None if r2.isDefined =>
+      case Some(false) | None if r2.isDefined =>
         assert(clipping.isInstanceOf[JObject], s"summary if not a JObject: $clipping")
       //TODO: check stats
       case _ => clipping shouldBe JNothing
@@ -167,7 +167,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   def testTrimmingR1(): Unit = {
     val trimming = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "trimming_R1"
     skipTrim match {
-      case Some(true) | None =>
+      case Some(false) | None =>
         assert(trimming.isInstanceOf[JObject], s"summary if not a JObject: $trimming")
       //TODO: check stats
       case _ => trimming shouldBe JNothing
@@ -178,7 +178,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   def testTrimmingR2(): Unit = {
     val trimming = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "trimming_R2"
     skipTrim match {
-      case Some(true) | None if r2.isDefined =>
+      case Some(false) | None if r2.isDefined =>
         assert(trimming.isInstanceOf[JObject], s"summary if not a JObject: $trimming")
       //TODO: check stats
       case _ => trimming shouldBe JNothing
