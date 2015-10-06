@@ -18,10 +18,6 @@ import scala.util.matching.Regex
 trait Pipeline extends TestNGSuite with Matchers {
   def outputDir = new File(Biopet.getOutputDir, this.getClass.getName.stripPrefix("nl.lumc.sasc.biopet.test."))
 
-  /** Given token(s) of a filesystem path that points to an output file, return its file object representation. */
-  def getOutputFile(pathTokens: String*): File =
-    new File(outputDir, pathTokens.mkString(File.separator))
-
   def logFile = new File(outputDir, "run.log")
 
   def pipelineName: String
