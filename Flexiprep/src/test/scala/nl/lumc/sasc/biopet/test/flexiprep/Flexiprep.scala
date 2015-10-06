@@ -141,7 +141,6 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     } else fastqc shouldBe JNothing
   }
 
-
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSeqstatR1(): Unit = {
     val seqstat = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "seqstat_R1"
@@ -180,7 +179,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     val adapters = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R1" \ "adapters"
     skipClip match {
       case Some(false) | None =>
-        if (adapters.as[JObject].values.size > 0) assert(clipping.isInstanceOf[JObject])
+        if (adapters.asInstanceOf[JObject].values.size > 0) assert(clipping.isInstanceOf[JObject])
         else clipping shouldBe JNothing
       //TODO: check stats
       case _ => clipping shouldBe JNothing
@@ -193,9 +192,9 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     val adapters = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R2" \ "adapters"
     skipClip match {
       case Some(false) | None if r2.isDefined =>
-        if (adapters.as[JObject].values.size > 0) assert(clipping.isInstanceOf[JObject])
+        if (adapters.asInstanceOf[JObject].values.size > 0) assert(clipping.isInstanceOf[JObject])
         else clipping shouldBe JNothing
-        //TODO: check stats
+      //TODO: check stats
       case _ => clipping shouldBe JNothing
     }
   }
