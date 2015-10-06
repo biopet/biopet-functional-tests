@@ -2,59 +2,63 @@ package nl.lumc.sasc.biopet.test
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.utils.summary.Summary
-import org.testng.annotations.{ Test }
+import org.testng.annotations.Test
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
 
 /**
  * Created by pjvanthof on 19/09/15.
  */
 trait SummaryPipeline extends Pipeline {
+
+  implicit val formats = DefaultFormats
+
   def summaryFile: File
 
-  private var _summary: Summary = _
+  private var _summary: JValue = _
   def summary = _summary
 
   @Test(groups = Array("parseSummary"))
-  def parseSummary: Unit = {
-    _summary = new Summary(summaryFile)
-  }
+  def parseSummary(): Unit = _summary = parse(summaryFile)
 
   @Test(groups = Array("parseSummary"))
-  def testSummaryFileExist: Unit = {
-    assert(summaryFile.exists(), "Summary file does not exist")
-  }
+  def testSummaryFileExist(): Unit = assert(summaryFile.exists, "Summary file does not exist")
 
   // Testing meta field of summary
 
   @Test(dependsOnGroups = Array("parseSummary"))
-  def summaryPipelineName: Unit = {
-    summary.getValue("meta", "pipeline_name") shouldBe Some(pipelineName.toLowerCase)
-  }
+  def summaryPipelineName(): Unit =
+    (summary \ "meta" \ "pipeline_name").extract[String] shouldBe pipelineName.toLowerCase
 
   //TODO: Add regex testing
   @Test(dependsOnGroups = Array("parseSummary"))
-  def summaryPipelineVersion: Unit = {
-    summary.getValue("meta", "pipeline_version") should not be None
-  }
+  def summaryPipelineVersion(): Unit =
+    (summary \ "meta" \ "pipeline_version").extractOpt[String] shouldBe defined
 
   //TODO: Add regex testing
   @Test(dependsOnGroups = Array("parseSummary"))
-  def summaryCommitHash: Unit = {
-    summary.getValue("meta", "last_commit_hash") should not be None
-  }
+  def summaryCommitHash(): Unit =
+    (summary \ "meta" \ "last_commit_hash").extractOpt[String] shouldBe defined
 
   @Test(dependsOnGroups = Array("parseSummary"))
-  def summaryOutputDir: Unit = {
-    summary.getValue("meta", "output_dir") shouldBe Some(outputDir.getAbsolutePath)
-  }
+  def summaryOutputDir(): Unit =
+    (summary \ "meta" \ "output_dir").extract[String] shouldBe outputDir.getAbsolutePath
 
   @Test(dependsOnGroups = Array("parseSummary"))
-  def summaryCreation: Unit = {
-    summary.getValue("meta", "summary_creation") should not be None
-  }
+  def summaryCreation(): Unit =
+    (summary \ "meta" \ "summary_creation").extractOpt[String] shouldBe defined
 
   @Test(dependsOnGroups = Array("parseSummary"))
-  def summaryRunName: Unit = {
-    summary.getValue("meta", "run_name") should not be None
+  def summaryRunName(): Unit =
+    (summary \ "meta" \ "run_name").extractOpt[String] shouldBe defined
+
+  def validateSummaryFile(summaryFile: JValue,
+                          file: Option[File] = None,
+                          md5: Option[String] = None): Unit = {
+    assert(summaryFile.isInstanceOf[JObject], s"summaryFile if not a JObject: $summaryFile")
+    assert((summaryFile \ "path").isInstanceOf[JString], s"path if not a JString: ${summaryFile \ "path"}")
+    assert((summaryFile \ "md5").isInstanceOf[JString], s"md5 if not a JString: ${summaryFile \ "md5"}")
+    file.foreach(_.getAbsolutePath shouldBe (summaryFile \ "path").extract[String])
+    md5.foreach(_ shouldBe (summaryFile \ "md5").extract[String])
   }
 }
