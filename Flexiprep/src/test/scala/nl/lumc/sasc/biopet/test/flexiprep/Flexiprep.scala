@@ -179,7 +179,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     val adapters = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R1" \ "adapters"
     skipClip match {
       case Some(false) | None =>
-        if (adapters.asInstanceOf[JObject].values.size > 0) assert(clipping.isInstanceOf[JObject])
+        if (adapters.asInstanceOf[JObject].values.nonEmpty) assert(clipping.isInstanceOf[JObject])
         else clipping shouldBe JNothing
       //TODO: check stats
       case _ => clipping shouldBe JNothing
@@ -192,7 +192,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     val adapters = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R2" \ "adapters"
     skipClip match {
       case Some(false) | None if r2.isDefined =>
-        if (adapters.asInstanceOf[JObject].values.size > 0) assert(clipping.isInstanceOf[JObject])
+        if (adapters.asInstanceOf[JObject].values.nonEmpty) assert(clipping.isInstanceOf[JObject])
         else clipping shouldBe JNothing
       //TODO: check stats
       case _ => clipping shouldBe JNothing
