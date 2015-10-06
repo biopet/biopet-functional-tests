@@ -1,9 +1,8 @@
 package nl.lumc.sasc.biopet.test.shiva
 
-import java.io.{PrintWriter, File}
+import java.io.{ PrintWriter, File }
 
 import nl.lumc.sasc.biopet.test.Pipeline
-import nl.lumc.sasc.biopet.utils.ConfigUtils
 
 /**
  * Created by pjvan_thof on 5/26/15.
@@ -24,7 +23,7 @@ abstract class AbstractShiva extends Pipeline {
     val sampleFile = File.createTempFile("samples.", ".json")
     sampleFile.deleteOnExit()
     val writer = new PrintWriter(sampleFile)
-    writer.print(ConfigUtils.mapToJson(sampleConfig).spaces2)
+    //writer.print(ConfigUtils.mapToJson(sampleConfig).spaces2)
     writer.close()
     Seq("-cv", s"output_dir=$outputDir", "-config", sampleFile.getAbsolutePath) ++
       referenceSpecies.collect { case species => Seq("-cv", s"species=$species") }.getOrElse(Seq()) ++

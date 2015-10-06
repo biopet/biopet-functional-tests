@@ -11,15 +11,15 @@ import nl.lumc.sasc.biopet.test.mapping.{ AbstractMappingSuccess, AbstractMappin
 class ReferenceSingleTemplate(aln: String) extends AbstractMappingSuccess {
   override def aligner = Some(aln)
   override def functionalTest = true
-  override def skipFlexiprep = true
-  override def skipMetrics = true
+  override def skipFlexiprep = Some(true)
+  override def skipMetrics = Some(true)
 }
 
 class ReferencePairedTemplate(aln: String) extends AbstractMappingSuccess {
   override def aligner = Some(aln)
   override def functionalTest = true
-  override def skipFlexiprep = true
-  override def skipMetrics = true
+  override def skipFlexiprep = Some(true)
+  override def skipMetrics = Some(true)
 }
 
 trait HsapiensGRCh38 extends AbstractMapping {

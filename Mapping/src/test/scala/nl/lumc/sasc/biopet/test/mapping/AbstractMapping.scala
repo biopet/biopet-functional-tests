@@ -27,9 +27,9 @@ abstract class AbstractMapping extends Pipeline {
 
   def summaryFile = new File(outputDir, s"${sampleId}-${libId}.summary.json")
 
-  def skipMarkDuplicates = false
-  def skipFlexiprep = false
-  def skipMetrics = false
+  def skipMarkDuplicates: Option[Boolean] = None
+  def skipFlexiprep: Option[Boolean] = None
+  def skipMetrics: Option[Boolean] = None
 
   def paired = r2.isDefined
 
@@ -39,7 +39,19 @@ abstract class AbstractMapping extends Pipeline {
     aligner.collect { case aligner => Seq("-cv", s"aligner=$aligner") }.getOrElse(Seq()) ++
     r1.collect { case r1 => Seq("-R1", r1.getAbsolutePath) }.getOrElse(Seq()) ++
     r2.collect { case r2 => Seq("-R2", r2.getAbsolutePath) }.getOrElse(Seq()) ++
-    (if (skipMarkDuplicates) Seq("-cv", "skip_markduplicates=true") else Seq()) ++
-    (if (skipFlexiprep) Seq("-cv", "skip_flexiprep=true") else Seq()) ++
-    (if (skipMetrics) Seq("-cv", "skip_metrics=true") else Seq())
+    (skipMarkDuplicates match {
+      case Some(true)  => Seq("-cv", "skip_markduplicates=true")
+      case Some(false) => Seq("-cv", "skip_markduplicates=false")
+      case _           => Seq()
+    }) ++
+    (skipFlexiprep match {
+      case Some(true)  => Seq("-cv", "skip_flexiprep=true")
+      case Some(false) => Seq("-cv", "skip_flexiprep=false")
+      case _           => Seq()
+    }) ++
+    (skipMetrics match {
+      case Some(true)  => Seq("-cv", "skip_metrics=true")
+      case Some(false) => Seq("-cv", "skip_metrics=false")
+      case _           => Seq()
+    })
 }

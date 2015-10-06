@@ -27,11 +27,11 @@ abstract class AbstractMappingSuccess extends AbstractMapping with SummaryPipeli
 
   @Test
   def testMarkduplicates: Unit = {
-    val bamFile = if (skipMarkDuplicates)
+    val bamFile = if (skipMarkDuplicates == Some(true))
       new File(outputDir, s"$sampleId-$libId.bam")
     else new File(outputDir, s"$sampleId-$libId.dedup.bam")
 
-    val baiFile = if (skipMarkDuplicates)
+    val baiFile = if (skipMarkDuplicates == Some(true))
       new File(outputDir, s"$sampleId-$libId.bai")
     else new File(outputDir, s"$sampleId-$libId.dedup.bai")
 
@@ -44,7 +44,7 @@ abstract class AbstractMappingSuccess extends AbstractMapping with SummaryPipeli
   @Test
   def testSkipFlexiprep: Unit = {
     val flexiprepDir = new File(outputDir, "flexiprep")
-    if (skipFlexiprep) {
+    if (skipFlexiprep == Some(true)) {
       assert(!flexiprepDir.exists(), "Flexiprep is skipped but directory exist")
     } else {
       assert(flexiprepDir.exists(), "Flexiprep directory should be there")
@@ -55,7 +55,7 @@ abstract class AbstractMappingSuccess extends AbstractMapping with SummaryPipeli
   @Test
   def testSkipMetrics: Unit = {
     val metricsDir = new File(outputDir, "flexiprep")
-    if (skipMetrics) {
+    if (skipMetrics == Some(true)) {
       assert(!metricsDir.exists(), "Metrics are skipped but directory exist")
     } else {
       assert(metricsDir.exists(), "Metrics directory should be there")
