@@ -31,7 +31,7 @@ abstract class AbstractMapping extends Pipeline {
   def skipFlexiprep = false
   def skipMetrics = false
 
-  def paired = r1.isDefined
+  def paired = r2.isDefined
 
   def args = Seq("-sample", sampleId, "-library", libId, "-cv", s"output_dir=$outputDir") ++
     referenceSpecies.collect { case species => Seq("-cv", s"species=$species") }.getOrElse(Seq()) ++
