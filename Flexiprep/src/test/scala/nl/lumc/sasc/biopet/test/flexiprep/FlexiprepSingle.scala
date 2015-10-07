@@ -11,7 +11,7 @@ import nl.lumc.sasc.biopet.test.Biopet
 trait FlexiprepSingle extends FlexiprepSuccessful {
 
   /** Input file of this run. */
-  override def r1 = Some(new File(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz").getAbsolutePath))
+  override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
 
   /** MD5 checksum of the input file. */
   def md5SumInputR1 = "8245507d70154d7921cd1bcce1ea344b"

@@ -11,7 +11,7 @@ import nl.lumc.sasc.biopet.test.Biopet
 trait FlexiprepPaired extends FlexiprepSingle {
 
   /** Input read pair 2 for this run. */
-  override def r2 = Some(new File(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz").getAbsolutePath))
+  override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
 
   /** MD5 checksum of input read pair 2. */
   override def md5SumInputR2 = Some("1560a4cdc87cc8c4b6701e1253d41f93")
