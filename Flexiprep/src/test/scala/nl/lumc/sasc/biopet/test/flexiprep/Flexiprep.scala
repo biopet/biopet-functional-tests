@@ -28,7 +28,7 @@ trait FlexiprepRun extends Pipeline {
 
   def keepQcFastqFiles = true
 
-  def args = Seq("-sample", sampleId, "-library", libId, "-cv", "output_dir=" + outputDir) ++
+  def args = Seq("-sample", sampleId, "-library", libId) ++
     r1.collect { case r1 => Seq("-R1", r1.getAbsolutePath) }.getOrElse(Seq()) ++
     r2.collect { case r2 => Seq("-R2", r2.getAbsolutePath) }.getOrElse(Seq()) ++
     (if (keepQcFastqFiles) Seq("-cv", "keepQcFastqFiles=true") else Seq("-cv", "keepQcFastqFiles=false")) ++

@@ -44,8 +44,7 @@ trait Mapping extends Pipeline {
   def readgroupSequencingCenter: Option[String] = None
   def platform: Option[String] = None
 
-  def args = Seq("-cv", s"output_dir=$outputDir") ++
-    sampleId.collect { case sampleId => Seq("-sample", sampleId) }.getOrElse(Seq()) ++
+  def args = sampleId.collect { case sampleId => Seq("-sample", sampleId) }.getOrElse(Seq()) ++
     libId.collect { case libId => Seq("-library", libId) }.getOrElse(Seq()) ++
     referenceSpecies.collect { case species => Seq("-cv", s"species=$species") }.getOrElse(Seq()) ++
     referenceName.collect { case name => Seq("-cv", s"reference_name=$name") }.getOrElse(Seq()) ++

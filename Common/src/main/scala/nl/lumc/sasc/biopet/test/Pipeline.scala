@@ -18,6 +18,8 @@ import scala.util.matching.Regex
 trait Pipeline extends TestNGSuite with Matchers {
   def outputDir = new File(Biopet.getOutputDir, this.getClass.getName.stripPrefix("nl.lumc.sasc.biopet.test."))
 
+  def outputDirArg = Option(outputDir)
+
   def logFile = new File(outputDir, "run.log")
 
   def pipelineName: String
@@ -45,7 +47,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   def runPipeline: Unit = {
     if (functionalTest && !Biopet.functionalTests) throw new SkipException("Functional tests are disabled")
     // Running pipeline
-    _exitValue = Pipeline.runPipeline(pipelineName, outputDir, args, logFile, memoryArg, retries, run)
+    _exitValue = Pipeline.runPipeline(pipelineName, outputDir, outputDirArg, args, logFile, memoryArg, retries, run)
   }
 
   @DataProvider(name = "not_allowed_reties")
@@ -100,14 +102,17 @@ trait Pipeline extends TestNGSuite with Matchers {
 
 object Pipeline {
   def runPipeline(pipelineName: String,
-                  outputDir: File, args: Seq[String],
+                  outputDir: File,
+                  outputDirArg: Option[File],
+                  args: Seq[String],
                   logFile: File,
                   memoryArg: String,
                   retries: Option[Int],
                   run: Boolean) = {
     val cmd = Seq("java", memoryArg, "-jar", Biopet.getBiopetJar.toString, "pipeline", pipelineName) ++
       args ++ Biopet.queueArgs ++ retries.map(r => Seq("-retry", r.toString)).getOrElse(Seq()) ++
-      (if (run) Seq("-run") else Seq())
+      (if (run) Seq("-run") else Seq()) ++
+      outputDirArg.map(x => Seq("-cv", s"output_dir=${x}")).getOrElse(Seq())
     if (!outputDir.exists()) outputDir.mkdirs()
 
     if (logFile.exists()) logFile.delete()
