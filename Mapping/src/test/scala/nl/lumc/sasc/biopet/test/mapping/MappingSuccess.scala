@@ -50,11 +50,11 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test
   def testMarkduplicates(): Unit = {
-    val bamFile = if (skipMarkDuplicates == Some(true))
+    val bamFile = if (skipMarkDuplicates.contains(true))
       new File(outputDir, s"$sampleId-$libId.bam")
     else new File(outputDir, s"$sampleId-$libId.dedup.bam")
 
-    val baiFile = if (skipMarkDuplicates == Some(true))
+    val baiFile = if (skipMarkDuplicates.contains(true))
       new File(outputDir, s"$sampleId-$libId.bai")
     else new File(outputDir, s"$sampleId-$libId.dedup.bai")
 
@@ -68,7 +68,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   def testSkipFlexiprep(): Unit = {
     val flexiprepSummary = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep"
     val flexiprepDir = new File(outputDir, "flexiprep")
-    if (skipFlexiprep == Some(true)) {
+    if (skipFlexiprep.contains(true)) {
       assert(flexiprepSummary.isInstanceOf[JObject])
       assert(!flexiprepDir.exists(), "Flexiprep is skipped but directory exist")
     } else {
@@ -81,7 +81,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   def testSkipMetrics(): Unit = {
     val metricsSummary = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "bammetrics"
     val metricsDir = new File(outputDir, "metrics")
-    if (skipMetrics == Some(true)) {
+    if (skipMetrics.contains(true)) {
       assert(metricsSummary.isInstanceOf[JObject])
       assert(!metricsDir.exists(), "Metrics are skipped but directory exist")
     } else {
