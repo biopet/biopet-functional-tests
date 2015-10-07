@@ -110,6 +110,16 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
+  def testSettings: Unit = {
+    val settings = summary \ "samples" \ sampleId \ "libraries" \ libId \ "mapping" \ "settings"
+    assert(settings.isInstanceOf[JObject])
+
+    settings \ "skip_trim" shouldBe JBool(skipTrim.getOrElse(false))
+    settings \ "skip_clip" shouldBe JBool(skipClip.getOrElse(false))
+    settings \ "paired" shouldBe JBool(r2.isDefined)
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
   def testFastqcR1(): Unit = {
     val fastqc = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R1"
     assert(fastqc.isInstanceOf[JObject], s"summaryFile if not a JObject: $fastqc")
