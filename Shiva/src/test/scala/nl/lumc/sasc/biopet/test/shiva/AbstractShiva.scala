@@ -21,12 +21,12 @@ abstract class AbstractShiva extends Pipeline {
 
   def args = {
     Seq("-cv", s"output_dir=$outputDir") ++
-      sampleConfigs.map(x => Seq("-config", x.getAbsolutePath)).toSeq.flatten ++
+      configs.map(x => Seq("-config", x.getAbsolutePath)).toSeq.flatten ++
       referenceSpecies.collect { case species => Seq("-cv", s"species=$species") }.getOrElse(Seq()) ++
       referenceName.collect { case name => Seq("-cv", s"reference_name=$name") }.getOrElse(Seq()) ++
       aligner.collect { case aligner => Seq("-cv", s"aligner=$aligner") }.getOrElse(Seq())
   }
 
-  def sampleConfigs: List[File]
+  def configs: List[File]
 }
 
