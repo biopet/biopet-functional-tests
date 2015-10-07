@@ -37,6 +37,13 @@ trait Mapping extends Pipeline {
   def chunking = Option(false)
   def chunksize: Option[Int] = None
 
+  def readgroupId: Option[String] = None
+  def readgroupDescription: Option[String] = None
+  def platformUnit: Option[String] = None
+  def predictedInsertsize: Option[Int] = None
+  def readgroupSequencingCenter: Option[String] = None
+  def platform: Option[String] = None
+
   def args = Seq("-cv", s"output_dir=$outputDir") ++
     sampleId.collect { case sampleId => Seq("-sample", sampleId) }.getOrElse(Seq()) ++
     libId.collect { case libId => Seq("-library", libId) }.getOrElse(Seq()) ++

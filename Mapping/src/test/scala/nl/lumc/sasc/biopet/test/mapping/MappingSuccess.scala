@@ -2,6 +2,7 @@ package nl.lumc.sasc.biopet.test.mapping
 
 import java.io.File
 
+import htsjdk.samtools.SamReaderFactory
 import nl.lumc.sasc.biopet.test.SummaryPipeline
 import org.json4s._
 import org.testng.annotations.Test
@@ -12,6 +13,9 @@ import scala.math._
  * Created by pjvan_thof on 9/17/15.
  */
 trait MappingSuccess extends Mapping with SummaryPipeline {
+
+  logMustNotHave("""Script failed with \d+ total jobs""".r)
+  logMustHave("""Script completed successfully with \d+ total jobs""".r)
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR1(): Unit = {
@@ -44,7 +48,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testFinalBamFile(): Unit = {
-    val bamFile = new File(outputDir, s"$sampleId-$libId.final.bam")
+    val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
     val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "output_bamfile"
     assert(summaryFile.isInstanceOf[JObject])
     summaryFile \ "path" shouldBe JString(bamFile.getAbsolutePath)
@@ -55,9 +59,9 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test
   def testFinalBaiFile(): Unit = {
-    val baiFile = new File(outputDir, s"$sampleId-$libId.final.bai")
+    val baiFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bai")
 
-    baiFile.exists() shouldBe true
+    assert(baiFile.exists())
     assert(baiFile.length() > 0, s"$baiFile has size of 0 bytes")
   }
 
@@ -71,8 +75,8 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
       new File(outputDir, s"$sampleId-$libId.bai")
     else new File(outputDir, s"$sampleId-$libId.dedup.bai")
 
-    bamFile.exists() shouldBe true
-    baiFile.exists() shouldBe true
+    assert(bamFile.exists())
+    assert(baiFile.exists())
     assert(bamFile.length() > 0, s"$bamFile has size of 0 bytes")
     assert(baiFile.length() > 0, s"$baiFile has size of 0 bytes")
   }
@@ -118,5 +122,26 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     if (chunking.getOrElse(chunksize.exists(_ > 1))) {
       settings \ "numberChunks" shouldBe JInt(BigInt(numberChunks.getOrElse(calcNumberChunk)))
     } else settings \ "numberChunks" shouldBe JInt(BigInt(numberChunks.getOrElse(1)))
+  }
+
+  @Test
+  def testReadgroup: Unit = {
+    val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
+    val inputSam = SamReaderFactory.makeDefault.open(bamFile)
+    val header = inputSam.getFileHeader
+    assert(header.getReadGroups.size() == 1)
+    val id = readgroupId.getOrElse(sampleId.get + "-" + libId.get)
+    val readgroup = header.getReadGroup(id)
+    assert(readgroup != null, s"Readgroup '$id' does not exist in $bamFile")
+
+    readgroup.getSample shouldBe sampleId.get
+    readgroup.getLibrary shouldBe libId.get
+    Option(readgroup.getDescription) shouldBe readgroupDescription
+    readgroup.getPlatformUnit shouldBe platformUnit.getOrElse("na")
+    Option(readgroup.getPredictedMedianInsertSize) shouldBe predictedInsertsize
+    Option(readgroup.getSequencingCenter) shouldBe readgroupSequencingCenter
+    readgroup.getPlatform shouldBe platform.getOrElse("illumina")
+
+    inputSam.close()
   }
 }
