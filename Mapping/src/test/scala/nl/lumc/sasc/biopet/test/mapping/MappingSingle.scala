@@ -11,7 +11,13 @@ trait MappingSingle extends MappingSuccess with TestReference {
   override def r1 = Some(Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R1.fq.gz"))
 }
 
-class MappingSingleTest extends MappingSingle
+class MappingSingleDefaultTest extends MappingSingle
+
+class MappingSingleNoSkipTest extends MappingSingle {
+  override def skipFlexiprep = Some(false)
+  override def skipMetrics = Some(false)
+  override def skipMarkDuplicates = Some(false)
+}
 
 class MappingSingleSkipTest extends MappingSingle {
   override def skipFlexiprep = Some(true)

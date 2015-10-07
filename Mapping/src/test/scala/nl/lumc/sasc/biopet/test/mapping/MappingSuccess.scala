@@ -10,6 +10,8 @@ import org.testng.annotations.Test
 import scala.math._
 
 /**
+ * This is a general trait to test a successful run of mapping
+ *
  * Created by pjvan_thof on 9/17/15.
  */
 trait MappingSuccess extends Mapping with SummaryPipeline {
@@ -36,7 +38,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
-  def testSettings: Unit = {
+  def testSettings(): Unit = {
     val settings = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "settings"
     assert(settings.isInstanceOf[JObject])
 
@@ -110,7 +112,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
-  def testChunkNumber: Unit = {
+  def testChunkNumber(): Unit = {
     def calcNumberChunk: Int = {
       val fileSize = r1.get.length()
       val size = if (r1.get.getName.endsWith(".gz") || r1.get.getName.endsWith(".gzip")) r1.get.length * 3 else r1.get.length
@@ -125,7 +127,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   }
 
   @Test
-  def testReadgroup: Unit = {
+  def testReadgroup(): Unit = {
     val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
     val inputSam = SamReaderFactory.makeDefault.open(bamFile)
     val header = inputSam.getFileHeader

@@ -3,8 +3,6 @@ package nl.lumc.sasc.biopet.test.mapping
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.{ TestReference, Biopet }
-import org.json4s._
-import org.testng.annotations.Test
 
 /**
  * Created by pjvan_thof on 10/7/15.
@@ -14,7 +12,13 @@ trait MappingPaired extends MappingSuccess with TestReference {
   override def r2 = Some(Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R2.fq.gz"))
 }
 
-class MappingPairedTest extends MappingPaired
+class MappingPairedDefaultTest extends MappingPaired
+
+class MappingPairedNoSkipTest extends MappingPaired {
+  override def skipFlexiprep = Some(false)
+  override def skipMetrics = Some(false)
+  override def skipMarkDuplicates = Some(false)
+}
 
 class MappingSkipTest extends MappingPaired {
   override def skipFlexiprep = Some(true)
