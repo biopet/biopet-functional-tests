@@ -18,3 +18,13 @@ class MappingSingleSkipTest extends MappingSingle {
   override def skipMetrics = Some(true)
   override def skipMarkDuplicates = Some(true)
 }
+
+class MappingSingleAutoChunkTest extends MappingPaired {
+  override def chunking = Some(true)
+  override def chunksize = Some(110000)
+}
+
+class MappingSingleChunkTest extends MappingPaired {
+  override def chunking = Some(true)
+  override def numberChunks = Some(4)
+}

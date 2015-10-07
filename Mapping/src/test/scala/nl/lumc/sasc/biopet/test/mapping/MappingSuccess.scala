@@ -6,6 +6,8 @@ import nl.lumc.sasc.biopet.test.SummaryPipeline
 import org.json4s._
 import org.testng.annotations.Test
 
+import scala.math._
+
 /**
  * Created by pjvan_thof on 9/17/15.
  */
@@ -101,5 +103,20 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
       assert(metricsDir.exists(), "Metrics directory should be there")
       assert(metricsDir.isDirectory, s"'$metricsDir' should be a directory")
     }
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testChunkNumber: Unit = {
+    def calcNumberChunk: Int = {
+      val fileSize = r1.get.length()
+      val size = if (r1.get.getName.endsWith(".gz") || r1.get.getName.endsWith(".gzip")) r1.get.length * 3 else r1.get.length
+      ceil(fileSize.toDouble / size).toInt
+    }
+
+    val settings = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "settings"
+    settings \ "chunking" shouldBe JBool(chunking.getOrElse(chunksize.exists(_ > 1)))
+    if (chunking.getOrElse(chunksize.exists(_ > 1))) {
+      settings \ "numberChunks" shouldBe JInt(BigInt(numberChunks.getOrElse(calcNumberChunk)))
+    } else settings \ "numberChunks" shouldBe JInt(BigInt(numberChunks.getOrElse(1)))
   }
 }

@@ -33,6 +33,10 @@ trait Mapping extends Pipeline {
 
   def paired = r2.isDefined
 
+  def numberChunks: Option[Int] = None
+  def chunking = Option(false)
+  def chunksize: Option[Int] = None
+
   def args = Seq("-cv", s"output_dir=$outputDir") ++
     sampleId.collect { case sampleId => Seq("-sample", sampleId) }.getOrElse(Seq()) ++
     libId.collect { case libId => Seq("-library", libId) }.getOrElse(Seq()) ++
@@ -55,5 +59,12 @@ trait Mapping extends Pipeline {
       case Some(true)  => Seq("-cv", "skip_metrics=true")
       case Some(false) => Seq("-cv", "skip_metrics=false")
       case _           => Seq()
-    })
+    }) ++ (chunking match {
+      case Some(true)  => Seq("-cv", "chunking=true")
+      case Some(false) => Seq("-cv", "chunking=false")
+      case _           => Seq()
+    }) ++
+    numberChunks.collect { case numberChunks => Seq("-cv", s"number_chunks=$numberChunks") }.getOrElse(Seq()) ++
+    chunksize.collect { case chunksize => Seq("-cv", s"chunksize=$chunksize") }.getOrElse(Seq())
+
 }
