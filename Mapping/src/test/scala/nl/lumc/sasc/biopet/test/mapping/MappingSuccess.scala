@@ -30,6 +30,17 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
+  def testSettings: Unit = {
+    val settings = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "settings"
+    assert(settings.isInstanceOf[JObject])
+
+    settings \ "skip_metrics" shouldBe JBool(skipMetrics.getOrElse(false))
+    settings \ "skip_flexiprep" shouldBe JBool(skipFlexiprep.getOrElse(false))
+    settings \ "skip_markduplicates" shouldBe JBool(skipMarkDuplicates.getOrElse(false))
+    settings \ "aligner" shouldBe JString(aligner.getOrElse("bwamem"))
+  }
+
+  @Test(dependsOnGroups = Array("parseSummary"))
   def testFinalBamFile(): Unit = {
     val bamFile = new File(outputDir, s"$sampleId-$libId.final.bam")
     val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "output_bamfile"
