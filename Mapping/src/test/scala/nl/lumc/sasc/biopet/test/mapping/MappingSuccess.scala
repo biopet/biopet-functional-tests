@@ -8,7 +8,7 @@ import org.testng.annotations.Test
 /**
  * Created by pjvan_thof on 9/17/15.
  */
-abstract class AbstractMappingSuccess extends AbstractMapping with SummaryPipeline {
+trait MappingSuccess extends Mapping with SummaryPipeline {
   @Test
   def testFinalBamFile: Unit = {
     val bamFile = new File(outputDir, s"$sampleId-$libId.final.bam")

@@ -7,13 +7,13 @@ import nl.lumc.sasc.biopet.test.Pipeline
 /**
  * Created by pjvan_thof on 5/26/15.
  */
-abstract class AbstractMapping extends Pipeline {
+trait Mapping extends Pipeline {
 
   def pipelineName = "mapping"
 
-  def sampleId = "sampleName"
+  def sampleId = Option("sampleName")
 
-  def libId = "libName"
+  def libId = Option("libName")
 
   def referenceSpecies: Option[String] = None
 
@@ -33,7 +33,9 @@ abstract class AbstractMapping extends Pipeline {
 
   def paired = r2.isDefined
 
-  def args = Seq("-sample", sampleId, "-library", libId, "-cv", s"output_dir=$outputDir") ++
+  def args = Seq("-cv", s"output_dir=$outputDir") ++
+    sampleId.collect { case sampleId => Seq("-sample", sampleId) }.getOrElse(Seq()) ++
+    libId.collect { case libId => Seq("-library", libId) }.getOrElse(Seq()) ++
     referenceSpecies.collect { case species => Seq("-cv", s"species=$species") }.getOrElse(Seq()) ++
     referenceName.collect { case name => Seq("-cv", s"reference_name=$name") }.getOrElse(Seq()) ++
     aligner.collect { case aligner => Seq("-cv", s"aligner=$aligner") }.getOrElse(Seq()) ++
