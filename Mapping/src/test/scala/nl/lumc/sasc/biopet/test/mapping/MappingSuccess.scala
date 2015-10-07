@@ -80,9 +80,10 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     val flexiprepSummary = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep"
     val flexiprepDir = new File(outputDir, "flexiprep")
     if (skipFlexiprep.contains(true)) {
-      assert(flexiprepSummary.isInstanceOf[JObject])
       assert(!flexiprepDir.exists(), "Flexiprep is skipped but directory exist")
+      flexiprepSummary shouldBe JNothing
     } else {
+      assert(flexiprepSummary.isInstanceOf[JObject])
       assert(flexiprepDir.exists(), "Flexiprep directory should be there")
       assert(flexiprepDir.isDirectory, s"'$flexiprepDir' should be a directory")
     }
@@ -93,9 +94,10 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     val metricsSummary = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "bammetrics"
     val metricsDir = new File(outputDir, "metrics")
     if (skipMetrics.contains(true)) {
-      assert(metricsSummary.isInstanceOf[JObject])
       assert(!metricsDir.exists(), "Metrics are skipped but directory exist")
+      metricsSummary shouldBe JNothing
     } else {
+      assert(metricsSummary.isInstanceOf[JObject])
       assert(metricsDir.exists(), "Metrics directory should be there")
       assert(metricsDir.isDirectory, s"'$metricsDir' should be a directory")
     }
