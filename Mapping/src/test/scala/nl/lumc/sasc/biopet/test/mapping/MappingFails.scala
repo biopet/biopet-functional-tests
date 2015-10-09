@@ -2,7 +2,7 @@ package nl.lumc.sasc.biopet.test.mapping
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.{Biopet, PipelineFail}
+import nl.lumc.sasc.biopet.test.{ Biopet, PipelineFail }
 import org.testng.annotations.Test
 
 /**
