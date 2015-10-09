@@ -16,14 +16,14 @@ trait MappingPaired extends MappingSingle {
   @Test(dependsOnGroups = Array("parseSummary"))
   def seqstatR2: Unit = {
     val seqstat = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep" \ "stats" \ "seqstat_R2"
-    if (skipFlexiprep.contains(true)) summary shouldBe JNothing
+    if (skipFlexiprep.contains(true)) seqstat shouldBe JNothing
     else seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def seqstatR2Qc: Unit = {
     val seqstat = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep" \ "stats" \ "seqstat_R2_qc"
-    if (skipFlexiprep.contains(true)) summary shouldBe JNothing
+    if (skipFlexiprep.contains(true)) seqstat shouldBe JNothing
     else seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
   }
 }
@@ -36,7 +36,7 @@ class MappingPairedNoSkipTest extends MappingPaired {
   override def skipMarkDuplicates = Some(false)
 }
 
-class MappingSkipTest extends MappingPaired {
+class MappingPairedSkipTest extends MappingPaired {
   override def skipFlexiprep = Some(true)
   override def skipMetrics = Some(true)
   override def skipMarkDuplicates = Some(true)

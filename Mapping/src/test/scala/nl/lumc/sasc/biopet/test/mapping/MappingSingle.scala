@@ -15,14 +15,14 @@ trait MappingSingle extends MappingSuccess with TestReference {
   @Test(dependsOnGroups = Array("parseSummary"))
   def seqstatR1: Unit = {
     val seqstat = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep" \ "stats" \ "seqstat_R1"
-    if (skipFlexiprep.contains(true)) summary shouldBe JNothing
+    if (skipFlexiprep.contains(true)) seqstat shouldBe JNothing
     else seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def seqstatR1Qc: Unit = {
     val seqstat = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep" \ "stats" \ "seqstat_R1_qc"
-    if (skipFlexiprep.contains(true)) summary shouldBe JNothing
+    if (skipFlexiprep.contains(true)) seqstat shouldBe JNothing
     else seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
   }
 }
