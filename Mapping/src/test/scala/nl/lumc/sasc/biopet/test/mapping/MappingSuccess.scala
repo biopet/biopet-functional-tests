@@ -26,7 +26,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "input_R1"
     assert(summaryFile.isInstanceOf[JObject])
     assert(r1.get.exists(), "Input file is not there anymore")
-    summaryFile shouldBe JString(r1.get.getAbsolutePath)
+    summaryFile \ "path" shouldBe JString(r1.get.getAbsolutePath)
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
@@ -35,7 +35,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     if (r2.isDefined) {
       assert(summaryFile.isInstanceOf[JObject])
       assert(r2.get.exists(), "Input file is not there anymore")
-      summaryFile shouldBe JString(r2.get.getAbsolutePath)
+      summaryFile \ "path" shouldBe JString(r2.get.getAbsolutePath)
     } else summaryFile shouldBe JNothing
   }
 
@@ -72,12 +72,12 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   @Test
   def testMarkduplicates(): Unit = {
     val bamFile = if (skipMarkDuplicates.contains(true))
-      new File(outputDir, s"$sampleId.get-$libId.get.bam")
-    else new File(outputDir, s"$sampleId.get-$libId.get.dedup.bam")
+      new File(outputDir, s"${sampleId.get}-${libId.get}.bam")
+    else new File(outputDir, s"$sampleId.get-${libId.get}.dedup.bam")
 
     val baiFile = if (skipMarkDuplicates.contains(true))
-      new File(outputDir, s"$sampleId.get-$libId.get.bai")
-    else new File(outputDir, s"$sampleId.get-$libId.get.dedup.bai")
+      new File(outputDir, s"$sampleId.get-${libId.get}.bai")
+    else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bai")
 
     assert(bamFile.exists())
     assert(baiFile.exists())
