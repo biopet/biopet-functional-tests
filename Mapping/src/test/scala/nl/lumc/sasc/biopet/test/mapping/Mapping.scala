@@ -25,8 +25,6 @@ trait Mapping extends Pipeline {
 
   def r2: Option[File] = None
 
-  def summaryFile = new File(outputDir, s"${sampleId}-${libId}.summary.json")
-
   def skipMarkDuplicates: Option[Boolean] = None
   def skipFlexiprep: Option[Boolean] = None
   def skipMetrics: Option[Boolean] = None

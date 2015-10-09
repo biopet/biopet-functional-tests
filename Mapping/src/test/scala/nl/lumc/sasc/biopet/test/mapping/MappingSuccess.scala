@@ -16,6 +16,8 @@ import scala.math._
  */
 trait MappingSuccess extends Mapping with SummaryPipeline {
 
+  def summaryFile = new File(outputDir, s"${sampleId.get}-${libId.get}.summary.json")
+
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
 
