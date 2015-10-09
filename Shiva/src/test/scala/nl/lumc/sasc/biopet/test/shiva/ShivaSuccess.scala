@@ -8,6 +8,6 @@ import org.testng.annotations.Test
 /**
  * Created by pjvan_thof on 9/17/15.
  */
-abstract class AbstractShivaSuccess extends AbstractShiva with SummaryPipeline {
+trait ShivaSuccess extends Shiva with SummaryPipeline {
 
 }

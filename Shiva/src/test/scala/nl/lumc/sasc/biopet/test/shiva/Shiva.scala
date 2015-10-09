@@ -7,7 +7,7 @@ import nl.lumc.sasc.biopet.test.Pipeline
 /**
  * Created by pjvan_thof on 5/26/15.
  */
-abstract class AbstractShiva extends Pipeline {
+trait Shiva extends Pipeline {
 
   def pipelineName = "shiva"
 
