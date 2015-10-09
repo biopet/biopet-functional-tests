@@ -118,7 +118,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     def calcNumberChunk: Int = {
       val fileSize = r1.get.length()
       val size = if (r1.get.getName.endsWith(".gz") || r1.get.getName.endsWith(".gzip")) r1.get.length * 3 else r1.get.length
-      ceil(fileSize.toDouble / size).toInt
+      ceil(size.toDouble / chunksize.getOrElse(1 << 30)).toInt
     }
 
     val settings = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "settings"
