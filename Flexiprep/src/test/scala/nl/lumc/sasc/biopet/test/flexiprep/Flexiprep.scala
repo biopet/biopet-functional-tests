@@ -111,7 +111,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSettings: Unit = {
-    val settings = summary \ "samples" \ sampleId \ "libraries" \ libId \ "mapping" \ "settings"
+    val settings = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "settings"
     assert(settings.isInstanceOf[JObject])
 
     settings \ "skip_trim" shouldBe JBool(skipTrim.getOrElse(false))
