@@ -17,14 +17,20 @@ trait MappingPaired extends MappingSingle {
   def seqstatR2: Unit = {
     val seqstat = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep" \ "stats" \ "seqstat_R2"
     if (skipFlexiprep.contains(true)) seqstat shouldBe JNothing
-    else seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
+    else {
+      seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
+      seqstat \ "bases" \ "num_total" shouldBe JInt(BigInt(1000000))
+    }
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def seqstatR2Qc: Unit = {
     val seqstat = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep" \ "stats" \ "seqstat_R2_qc"
     if (skipFlexiprep.contains(true)) seqstat shouldBe JNothing
-    else seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
+    else {
+      seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
+      seqstat \ "bases" \ "num_total" shouldBe JInt(BigInt(1000000))
+    }
   }
 }
 

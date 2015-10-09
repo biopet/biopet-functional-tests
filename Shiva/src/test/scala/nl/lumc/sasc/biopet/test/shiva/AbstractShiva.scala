@@ -20,9 +20,9 @@ abstract class AbstractShiva extends Pipeline {
   def summaryFile = new File(outputDir, s"Shiva.summary.json")
 
   def args = configs.map(x => Seq("-config", x.getAbsolutePath)).toSeq.flatten ++
-      referenceSpecies.collect { case species => Seq("-cv", s"species=$species") }.getOrElse(Seq()) ++
-      referenceName.collect { case name => Seq("-cv", s"reference_name=$name") }.getOrElse(Seq()) ++
-      aligner.collect { case aligner => Seq("-cv", s"aligner=$aligner") }.getOrElse(Seq())
+    referenceSpecies.collect { case species => Seq("-cv", s"species=$species") }.getOrElse(Seq()) ++
+    referenceName.collect { case name => Seq("-cv", s"reference_name=$name") }.getOrElse(Seq()) ++
+    aligner.collect { case aligner => Seq("-cv", s"aligner=$aligner") }.getOrElse(Seq())
 
   def configs: List[File]
 }
