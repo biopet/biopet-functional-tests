@@ -73,14 +73,14 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   def testMarkduplicates(): Unit = {
     val bamFile = if (skipMarkDuplicates.contains(true))
       new File(outputDir, s"${sampleId.get}-${libId.get}.bam")
-    else new File(outputDir, s"$sampleId.get-${libId.get}.dedup.bam")
+    else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bam")
 
     val baiFile = if (skipMarkDuplicates.contains(true))
-      new File(outputDir, s"$sampleId.get-${libId.get}.bai")
+      new File(outputDir, s"${sampleId.get}-${libId.get}.bai")
     else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bai")
 
-    assert(bamFile.exists())
-    assert(baiFile.exists())
+    assert(bamFile.exists(), s"Bamfile does not exist: $bamFile")
+    assert(baiFile.exists(), s"Bamfile idnex does not exist: $baiFile")
     assert(bamFile.length() > 0, s"$bamFile has size of 0 bytes")
     assert(baiFile.length() > 0, s"$baiFile has size of 0 bytes")
   }
