@@ -25,7 +25,7 @@ class MappingSingleR1NotExistTest extends Mapping with PipelineFail {
   override def r1 = Some(new File(Biopet.fixtureDir, "This_should_not_exist.R1.fq"))
   logMustNotHave("""FunctionEdge - Starting""".r)
 
-  @Test def fileNotExist = assert(!r1.get.exists(), s"this file should not exist: $r1")
+  @Test def fileNotExist() = assert(!r1.get.exists(), s"this file should not exist: $r1")
 }
 
 class MappingPairedR1NotExistTest extends Mapping with PipelineFail {
@@ -34,7 +34,7 @@ class MappingPairedR1NotExistTest extends Mapping with PipelineFail {
 
   logMustNotHave("""FunctionEdge - Starting""".r)
 
-  @Test def fileNotExist = assert(!r1.get.exists(), s"this file should not exist: $r1")
+  @Test def fileNotExist() = assert(!r1.get.exists(), s"this file should not exist: $r1")
 }
 
 class MappingPairedR2NotExistTest extends Mapping with PipelineFail {
@@ -43,7 +43,7 @@ class MappingPairedR2NotExistTest extends Mapping with PipelineFail {
 
   logMustNotHave("""FunctionEdge - Starting""".r)
 
-  @Test def fileNotExist = assert(!r2.get.exists(), s"this file should not exist: $r2")
+  @Test def fileNotExist() = assert(!r2.get.exists(), s"this file should not exist: $r2")
 }
 
 class MappingDryRunSingleR1NotExistTest extends Mapping with PipelineFail {
@@ -51,7 +51,7 @@ class MappingDryRunSingleR1NotExistTest extends Mapping with PipelineFail {
   override def r1 = Some(new File(Biopet.fixtureDir, "This_should_not_exist.R1.fq"))
   logMustNotHave("""FunctionEdge - Starting""".r)
 
-  @Test def fileNotExist = assert(!r1.get.exists(), s"this file should not exist: $r1")
+  @Test def fileNotExist() = assert(!r1.get.exists(), s"this file should not exist: $r1")
 }
 
 class MappingDryRunPairedR1NotExistTest extends Mapping with PipelineFail {
@@ -61,7 +61,7 @@ class MappingDryRunPairedR1NotExistTest extends Mapping with PipelineFail {
 
   logMustNotHave("""FunctionEdge - Starting""".r)
 
-  @Test def fileNotExist = assert(!r1.get.exists(), s"this file should not exist: $r1")
+  @Test def fileNotExist() = assert(!r1.get.exists(), s"this file should not exist: $r1")
 }
 
 class MappingDryRunPairedR2NotExistTest extends Mapping with PipelineFail {
@@ -71,7 +71,7 @@ class MappingDryRunPairedR2NotExistTest extends Mapping with PipelineFail {
 
   logMustNotHave("""FunctionEdge - Starting""".r)
 
-  @Test def fileNotExist = assert(!r2.get.exists(), s"this file should not exist: $r2")
+  @Test def fileNotExist() = assert(!r2.get.exists(), s"this file should not exist: $r2")
 }
 
 class MappingNoOutputDir extends Mapping with PipelineFail {
