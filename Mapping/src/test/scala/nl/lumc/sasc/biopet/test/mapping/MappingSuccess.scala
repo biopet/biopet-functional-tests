@@ -23,7 +23,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR1(): Unit = {
-    val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "input_R1"
+    val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "input_R1"
     assert(summaryFile.isInstanceOf[JObject])
     assert(r1.get.exists(), "Input file is not there anymore")
     summaryFile shouldBe JString(r1.get.getAbsolutePath)
@@ -31,7 +31,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR2(): Unit = {
-    val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "input_R2"
+    val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "input_R2"
     if (r2.isDefined) {
       assert(summaryFile.isInstanceOf[JObject])
       assert(r2.get.exists(), "Input file is not there anymore")
@@ -47,13 +47,13 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     settings \ "skip_metrics" shouldBe JBool(skipMetrics.getOrElse(false))
     settings \ "skip_flexiprep" shouldBe JBool(skipFlexiprep.getOrElse(false))
     settings \ "skip_markduplicates" shouldBe JBool(skipMarkDuplicates.getOrElse(false))
-    settings \ "aligner" shouldBe JString(aligner.getOrElse("bwamem"))
+    settings \ "aligner" shouldBe JString(aligner.getOrElse("bwa-mem"))
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testFinalBamFile(): Unit = {
     val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
-    val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "output_bamfile"
+    val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "output_bamfile"
     assert(summaryFile.isInstanceOf[JObject])
     summaryFile \ "path" shouldBe JString(bamFile.getAbsolutePath)
 
@@ -72,12 +72,12 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   @Test
   def testMarkduplicates(): Unit = {
     val bamFile = if (skipMarkDuplicates.contains(true))
-      new File(outputDir, s"$sampleId-$libId.bam")
-    else new File(outputDir, s"$sampleId-$libId.dedup.bam")
+      new File(outputDir, s"$sampleId.get-$libId.get.bam")
+    else new File(outputDir, s"$sampleId.get-$libId.get.dedup.bam")
 
     val baiFile = if (skipMarkDuplicates.contains(true))
-      new File(outputDir, s"$sampleId-$libId.bai")
-    else new File(outputDir, s"$sampleId-$libId.dedup.bai")
+      new File(outputDir, s"$sampleId.get-$libId.get.bai")
+    else new File(outputDir, s"$sampleId.get-$libId.get.dedup.bai")
 
     assert(bamFile.exists())
     assert(baiFile.exists())
