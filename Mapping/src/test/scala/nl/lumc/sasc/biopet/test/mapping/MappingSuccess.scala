@@ -121,7 +121,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   }
 
   @Test
-  def testChunkMetrics(): Unit = {
+  def testChunkDirs(): Unit = {
     val chunksDir = new File(outputDir, "chunks")
     numberChunks match {
       case Some(n) if chunking =>
