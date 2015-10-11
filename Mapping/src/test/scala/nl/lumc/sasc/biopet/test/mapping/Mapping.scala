@@ -4,6 +4,8 @@ import java.io.File
 
 import nl.lumc.sasc.biopet.test.Pipeline
 
+import scala.math._
+
 /**
  * Created by pjvan_thof on 5/26/15.
  */
@@ -31,9 +33,26 @@ trait Mapping extends Pipeline {
 
   def paired = r2.isDefined
 
-  def numberChunks: Option[Int] = None
-  def chunking = Option(false)
-  def chunksize: Option[Int] = None
+  def configNumberChunks: Option[Int] = None
+  def configChunking = Option(false)
+  def configChunksize: Option[Int] = None
+
+  def chunking = configChunking match {
+    case Some(c) => c
+    case _ => configNumberChunks.exists(_ > 1)
+  }
+
+  def numberChunks: Option[Int] = {
+    if (r1.isDefined && chunking) {
+      configNumberChunks match {
+        case Some(_) => configNumberChunks
+        case _ =>
+          val fileSize = r1.get.length()
+          val size = if (r1.get.getName.endsWith(".gz") || r1.get.getName.endsWith(".gzip")) fileSize * 3 else fileSize
+          Some(ceil(size.toDouble / configChunksize.getOrElse(1 << 30)).toInt)
+      }
+    } else None
+  }
 
   def readgroupId: Option[String] = None
   def readgroupDescription: Option[String] = None
@@ -41,6 +60,9 @@ trait Mapping extends Pipeline {
   def predictedInsertsize: Option[Int] = None
   def readgroupSequencingCenter: Option[String] = None
   def platform: Option[String] = None
+
+  def generateWig: Option[Boolean] = None
+  def chunkMetrics: Option[Boolean] = None
 
   def args = sampleId.collect { case sampleId => Seq("-sample", sampleId) }.getOrElse(Seq()) ++
     libId.collect { case libId => Seq("-library", libId) }.getOrElse(Seq()) ++
@@ -63,12 +85,20 @@ trait Mapping extends Pipeline {
       case Some(true)  => Seq("-cv", "skip_metrics=true")
       case Some(false) => Seq("-cv", "skip_metrics=false")
       case _           => Seq()
-    }) ++ (chunking match {
+    }) ++ (configChunking match {
       case Some(true)  => Seq("-cv", "chunking=true")
       case Some(false) => Seq("-cv", "chunking=false")
       case _           => Seq()
+    }) ++ (generateWig match {
+      case Some(true)  => Seq("-cv", "generate_wig=true")
+      case Some(false) => Seq("-cv", "generate_wig=false")
+      case _           => Seq()
+    }) ++ (chunkMetrics match {
+      case Some(true)  => Seq("-cv", "chunk_metrics=true")
+      case Some(false) => Seq("-cv", "chunk_metrics=false")
+      case _           => Seq()
     }) ++
-    numberChunks.collect { case numberChunks => Seq("-cv", s"number_chunks=$numberChunks") }.getOrElse(Seq()) ++
-    chunksize.collect { case chunksize => Seq("-cv", s"chunksize=$chunksize") }.getOrElse(Seq())
+    configNumberChunks.collect { case numberChunks => Seq("-cv", s"number_chunks=$numberChunks") }.getOrElse(Seq()) ++
+    configChunksize.collect { case chunksize => Seq("-cv", s"chunksize=$chunksize") }.getOrElse(Seq())
 
 }

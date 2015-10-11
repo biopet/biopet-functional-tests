@@ -115,17 +115,9 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testChunkNumber(): Unit = {
-    def calcNumberChunk: Int = {
-      val fileSize = r1.get.length()
-      val size = if (r1.get.getName.endsWith(".gz") || r1.get.getName.endsWith(".gzip")) r1.get.length * 3 else r1.get.length
-      ceil(size.toDouble / chunksize.getOrElse(1 << 30)).toInt
-    }
-
     val settings = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "settings"
-    settings \ "chunking" shouldBe JBool(chunking.getOrElse(chunksize.exists(_ > 1)))
-    if (chunking.getOrElse(chunksize.exists(_ > 1))) {
-      settings \ "numberChunks" shouldBe JInt(BigInt(numberChunks.getOrElse(calcNumberChunk)))
-    } else settings \ "numberChunks" shouldBe JInt(BigInt(numberChunks.getOrElse(1)))
+    settings \ "chunking" shouldBe JBool(chunking)
+    settings \ "numberChunks" shouldBe JInt(BigInt(numberChunks.getOrElse(1)))
   }
 
   @Test

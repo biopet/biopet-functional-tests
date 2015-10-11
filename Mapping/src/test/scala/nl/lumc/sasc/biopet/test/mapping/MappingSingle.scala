@@ -48,11 +48,11 @@ class MappingSingleSkipTest extends MappingSingle {
 }
 
 class MappingSingleAutoChunkTest extends MappingPaired {
-  override def chunking = Some(true)
-  override def chunksize = Some(110000)
+  override def configChunking = Some(true)
+  override def configChunksize = Some(110000)
 }
 
 class MappingSingleChunkTest extends MappingPaired {
-  override def chunking = Some(true)
-  override def numberChunks = Some(4)
+  override def configChunking = Some(true)
+  override def configNumberChunks = Some(4)
 }
