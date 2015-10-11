@@ -121,6 +121,34 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   }
 
   @Test
+  def testChunkMetrics(): Unit = {
+    val chunksDir = new File(outputDir, "chunks")
+    numberChunks match {
+      case Some(n) if chunking =>
+        for (i <- 1 to n) {
+          val dir = new File(chunksDir, s"$i")
+          assert(dir.exists(), s"'$dir' should exist")
+          val metrcisDir = new File(dir, "metrics")
+          if (chunkMetrics.contains(true)) assert(metrcisDir.exists(), s"'$metrcisDir' should exist")
+          else assert(!metrcisDir.exists(), s"'$metrcisDir' should not exist")
+        }
+      case _ => assert(!chunksDir.exists())
+    }
+  }
+
+  @Test
+  def testWig(): Unit = {
+    val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
+    val wig = new File(outputDir, bamFile.getName + ".wig")
+    val tdf = new File(outputDir, bamFile.getName + ".tdf")
+    val bw = new File(outputDir, bamFile.getName + ".bw")
+    val generateWig = this.generateWig.getOrElse(false)
+    assert(wig.exists() == generateWig)
+    assert(tdf.exists() == generateWig)
+    assert(bw.exists() == generateWig)
+  }
+
+  @Test
   def testReadgroup(): Unit = {
     val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
     val inputSam = SamReaderFactory.makeDefault.open(bamFile)
