@@ -40,12 +40,18 @@ class MappingPairedNoSkipTest extends MappingPaired {
   override def skipFlexiprep = Some(false)
   override def skipMetrics = Some(false)
   override def skipMarkDuplicates = Some(false)
+  override def generateWig = Some(true)
+}
+
+class MappingPairedWigTest extends MappingPaired {
+  override def generateWig = Some(true)
 }
 
 class MappingPairedSkipTest extends MappingPaired {
   override def skipFlexiprep = Some(true)
   override def skipMetrics = Some(true)
   override def skipMarkDuplicates = Some(true)
+  override def generateWig = Some(true)
 }
 
 class MappingPairedAutoChunkTest extends MappingPaired {
@@ -54,6 +60,17 @@ class MappingPairedAutoChunkTest extends MappingPaired {
 }
 
 class MappingPairedChunkTest extends MappingPaired {
+  override def configChunking = Some(true)
+  override def configNumberChunks = Some(4)
+}
+
+class MappingPairedForceNoChunkTest extends MappingPaired {
+  override def configChunking = Some(false)
+  override def configNumberChunks = Some(4)
+}
+
+class MappingPairedChunkMetricsTest extends MappingPaired {
+  override def chunkMetrics = Some(true)
   override def configChunking = Some(true)
   override def configNumberChunks = Some(4)
 }

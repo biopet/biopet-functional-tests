@@ -39,7 +39,7 @@ trait Mapping extends Pipeline {
 
   def chunking = configChunking match {
     case Some(c) => c
-    case _ => configNumberChunks.exists(_ > 1)
+    case _       => configNumberChunks.exists(_ > 1)
   }
 
   def numberChunks: Option[Int] = {
