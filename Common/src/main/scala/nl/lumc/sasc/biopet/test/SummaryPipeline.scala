@@ -46,7 +46,7 @@ trait SummaryPipeline extends Pipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def summaryCreation(): Unit =
-    (summary \ "meta" \ "summary_creation") shouldBe a[JString]
+    (summary \ "meta" \ "summary_creation") shouldBe a[JInt]
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def summaryRunName(): Unit =
