@@ -24,25 +24,23 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR1(): Unit = {
     val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "input_R1"
-    assert(summaryFile.isInstanceOf[JObject])
+    validateSummaryFile(summaryFile, r1)
     assert(r1.get.exists(), "Input file is not there anymore")
-    summaryFile \ "path" shouldBe JString(r1.get.getAbsolutePath)
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR2(): Unit = {
     val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "input_R2"
     if (r2.isDefined) {
-      assert(summaryFile.isInstanceOf[JObject])
+      validateSummaryFile(summaryFile, r2)
       assert(r2.get.exists(), "Input file is not there anymore")
-      summaryFile \ "path" shouldBe JString(r2.get.getAbsolutePath)
     } else summaryFile shouldBe JNothing
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSettings(): Unit = {
     val settings = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "settings"
-    assert(settings.isInstanceOf[JObject])
+    settings shouldBe a[JObject]
 
     settings \ "skip_metrics" shouldBe JBool(skipMetrics.getOrElse(false))
     settings \ "skip_flexiprep" shouldBe JBool(skipFlexiprep.getOrElse(false))
@@ -54,8 +52,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   def testFinalBamFile(): Unit = {
     val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
     val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "output_bamfile"
-    assert(summaryFile.isInstanceOf[JObject])
-    summaryFile \ "path" shouldBe JString(bamFile.getAbsolutePath)
+    validateSummaryFile(summaryFile, Some(bamFile))
 
     assert(bamFile.exists())
     assert(bamFile.length() > 0, s"$bamFile has size of 0 bytes")
@@ -93,7 +90,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
       assert(!flexiprepDir.exists(), "Flexiprep is skipped but directory exist")
       flexiprepSummary shouldBe JNothing
     } else {
-      assert(flexiprepSummary.isInstanceOf[JObject])
+      flexiprepSummary shouldBe a[JObject]
       assert(flexiprepDir.exists(), "Flexiprep directory should be there")
       assert(flexiprepDir.isDirectory, s"'$flexiprepDir' should be a directory")
     }
@@ -107,7 +104,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
       assert(!metricsDir.exists(), "Metrics are skipped but directory exist")
       metricsSummary shouldBe JNothing
     } else {
-      assert(metricsSummary.isInstanceOf[JObject])
+      metricsSummary shouldBe a[JObject]
       assert(metricsDir.exists(), "Metrics directory should be there")
       assert(metricsDir.isDirectory, s"'$metricsDir' should be a directory")
     }

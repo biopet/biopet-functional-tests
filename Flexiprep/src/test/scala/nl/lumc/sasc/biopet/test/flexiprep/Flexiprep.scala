@@ -112,7 +112,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSettings: Unit = {
     val settings = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "settings"
-    assert(settings.isInstanceOf[JObject])
+    settings shouldBe a[JObject]
 
     settings \ "skip_trim" shouldBe JBool(skipTrim.getOrElse(false))
     settings \ "skip_clip" shouldBe JBool(skipClip.getOrElse(false))
@@ -122,7 +122,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   @Test(dependsOnGroups = Array("parseSummary"))
   def testFastqcR1(): Unit = {
     val fastqc = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R1"
-    assert(fastqc.isInstanceOf[JObject], s"summaryFile if not a JObject: $fastqc")
+    fastqc shouldBe a[JObject]
     //TODO: check stats
   }
 
@@ -130,7 +130,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   def testFastqcR2(): Unit = {
     val fastqc = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R2"
     if (r2.isDefined) {
-      assert(fastqc.isInstanceOf[JObject], s"summaryFile if not a JObject: $fastqc")
+      fastqc shouldBe a[JObject]
       //TODO: check stats
     } else fastqc shouldBe JNothing
   }
@@ -138,7 +138,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   @Test(dependsOnGroups = Array("parseSummary"))
   def testFastqcR1Qc(): Unit = {
     val fastqc = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R1_qc"
-    assert(fastqc.isInstanceOf[JObject], s"summaryFile if not a JObject: $fastqc")
+    fastqc shouldBe a[JObject]
     //TODO: check stats
   }
 
@@ -146,7 +146,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   def testFastqcR2Qc(): Unit = {
     val fastqc = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R2_qc"
     if (r2.isDefined) {
-      assert(fastqc.isInstanceOf[JObject], s"summaryFile if not a JObject: $fastqc")
+      fastqc shouldBe a[JObject]
       //TODO: check stats
     } else fastqc shouldBe JNothing
   }
@@ -154,7 +154,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSeqstatR1(): Unit = {
     val seqstat = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "seqstat_R1"
-    assert(seqstat.isInstanceOf[JObject], s"summaryFile if not a JObject: $seqstat")
+    seqstat shouldBe a[JObject]
     //TODO: check stats
   }
 
@@ -162,7 +162,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   def testSeqstatR2(): Unit = {
     val seqstat = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "seqstat_R2"
     if (r2.isDefined) {
-      assert(seqstat.isInstanceOf[JObject], s"summaryFile if not a JObject: $seqstat")
+      seqstat shouldBe a[JObject]
       //TODO: check stats
     } else seqstat shouldBe JNothing
   }
@@ -170,7 +170,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSeqstatR1Qc(): Unit = {
     val seqstat = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "seqstat_R1_qc"
-    assert(seqstat.isInstanceOf[JObject], s"summaryFile if not a JObject: $seqstat")
+    seqstat shouldBe a[JObject]
     //TODO: check stats
   }
 
@@ -178,7 +178,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   def testSeqstatR2Qc(): Unit = {
     val seqstat = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "seqstat_R2_qc"
     if (r2.isDefined) {
-      assert(seqstat.isInstanceOf[JObject], s"summaryFile if not a JObject: $seqstat")
+      seqstat shouldBe a[JObject]
       //TODO: check stats
     } else seqstat shouldBe JNothing
   }
@@ -189,7 +189,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     val adapters = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R1" \ "adapters"
     skipClip match {
       case Some(false) | None =>
-        if (adapters.asInstanceOf[JObject].values.nonEmpty) assert(clipping.isInstanceOf[JObject])
+        if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
         else clipping shouldBe JNothing
       //TODO: check stats
       case _ => clipping shouldBe JNothing
@@ -202,7 +202,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     val adapters = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R2" \ "adapters"
     skipClip match {
       case Some(false) | None if r2.isDefined =>
-        if (adapters.asInstanceOf[JObject].values.nonEmpty) assert(clipping.isInstanceOf[JObject])
+        if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
         else clipping shouldBe JNothing
       //TODO: check stats
       case _ => clipping shouldBe JNothing
@@ -214,7 +214,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     val trimming = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "trimming_R1"
     skipTrim match {
       case Some(false) | None =>
-        assert(trimming.isInstanceOf[JObject], s"summary if not a JObject: $trimming")
+        trimming shouldBe a[JObject]
       //TODO: check stats
       case _ => trimming shouldBe JNothing
     }
@@ -225,7 +225,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     val trimming = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "trimming_R2"
     skipTrim match {
       case Some(false) | None if r2.isDefined =>
-        assert(trimming.isInstanceOf[JObject], s"summary if not a JObject: $trimming")
+        trimming shouldBe a[JObject]
       //TODO: check stats
       case _ => trimming shouldBe JNothing
     }
@@ -235,7 +235,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   def testFastqSync(): Unit = {
     val syncing = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastq_sync"
     if (r2.isDefined) {
-      assert(syncing.isInstanceOf[JObject], s"summary if not a JObject: $syncing")
+      syncing shouldBe a[JObject]
       //TODO: check stats
     } else syncing shouldBe JNothing
   }
