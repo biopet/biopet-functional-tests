@@ -27,6 +27,13 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     if (r2.isDefined) addExecutable(Executable("fastqsync", Some(""".+""".r)))
   }
 
+  aligner match {
+    case None | Some("bwa-mem") | Some("bwa-aln") =>
+      addExecutable(Executable("bwa", Some(""".+""".r)))
+      addExecutable(Executable("sortsam", Some(""".+""".r)))
+    case _ =>
+  }
+
   override def summaryRoot = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get
 
   @Test(dependsOnGroups = Array("parseSummary"))
