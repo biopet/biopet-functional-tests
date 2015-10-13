@@ -64,6 +64,8 @@ trait SummaryPipeline extends Pipeline {
     md5.foreach(x => (summaryFile \ "md5") shouldBe JString(x))
   }
 
+  def summarySample(sampleId: String) = summary \ "samples" \ sampleId
+  def summaryLibrary(sampleId: String, libId: String) = summary \ "samples" \ sampleId \ "libraries" \ libId
   def summaryRoot = summary
 
   case class Executable(name: String, version: Option[Regex] = None)

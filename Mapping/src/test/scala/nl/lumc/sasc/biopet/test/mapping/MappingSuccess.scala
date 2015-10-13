@@ -34,18 +34,18 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     case _ =>
   }
 
-  override def summaryRoot = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get
+  override def summaryRoot = summaryLibrary(sampleId.get, libId.get)
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR1(): Unit = {
-    val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "input_R1"
+    val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "input_R1"
     validateSummaryFile(summaryFile, r1)
     assert(r1.get.exists(), "Input file is not there anymore")
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR2(): Unit = {
-    val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "input_R2"
+    val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "input_R2"
     if (r2.isDefined) {
       validateSummaryFile(summaryFile, r2)
       assert(r2.get.exists(), "Input file is not there anymore")
@@ -54,7 +54,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSettings(): Unit = {
-    val settings = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "settings"
+    val settings = summaryRoot \ "mapping" \ "settings"
     settings shouldBe a[JObject]
 
     settings \ "skip_metrics" shouldBe JBool(skipMetrics.getOrElse(false))
@@ -66,7 +66,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   @Test(dependsOnGroups = Array("parseSummary"))
   def testFinalBamFile(): Unit = {
     val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
-    val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "output_bamfile"
+    val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "output_bamfile"
     validateSummaryFile(summaryFile, Some(bamFile))
 
     assert(bamFile.exists())
@@ -99,7 +99,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSkipFlexiprep(): Unit = {
-    val flexiprepSummary = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep"
+    val flexiprepSummary = summaryRoot \ "flexiprep"
     val flexiprepDir = new File(outputDir, "flexiprep")
     if (skipFlexiprep.contains(true)) {
       assert(!flexiprepDir.exists(), "Flexiprep is skipped but directory exist")
@@ -113,7 +113,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSkipMetrics(): Unit = {
-    val metricsSummary = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "bammetrics"
+    val metricsSummary = summaryRoot \ "bammetrics"
     val metricsDir = new File(outputDir, "metrics")
     if (skipMetrics.contains(true)) {
       assert(!metricsDir.exists(), "Metrics are skipped but directory exist")
@@ -127,7 +127,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testChunkNumber(): Unit = {
-    val settings = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "settings"
+    val settings = summaryRoot \ "mapping" \ "settings"
     settings \ "chunking" shouldBe JBool(chunking)
     if (chunking) settings \ "numberChunks" shouldBe JInt(BigInt(numberChunks.getOrElse(1)))
     else settings \ "numberChunks" shouldBe JNull
