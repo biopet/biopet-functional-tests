@@ -58,6 +58,13 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   /** This is the uncompressed md5sum of the output R2 */
   def md5SumOutputR2: Option[String] = None
 
+  addExecutable(Executable("fastqc", Some(""".+""".r)))
+  addExecutable(Executable("seqstat", Some(""".+""".r)))
+  if (r2.isDefined) addExecutable(Executable("fastqsync", Some(""".+""".r)))
+  if (!skipTrim.contains(true)) addExecutable(Executable("sickle", Some(""".+""".r)))
+
+  override def summaryRoot = summary \ "samples" \ sampleId \ "libraries" \ libId
+
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputR1File() = {
     val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "input_R1"

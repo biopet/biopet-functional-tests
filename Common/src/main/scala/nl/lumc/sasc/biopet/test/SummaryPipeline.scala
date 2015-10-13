@@ -2,9 +2,11 @@ package nl.lumc.sasc.biopet.test
 
 import java.io.File
 
-import org.testng.annotations.Test
+import org.testng.annotations.{ DataProvider, Test }
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+
+import scala.util.matching.Regex
 
 /**
  * Created by pjvanthof on 19/09/15.
@@ -60,5 +62,24 @@ trait SummaryPipeline extends Pipeline {
     (summaryFile \ "md5") shouldBe a[JString]
     file.foreach(x => (summaryFile \ "path") shouldBe JString(x.getAbsolutePath))
     md5.foreach(x => (summaryFile \ "md5") shouldBe JString(x))
+  }
+
+  def summaryRoot = summary
+
+  case class Executable(name: String, version: Option[Regex] = None)
+  private var executables: Set[Executable] = Set()
+  def addExecutable(exe: Executable): Unit = executables += exe
+
+  @DataProvider(name = "executables")
+  private def executablesProvider = executables.toArray
+
+  @Test(dataProvider = "executables", dependsOnGroups = Array("parseSummary"))
+  def testExecutables(exe: Executable): Unit = {
+    val summaryExe = summaryRoot \ pipelineName.toLowerCase \ "executables" \ exe.name
+    summaryExe shouldBe a[JObject]
+    exe.version match {
+      case Some(r) => (summaryExe \ "version").extract[String] should fullyMatch regex r
+      case _       => summaryExe \ "version" shouldBe JNothing
+    }
   }
 }

@@ -21,6 +21,14 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
 
+  if (!skipFlexiprep.contains(true)) {
+    addExecutable(Executable("fastqc", Some(""".+""".r)))
+    addExecutable(Executable("seqstat", Some(""".+""".r)))
+    if (r2.isDefined) addExecutable(Executable("fastqsync", Some(""".+""".r)))
+  }
+
+  override def summaryRoot = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get
+
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR1(): Unit = {
     val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "input_R1"
