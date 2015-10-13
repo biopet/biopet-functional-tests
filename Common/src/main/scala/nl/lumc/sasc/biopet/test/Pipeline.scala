@@ -79,7 +79,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   def logMustHave(r: Regex): Unit = logMustHave :+= r
 
   @DataProvider(name = "log_must_have")
-  private def logMustHaveProvider = logMustHave.toArray
+  def logMustHaveProvider = logMustHave.toArray
 
   @Test(dataProvider = "log_must_have", dependsOnGroups = Array("parseLog"))
   def testLogMustHave(r: Regex): Unit = {
@@ -90,7 +90,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   def logMustNotHave(r: Regex): Unit = logMustNotHave :+= r
 
   @DataProvider(name = "log_must_not_have")
-  private def logMustNotHaveProvider = logMustNotHave.toArray
+  def logMustNotHaveProvider = logMustNotHave.toArray
 
   @Test(dataProvider = "log_must_not_have", dependsOnGroups = Array("parseLog"))
   def testLogMustNotHave(r: Regex): Unit = {

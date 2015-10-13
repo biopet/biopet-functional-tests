@@ -73,7 +73,7 @@ trait SummaryPipeline extends Pipeline {
   def addExecutable(exe: Executable): Unit = executables += exe
 
   @DataProvider(name = "executables")
-  private def executablesProvider = executables.toArray
+  def executablesProvider = executables.toArray
 
   @Test(dataProvider = "executables", dependsOnGroups = Array("parseSummary"))
   def testExecutables(exe: Executable): Unit = {
