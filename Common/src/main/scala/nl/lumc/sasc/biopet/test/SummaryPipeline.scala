@@ -18,6 +18,8 @@ trait SummaryPipeline extends Pipeline {
   def summaryFile: File
 
   private var _summary: JValue = _
+
+  /** This will return the parsed summary, this method only work when the group "parseSummary" is done */
   def summary = _summary
 
   @Test(groups = Array("parseSummary"))
@@ -70,6 +72,8 @@ trait SummaryPipeline extends Pipeline {
 
   case class Executable(name: String, version: Option[Regex] = None)
   private var executables: Set[Executable] = Set()
+
+  /** With this method an executable can be added that must exists in the summary */
   def addExecutable(exe: Executable): Unit = executables += exe
 
   @DataProvider(name = "executables")
@@ -83,5 +87,18 @@ trait SummaryPipeline extends Pipeline {
       case Some(r) => (summaryExe \ "version").extract[String] should fullyMatch regex r
       case _       => summaryExe \ "version" shouldBe JNothing
     }
+  }
+
+  private var notExecutables: Set[String] = Set()
+
+  /** With this method an executable can be added that must not exists in the summary */
+  def addNotExecutable(exe: String): Unit = notExecutables += exe
+
+  @DataProvider(name = "notExecutables")
+  def notExecutablesProvider = notExecutables.map(Array(_)).toArray
+
+  @Test(dataProvider = "notExecutables", dependsOnGroups = Array("parseSummary"))
+  def testNotExecutables(exe: String): Unit = {
+    summaryRoot \ pipelineName.toLowerCase \ "executables" \ exe shouldBe JNothing
   }
 }

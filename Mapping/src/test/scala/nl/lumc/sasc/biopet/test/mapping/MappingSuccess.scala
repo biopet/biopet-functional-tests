@@ -25,14 +25,44 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     addExecutable(Executable("fastqc", Some(""".+""".r)))
     addExecutable(Executable("seqstat", Some(""".+""".r)))
     if (r2.isDefined) addExecutable(Executable("fastqsync", Some(""".+""".r)))
+    else addNotExecutable("fastqsync")
+  } else {
+    addNotExecutable("fastqc")
+    addNotExecutable("seqstat")
+    addNotExecutable("sickle")
+    addNotExecutable("cutadept")
+    addNotExecutable("fastqsync")
   }
 
-  aligner match {
-    case None | Some("bwa-mem") | Some("bwa-aln") =>
-      addExecutable(Executable("bwa", Some(""".+""".r)))
-      addExecutable(Executable("sortsam", Some(""".+""".r)))
-    case _ =>
-  }
+  if (aligner.isEmpty || aligner == Some("bwamem")) {
+    addExecutable(Executable("bwamem", Some(""".+""".r)))
+    addExecutable(Executable("sortsam", Some(""".+""".r)))
+  } else addNotExecutable("bwamem")
+
+  if (aligner == Some("bowtie")) {
+    addExecutable(Executable("bowtie", Some(""".+""".r)))
+    addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
+  } else addNotExecutable("bowtie")
+
+  if (aligner == Some("gsnap")) {
+    addExecutable(Executable("gsnap", Some(""".+""".r)))
+    addExecutable(Executable("reorderSam", Some(""".+""".r)))
+    addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
+  } else addNotExecutable("gsnap")
+
+  if (aligner == Some("star-2pass") || aligner == Some("star-2pass")) {
+    addExecutable(Executable("star", Some(""".+""".r)))
+    addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
+  } else addNotExecutable("star")
+
+  if (aligner == Some("tophat")) {
+    addExecutable(Executable("tophat", Some(""".+""".r)))
+    addExecutable(Executable("reorderSam", Some(""".+""".r)))
+    addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
+  } else addNotExecutable("tophat")
+
+  if (skipMarkDuplicates.contains(true)) addNotExecutable("markduplicates")
+  else addExecutable(Executable("markduplicates", Some(""".+""".r)))
 
   override def summaryRoot = summaryLibrary(sampleId.get, libId.get)
 
