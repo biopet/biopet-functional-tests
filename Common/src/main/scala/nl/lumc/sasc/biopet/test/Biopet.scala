@@ -55,6 +55,6 @@ object Biopet {
     val file = new File(fixtureDir, path)
     require(file.exists(), "Fixture file does not exist: " + file)
     require(file.canRead(), "Fixture file is not readable: " + file)
-    file
+    file.getAbsoluteFile
   }
 }

@@ -3,40 +3,40 @@ package nl.lumc.sasc.biopet.test.mapping.reference
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.Biopet
-import nl.lumc.sasc.biopet.test.mapping.{ AbstractMappingSuccess, AbstractMapping }
+import nl.lumc.sasc.biopet.test.mapping.{ MappingSuccess, Mapping }
 
 /**
  * Created by pjvanthof on 06/08/15.
  */
-class ReferenceSingleTemplate(aln: String) extends AbstractMappingSuccess {
+class ReferenceSingleTemplate(aln: String) extends MappingSuccess {
   override def aligner = Some(aln)
   override def functionalTest = true
-  override def skipFlexiprep = true
-  override def skipMetrics = true
+  override def skipFlexiprep = Some(true)
+  override def skipMetrics = Some(true)
 }
 
-class ReferencePairedTemplate(aln: String) extends AbstractMappingSuccess {
+class ReferencePairedTemplate(aln: String) extends MappingSuccess {
   override def aligner = Some(aln)
   override def functionalTest = true
-  override def skipFlexiprep = true
-  override def skipMetrics = true
+  override def skipFlexiprep = Some(true)
+  override def skipMetrics = Some(true)
 }
 
-trait HsapiensGRCh38 extends AbstractMapping {
+trait HsapiensGRCh38 extends Mapping {
   override def referenceSpecies = Some("H.sapiens")
   override def referenceName = Some("GRCh38")
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
 }
 
-trait HsapiensGRCh37 extends AbstractMapping {
+trait HsapiensGRCh37 extends Mapping {
   override def referenceSpecies = Some("H.sapiens")
   override def referenceName = Some("GRCh37")
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
 }
 
-trait MmusculusGRCm38 extends AbstractMapping {
+trait MmusculusGRCm38 extends Mapping {
   override def referenceSpecies = Some("M.musculus")
   override def referenceName = Some("GRCm38")
 
@@ -45,7 +45,7 @@ trait MmusculusGRCm38 extends AbstractMapping {
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
 }
 
-trait RnorvegicusRnor_6 extends AbstractMapping {
+trait RnorvegicusRnor_6 extends Mapping {
   override def referenceSpecies = Some("R.norvegicus")
   override def referenceName = Some("Rnor_6.0")
 
@@ -54,7 +54,7 @@ trait RnorvegicusRnor_6 extends AbstractMapping {
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
 }
 
-trait CelegansWBcel235 extends AbstractMapping {
+trait CelegansWBcel235 extends Mapping {
   override def referenceSpecies = Some("C.elegans")
   override def referenceName = Some("WBcel235")
 
