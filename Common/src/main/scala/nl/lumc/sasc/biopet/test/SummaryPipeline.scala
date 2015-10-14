@@ -80,11 +80,13 @@ trait SummaryPipeline extends Pipeline {
   def executablesProvider = executables.map(Array(_)).toArray
 
   @Test(dataProvider = "executables", dependsOnGroups = Array("parseSummary"))
-  def testExecutables(exe: Executable): Unit = {
+  def testExecutables(exe: Executable): Unit = withClue(s"Executable: $exe") {
     val summaryExe = summaryRoot \ pipelineName.toLowerCase \ "executables" \ exe.name
     summaryExe shouldBe a[JObject]
     exe.version match {
-      case Some(r) => (summaryExe \ "version").extract[String] should fullyMatch regex r
+      case Some(r) =>
+        (summaryExe \ "version") shouldBe a[JString]
+        (summaryExe \ "version").extract[String] should fullyMatch regex r
       case _       => summaryExe \ "version" shouldBe JNothing
     }
   }
@@ -98,7 +100,7 @@ trait SummaryPipeline extends Pipeline {
   def notExecutablesProvider = notExecutables.map(Array(_)).toArray
 
   @Test(dataProvider = "notExecutables", dependsOnGroups = Array("parseSummary"))
-  def testNotExecutables(exe: String): Unit = {
+  def testNotExecutables(exe: String): Unit = withClue(s"Executable: $exe") {
     summaryRoot \ pipelineName.toLowerCase \ "executables" \ exe shouldBe JNothing
   }
 }

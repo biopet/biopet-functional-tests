@@ -82,7 +82,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   def logMustHaveProvider = logMustHave.map(Array(_)).toArray
 
   @Test(dataProvider = "log_must_have", dependsOnGroups = Array("parseLog"))
-  def testLogMustHave(r: Regex): Unit = {
+  def testLogMustHave(r: Regex): Unit = withClue(s"regex: $r") {
     assert(logLines.exists(r.findFirstMatchIn(_).isDefined), s"Logfile does not contains: $r")
   }
 
@@ -93,7 +93,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   def logMustNotHaveProvider = logMustNotHave.map(Array(_)).toArray
 
   @Test(dataProvider = "log_must_not_have", dependsOnGroups = Array("parseLog"))
-  def testLogMustNotHave(r: Regex): Unit = {
+  def testLogMustNotHave(r: Regex): Unit = withClue(s"regex: $r") {
     val i = logLines.indexWhere(r.findFirstMatchIn(_).isDefined)
     assert(i == -1, s"at line number ${i + 1} in logfile does contains: $r")
   }
