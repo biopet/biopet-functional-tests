@@ -64,7 +64,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   if (r2.isDefined) addExecutable(Executable("fastqsync", Some(""".+""".r)))
   if (!skipTrim.contains(true)) addExecutable(Executable("sickle", Some(""".+""".r)))
   else addNotExecutable("sickle")
-  if (skipTrim.contains(true)) addNotExecutable("cutadapt")
+  if (skipClip.contains(true)) addNotExecutable("cutadapt")
 
   override def summaryRoot = summaryLibrary(sampleId, libId)
 
