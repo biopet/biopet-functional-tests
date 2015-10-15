@@ -15,6 +15,8 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
 
   /** MD5 checksum of the input file. */
   def md5SumInputR1 = "8245507d70154d7921cd1bcce1ea344b"
+
+  if (!skipTrim.contains(true)) addExecutable(Executable("cutadapt", Option(""".+""".r)))
 }
 
 class FlexiprepSingleClipTest extends FlexiprepSingle {
@@ -54,4 +56,6 @@ class FlexiprepSingleUnzippedTest extends FlexiprepSingleClipTrimTest {
 
   /** MD5 checksum of the input file. */
   override def md5SumInputR1 = "b6f564f7496039dfe4e4e9794d191af2"
+
+  if (!skipTrim.contains(true)) addExecutable(Executable("cutadapt", Option(""".+""".r)))
 }
