@@ -60,7 +60,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   addExecutable(Executable("fastqc", Some(""".+""".r)))
   addExecutable(Executable("seqstat", Some(""".+""".r)))
-  addExecutable(Executable("seqtk", Some(""".+""".r)))
+  addExecutable(Executable("seqtkseq", Some(""".+""".r)))
   if (r2.isDefined) addExecutable(Executable("fastqsync", Some(""".+""".r)))
   if (!skipTrim.contains(true)) addExecutable(Executable("sickle", Some(""".+""".r)))
   else addNotExecutable("sickle")

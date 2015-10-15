@@ -24,13 +24,15 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   if (!skipFlexiprep.contains(true)) {
     addExecutable(Executable("fastqc", Some(""".+""".r)))
     addExecutable(Executable("seqstat", Some(""".+""".r)))
+    addExecutable(Executable("seqtkseq", Some(""".+""".r)))
     if (r2.isDefined) addExecutable(Executable("fastqsync", Some(""".+""".r)))
     else addNotExecutable("fastqsync")
   } else {
     addNotExecutable("fastqc")
+    addNotExecutable("seqtkseq")
     addNotExecutable("seqstat")
     addNotExecutable("sickle")
-    addNotExecutable("cutadept")
+    addNotExecutable("cutadapt")
     addNotExecutable("fastqsync")
   }
 
