@@ -44,7 +44,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   def run = true
 
   @BeforeClass
-  def runPipeline: Unit = {
+  def runPipeline(): Unit = {
     if (functionalTest && !Biopet.functionalTests) throw new SkipException("Functional tests are disabled")
     // Running pipeline
     _exitValue = Pipeline.runPipeline(pipelineName, outputDir, outputDirArg, args, logFile, memoryArg, retries, run)
@@ -63,14 +63,14 @@ trait Pipeline extends TestNGSuite with Matchers {
     require(!logLines.exists(_.contains(s)), s"${retry}e retry found but not allowed")
   }
 
-  @Test(priority = -1) def exitcode = exitValue shouldBe 0
-  @Test def outputDirExist = assert(outputDir.exists())
+  @Test(priority = -1) def exitcode() = exitValue shouldBe 0
+  @Test def outputDirExist() = assert(outputDir.exists())
 
   private var _logLines: List[String] = _
   def logLines = _logLines
 
   @Test(groups = Array("parseLog"))
-  def logFileExist = {
+  def logFileExist() = {
     assert(logFile.exists())
     _logLines = Source.fromFile(logFile).getLines().toList
   }
@@ -112,7 +112,7 @@ object Pipeline {
     val cmd = Seq("java", memoryArg, "-jar", Biopet.getBiopetJar.toString, "pipeline", pipelineName) ++
       args ++ Biopet.queueArgs ++ retries.map(r => Seq("-retry", r.toString)).getOrElse(Seq()) ++
       (if (run) Seq("-run") else Seq()) ++
-      outputDirArg.map(x => Seq("-cv", s"output_dir=${x}")).getOrElse(Seq())
+      outputDirArg.map(x => Seq("-cv", s"output_dir=$x")).getOrElse(Seq())
     if (!outputDir.exists()) outputDir.mkdirs()
 
     if (logFile.exists()) logFile.delete()
