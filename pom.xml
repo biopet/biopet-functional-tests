@@ -47,7 +47,8 @@
                 <version>2.18.1</version>
                 <configuration>
                     <forkCount>12</forkCount>
-                    <reuseForks>false</reuseForks>
+                    <argLine>-Xmx200m</argLine>
+                    <!--<reuseForks>false</reuseForks>-->
                     <workingDirectory>${project.build.directory}</workingDirectory>
                 </configuration>
             </plugin>
