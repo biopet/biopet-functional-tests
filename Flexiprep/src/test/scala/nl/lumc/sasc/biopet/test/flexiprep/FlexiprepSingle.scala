@@ -47,7 +47,11 @@ class FlexiprepSingleDefaultTest extends FlexiprepSingle {
 }
 
 class FlexiprepSingleRemoveOutputTest extends FlexiprepSingleClipTrimTest {
-  override def keepQcFastqFiles = false
+  override def keepQcFastqFiles = Some(false)
+}
+
+class FlexiprepSingleKeepOutputTest extends FlexiprepSingleClipTrimTest {
+  override def keepQcFastqFiles = Some(true)
 }
 
 class FlexiprepSingleUnzippedTest extends FlexiprepSingleClipTrimTest {

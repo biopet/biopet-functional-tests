@@ -87,7 +87,7 @@ trait SummaryPipeline extends Pipeline {
       case Some(r) =>
         (summaryExe \ "version") shouldBe a[JString]
         (summaryExe \ "version").extract[String] should fullyMatch regex r
-      case _       => summaryExe \ "version" shouldBe JNothing
+      case _ => summaryExe \ "version" shouldBe JNothing
     }
   }
 
