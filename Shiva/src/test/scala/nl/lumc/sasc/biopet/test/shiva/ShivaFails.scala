@@ -1,6 +1,6 @@
 package nl.lumc.sasc.biopet.test.shiva
 
-import nl.lumc.sasc.biopet.test.{TestReference, Samples, PipelineFail}
+import nl.lumc.sasc.biopet.test.{ TestReference, Samples, PipelineFail }
 
 /**
  * Created by pjvanthof on 19/10/15.
