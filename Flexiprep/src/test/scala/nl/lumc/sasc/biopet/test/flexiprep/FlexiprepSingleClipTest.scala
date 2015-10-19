@@ -1,6 +1,6 @@
 package nl.lumc.sasc.biopet.test.flexiprep
 
-import org.json4s.JValue
+import org.json4s._
 import org.testng.annotations.Test
 
 class FlexiprepSingleClipTest extends FlexiprepSingle {
@@ -16,21 +16,21 @@ class FlexiprepSingleClipTest extends FlexiprepSingle {
 
   @Test(dependsOnGroups = Array("summaryFastqcR1"))
   def testPerBaseSequenceQualityR1First() = {
-    pbsR1 \ "1" \ "mean" shouldBe 32.23529411764706
-    pbsR1 \ "1" \ "median" shouldBe 33.0
-    pbsR1 \ "1" \ "lower_quartile" shouldBe 31.0
-    pbsR1 \ "1" \ "upper_quartile" shouldBe 34.0
-    pbsR1 \ "1" \ "percentile_10th" shouldBe 30.0
-    pbsR1 \ "1" \ "percentile_90th" shouldBe 34.0
+    pbsR1 \ "1" \ "mean" shouldBe JDecimal(32.244)
+    pbsR1 \ "1" \ "median" shouldBe JDecimal(33.0)
+    pbsR1 \ "1" \ "lower_quartile" shouldBe JDecimal(31.0)
+    pbsR1 \ "1" \ "upper_quartile" shouldBe JDecimal(34.0)
+    pbsR1 \ "1" \ "percentile_10th" shouldBe JDecimal(30.0)
+    pbsR1 \ "1" \ "percentile_90th" shouldBe JDecimal(34.0)
   }
 
   @Test(dependsOnGroups = Array("summaryFastqcR1"))
   def testPerBaseSequenceQualityR1Last() = {
-    pbsR1 \ "100" \ "mean" shouldBe 21.59223300970874
-    pbsR1 \ "100" \ "median" shouldBe 29.0
-    pbsR1 \ "100" \ "lower_quartile" shouldBe 2.0
-    pbsR1 \ "100" \ "upper_quartile" shouldBe 34.0
-    pbsR1 \ "100" \ "percentile_10th" shouldBe 2.0
-    pbsR1 \ "100" \ "percentile_90th" shouldBe 35.0
+    pbsR1 \ "100" \ "mean" shouldBe JDecimal(21.984)
+    pbsR1 \ "100" \ "median" shouldBe JDecimal(29.0)
+    pbsR1 \ "100" \ "lower_quartile" shouldBe JDecimal(2.0)
+    pbsR1 \ "100" \ "upper_quartile" shouldBe JDecimal(34.0)
+    pbsR1 \ "100" \ "percentile_10th" shouldBe JDecimal(2.0)
+    pbsR1 \ "100" \ "percentile_90th" shouldBe JDecimal(35.0)
   }
 }
