@@ -35,6 +35,8 @@ trait Pipeline extends TestNGSuite with Matchers {
   def retries = Option(5)
   def allowRetries = 0
 
+  def configs: List[File] = Nil
+
   /**
    * When override this to true the pipeline is marked as functional.
    * This is only executed when property "biopet.functionalTests" is set true
@@ -48,7 +50,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   def runPipeline(): Unit = {
     if (functionalTest && !Biopet.functionalTests) throw new SkipException("Functional tests are disabled")
     // Running pipeline
-    _exitValue = Pipeline.runPipeline(pipelineName, outputDir, outputDirArg, args, logFile, memoryArg, retries, run)
+    _exitValue = Pipeline.runPipeline(this)
   }
 
   @DataProvider(name = "not_allowed_reties")
@@ -101,29 +103,23 @@ trait Pipeline extends TestNGSuite with Matchers {
 }
 
 object Pipeline {
-  def runPipeline(pipelineName: String,
-                  outputDir: File,
-                  outputDirArg: Option[File],
-                  args: Seq[String],
-                  logFile: File,
-                  memoryArg: String,
-                  retries: Option[Int],
-                  run: Boolean) = {
-    val cmd = Seq("java", memoryArg, "-jar", Biopet.getBiopetJar.toString, "pipeline", pipelineName) ++
+  def runPipeline(pipeline: Pipeline) = {
+    val cmd = Seq("java", pipeline.memoryArg, "-jar", Biopet.getBiopetJar.toString, "pipeline", pipeline.pipelineName) ++
       Biopet.queueArgs ++
-      cmdArg("-retry", retries) ++
-      cmdCondition("-run", run) ++
-      cmdConfig("output_dir", outputDirArg) ++
-      args
-    if (!outputDir.exists()) outputDir.mkdirs()
+      cmdArg("-retry", pipeline.retries) ++
+      cmdCondition("-run", pipeline.run) ++
+      cmdConfig("output_dir", pipeline.outputDirArg) ++
+      pipeline.configs.flatMap(x => Seq("-config", x.getAbsolutePath)) ++
+      pipeline.args
+    if (!pipeline.outputDir.exists()) pipeline.outputDir.mkdirs()
 
-    if (logFile.exists()) logFile.delete()
-    val writer = new PrintWriter(logFile)
+    if (pipeline.logFile.exists()) pipeline.logFile.delete()
+    val writer = new PrintWriter(pipeline.logFile)
     def writeLine(line: String): Unit = {
       writer.println(line)
       writer.flush()
     }
-    val process = Process(cmd, outputDir).run(ProcessLogger(writeLine(_)))
+    val process = Process(cmd, pipeline.outputDir).run(ProcessLogger(writeLine(_)))
     val exitValue = process.exitValue()
     writer.close()
 

@@ -20,11 +20,8 @@ trait Shiva extends Pipeline {
 
   def summaryFile = new File(outputDir, s"Shiva.summary.json")
 
-  def args = configs.map(x => Seq("-config", x.getAbsolutePath)).toSeq.flatten ++
-    cmdConfig("species", referenceSpecies) ++
+  def args = cmdConfig("species", referenceSpecies) ++
     cmdConfig("reference_name", referenceName) ++
     cmdConfig("aligner", aligner)
-
-  def configs: List[File]
 }
 
