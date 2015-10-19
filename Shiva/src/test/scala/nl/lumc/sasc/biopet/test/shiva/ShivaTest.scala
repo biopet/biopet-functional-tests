@@ -12,26 +12,26 @@ trait ShivaWgs1 extends ShivaSuccess with TestReference {
   def samples = Map("wgs1" -> List("lib1"))
 }
 
-class ShivaHaplotypeCaller extends ShivaWgs1 {
+class ShivaHaplotypeCallerTest extends ShivaWgs1 {
   override def variantcallers = List("haplotypecaller")
 }
 
-class ShivaHaplotypeCallerGvcf extends ShivaWgs1 {
+class ShivaHaplotypeCallerGvcfTest extends ShivaWgs1 {
   override def variantcallers = List("haplotypecaller_gvcf")
 }
 
-class ShivaUnifiedGenotyper extends ShivaWgs1 {
+class ShivaUnifiedGenotyperTest extends ShivaWgs1 {
   override def variantcallers = List("unifiedgenotyper")
 }
 
-class ShivaBcftools extends ShivaWgs1 {
+class ShivaBcftoolsTest extends ShivaWgs1 {
   override def variantcallers = List("bcftools")
 }
 
-class ShivaFreebayes extends ShivaWgs1 {
+class ShivaFreebayesTest extends ShivaWgs1 {
   override def variantcallers = List("freebayes")
 }
 
-class ShivaRaw extends ShivaWgs1 {
+class ShivaRawTest extends ShivaWgs1 {
   override def variantcallers = List("raw")
 }
