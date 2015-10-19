@@ -113,7 +113,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
-  def testSettings: Unit = {
+  def testSettings(): Unit = {
     val settings = summaryRoot \ "flexiprep" \ "settings"
     settings shouldBe a[JObject]
 
