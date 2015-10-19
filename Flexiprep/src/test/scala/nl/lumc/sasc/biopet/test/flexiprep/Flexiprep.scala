@@ -122,11 +122,10 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     settings \ "paired" shouldBe JBool(r2.isDefined)
   }
 
-  @Test(dependsOnGroups = Array("parseSummary"))
+  @Test(dependsOnGroups = Array("parseSummary"), groups = Array("summaryFastqcR1"))
   def testFastqcR1(): Unit = {
     val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1"
     fastqc shouldBe a[JObject]
-    //TODO: check stats
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
