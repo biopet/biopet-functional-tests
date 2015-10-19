@@ -9,4 +9,6 @@ import nl.lumc.sasc.biopet.test.utils._
 class ShivaTest extends ShivaSuccess with TestReference {
   val configFile = createTempConfig(Map("variantcallers" -> List("haplotypecaller", "haplotypecaller_gvcf")))
   override def configs = super.configs ::: Samples.wgs1Config :: configFile :: Nil
+
+  def samples = Map("wgs1" -> List("lib1"))
 }
