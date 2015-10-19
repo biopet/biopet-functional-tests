@@ -51,7 +51,11 @@ class FlexiprepPairedDefaultTest extends FlexiprepPaired {
 }
 
 class FlexiprepPairedRemoveOutputTest extends FlexiprepPairedClipTrimTest {
-  override def keepQcFastqFiles = false
+  override def keepQcFastqFiles = Some(false)
+}
+
+class FlexiprepPairedKeepOutputTest extends FlexiprepPairedClipTrimTest {
+  override def keepQcFastqFiles = Some(true)
 }
 
 class FlexiprepPairedUnzippedTest extends FlexiprepPairedClipTrimTest {

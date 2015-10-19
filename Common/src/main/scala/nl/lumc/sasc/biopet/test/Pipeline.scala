@@ -16,6 +16,7 @@ import scala.util.matching.Regex
  */
 
 trait Pipeline extends TestNGSuite with Matchers {
+
   def outputDir = new File(Biopet.getOutputDir, this.getClass.getName.stripPrefix("nl.lumc.sasc.biopet.test."))
 
   def outputDirArg = Option(outputDir)
@@ -97,7 +98,6 @@ trait Pipeline extends TestNGSuite with Matchers {
     val i = logLines.indexWhere(r.findFirstMatchIn(_).isDefined)
     assert(i == -1, s"at line number ${i + 1} in logfile does contains: $r")
   }
-
 }
 
 object Pipeline {
@@ -110,9 +110,11 @@ object Pipeline {
                   retries: Option[Int],
                   run: Boolean) = {
     val cmd = Seq("java", memoryArg, "-jar", Biopet.getBiopetJar.toString, "pipeline", pipelineName) ++
-      args ++ Biopet.queueArgs ++ retries.map(r => Seq("-retry", r.toString)).getOrElse(Seq()) ++
-      (if (run) Seq("-run") else Seq()) ++
-      outputDirArg.map(x => Seq("-cv", s"output_dir=$x")).getOrElse(Seq())
+      Biopet.queueArgs ++
+      cmdArg("-retry", retries) ++
+      cmdCondition("-run", run) ++
+      cmdConfig("output_dir", outputDirArg) ++
+      args
     if (!outputDir.exists()) outputDir.mkdirs()
 
     if (logFile.exists()) logFile.delete()
@@ -127,4 +129,25 @@ object Pipeline {
 
     exitValue
   }
+
+  def cmdArg(argName: String, value: Any): Seq[String] = {
+    value match {
+      case Some(v) => Seq(argName, v.toString)
+      case None    => Seq()
+      case _       => Seq(argName, value.toString)
+    }
+  }
+
+  def cmdCondition(argName: String, condition: Boolean): Seq[String] = {
+    if (condition) Seq(argName) else Seq()
+  }
+
+  def cmdConfig(configKey: String, value: Any): Seq[String] = {
+    value match {
+      case Some(v) => Seq("-cv", s"${configKey}=${v.toString}")
+      case None    => Seq()
+      case _       => Seq("-cv", s"${configKey}=${value.toString}")
+    }
+  }
+
 }
