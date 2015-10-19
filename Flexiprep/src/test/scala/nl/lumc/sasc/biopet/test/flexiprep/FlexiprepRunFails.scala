@@ -46,17 +46,19 @@ class FlexiprepDryRunR2NotExistTest extends FlexiprepRun with PipelineFail {
   @Test def fileNotExist = assert(!r2.get.exists(), s"This file should not exist: $r2")
 }
 
-class FlexiprepNoOutputDir extends FlexiprepRun with PipelineFail {
+class FlexiprepNoOutputDirTest extends FlexiprepRun with PipelineFail {
   override def outputDirArg = None
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
 
   logMustNotHave("""FunctionEdge - Starting""".r)
+  logMustHave("""Value does not exist but is required, key: output_dir""".r)
 }
 
-class FlexiprepDryRunNoOutputDir extends FlexiprepRun with PipelineFail {
+class FlexiprepDryRunNoOutputDirTest extends FlexiprepRun with PipelineFail {
   override def outputDirArg = None
   override def run = false
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
 
   logMustNotHave("""FunctionEdge - Starting""".r)
+  logMustHave("""Value does not exist but is required, key: output_dir""".r)
 }
