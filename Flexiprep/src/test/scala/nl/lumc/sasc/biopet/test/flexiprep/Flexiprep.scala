@@ -3,6 +3,7 @@ package nl.lumc.sasc.biopet.test.flexiprep
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.{ SummaryPipeline, Pipeline }
+import nl.lumc.sasc.biopet.test.Pipeline._
 import org.json4s._
 import org.testng.annotations.Test
 import nl.lumc.sasc.biopet.test.utils._
@@ -26,21 +27,13 @@ trait FlexiprepRun extends Pipeline {
 
   def skipTrim = Option(false)
 
-  def keepQcFastqFiles = true
+  def keepQcFastqFiles: Option[Boolean] = None
 
   def args = Seq("-sample", sampleId, "-library", libId) ++
-    r1.collect { case r1 => Seq("-R1", r1.getAbsolutePath) }.getOrElse(Seq()) ++
-    r2.collect { case r2 => Seq("-R2", r2.getAbsolutePath) }.getOrElse(Seq()) ++
-    (if (keepQcFastqFiles) Seq("-cv", "keepQcFastqFiles=true") else Seq("-cv", "keepQcFastqFiles=false")) ++
-    (skipClip match {
-      case Some(true)  => Seq("-cv", "skip_clip=true")
-      case Some(false) => Seq("-cv", "skip_clip=false")
-      case _           => Seq()
-    }) ++ (skipTrim match {
-      case Some(true)  => Seq("-cv", "skip_trim=true")
-      case Some(false) => Seq("-cv", "skip_trim=false")
-      case _           => Seq()
-    })
+    cmdArg("-R1", r1) ++ cmdArg("-R2", r2) ++
+    cmdConfig("keepQcFastqFiles", keepQcFastqFiles) ++
+    cmdConfig("skip_clip", skipClip) ++
+    cmdConfig("skip_trim", skipTrim)
 }
 
 /** Trait representing a successful Flexiprep test group. */
@@ -93,7 +86,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     validateSummaryFile(summaryFile)
     (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
 
-    if (keepQcFastqFiles) {
+    if (!keepQcFastqFiles.contains(false)) {
       assert(outputFile.exists(), "Output file R1 should exist while keepQcFastqFiles=true")
       md5SumOutputR1.foreach(calcMd5Unzipped(outputFile) shouldBe _)
       calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
@@ -108,7 +101,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
       validateSummaryFile(summaryFile)
       (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
 
-      if (keepQcFastqFiles) {
+      if (!keepQcFastqFiles.contains(false)) {
         assert(outputFile.exists(), "Output file R2 should exist while keepQcFastqFiles=true")
         md5SumOutputR2.foreach(calcMd5Unzipped(outputFile) shouldBe _)
         calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
