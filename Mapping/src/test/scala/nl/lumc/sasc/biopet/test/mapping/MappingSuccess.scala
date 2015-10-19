@@ -21,16 +21,63 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
 
+  if (!skipFlexiprep.contains(true)) {
+    addExecutable(Executable("fastqc", Some(""".+""".r)))
+    addExecutable(Executable("seqstat", Some(""".+""".r)))
+    addExecutable(Executable("seqtkseq", Some(""".+""".r)))
+    if (r2.isDefined) addExecutable(Executable("fastqsync", Some(""".+""".r)))
+    else addNotExecutable("fastqsync")
+  } else {
+    addNotExecutable("fastqc")
+    addNotExecutable("seqtkseq")
+    addNotExecutable("seqstat")
+    addNotExecutable("sickle")
+    addNotExecutable("cutadapt")
+    addNotExecutable("fastqsync")
+  }
+
+  if (aligner.isEmpty || aligner == Some("bwamem")) {
+    addExecutable(Executable("bwamem", Some(""".+""".r)))
+    addExecutable(Executable("sortsam", Some(""".+""".r)))
+  } else addNotExecutable("bwamem")
+
+  if (aligner == Some("bowtie")) {
+    addExecutable(Executable("bowtie", Some(""".+""".r)))
+    addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
+  } else addNotExecutable("bowtie")
+
+  if (aligner == Some("gsnap")) {
+    addExecutable(Executable("gsnap", Some(""".+""".r)))
+    addExecutable(Executable("reorderSam", Some(""".+""".r)))
+    addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
+  } else addNotExecutable("gsnap")
+
+  if (aligner == Some("star-2pass") || aligner == Some("star-2pass")) {
+    addExecutable(Executable("star", Some(""".+""".r)))
+    addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
+  } else addNotExecutable("star")
+
+  if (aligner == Some("tophat")) {
+    addExecutable(Executable("tophat", Some(""".+""".r)))
+    addExecutable(Executable("reorderSam", Some(""".+""".r)))
+    addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
+  } else addNotExecutable("tophat")
+
+  if (skipMarkDuplicates.contains(true)) addNotExecutable("markduplicates")
+  else addExecutable(Executable("markduplicates", Some(""".+""".r)))
+
+  override def summaryRoot = summaryLibrary(sampleId.get, libId.get)
+
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR1(): Unit = {
-    val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "input_R1"
+    val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "input_R1"
     validateSummaryFile(summaryFile, r1)
     assert(r1.get.exists(), "Input file is not there anymore")
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR2(): Unit = {
-    val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "input_R2"
+    val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "input_R2"
     if (r2.isDefined) {
       validateSummaryFile(summaryFile, r2)
       assert(r2.get.exists(), "Input file is not there anymore")
@@ -39,7 +86,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSettings(): Unit = {
-    val settings = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "settings"
+    val settings = summaryRoot \ "mapping" \ "settings"
     settings shouldBe a[JObject]
 
     settings \ "skip_metrics" shouldBe JBool(skipMetrics.getOrElse(false))
@@ -51,7 +98,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   @Test(dependsOnGroups = Array("parseSummary"))
   def testFinalBamFile(): Unit = {
     val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
-    val summaryFile = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "files" \ "pipeline" \ "output_bamfile"
+    val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "output_bamfile"
     validateSummaryFile(summaryFile, Some(bamFile))
 
     assert(bamFile.exists())
@@ -84,7 +131,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSkipFlexiprep(): Unit = {
-    val flexiprepSummary = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep"
+    val flexiprepSummary = summaryRoot \ "flexiprep"
     val flexiprepDir = new File(outputDir, "flexiprep")
     if (skipFlexiprep.contains(true)) {
       assert(!flexiprepDir.exists(), "Flexiprep is skipped but directory exist")
@@ -98,7 +145,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSkipMetrics(): Unit = {
-    val metricsSummary = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "bammetrics"
+    val metricsSummary = summaryRoot \ "bammetrics"
     val metricsDir = new File(outputDir, "metrics")
     if (skipMetrics.contains(true)) {
       assert(!metricsDir.exists(), "Metrics are skipped but directory exist")
@@ -112,7 +159,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testChunkNumber(): Unit = {
-    val settings = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "mapping" \ "settings"
+    val settings = summaryRoot \ "mapping" \ "settings"
     settings \ "chunking" shouldBe JBool(chunking)
     if (chunking) settings \ "numberChunks" shouldBe JInt(BigInt(numberChunks.getOrElse(1)))
     else settings \ "numberChunks" shouldBe JNull

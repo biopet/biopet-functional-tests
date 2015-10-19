@@ -44,7 +44,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   def run = true
 
   @BeforeClass
-  def runPipeline: Unit = {
+  def runPipeline(): Unit = {
     if (functionalTest && !Biopet.functionalTests) throw new SkipException("Functional tests are disabled")
     // Running pipeline
     _exitValue = Pipeline.runPipeline(pipelineName, outputDir, outputDirArg, args, logFile, memoryArg, retries, run)
@@ -63,14 +63,14 @@ trait Pipeline extends TestNGSuite with Matchers {
     require(!logLines.exists(_.contains(s)), s"${retry}e retry found but not allowed")
   }
 
-  @Test(priority = -1) def exitcode = exitValue shouldBe 0
-  @Test def outputDirExist = assert(outputDir.exists())
+  @Test(priority = -1) def exitcode() = exitValue shouldBe 0
+  @Test def outputDirExist() = assert(outputDir.exists())
 
   private var _logLines: List[String] = _
   def logLines = _logLines
 
   @Test(groups = Array("parseLog"))
-  def logFileExist = {
+  def logFileExist() = {
     assert(logFile.exists())
     _logLines = Source.fromFile(logFile).getLines().toList
   }
@@ -79,10 +79,10 @@ trait Pipeline extends TestNGSuite with Matchers {
   def logMustHave(r: Regex): Unit = logMustHave :+= r
 
   @DataProvider(name = "log_must_have")
-  private def logMustHaveProvider = logMustHave.toArray
+  def logMustHaveProvider = logMustHave.map(Array(_)).toArray
 
   @Test(dataProvider = "log_must_have", dependsOnGroups = Array("parseLog"))
-  def testLogMustHave(r: Regex): Unit = {
+  def testLogMustHave(r: Regex): Unit = withClue(s"regex: $r") {
     assert(logLines.exists(r.findFirstMatchIn(_).isDefined), s"Logfile does not contains: $r")
   }
 
@@ -90,10 +90,10 @@ trait Pipeline extends TestNGSuite with Matchers {
   def logMustNotHave(r: Regex): Unit = logMustNotHave :+= r
 
   @DataProvider(name = "log_must_not_have")
-  private def logMustNotHaveProvider = logMustNotHave.toArray
+  def logMustNotHaveProvider = logMustNotHave.map(Array(_)).toArray
 
   @Test(dataProvider = "log_must_not_have", dependsOnGroups = Array("parseLog"))
-  def testLogMustNotHave(r: Regex): Unit = {
+  def testLogMustNotHave(r: Regex): Unit = withClue(s"regex: $r") {
     val i = logLines.indexWhere(r.findFirstMatchIn(_).isDefined)
     assert(i == -1, s"at line number ${i + 1} in logfile does contains: $r")
   }
@@ -112,7 +112,7 @@ object Pipeline {
     val cmd = Seq("java", memoryArg, "-jar", Biopet.getBiopetJar.toString, "pipeline", pipelineName) ++
       args ++ Biopet.queueArgs ++ retries.map(r => Seq("-retry", r.toString)).getOrElse(Seq()) ++
       (if (run) Seq("-run") else Seq()) ++
-      outputDirArg.map(x => Seq("-cv", s"output_dir=${x}")).getOrElse(Seq())
+      outputDirArg.map(x => Seq("-cv", s"output_dir=$x")).getOrElse(Seq())
     if (!outputDir.exists()) outputDir.mkdirs()
 
     if (logFile.exists()) logFile.delete()

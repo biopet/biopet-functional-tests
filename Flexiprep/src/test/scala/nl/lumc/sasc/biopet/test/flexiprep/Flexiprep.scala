@@ -58,9 +58,19 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   /** This is the uncompressed md5sum of the output R2 */
   def md5SumOutputR2: Option[String] = None
 
+  addExecutable(Executable("fastqc", Some(""".+""".r)))
+  addExecutable(Executable("seqstat", Some(""".+""".r)))
+  addExecutable(Executable("seqtkseq", Some(""".+""".r)))
+  if (r2.isDefined) addExecutable(Executable("fastqsync", Some(""".+""".r)))
+  if (!skipTrim.contains(true)) addExecutable(Executable("sickle", Some(""".+""".r)))
+  else addNotExecutable("sickle")
+  if (skipClip.contains(true)) addNotExecutable("cutadapt")
+
+  override def summaryRoot = summaryLibrary(sampleId, libId)
+
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputR1File() = {
-    val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "input_R1"
+    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "input_R1"
     validateSummaryFile(summaryFile, file = r1, md5 = Some(md5SumInputR1))
     assert(r1.get.exists(), "Input file R1 does not exits anymore")
     assert(calcMd5(r1.get) == md5SumInputR1)
@@ -68,7 +78,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputR2File() = {
-    val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "input_R2"
+    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "input_R2"
     if (r2.isDefined) {
       validateSummaryFile(summaryFile, file = r2, md5 = md5SumInputR2)
       assert(r2.get.exists(), "Input file R2 does not exits anymore")
@@ -79,7 +89,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   @Test(dependsOnGroups = Array("parseSummary"))
   def testOutputR1File() = {
     val outputFile = new File(outputDir, s"$sampleId-$libId.R1.qc${if (r2.isDefined) ".sync" else ""}.fq.gz")
-    val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "output_R1"
+    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "output_R1"
     validateSummaryFile(summaryFile)
     (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
 
@@ -92,7 +102,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testOutputR2File() = {
-    val summaryFile = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "files" \ "pipeline" \ "output_R2"
+    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "output_R2"
     if (r2.isDefined) {
       val outputFile = new File(outputDir, s"$sampleId-$libId.R2.qc.sync.fq.gz")
       validateSummaryFile(summaryFile)
@@ -111,7 +121,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSettings: Unit = {
-    val settings = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "settings"
+    val settings = summaryRoot \ "flexiprep" \ "settings"
     settings shouldBe a[JObject]
 
     settings \ "skip_trim" shouldBe JBool(skipTrim.getOrElse(false))
@@ -121,14 +131,14 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testFastqcR1(): Unit = {
-    val fastqc = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R1"
+    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1"
     fastqc shouldBe a[JObject]
     //TODO: check stats
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testFastqcR2(): Unit = {
-    val fastqc = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R2"
+    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2"
     if (r2.isDefined) {
       fastqc shouldBe a[JObject]
       //TODO: check stats
@@ -137,14 +147,14 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testFastqcR1Qc(): Unit = {
-    val fastqc = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R1_qc"
+    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1_qc"
     fastqc shouldBe a[JObject]
     //TODO: check stats
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testFastqcR2Qc(): Unit = {
-    val fastqc = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R2_qc"
+    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2_qc"
     if (r2.isDefined) {
       fastqc shouldBe a[JObject]
       //TODO: check stats
@@ -153,14 +163,14 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSeqstatR1(): Unit = {
-    val seqstat = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "seqstat_R1"
+    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R1"
     seqstat shouldBe a[JObject]
     //TODO: check stats
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSeqstatR2(): Unit = {
-    val seqstat = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "seqstat_R2"
+    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R2"
     if (r2.isDefined) {
       seqstat shouldBe a[JObject]
       //TODO: check stats
@@ -169,14 +179,14 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSeqstatR1Qc(): Unit = {
-    val seqstat = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "seqstat_R1_qc"
+    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R1_qc"
     seqstat shouldBe a[JObject]
     //TODO: check stats
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSeqstatR2Qc(): Unit = {
-    val seqstat = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "seqstat_R2_qc"
+    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R2_qc"
     if (r2.isDefined) {
       seqstat shouldBe a[JObject]
       //TODO: check stats
@@ -185,8 +195,8 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testClippingR1(): Unit = {
-    val clipping = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "clipping_R1"
-    val adapters = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R1" \ "adapters"
+    val clipping = summaryRoot \ "flexiprep" \ "stats" \ "clipping_R1"
+    val adapters = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1" \ "adapters"
     skipClip match {
       case Some(false) | None =>
         if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
@@ -198,8 +208,8 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testClippingR2(): Unit = {
-    val clipping = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "clipping_R2"
-    val adapters = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastqc_R2" \ "adapters"
+    val clipping = summaryRoot \ "flexiprep" \ "stats" \ "clipping_R2"
+    val adapters = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2" \ "adapters"
     skipClip match {
       case Some(false) | None if r2.isDefined =>
         if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
@@ -211,7 +221,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testTrimmingR1(): Unit = {
-    val trimming = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "trimming_R1"
+    val trimming = summaryRoot \ "flexiprep" \ "stats" \ "trimming_R1"
     skipTrim match {
       case Some(false) | None =>
         trimming shouldBe a[JObject]
@@ -222,7 +232,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testTrimmingR2(): Unit = {
-    val trimming = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "trimming_R2"
+    val trimming = summaryRoot \ "flexiprep" \ "stats" \ "trimming_R2"
     skipTrim match {
       case Some(false) | None if r2.isDefined =>
         trimming shouldBe a[JObject]
@@ -233,7 +243,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testFastqSync(): Unit = {
-    val syncing = summary \ "samples" \ sampleId \ "libraries" \ libId \ "flexiprep" \ "stats" \ "fastq_sync"
+    val syncing = summaryRoot \ "flexiprep" \ "stats" \ "fastq_sync"
     if (r2.isDefined) {
       syncing shouldBe a[JObject]
       //TODO: check stats

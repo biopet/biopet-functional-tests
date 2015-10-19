@@ -13,6 +13,8 @@ class FlexiprepSingleNonSangerTest extends FlexiprepSuccessful {
 
   /** MD5 checksum of the input file. */
   def md5SumInputR1 = "e85a903fad9267e4807a977292adc81f"
+
+  if (!skipTrim.contains(true)) addExecutable(Executable("cutadapt", Option(""".+""".r)))
 }
 
 class FlexiprepPairedNonSangerTest extends FlexiprepSingleNonSangerTest {
