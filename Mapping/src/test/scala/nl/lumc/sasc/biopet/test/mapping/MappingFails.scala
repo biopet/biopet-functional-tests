@@ -11,14 +11,14 @@ import org.testng.annotations.Test
 class MappingNoR1ArgTest extends Mapping with PipelineFail {
   logMustNotHave("""FunctionEdge - Starting""".r)
 
-  //TODO: log checks
+  logMustHave("""Argument with name '--input_r1' \(-R1\) is missing""".r)
 }
 
 class MappingDryRunNoR1ArgTest extends Mapping with PipelineFail {
   override def run = false
   logMustNotHave("""FunctionEdge - Starting""".r)
 
-  //TODO: log checks
+  logMustHave("""Argument with name '--input_r1' \(-R1\) is missing""".r)
 }
 
 class MappingSingleR1NotExistTest extends Mapping with PipelineFail {
