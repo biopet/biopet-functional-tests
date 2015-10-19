@@ -2,7 +2,7 @@ package nl.lumc.sasc.biopet.test.flexiprep
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.{ SummaryPipeline, Pipeline }
+import nl.lumc.sasc.biopet.test.{ Biopet, SummaryPipeline, Pipeline }
 import nl.lumc.sasc.biopet.test.Pipeline._
 import org.json4s._
 import org.testng.annotations.Test
@@ -243,3 +243,24 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   }
 
 }
+
+/** Trait for Flexiprep runs with single-end inputs. */
+trait FlexiprepSingle extends FlexiprepSuccessful {
+
+  /** Input file of this run. */
+  override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
+
+  /** MD5 checksum of the input file. */
+  def md5SumInputR1 = "8245507d70154d7921cd1bcce1ea344b"
+}
+
+/** Trait for Flexiprep runs with paired-end inputs. */
+trait FlexiprepPaired extends FlexiprepSingle {
+
+  /** Input read pair 2 for this run. */
+  override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
+
+  /** MD5 checksum of input read pair 2. */
+  override def md5SumInputR2 = Some("1560a4cdc87cc8c4b6701e1253d41f93")
+}
+
