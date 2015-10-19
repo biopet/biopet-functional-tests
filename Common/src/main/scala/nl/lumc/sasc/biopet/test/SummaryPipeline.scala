@@ -13,7 +13,7 @@ import scala.util.matching.Regex
  */
 trait SummaryPipeline extends Pipeline {
 
-  implicit val formats = DefaultFormats
+  implicit val formats = DefaultFormats.withBigDecimal
 
   def summaryFile: File
 
