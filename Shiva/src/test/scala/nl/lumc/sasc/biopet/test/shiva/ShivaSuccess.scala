@@ -16,6 +16,22 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
     logMustHave("""No Known site found, skipping base recalibration""".r)
   else logMustNotHave("""No Known site found, skipping base recalibration""".r)
 
+  if (!useIndelRealigner.contains(false)) {
+    addExecutable(Executable("realignertargetcreator", Some( """.+""".r)))
+    addExecutable(Executable("indelrealigner", Some(""".+""".r)))
+  } else {
+    addNotExecutable("realignertargetcreator")
+    addNotExecutable("indelrealigner")
+  }
+
+  if (!useBaseRecalibration.contains(false) && dbsnpVcfFile.isDefined) {
+    addExecutable(Executable("baserecalibrator", Some( """.+""".r)))
+    addExecutable(Executable("printreads", Some(""".+""".r)))
+  } else {
+    addNotExecutable("baserecalibrator")
+    addNotExecutable("printreads")
+  }
+
   @DataProvider(name = "variantcallers")
   def variantcallerProvider = Shiva.validVariantcallers.map(Array(_)).toArray
 
@@ -72,4 +88,16 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
         vcfstats shouldBe JNothing
       }
     }
+
+  @Test(dataProvider = "libraries")
+  def testLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
+    val file = new File(libraryDir(sample, lib), s"$sample-$lib.final.bam")
+    assert(file.exists())
+  }
+
+  @Test(dataProvider = "samples")
+  def testSampleBam(sample: String): Unit = withClue(s"Sample: $sample") {
+    val file = new File(sampleDir(sample), s"$sample.final.bam")
+    assert(file.exists())
+  }
 }
