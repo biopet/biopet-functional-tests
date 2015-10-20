@@ -317,7 +317,7 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
 
   addSummaryTest(flexiprepPath :+ "files",
     Seq(
-      _ \ "pipeline" \ "input_R1" \ "md5" should haveValue("8245507d70154d7921cd1bcce1ea344b"),
+      _ \ "pipeline" \ "input_R1" \ "md5" should haveValue(md5SumInputR1),
       _ \ "fastqc_R1" \ "fastqc_data" \ "path" should existAsFile,
       _ \ "fastqc_R1" \ "fastqc_data" \ "md5" should haveValue("ab8d4dca2d07eef9743c14571f073ba9")))
 
