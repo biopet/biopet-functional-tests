@@ -20,7 +20,7 @@ trait MultisampleSuccess extends SummaryPipeline {
 
   def sampleDir(sampleId: String) = new File(outputDir, "samples" + File.separator + sampleId)
 
-  def libraryDir(sampleId: String, libId: String) = new File(sampleDir(sampleId), libId)
+  def libraryDir(sampleId: String, libId: String) = new File(sampleDir(sampleId), s"lib_$libId")
 
   @Test(dataProvider = "samples")
   def testSampleDir(sampleId: String): Unit = withClue(s"sample = $sampleId") {
