@@ -35,3 +35,10 @@ class ShivaFreebayesTest extends ShivaWgs1 {
 class ShivaRawTest extends ShivaWgs1 {
   override def variantcallers = List("raw")
 }
+
+class ShivaSampleLibraryCallingTest extends ShivaWgs1 {
+  override def variantcallers = List("unifiedgenotyper")
+  override def multisampleVariantcalling = Some(false)
+  override def libraryVariantcalling = Some(true)
+  override def singleSampleVariantcalling = Some(true)
+}
