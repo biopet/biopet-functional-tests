@@ -3,36 +3,14 @@ package nl.lumc.sasc.biopet.test.shiva
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.MultisampleSuccess
+import nl.lumc.sasc.biopet.test.shiva.variantcalling.VariantcallersExecutables
 import org.json4s._
 import org.testng.annotations.{ DataProvider, Test }
 
 /**
  * Created by pjvan_thof on 9/17/15.
  */
-trait ShivaSuccess extends Shiva with MultisampleSuccess {
-  if (variantcallers.contains("haplotypecaller") ||
-    variantcallers.contains("haplotypecaller_gvcf") ||
-    variantcallers.contains("haplotypecaller_allele")) addExecutable(Executable("haplotypecaller", Some(""".+""".r)))
-  else addNotExecutable("haplotypecaller")
-
-  if (variantcallers.contains("unifiedgenotyper") ||
-    variantcallers.contains("unifiedgenotyper_allele")) addExecutable(Executable("unifiedgenotyper", Some(""".+""".r)))
-  else addNotExecutable("unifiedgenotyper")
-
-  if (variantcallers.contains("freebayes")) addExecutable(Executable("freebayes", Some(""".+""".r)))
-  else addNotExecutable("freebayes")
-
-  if (variantcallers.contains("bcftools") ||
-    variantcallers.contains("bcftools_singlesample")) addExecutable(Executable("bcftools", Some(""".+""".r)))
-  else addNotExecutable("bcftools")
-
-  if (variantcallers.contains("raw")) addExecutable(Executable("mpileuptovcf", Some(""".+""".r)))
-  else addNotExecutable("mpileuptovcf")
-
-  if (variantcallers.contains("bcftools") ||
-    variantcallers.contains("bcftools_singlesample") ||
-    variantcallers.contains("raw")) addExecutable(Executable("samtoolsmpileup", Some(""".+""".r)))
-  else addNotExecutable("samtoolsmpileup")
+trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExecutables {
 
   @DataProvider(name = "variantcallers")
   def variantcallerProvider = Shiva.validVariantcallers.map(Array(_)).toArray
