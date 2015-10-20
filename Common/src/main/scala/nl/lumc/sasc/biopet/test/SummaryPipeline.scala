@@ -6,6 +6,7 @@ import org.testng.annotations.{ DataProvider, Test }
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 
+import scala.collection.mutable.{ Map => MutMap }
 import scala.util.matching.Regex
 
 /**
@@ -22,8 +23,30 @@ trait SummaryPipeline extends Pipeline {
   /** This will return the parsed summary, this method only work when the group "parseSummary" is done */
   def summary = _summary
 
+  type SummaryTestFunc = JValue => Unit
+
+  private val summaryTests: MutMap[Seq[String], Seq[SummaryTestFunc]] = MutMap()
+
+  def addSummaryTest(pathTokens: Seq[String], testFuncs: Seq[JValue => Unit]): Unit =
+    summaryTests.get(pathTokens) match {
+      case None     => summaryTests(pathTokens) = testFuncs
+      case Some(ts) => summaryTests(pathTokens) = ts ++ testFuncs
+    }
+
   @Test(groups = Array("parseSummary"))
   def parseSummary(): Unit = _summary = parse(summaryFile)
+
+  @DataProvider(name = "summaryTests")
+  def summaryTestsProvider() = {
+    (for {
+      (pathTokens, testFuncs) <- summaryTests
+      testFunc <- testFuncs
+    } yield Array(pathTokens, pathTokens.foldLeft(summary) { case (curjv, p) => curjv \ p }, testFunc)).toArray
+  }
+
+  @Test(dataProvider = "summaryTests")
+  def testSummaryValue(pathTokens: Seq[String], json: JValue, testFunc: SummaryTestFunc) =
+    withClue(s"Summary test on path '${pathTokens.mkString(" -> ")}'") { testFunc(json) }
 
   @Test(groups = Array("parseSummary"))
   def testSummaryFileExist(): Unit = assert(summaryFile.exists, "Summary file does not exist")
