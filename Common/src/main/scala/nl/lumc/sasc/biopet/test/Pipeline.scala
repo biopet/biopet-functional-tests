@@ -2,7 +2,8 @@ package nl.lumc.sasc.biopet.test
 
 import java.io.{ File, PrintWriter }
 
-import org.scalatest.Matchers
+import org.json4s._
+import org.scalatest._, matchers._
 import org.scalatest.testng.TestNGSuite
 import org.testng.SkipException
 import org.testng.annotations.{ DataProvider, Test, BeforeClass }
@@ -15,7 +16,7 @@ import scala.util.matching.Regex
  * Created by pjvan_thof on 6/30/15.
  */
 
-trait Pipeline extends TestNGSuite with Matchers {
+trait Pipeline extends TestNGSuite with Matchers with JValueMatchers {
 
   def outputDir = new File(Biopet.getOutputDir, this.getClass.getName.stripPrefix("nl.lumc.sasc.biopet.test."))
 
@@ -150,4 +151,51 @@ object Pipeline {
     }
   }
 
+}
+
+/** Trait for easier JValue matching. */
+trait JValueMatchers {
+
+  private def makeMatchResult(boolTest: => Boolean, obsValue: Any, expValue: Any): MatchResult =
+    MatchResult(boolTest,
+      s"""Value $obsValue can not be equalized to $expValue""",
+      s"""Value $obsValue can be equalized to $expValue""")
+
+  class JValueIntMatcher(expectedValue: Int) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JInt(i)     => i == scala.math.BigInt(expectedValue)
+        case JDouble(d)  => d == expectedValue
+        case JDecimal(d) => d == scala.math.BigDecimal(expectedValue)
+        case otherwise   => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  class JValueDoubleMatcher(expectedValue: Double) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JInt(i)     => i.doubleValue() == expectedValue
+        case JDouble(d)  => d == expectedValue
+        case JDecimal(d) => d == scala.math.BigDecimal(expectedValue)
+        case otherwise   => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  class JValueStringMatcher(expectedValue: String) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JString(s) => s == expectedValue
+        case otherwise  => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  def haveValue(expectedValue: Int) = new JValueIntMatcher(expectedValue)
+  def haveValue(expectedValue: Double) = new JValueDoubleMatcher(expectedValue)
+  def haveValue(expectedValue: String) = new JValueStringMatcher(expectedValue)
 }
