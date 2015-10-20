@@ -12,6 +12,10 @@ import org.testng.annotations.{ DataProvider, Test }
  */
 trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExecutables {
 
+  if (dbsnpVcfFile.isEmpty && !useBaseRecalibration.contains(false))
+    logMustHave("""No Known site found, skipping base recalibration""".r)
+  else logMustNotHave("""No Known site found, skipping base recalibration""".r)
+
   @DataProvider(name = "variantcallers")
   def variantcallerProvider = Shiva.validVariantcallers.map(Array(_)).toArray
 
