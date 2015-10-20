@@ -252,6 +252,26 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
 
   /** MD5 checksum of the input file. */
   def md5SumInputR1 = "8245507d70154d7921cd1bcce1ea344b"
+
+  /** JSON paths for summary. */
+  protected def statsPath = Seq("samples", sampleId, "libraries", libId, "flexiprep", "stats")
+  protected def statsFastqcR1Path = statsPath :+ "fastqc_R1"
+
+  addSummaryTest(statsFastqcR1Path :+ "per_base_sequence_quality",
+    Seq(
+      _.children.size shouldBe 55,
+      _ \ "1" \ "mean" should haveValue(32.244),
+      _ \ "1" \ "median" should haveValue(33),
+      _ \ "1" \ "lower_quartile" should haveValue(31),
+      _ \ "1" \ "upper_quartile" should haveValue(34),
+      _ \ "1" \ "percentile_10th" should haveValue(30),
+      _ \ "1" \ "percentile_90th" should haveValue(34),
+      _ \ "100" \ "mean" should haveValue(21.984),
+      _ \ "100" \ "median" should haveValue(30),
+      _ \ "100" \ "lower_quartile" should haveValue(2),
+      _ \ "100" \ "upper_quartile" should haveValue(34),
+      _ \ "100" \ "percentile_10th" should haveValue(2),
+      _ \ "100" \ "percentile_90th" should haveValue(35)))
 }
 
 /** Trait for Flexiprep runs with paired-end inputs. */
