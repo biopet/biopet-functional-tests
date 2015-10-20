@@ -8,7 +8,9 @@ class FlexiprepSingleClipTest extends FlexiprepSingle {
   override def skipTrim = Some(true)
   override def md5SumOutputR1 = Some("037aa58f60372c11037bef9ac157777e")
 
-  addSummaryTest(statsFastqcR1Path :+ "per_base_sequence_quality",
+  protected val statsFastqcR1QcPath = statsPath :+ "fastqc_R1_qc"
+
+  addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_quality",
     Seq(
       _.children.size shouldBe 55,
       _ \ "1" \ "mean" should haveValue(32.23529411764706),

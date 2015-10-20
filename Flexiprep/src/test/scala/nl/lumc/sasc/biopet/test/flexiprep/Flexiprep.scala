@@ -254,8 +254,10 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
   def md5SumInputR1 = "8245507d70154d7921cd1bcce1ea344b"
 
   /** JSON paths for summary. */
-  protected def statsPath = Seq("samples", sampleId, "libraries", libId, "flexiprep", "stats")
-  protected def statsFastqcR1Path = statsPath :+ "fastqc_R1"
+  protected val flexiprepPath = Seq("samples", sampleId, "libraries", libId, "flexiprep")
+  protected val statsPath = flexiprepPath :+ "stats"
+  protected val statsFastqcR1Path = statsPath :+ "fastqc_R1"
+  protected val statsSeqstatR1Path = statsPath :+ "seqstat_R1"
 
   addSummaryTest(statsFastqcR1Path :+ "per_base_sequence_quality",
     Seq(
@@ -272,6 +274,58 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
       _ \ "100" \ "upper_quartile" should haveValue(34),
       _ \ "100" \ "percentile_10th" should haveValue(2),
       _ \ "100" \ "percentile_90th" should haveValue(35)))
+
+  addSummaryTest(statsFastqcR1Path :+ "per_base_sequence_content",
+    Seq(
+      _.children.size shouldBe 55,
+      _ \ "1" \ "A" should haveValue(17.251755265797392),
+      _ \ "1" \ "T" should haveValue(11.735205616850552),
+      _ \ "1" \ "G" should haveValue(52.35707121364093),
+      _ \ "1" \ "C" should haveValue(18.655967903711137),
+      _ \ "100" \ "A" should haveValue(26),
+      _ \ "100" \ "T" should haveValue(21.9),
+      _ \ "100" \ "G" should haveValue(24),
+      _ \ "100" \ "C" should haveValue(28.1)))
+
+  addSummaryTest(statsFastqcR1Path :+ "adapters",
+    Seq(
+      _ \ "TruSeq Adapter, Index 1" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG"),
+      _ \ "TruSeq Adapter, Index 18" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG")))
+
+  addSummaryTest(statsSeqstatR1Path :+ "bases",
+    Seq(
+      _ \ "num_total" should haveValue(100000),
+      _ \ "nucleotides" \ "A" should haveValue(21644),
+      _ \ "nucleotides" \ "T" should haveValue(23049),
+      _ \ "nucleotides" \ "G" should haveValue(25816),
+      _ \ "nucleotides" \ "C" should haveValue(26555),
+      _ \ "nucleotides" \ "N" should haveValue(2936),
+      _ \ "num_qual" shouldBe a[JArray],
+      jv => (jv \ "num_qual").extract[List[Int]].apply(41) shouldBe 16497,
+      jv => (jv \ "num_qual").extract[List[Int]].apply(2) shouldBe 7264))
+
+  addSummaryTest(statsSeqstatR1Path :+ "reads",
+    Seq(
+      _ \ "num_total" should haveValue(1000),
+      _ \ "num_with_n" should haveValue(175),
+      _ \ "len_min" should haveValue(100),
+      _ \ "len_max" should haveValue(100),
+      _ \ "qual_encoding" should haveValue("sanger"),
+      jv => (jv \ "num_avg_qual_gte").children.size shouldBe 61,
+      _ \ "num_avg_qual_gte" \ "0" should haveValue(1000),
+      _ \ "num_avg_qual_gte" \ "60" should haveValue(0)))
+
+  addSummaryTest(flexiprepPath :+ "files",
+    Seq(
+      _ \ "pipeline" \ "input_R1" \ "md5" should haveValue("8245507d70154d7921cd1bcce1ea344b"),
+      _ \ "fastqc_R1" \ "fastqc_data" \ "path" should existAsFile,
+      _ \ "fastqc_R1" \ "fastqc_data" \ "md5" should haveValue("ab8d4dca2d07eef9743c14571f073ba9")))
+
+  addSummaryTest(flexiprepPath :+ "settings",
+    Seq(
+      jv => skipTrim should contain((jv \ "skip_trim").extract[Boolean]),
+      jv => skipClip should contain((jv \ "skip_clip").extract[Boolean]),
+      jv => (jv \ "paired").extract[Boolean] shouldBe r1.isDefined && r2.isDefined))
 }
 
 /** Trait for Flexiprep runs with paired-end inputs. */
