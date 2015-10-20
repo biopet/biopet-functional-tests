@@ -42,3 +42,19 @@ class ShivaSampleLibraryCallingTest extends ShivaWgs1 {
   override def libraryVariantcalling = Some(true)
   override def singleSampleVariantcalling = Some(true)
 }
+
+class ShivaNoBaserecalTest extends ShivaWgs1 {
+  override def variantcallers = List("unifiedgenotyper")
+  override def useBaseRecalibration = Some(false)
+}
+
+class ShivaNoIndelRealignTest extends ShivaWgs1 {
+  override def variantcallers = List("unifiedgenotyper")
+  override def useIndelRealigner = Some(false)
+}
+
+class ShivaNoPreprocessTest extends ShivaWgs1 {
+  override def variantcallers = List("unifiedgenotyper")
+  override def useIndelRealigner = Some(false)
+  override def useBaseRecalibration = Some(false)
+}
