@@ -30,7 +30,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
   }
 
   @Test(dataProvider = "variantcallers", dependsOnGroups = Array("parseSummary"))
-  def testVariantcaller(variantcaller: String): Unit = {
+  def testVariantcaller(variantcaller: String): Unit = withClue(s"Variantcaller: $variantcaller") {
     val dir = new File(outputDir, "variantcalling" + File.separator + variantcaller)
     val vcfstats = this.summary \ "shivavariantcalling" \ s"multisample-vcfstats-$variantcaller"
     if (!multisampleVariantcalling.contains(false) && variantcallers.contains(variantcaller)) {
@@ -44,30 +44,32 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
   }
 
   @Test(dataProvider = "sample-variantcallers", dependsOnGroups = Array("parseSummary"))
-  def testSampleVariantcaller(sample: String, variantcaller: String): Unit = {
-    val dir = new File(sampleDir(sample), "variantcalling" + File.separator + variantcaller)
-    val vcfstats = this.summary \ "samples" \ sample \ "shivavariantcalling" \ s"$sample-vcfstats-$variantcaller"
-    if (singleSampleVariantcalling.contains(true) && variantcallers.contains(variantcaller)) {
-      assert(dir.exists())
-      assert(dir.isDirectory)
-      vcfstats shouldBe a[JObject]
-    } else {
-      assert(!dir.exists())
-      vcfstats shouldBe JNothing
+  def testSampleVariantcaller(sample: String, variantcaller: String): Unit =
+    withClue(s"Variantcaller: $variantcaller, Sample: $sample") {
+      val dir = new File(sampleDir(sample), "variantcalling" + File.separator + variantcaller)
+      val vcfstats = this.summary \ "samples" \ sample \ "shivavariantcalling" \ s"$sample-vcfstats-$variantcaller"
+      if (singleSampleVariantcalling.contains(true) && variantcallers.contains(variantcaller)) {
+        assert(dir.exists())
+        assert(dir.isDirectory)
+        vcfstats shouldBe a[JObject]
+      } else {
+        assert(!dir.exists())
+        vcfstats shouldBe JNothing
+      }
     }
-  }
 
   @Test(dataProvider = "library-variantcallers", dependsOnGroups = Array("parseSummary"))
-  def testLibraryVariantcaller(sample: String, lib: String, variantcaller: String): Unit = {
-    val dir = new File(libraryDir(sample, lib), "variantcalling" + File.separator + variantcaller)
-    val vcfstats = this.summary \ "samples" \ sample \ "libraries" \ lib \ "shivavariantcalling" \ s"$sample-$lib-vcfstats-$variantcaller"
-    if (singleSampleVariantcalling.contains(true) && variantcallers.contains(variantcaller)) {
-      assert(dir.exists())
-      assert(dir.isDirectory)
-      vcfstats shouldBe a[JObject]
-    } else {
-      assert(!dir.exists())
-      vcfstats shouldBe JNothing
+  def testLibraryVariantcaller(sample: String, lib: String, variantcaller: String): Unit =
+    withClue(s"Variantcaller: $variantcaller, Sample: $sample, Lib: $lib") {
+      val dir = new File(libraryDir(sample, lib), "variantcalling" + File.separator + variantcaller)
+      val vcfstats = this.summary \ "samples" \ sample \ "libraries" \ lib \ "shivavariantcalling" \ s"$sample-$lib-vcfstats-$variantcaller"
+      if (singleSampleVariantcalling.contains(true) && variantcallers.contains(variantcaller)) {
+        assert(dir.exists())
+        assert(dir.isDirectory)
+        vcfstats shouldBe a[JObject]
+      } else {
+        assert(!dir.exists())
+        vcfstats shouldBe JNothing
+      }
     }
-  }
 }
