@@ -63,7 +63,7 @@ trait Shiva extends Pipeline {
 }
 
 object Shiva {
-  val validVariantcallers = List("freebayes", "raw", "bcftools",
+  val validVariantcallers = List("freebayes", "raw", "bcftools", "bcftools_singlesample",
     "haplotypecaller", "unifiedgenotyper", "haplotypecaller_gvcf",
     "haplotypecaller_allele", "unifiedgenotyper_allele")
 }
