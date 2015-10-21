@@ -7,7 +7,7 @@ import nl.lumc.sasc.biopet.test.Biopet
 /**
  * Created by pjvanthof on 04/10/15.
  */
-class FlexiprepSingleNonSangerTest extends FlexiprepSingleDefaultTest {
+class FlexiprepSingleNonSangerTest extends FlexiprepSingleDefaultTest with FlexiprepSingleClipTrimSummaryValues {
   /** Input file of this run. */
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "cti_r1.fq"))
 
@@ -17,7 +17,7 @@ class FlexiprepSingleNonSangerTest extends FlexiprepSingleDefaultTest {
   override def md5SumInputR1 = "e85a903fad9267e4807a977292adc81f"
 }
 
-class FlexiprepPairedNonSangerTest extends FlexiprepPairedDefaultTest {
+class FlexiprepPairedNonSangerTest extends FlexiprepPairedDefaultTest with FlexiprepPairedClipTrimSummaryValues {
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "cti_r1.fq"))
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "cti_r2.fq"))
 
