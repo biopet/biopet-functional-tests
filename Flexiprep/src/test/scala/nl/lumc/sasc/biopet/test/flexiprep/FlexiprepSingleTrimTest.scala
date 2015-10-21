@@ -49,7 +49,7 @@ class FlexiprepSingleTrimTest extends FlexiprepSingle {
       _ \ "nucleotides" \ "C" should haveValue(24795),
       _ \ "nucleotides" \ "N" should haveValue(7),
       _ \ "num_qual" shouldBe a[JArray],
-      jv => (jv \ "num_qual").extract[List[Int]].apply(41) shouldBe 16947,
+      jv => (jv \ "num_qual").extract[List[Int]].apply(41) shouldBe 16497,
       jv => (jv \ "num_qual").extract[List[Int]].apply(2) shouldBe 62))
 
   addSummaryTest(statsSeqstatR1QcPath :+ "reads",
