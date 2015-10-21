@@ -5,6 +5,7 @@ import java.io.File
 import org.testng.annotations.{ DataProvider, Test }
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import org.scalatest._, matchers._
 
 import scala.collection.mutable.{ Map => MutMap }
 import scala.util.matching.Regex
@@ -12,7 +13,7 @@ import scala.util.matching.Regex
 /**
  * Created by pjvanthof on 19/09/15.
  */
-trait SummaryPipeline extends Pipeline {
+trait SummaryPipeline extends Pipeline with JValueMatchers {
 
   implicit val formats = DefaultFormats
 
@@ -126,4 +127,67 @@ trait SummaryPipeline extends Pipeline {
   def testNotExecutables(exe: String): Unit = withClue(s"Executable: $exe") {
     summaryRoot \ pipelineName.toLowerCase \ "executables" \ exe shouldBe JNothing
   }
+}
+
+/** Trait for easier JValue matching. */
+trait JValueMatchers {
+
+  private def makeMatchResult(boolTest: => Boolean, obsValue: Any, expValue: Any): MatchResult =
+    MatchResult(boolTest,
+      s"""Value $obsValue can not be equalized to $expValue""",
+      s"""Value $obsValue can be equalized to $expValue""")
+
+  private def makeFileExistsMatchResult(boolTest: => Boolean, obsValue: Any): MatchResult =
+    MatchResult(boolTest,
+      s"""Value $obsValue can not be checked for file existence.""",
+      s"""Value $obsValue exists as a file.""")
+
+  class JValueFileExistMatcher() extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JString(s) => new java.io.File(s).exists()
+        case otherwise  => false
+      }
+      makeFileExistsMatchResult(testFunc, left)
+    }
+  }
+
+  class JValueIntMatcher(expectedValue: Int) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JInt(i)     => i == scala.math.BigInt(expectedValue)
+        case JDouble(d)  => d == expectedValue
+        case JDecimal(d) => d == scala.math.BigDecimal(expectedValue)
+        case otherwise   => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  class JValueDoubleMatcher(expectedValue: Double) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JInt(i)     => i.doubleValue() == expectedValue
+        case JDouble(d)  => d == expectedValue
+        case JDecimal(d) => d == scala.math.BigDecimal(expectedValue)
+        case otherwise   => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  class JValueStringMatcher(expectedValue: String) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JString(s) => s == expectedValue
+        case otherwise  => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  def haveValue(expectedValue: Int) = new JValueIntMatcher(expectedValue)
+  def haveValue(expectedValue: Double) = new JValueDoubleMatcher(expectedValue)
+  def haveValue(expectedValue: String) = new JValueStringMatcher(expectedValue)
+  def existAsFile = new JValueFileExistMatcher
 }
