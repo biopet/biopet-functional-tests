@@ -258,6 +258,8 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
   protected val statsPath = flexiprepPath :+ "stats"
   protected val statsFastqcR1Path = statsPath :+ "fastqc_R1"
   protected val statsSeqstatR1Path = statsPath :+ "seqstat_R1"
+  protected val statsFastqcR1QcPath = statsPath :+ "fastqc_R1_qc"
+  protected val statsSeqstatR1QcPath = statsPath :+ "seqstat_R1_qc"
 
   addSummaryTest(statsFastqcR1Path :+ "per_base_sequence_quality",
     Seq(
@@ -342,6 +344,8 @@ trait FlexiprepPaired extends FlexiprepSingle {
   /** JSON paths for summary. */
   protected val statsFastqcR2Path = statsPath :+ "fastqc_R2"
   protected val statsSeqstatR2Path = statsPath :+ "seqstat_R2"
+  protected val statsFastqcR2QcPath = statsPath :+ "fastqc_R2_qc"
+  protected val statsSeqstatR2QcPath = statsPath :+ "seqstat_R2_qc"
 
   addSummaryTest(statsFastqcR2Path :+ "per_base_sequence_quality",
     Seq(
