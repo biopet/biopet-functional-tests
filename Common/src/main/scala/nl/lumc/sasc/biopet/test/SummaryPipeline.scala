@@ -186,8 +186,28 @@ trait JValueMatchers {
     }
   }
 
+  class JValueEmptyMatcher(expectedValue: None.type) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JNothing  => true
+        case otherwise => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
   def haveValue(expectedValue: Int) = new JValueIntMatcher(expectedValue)
   def haveValue(expectedValue: Double) = new JValueDoubleMatcher(expectedValue)
   def haveValue(expectedValue: String) = new JValueStringMatcher(expectedValue)
+  def haveValue(expectedValue: Option[_]): Matcher[JValue] = expectedValue match {
+    case n @ None => new JValueEmptyMatcher(n)
+    case Some(a) => a match {
+      case v: Int       => new JValueIntMatcher(v)
+      case v: Double    => new JValueDoubleMatcher(v)
+      case v: String    => new JValueStringMatcher(v)
+      case v: Option[_] => haveValue(v)
+      case otherwise    => throw new RuntimeException("Unexpected type for testing JValue: " + otherwise.toString)
+    }
+  }
   def existAsFile = new JValueFileExistMatcher
 }
