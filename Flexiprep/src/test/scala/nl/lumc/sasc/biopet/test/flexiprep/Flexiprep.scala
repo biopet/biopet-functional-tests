@@ -319,7 +319,9 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
     Seq(
       _ \ "pipeline" \ "input_R1" \ "md5" should haveValue(md5SumInputR1),
       _ \ "fastqc_R1" \ "fastqc_data" \ "path" should existAsFile,
-      _ \ "fastqc_R1" \ "fastqc_data" \ "md5" should haveValue("ab8d4dca2d07eef9743c14571f073ba9")))
+      _ \ "fastqc_R1" \ "fastqc_data" \ "md5" should haveValue(
+        if (r1.exists(_.getName.endsWith(".gz"))) "ab8d4dca2d07eef9743c14571f073ba9"
+        else "10683393032d9dfe8eed183fdb70e623")))
 
   addSummaryTest(flexiprepPath :+ "settings",
     Seq(
