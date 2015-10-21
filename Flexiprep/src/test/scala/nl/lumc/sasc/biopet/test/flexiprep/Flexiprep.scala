@@ -319,17 +319,10 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
 
   addSummaryTest(flexiprepPath :+ "files",
     Seq(
-      _ \ "pipeline" \ "input_R1" \ "md5" should haveValue(md5SumInputR1),
       _ \ "fastqc_R1" \ "fastqc_data" \ "path" should existAsFile,
       _ \ "fastqc_R1" \ "fastqc_data" \ "md5" should haveValue(
         if (r1.exists(_.getName.endsWith(".gz"))) "ab8d4dca2d07eef9743c14571f073ba9"
         else "10683393032d9dfe8eed183fdb70e623")))
-
-  addSummaryTest(flexiprepPath :+ "settings",
-    Seq(
-      jv => skipTrim should contain((jv \ "skip_trim").extract[Boolean]),
-      jv => skipClip should contain((jv \ "skip_clip").extract[Boolean]),
-      jv => (jv \ "paired").extract[Boolean] shouldBe r1.isDefined && r2.isDefined))
 }
 
 /** Trait for Flexiprep runs with paired-end inputs. */
@@ -402,7 +395,6 @@ trait FlexiprepPaired extends FlexiprepSingle {
 
   addSummaryTest(flexiprepPath :+ "files",
     Seq(
-      _ \ "pipeline" \ "input_R2" \ "md5" should haveValue(md5SumInputR2),
       _ \ "fastqc_R2" \ "fastqc_data" \ "path" should existAsFile,
       _ \ "fastqc_R2" \ "fastqc_data" \ "md5" should haveValue(
         if (r2.exists(_.getName.endsWith(".gz"))) "76967fa1a4518a017f7a0c1abd5a2af9"
