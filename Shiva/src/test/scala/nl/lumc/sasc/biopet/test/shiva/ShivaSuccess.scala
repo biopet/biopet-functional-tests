@@ -93,10 +93,36 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
     }
 
   @Test(dependsOnGroups = Array("parseSummary"))
-  def testMultisampleVcfFile: Unit = {
+  def testMultisampleVcfFile(): Unit = {
     val file = new File(outputDir, "variantcalling" + File.separator + "multisample.final.vcf.gz")
     val summaryPath = summary \ "shiva" \ "files" \ "pipeline" \ "final" \ "path"
     if (!multisampleVariantcalling.contains(false)) {
+      summaryPath shouldBe JString(file.getAbsolutePath)
+      assert(file.exists())
+    } else {
+      assert(!file.exists())
+      summaryPath shouldBe JNothing
+    }
+  }
+
+  @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
+  def testSingleSampleVcfFile(sample: String): Unit = {
+    val file = new File(sampleDir(sample), "variantcalling" + File.separator + s"$sample.final.vcf.gz")
+    val summaryPath = summary \ "samples" \ sample \ "shiva" \ "files" \ "pipeline" \ "final" \ "path"
+    if (singleSampleVariantcalling.contains(true)) {
+      summaryPath shouldBe JString(file.getAbsolutePath)
+      assert(file.exists())
+    } else {
+      assert(!file.exists())
+      summaryPath shouldBe JNothing
+    }
+  }
+
+  @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
+  def testLibraryVcfFile(sample: String, lib: String): Unit = {
+    val file = new File(libraryDir(sample, lib), "variantcalling" + File.separator + s"$sample-$lib.final.vcf.gz")
+    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "final" \ "path"
+    if (singleSampleVariantcalling.contains(true)) {
       summaryPath shouldBe JString(file.getAbsolutePath)
       assert(file.exists())
     } else {
@@ -149,7 +175,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
     summaryPath shouldBe a[JString]
     val file = new File(summaryPath.extract[String])
     file.getParentFile shouldBe sampleDir(sample)
-    assert(file.getName.startsWith(s"${sample}."))
+    assert(file.getName.startsWith(s"$sample."))
     assert(file.exists())
     if (samples(sample).size == 1) assert(java.nio.file.Files.isSymbolicLink(file.toPath))
 
