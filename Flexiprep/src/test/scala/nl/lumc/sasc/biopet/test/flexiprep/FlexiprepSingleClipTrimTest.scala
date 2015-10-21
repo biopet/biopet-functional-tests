@@ -64,7 +64,7 @@ trait FlexiprepSingleClipTrimSummaryValues { this: FlexiprepSingle =>
       _ \ "num_with_n" should haveValue(4),
       _ \ "len_min" should haveValue(20),
       _ \ "len_max" should haveValue(100),
-      _ \ "qual_encoding" should haveValue(inputEncodingR1),
+      _ \ "qual_encoding" should haveValue("sanger"),
       jv => (jv \ "num_avg_qual_gte").children.size shouldBe 61,
       _ \ "num_avg_qual_gte" \ "0" should haveValue(971),
       _ \ "num_avg_qual_gte" \ "60" should haveValue(0)))

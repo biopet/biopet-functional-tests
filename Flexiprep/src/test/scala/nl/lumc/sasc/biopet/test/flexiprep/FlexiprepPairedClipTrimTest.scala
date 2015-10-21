@@ -123,5 +123,5 @@ trait FlexiprepPairedClipTrimSummaryValues { this: FlexiprepPaired =>
       _ \ "num_avg_qual_gte" \ "60" should haveValue(0)))
 
   addSummaryTest(flexiprepPath :+ "files",
-    Seq(_ \ "fastqc_R1_qc" \ "fastqc_data" \ "path" should existAsFile))
+    Seq(_ \ "fastqc_R2_qc" \ "fastqc_data" \ "path" should existAsFile))
 }
