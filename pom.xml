@@ -21,6 +21,14 @@
         <module>Toucan</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.samtools</groupId>
+            <artifactId>htsjdk</artifactId>
+            <version>1.138</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <sourceDirectory>${basedir}/src/main/scala</sourceDirectory>
         <testSourceDirectory>${basedir}/src/test/scala</testSourceDirectory>

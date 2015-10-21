@@ -2,10 +2,13 @@ package nl.lumc.sasc.biopet.test.shiva
 
 import java.io.File
 
+import htsjdk.samtools.SamReaderFactory
 import nl.lumc.sasc.biopet.test.MultisampleSuccess
 import nl.lumc.sasc.biopet.test.shiva.variantcalling.VariantcallersExecutables
 import org.json4s._
 import org.testng.annotations.{ DataProvider, Test }
+
+import scala.collection.JavaConversions._
 
 /**
  * Created by pjvan_thof on 9/17/15.
@@ -17,7 +20,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
   else logMustNotHave("""No Known site found, skipping base recalibration""".r)
 
   if (!useIndelRealigner.contains(false)) {
-    addExecutable(Executable("realignertargetcreator", Some( """.+""".r)))
+    addExecutable(Executable("realignertargetcreator", Some(""".+""".r)))
     addExecutable(Executable("indelrealigner", Some(""".+""".r)))
   } else {
     addNotExecutable("realignertargetcreator")
@@ -25,7 +28,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
   }
 
   if (!useBaseRecalibration.contains(false) && dbsnpVcfFile.isDefined) {
-    addExecutable(Executable("baserecalibrator", Some( """.+""".r)))
+    addExecutable(Executable("baserecalibrator", Some(""".+""".r)))
     addExecutable(Executable("printreads", Some(""".+""".r)))
   } else {
     addNotExecutable("baserecalibrator")
@@ -89,15 +92,78 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
       }
     }
 
-  @Test(dataProvider = "libraries")
-  def testLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    val file = new File(libraryDir(sample, lib), s"$sample-$lib.final.bam")
-    assert(file.exists())
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testMultisampleVcfFile: Unit = {
+    val file = new File(outputDir, "variantcalling" + File.separator + "multisample.final.vcf.gz")
+    val summaryPath = summary \ "shiva" \ "files" \ "pipeline" \ "final" \ "path"
+    if (!multisampleVariantcalling.contains(false)) {
+      summaryPath shouldBe JString(file.getAbsolutePath)
+      assert(file.exists())
+    } else {
+      assert(!file.exists())
+      summaryPath shouldBe JNothing
+    }
   }
 
-  @Test(dataProvider = "samples")
-  def testSampleBam(sample: String): Unit = withClue(s"Sample: $sample") {
-    val file = new File(sampleDir(sample), s"$sample.final.bam")
+  @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
+  def testMappingBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
+    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "bamFile" \ "path"
+    summaryPath shouldBe a[JString]
+    val file = new File(summaryPath.extract[String])
+    file.getParentFile shouldBe libraryDir(sample, lib)
+    file.getName shouldBe s"$sample-$lib.final.bam"
     assert(file.exists())
+
+    val reader = SamReaderFactory.makeDefault.open(file)
+    val header = reader.getFileHeader
+    assert(!header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
+    assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
+    reader.close()
+  }
+
+  @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
+  def testLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
+    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "bamFile" \ "preProcessBam"
+    summaryPath shouldBe a[JString]
+    val file = new File(summaryPath.extract[String])
+    file.getParentFile shouldBe libraryDir(sample, lib)
+    file.getName shouldBe s"$sample-$lib.final.bam"
+    if (samples(sample).size == 1) {
+      assert(file.exists())
+      val reader = SamReaderFactory.makeDefault.open(file)
+      val header = reader.getFileHeader
+      if (!useIndelRealigner.contains(false))
+        assert(header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
+      else assert(!header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
+
+      if (!useBaseRecalibration.contains(false) && dbsnpVcfFile.isDefined)
+        assert(header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
+      else assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
+      reader.close()
+    } else assert(!file.exists())
+  }
+
+  @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
+  def testSampleBam(sample: String): Unit = withClue(s"Sample: $sample") {
+    val summaryPath = summary \ "samples" \ sample \ "shiva" \ "files" \ "pipeline" \ "preProcessBam" \ "path"
+    summaryPath shouldBe a[JString]
+    val file = new File(summaryPath.extract[String])
+    file.getParentFile shouldBe sampleDir(sample)
+    assert(file.getName.startsWith(s"${sample}."))
+    assert(file.exists())
+    if (samples(sample).size == 1) assert(java.nio.file.Files.isSymbolicLink(file.toPath))
+
+    val reader = SamReaderFactory.makeDefault.open(file)
+    val header = reader.getFileHeader
+
+    if (!useIndelRealigner.contains(false))
+      assert(header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
+    else assert(!header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
+
+    if (!useBaseRecalibration.contains(false) && dbsnpVcfFile.isDefined)
+      assert(header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
+    else assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
+
+    reader.close()
   }
 }

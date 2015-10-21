@@ -17,11 +17,6 @@
             <artifactId>Common</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.samtools</groupId>
-            <artifactId>htsjdk</artifactId>
-            <version>1.138</version>
-        </dependency>
     </dependencies>
 
 </project>
