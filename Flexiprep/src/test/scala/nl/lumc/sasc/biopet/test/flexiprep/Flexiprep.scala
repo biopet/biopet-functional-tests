@@ -27,6 +27,10 @@ trait FlexiprepRun extends Pipeline {
 
   def skipTrim = Option(false)
 
+  def inputEncodingR1 = "sanger"
+
+  def inputEncodingR2 = "sanger"
+
   def keepQcFastqFiles: Option[Boolean] = None
 
   def args = Seq("-sample", sampleId, "-library", libId) ++
@@ -312,17 +316,14 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
       _ \ "num_with_n" should haveValue(175),
       _ \ "len_min" should haveValue(100),
       _ \ "len_max" should haveValue(100),
-      _ \ "qual_encoding" should haveValue("sanger"),
+      _ \ "qual_encoding" should haveValue(inputEncodingR1),
       jv => (jv \ "num_avg_qual_gte").children.size shouldBe 61,
       _ \ "num_avg_qual_gte" \ "0" should haveValue(1000),
       _ \ "num_avg_qual_gte" \ "60" should haveValue(0)))
 
   addSummaryTest(flexiprepPath :+ "files",
     Seq(
-      _ \ "fastqc_R1" \ "fastqc_data" \ "path" should existAsFile,
-      _ \ "fastqc_R1" \ "fastqc_data" \ "md5" should haveValue(
-        if (r1.exists(_.getName.endsWith(".gz"))) "ab8d4dca2d07eef9743c14571f073ba9"
-        else "10683393032d9dfe8eed183fdb70e623")))
+      _ \ "fastqc_R1" \ "fastqc_data" \ "path" should existAsFile))
 }
 
 /** Trait for Flexiprep runs with paired-end inputs. */
@@ -388,16 +389,13 @@ trait FlexiprepPaired extends FlexiprepSingle {
       _ \ "num_with_n" should haveValue(769),
       _ \ "len_min" should haveValue(100),
       _ \ "len_max" should haveValue(100),
-      _ \ "qual_encoding" should haveValue("sanger"),
+      _ \ "qual_encoding" should haveValue(inputEncodingR2),
       jv => (jv \ "num_avg_qual_gte").children.size shouldBe 61,
       _ \ "num_avg_qual_gte" \ "0" should haveValue(1000),
       _ \ "num_avg_qual_gte" \ "60" should haveValue(0)))
 
   addSummaryTest(flexiprepPath :+ "files",
     Seq(
-      _ \ "fastqc_R2" \ "fastqc_data" \ "path" should existAsFile,
-      _ \ "fastqc_R2" \ "fastqc_data" \ "md5" should haveValue(
-        if (r2.exists(_.getName.endsWith(".gz"))) "76967fa1a4518a017f7a0c1abd5a2af9"
-        else "260fab67458766f45e7d349ed5e0725a")))
+      _ \ "fastqc_R2" \ "fastqc_data" \ "path" should existAsFile))
 }
 
