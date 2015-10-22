@@ -58,3 +58,4 @@ class ShivaNoPreprocessTest extends ShivaWgs1 {
   override def useIndelRealigner = Some(false)
   override def useBaseRecalibration = Some(false)
 }
+
