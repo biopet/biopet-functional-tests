@@ -177,8 +177,8 @@ trait JValueMatchers {
   class JValueBoolMatcher(expectedValue: Boolean) extends Matcher[JValue] {
     def apply(left: JValue) = {
       def testFunc: Boolean = left match {
-        case JBool(i)     => i == expectedValue
-        case otherwise   => false
+        case JBool(i)  => i == expectedValue
+        case otherwise => false
       }
       makeMatchResult(testFunc, left, expectedValue)
     }
@@ -197,11 +197,11 @@ trait JValueMatchers {
   class JValueArrayMatcher(expectedValue: List[_]) extends Matcher[JValue] {
     def apply(left: JValue) = {
       def testFunc: Boolean = left match {
-        case a:JArray => {
+        case a: JArray => {
           val values = a.values
           values.size == expectedValue.size && expectedValue.forall(x => values.exists(x == _))
         }
-        case otherwise  => false
+        case otherwise => false
       }
       makeMatchResult(testFunc, left, expectedValue)
     }
