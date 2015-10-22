@@ -173,6 +173,16 @@ trait JValueMatchers {
     }
   }
 
+  class JValueBoolMatcher(expectedValue: Boolean) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JBool(i)     => i == expectedValue
+        case otherwise   => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
   class JValueStringMatcher(expectedValue: String) extends Matcher[JValue] {
     def apply(left: JValue) = {
       def testFunc: Boolean = left match {
@@ -193,6 +203,7 @@ trait JValueMatchers {
     }
   }
 
+  def haveValue(expectedValue: Boolean) = new JValueBoolMatcher(expectedValue)
   def haveValue(expectedValue: Int) = new JValueIntMatcher(expectedValue)
   def haveValue(expectedValue: Double) = new JValueDoubleMatcher(expectedValue)
   def haveValue(expectedValue: String) = new JValueStringMatcher(expectedValue)
