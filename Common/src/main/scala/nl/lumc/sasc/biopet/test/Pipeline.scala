@@ -35,6 +35,8 @@ trait Pipeline extends TestNGSuite with Matchers {
   def retries = Option(5)
   def allowRetries = 0
 
+  def disablescatter = true
+
   def configs: List[File] = Nil
 
   /**
@@ -106,6 +108,7 @@ object Pipeline {
   def runPipeline(pipeline: Pipeline) = {
     val cmd = Seq("java", pipeline.memoryArg, "-jar", Biopet.getBiopetJar.toString, "pipeline", pipeline.pipelineName) ++
       Biopet.queueArgs ++
+      (if (pipeline.disablescatter) Seq("--disablescatter") else Seq())
       cmdArg("-retry", pipeline.retries) ++
       cmdCondition("-run", pipeline.run) ++
       cmdConfig("output_dir", pipeline.outputDirArg) ++
