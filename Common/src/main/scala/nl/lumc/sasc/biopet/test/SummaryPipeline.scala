@@ -7,7 +7,6 @@ import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatest._, matchers._
 
-import scala.collection.Iterable
 import scala.collection.mutable.{ Map => MutMap }
 import scala.util.matching.Regex
 
@@ -197,10 +196,9 @@ trait JValueMatchers {
   class JValueArrayMatcher(expectedValue: List[_]) extends Matcher[JValue] {
     def apply(left: JValue) = {
       def testFunc: Boolean = left match {
-        case a: JArray => {
+        case a: JArray =>
           val values = a.values
-          values.size == expectedValue.size && expectedValue.forall(x => values.exists(x == _))
-        }
+          values.size == expectedValue.size && expectedValue.forall(values.contains)
         case otherwise => false
       }
       makeMatchResult(testFunc, left, expectedValue)
