@@ -9,7 +9,7 @@ class FlexiprepPairedClipTrimTest extends FlexiprepPaired with FlexiprepPairedCl
   override def md5SumOutputR2 = Some("2acfae7d3ead4c6054786a1b5eef2b17")
 }
 
-trait FlexiprepPairedClipTrimSummaryValues { this: FlexiprepPaired =>
+trait FlexiprepPairedClipTrimSummaryValues extends FlexiprepPaired {
 
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_quality",
     Seq(

@@ -8,7 +8,7 @@ class FlexiprepSingleClipTrimTest extends FlexiprepSingle with FlexiprepSingleCl
   override def md5SumOutputR1 = Some("5b7896e489a5aeb3d30cb11ea15a7be3")
 }
 
-trait FlexiprepSingleClipTrimSummaryValues { this: FlexiprepSingle =>
+trait FlexiprepSingleClipTrimSummaryValues extends FlexiprepSingle {
 
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_quality",
     Seq(

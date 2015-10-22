@@ -10,7 +10,7 @@ class FlexiprepSingleClipTest extends FlexiprepSingle with FlexiprepSingleClipSu
 
 }
 
-trait FlexiprepSingleClipSummaryValues { this: FlexiprepSingle =>
+trait FlexiprepSingleClipSummaryValues extends FlexiprepSingle {
 
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_quality",
     Seq(
