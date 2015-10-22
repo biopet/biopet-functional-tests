@@ -29,10 +29,7 @@ trait SummaryPipeline extends Pipeline with JValueMatchers {
   private val summaryTests: MutMap[Seq[String], Seq[SummaryTestFunc]] = MutMap()
 
   def addSummaryTest(pathTokens: Seq[String], testFuncs: Seq[JValue => Unit]): Unit =
-    summaryTests.get(pathTokens) match {
-      case None     => summaryTests(pathTokens) = testFuncs
-      case Some(ts) => summaryTests(pathTokens) = ts ++ testFuncs
-    }
+    summaryTests(pathTokens) = summaryTests.getOrElse(pathTokens, Seq()) ++ testFuncs
 
   @Test(groups = Array("parseSummary"))
   def parseSummary(): Unit = _summary = parse(summaryFile)
@@ -200,14 +197,12 @@ trait JValueMatchers {
   def haveValue(expectedValue: Double) = new JValueDoubleMatcher(expectedValue)
   def haveValue(expectedValue: String) = new JValueStringMatcher(expectedValue)
   def haveValue(expectedValue: Option[_]): Matcher[JValue] = expectedValue match {
-    case n @ None => new JValueEmptyMatcher(n)
-    case Some(a) => a match {
-      case v: Int       => new JValueIntMatcher(v)
-      case v: Double    => new JValueDoubleMatcher(v)
-      case v: String    => new JValueStringMatcher(v)
-      case v: Option[_] => haveValue(v)
-      case otherwise    => throw new RuntimeException("Unexpected type for testing JValue: " + otherwise.toString)
-    }
+    case n @ None           => new JValueEmptyMatcher(n)
+    case Some(v: Int)       => new JValueIntMatcher(v)
+    case Some(v: Double)    => new JValueDoubleMatcher(v)
+    case Some(v: String)    => new JValueStringMatcher(v)
+    case Some(v: Option[_]) => haveValue(v)
+    case otherwise          => throw new RuntimeException(s"Unexpected type for testing JValue: $otherwise")
   }
   def existAsFile = new JValueFileExistMatcher
 }
