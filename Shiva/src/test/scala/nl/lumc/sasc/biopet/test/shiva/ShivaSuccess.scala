@@ -106,7 +106,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
   }
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
-  def testSingleSampleVcfFile(sample: String): Unit = {
+  def testSingleSampleVcfFile(sample: String): Unit = withClue(s"Sample: $sample") {
     val file = new File(sampleDir(sample), "variantcalling" + File.separator + s"$sample.final.vcf.gz")
     val summaryPath = summary \ "samples" \ sample \ "shiva" \ "files" \ "pipeline" \ "final" \ "path"
     if (singleSampleVariantcalling.contains(true)) {
@@ -119,7 +119,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
   }
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
-  def testLibraryVcfFile(sample: String, lib: String): Unit = {
+  def testLibraryVcfFile(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     val file = new File(libraryDir(sample, lib), "variantcalling" + File.separator + s"$sample-$lib.final.vcf.gz")
     val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "final" \ "path"
     if (singleSampleVariantcalling.contains(true)) {
