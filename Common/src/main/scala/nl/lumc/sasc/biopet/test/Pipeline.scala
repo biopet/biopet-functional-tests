@@ -17,26 +17,41 @@ import scala.util.matching.Regex
 
 trait Pipeline extends TestNGSuite with Matchers {
 
+  /** Output dir of pipeline */
   def outputDir = new File(Biopet.getOutputDir, this.getClass.getName.stripPrefix("nl.lumc.sasc.biopet.test."))
 
+  /** The argument to queue for outputDir, default uses `outputDir` */
   def outputDirArg = Option(outputDir)
 
+  /** Log file of pipeline */
   def logFile = new File(outputDir, "run.log")
 
+  /** Name of pipeline, this is used for the commandline and for the summary */
   def pipelineName: String
 
+  /** Args given on the commandline */
   def args: Seq[String]
 
   private var _exitValue = -1
+  /** exitvalue of the pipeline, if this is -1 the pipeline is not executed yet */
   def exitValue = _exitValue
 
+  /** Memory for biopet process */
   def memoryArg = "-Xmx150m"
 
+  /** This is the retry option for the pipeline, default is 5 */
   def retries = Option(5)
+
+  /**
+   * Allowed retries, test will be generated from `allowRetries` until `retries`
+   * Default is 0 so no retries are allowed
+   */
   def allowRetries = 0
 
+  /** This enabled the "--disablescatter" option on the commandline, default enabled */
   def disablescatter = true
 
+  /** This are the config files given to the pipeline with the "-config" option */
   def configs: List[File] = Nil
 
   /**
