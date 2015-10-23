@@ -123,7 +123,7 @@ object Pipeline {
   def runPipeline(pipeline: Pipeline) = {
     val cmd = Seq("java", pipeline.memoryArg, "-jar", Biopet.getBiopetJar.toString, "pipeline", pipeline.pipelineName) ++
       Biopet.queueArgs ++
-      (if (pipeline.disablescatter) Seq("--disablescatter") else Seq())
+      (if (pipeline.disablescatter) Seq("--disablescatter") else Seq()) ++
       cmdArg("-retry", pipeline.retries) ++
       cmdCondition("-run", pipeline.run) ++
       cmdConfig("output_dir", pipeline.outputDirArg) ++
