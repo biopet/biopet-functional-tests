@@ -158,9 +158,9 @@ object Pipeline {
 
   def cmdConfig(configKey: String, value: Any): Seq[String] = {
     value match {
-      case Some(v) => Seq("-cv", s"${configKey}=${v.toString}")
+      case Some(v) => Seq("-cv", s"$configKey=$v")
       case None    => Seq()
-      case _       => Seq("-cv", s"${configKey}=${value.toString}")
+      case _       => Seq("-cv", s"$configKey=$value")
     }
   }
 
