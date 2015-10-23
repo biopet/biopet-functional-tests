@@ -22,6 +22,24 @@ object Samples {
   )
   val wgs1Config = createTempConfig(wgs1, "wgs1")
 
+  val wgs2 = Map("samples" ->
+    Map("wgs2" ->
+      Map("libraries" ->
+        Map("lib1" ->
+          Map(
+            "R1" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib1_R1.fq.gz").getAbsolutePath,
+            "R2" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib1_R2.fq.gz").getAbsolutePath
+          ), "lib2" ->
+          Map(
+            "R1" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib2_R1.fq.gz").getAbsolutePath,
+            "R2" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib2_R2.fq.gz").getAbsolutePath
+          )
+        )
+      )
+    )
+  )
+  val wgs2Config = createTempConfig(wgs2, "wgs2")
+
   val wgs1Bam = Map("samples" ->
     Map("wgs1" ->
       Map("libraries" ->
