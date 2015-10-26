@@ -19,7 +19,7 @@ trait ShivaVariantcalling extends Pipeline {
 
   def aligner: Option[String] = None
 
-  def namePrefix: Option[String] = None
+  def namePrefix: Option[String] = Some("multisample")
 
   def bamFiles: List[File]
 
