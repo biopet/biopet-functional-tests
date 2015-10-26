@@ -12,7 +12,7 @@ trait FlexiprepSingleClipTrimSummaryValues extends FlexiprepSingle {
 
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_quality",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "mean" should haveValue(32.43048403707518),
       _ \ "1" \ "median" should haveValue(33),
       _ \ "1" \ "lower_quartile" should haveValue(31),
@@ -28,7 +28,7 @@ trait FlexiprepSingleClipTrimSummaryValues extends FlexiprepSingle {
 
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_content",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "A" should haveValue(16.065911431513904),
       _ \ "1" \ "T" should haveValue(12.1524201853759),
       _ \ "1" \ "G" should haveValue(52.832131822863026),

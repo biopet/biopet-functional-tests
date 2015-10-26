@@ -13,7 +13,7 @@ trait FlexiprepPairedClipTrimSummaryValues extends FlexiprepPaired {
 
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_quality",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "mean" should haveValue(32.64253393665158),
       _ \ "1" \ "median" should haveValue(34),
       _ \ "1" \ "lower_quartile" should haveValue(31),
@@ -29,7 +29,7 @@ trait FlexiprepPairedClipTrimSummaryValues extends FlexiprepPaired {
 
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_content",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "A" should haveValue(15.610859728506787),
       _ \ "1" \ "T" should haveValue(11.312217194570136),
       _ \ "1" \ "G" should haveValue(51.80995475113123),
@@ -69,7 +69,7 @@ trait FlexiprepPairedClipTrimSummaryValues extends FlexiprepPaired {
 
   addSummaryTest(statsFastqcR2QcPath :+ "per_base_sequence_quality",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "mean" should haveValue(30.479638009049772),
       _ \ "1" \ "median" should haveValue(31),
       _ \ "1" \ "lower_quartile" should haveValue(30),
@@ -85,7 +85,7 @@ trait FlexiprepPairedClipTrimSummaryValues extends FlexiprepPaired {
 
   addSummaryTest(statsFastqcR2QcPath :+ "per_base_sequence_content",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "A" should haveValue(27.149321266968325),
       _ \ "1" \ "T" should haveValue(13.122171945701359),
       _ \ "1" \ "G" should haveValue(36.425339366515836),

@@ -9,7 +9,7 @@ class FlexiprepSingleTrimTest extends FlexiprepSingle {
 
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_quality",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "mean" should haveValue(32.412),
       _ \ "1" \ "median" should haveValue(33),
       _ \ "1" \ "lower_quartile" should haveValue(31),
@@ -25,7 +25,7 @@ class FlexiprepSingleTrimTest extends FlexiprepSingle {
 
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_content",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "A" should haveValue(17),
       _ \ "1" \ "T" should haveValue(11.799999999999999),
       _ \ "1" \ "G" should haveValue(52.5),

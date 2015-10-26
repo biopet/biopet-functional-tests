@@ -10,7 +10,7 @@ class FlexiprepPairedClipTest extends FlexiprepPaired with FlexiprepSingleClipSu
 
   addSummaryTest(statsFastqcR2QcPath :+ "per_base_sequence_quality",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "mean" should haveValue(11.36105476673428),
       _ \ "1" \ "median" should haveValue(2),
       _ \ "1" \ "lower_quartile" should haveValue(2),
@@ -26,7 +26,7 @@ class FlexiprepPairedClipTest extends FlexiprepPaired with FlexiprepSingleClipSu
 
   addSummaryTest(statsFastqcR2QcPath :+ "per_base_sequence_content",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "A" should haveValue(24.556213017751478),
       _ \ "1" \ "T" should haveValue(5.325443786982249),
       _ \ "1" \ "G" should haveValue(48.22485207100592),

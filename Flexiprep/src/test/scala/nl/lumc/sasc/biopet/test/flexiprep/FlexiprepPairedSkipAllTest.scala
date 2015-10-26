@@ -10,7 +10,7 @@ class FlexiprepPairedSkipAllTest extends FlexiprepPaired {
 
   addSummaryTest(statsFastqcR2QcPath :+ "per_base_sequence_quality",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "mean" should haveValue(11.351),
       _ \ "1" \ "median" should haveValue(2),
       _ \ "1" \ "lower_quartile" should haveValue(2),
@@ -26,7 +26,7 @@ class FlexiprepPairedSkipAllTest extends FlexiprepPaired {
 
   addSummaryTest(statsFastqcR2QcPath :+ "per_base_sequence_content",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "A" should haveValue(24.198250728862973),
       _ \ "1" \ "T" should haveValue(5.247813411078718),
       _ \ "1" \ "G" should haveValue(48.68804664723032),

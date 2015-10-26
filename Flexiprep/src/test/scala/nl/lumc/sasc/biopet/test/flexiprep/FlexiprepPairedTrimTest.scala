@@ -10,7 +10,7 @@ class FlexiprepPairedTrimTest extends FlexiprepPaired {
 
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_quality",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "mean" should haveValue(32.62888888888889),
       _ \ "1" \ "median" should haveValue(34),
       _ \ "1" \ "lower_quartile" should haveValue(31),
@@ -26,7 +26,7 @@ class FlexiprepPairedTrimTest extends FlexiprepPaired {
 
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_content",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "A" should haveValue(16.666666666666664),
       _ \ "1" \ "T" should haveValue(11.11111111111111),
       _ \ "1" \ "G" should haveValue(51.33333333333333),
@@ -70,7 +70,7 @@ class FlexiprepPairedTrimTest extends FlexiprepPaired {
 
   addSummaryTest(statsFastqcR2QcPath :+ "per_base_sequence_quality",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "mean" should haveValue(30.475555555555555),
       _ \ "1" \ "median" should haveValue(31),
       _ \ "1" \ "lower_quartile" should haveValue(30),
@@ -86,7 +86,7 @@ class FlexiprepPairedTrimTest extends FlexiprepPaired {
 
   addSummaryTest(statsFastqcR2QcPath :+ "per_base_sequence_content",
     Seq(
-      _.children.size shouldBe 55,
+      _.children.size should be <= 100,
       _ \ "1" \ "A" should haveValue(27.333333333333332),
       _ \ "1" \ "T" should haveValue(13.111111111111112),
       _ \ "1" \ "G" should haveValue(36.44444444444444),
