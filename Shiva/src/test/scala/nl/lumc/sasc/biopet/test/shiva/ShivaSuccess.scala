@@ -95,7 +95,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
   @Test(dependsOnGroups = Array("parseSummary"))
   def testMultisampleVcfFile(): Unit = {
     val file = new File(outputDir, "variantcalling" + File.separator + "multisample.final.vcf.gz")
-    val summaryPath = summary \ "shiva" \ "files" \ "pipeline" \ "final" \ "path"
+    val summaryPath = summary \ "shivavariantcalling" \ "files" \ "pipeline" \ "final" \ "path"
     if (!multisampleVariantcalling.contains(false)) {
       summaryPath shouldBe JString(file.getAbsolutePath)
       assert(file.exists())
@@ -108,7 +108,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
   @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
   def testSingleSampleVcfFile(sample: String): Unit = withClue(s"Sample: $sample") {
     val file = new File(sampleDir(sample), "variantcalling" + File.separator + s"$sample.final.vcf.gz")
-    val summaryPath = summary \ "samples" \ sample \ "shiva" \ "files" \ "pipeline" \ "final" \ "path"
+    val summaryPath = summary \ "samples" \ sample \ "shivavariantcalling" \ "files" \ "pipeline" \ "final" \ "path"
     if (singleSampleVariantcalling.contains(true)) {
       summaryPath shouldBe JString(file.getAbsolutePath)
       assert(file.exists())
@@ -121,7 +121,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
   def testLibraryVcfFile(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     val file = new File(libraryDir(sample, lib), "variantcalling" + File.separator + s"$sample-$lib.final.vcf.gz")
-    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "final" \ "path"
+    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shivavariantcalling" \ "files" \ "pipeline" \ "final" \ "path"
     if (singleSampleVariantcalling.contains(true)) {
       summaryPath shouldBe JString(file.getAbsolutePath)
       assert(file.exists())
