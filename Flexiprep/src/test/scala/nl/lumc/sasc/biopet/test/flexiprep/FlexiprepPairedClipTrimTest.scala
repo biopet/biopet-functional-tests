@@ -2,7 +2,7 @@ package nl.lumc.sasc.biopet.test.flexiprep
 
 import org.json4s.JArray
 
-class FlexiprepPairedClipTrimTest extends FlexiprepPaired with FlexiprepPairedClipTrimSummaryValues {
+class FlexiprepPairedClipTrimTest extends FlexiprepPairedClipTrimSummaryValues {
   override def skipClip = Some(false)
   override def skipTrim = Some(false)
   override def md5SumOutputR1 = Some("b88c68ac883086d558a76cd2fa9252fc")
