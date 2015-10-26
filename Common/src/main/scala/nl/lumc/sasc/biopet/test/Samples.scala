@@ -14,7 +14,9 @@ object Samples {
         Map("lib1" ->
           Map(
             "R1" -> Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R1.fq.gz").getAbsolutePath,
-            "R2" -> Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R2.fq.gz").getAbsolutePath
+            "R1_md5" -> "b859d6dd76a6861ce7e9a978ae2e530e",
+            "R2" -> Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R2.fq.gz").getAbsolutePath,
+            "R2_md5" -> "986acc7bda0bf2ef55c52431f54fe3a9"
           )
         )
       )
@@ -28,11 +30,15 @@ object Samples {
         Map("lib1" ->
           Map(
             "R1" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib1_R1.fq.gz").getAbsolutePath,
-            "R2" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib1_R2.fq.gz").getAbsolutePath
+            "R1_md5" -> "02f9197c80d6a249e8b06173b1a24c07",
+            "R2" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib1_R2.fq.gz").getAbsolutePath,
+            "R2_md5" -> "cffeb566425da8080dc8b425e5c9e6f9"
           ), "lib2" ->
           Map(
             "R1" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib2_R1.fq.gz").getAbsolutePath,
-            "R2" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib2_R2.fq.gz").getAbsolutePath
+            "R1_md5" -> "54d2e6c92ee8899dd2432a8c66124f29",
+            "R2" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib2_R2.fq.gz").getAbsolutePath,
+            "R2_md5" -> "c8a491e3d587646dcac5a201a2520e47"
           )
         )
       )
@@ -45,7 +51,8 @@ object Samples {
       Map("libraries" ->
         Map("lib1" ->
           Map(
-            "bam" -> Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "wgs1.bam").getAbsolutePath
+            "bam" -> Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "wgs1.bam").getAbsolutePath,
+            "bam_md5" -> "f69ad453cc62c703d394188120fe03fd"
           )
         )
       )
