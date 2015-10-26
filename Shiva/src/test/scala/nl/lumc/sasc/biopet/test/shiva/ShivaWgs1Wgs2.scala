@@ -2,7 +2,9 @@ package nl.lumc.sasc.biopet.test.shiva
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.{Biopet, Samples, TestReference}
+import nl.lumc.sasc.biopet.test.{ Biopet, Samples, TestReference }
+import org.json4s._
+import org.testng.annotations.Test
 
 /**
  * Created by pjvan_thof on 10/23/15.
@@ -10,6 +12,17 @@ import nl.lumc.sasc.biopet.test.{Biopet, Samples, TestReference}
 trait ShivaWgs1Wgs2 extends ShivaSuccess with TestReference {
   override def configs = super.configs ::: Samples.wgs1Config :: Samples.wgs2Config :: Nil
   override def referenceVcf = Some(Biopet.fixtureFile("shiva" + File.separator + "wgs1.wgs2.vcf.gz"))
+
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testMultisampleConcordance: Unit = {
+    val concordance = summary \ "shivavariantcalling" \ "stats" \ "multisample-genotype_concordance-final"
+    if (!multisampleVariantcalling.contains(false) && referenceVcf.isDefined) {
+      concordance shouldBe a[JObject]
+      (concordance \ "genotypeSummary" \ "Overall_Genotype_Concordance").extract[Double] should be > 0.9
+    } else {
+      concordance shouldBe JNothing
+    }
+  }
 
   def samples = Map("wgs1" -> List("lib1"), "wgs2" -> List("lib1", "lib2"))
 }

@@ -2,7 +2,7 @@ package nl.lumc.sasc.biopet.test.shiva
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.{Biopet, Samples, TestReference}
+import nl.lumc.sasc.biopet.test.{ Biopet, Samples, TestReference }
 
 /**
  * Created by pjvan_thof on 10/23/15.
