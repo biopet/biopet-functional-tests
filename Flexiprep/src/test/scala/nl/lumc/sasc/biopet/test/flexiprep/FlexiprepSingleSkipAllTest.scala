@@ -64,6 +64,5 @@ class FlexiprepSingleSkipAllTest extends FlexiprepSingle {
 
   addSummaryTest(flexiprepPath :+ "files",
     Seq(
-      _ \ "fastqc_R1_qc" \ "fastqc_data" \ "path" should existAsFile,
-      _ \ "fastqc_R1_qc" \ "fastqc_data" \ "md5" should haveValue("f2dcd9495284aac1de8c4887fbc4131f")))
+      _ \ "fastqc_R1_qc" \ "fastqc_data" \ "path" should existAsFile))
 }

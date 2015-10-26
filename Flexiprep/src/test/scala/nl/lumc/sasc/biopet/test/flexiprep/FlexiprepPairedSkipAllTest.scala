@@ -63,6 +63,5 @@ class FlexiprepPairedSkipAllTest extends FlexiprepPaired {
 
   addSummaryTest(flexiprepPath :+ "files",
     Seq(
-      _ \ "fastqc_R2_qc" \ "fastqc_data" \ "path" should existAsFile,
-      _ \ "fastqc_R2_qc" \ "fastqc_data" \ "md5" should haveValue("437615cd8280df140c293212d95f2da4")))
+      _ \ "fastqc_R2_qc" \ "fastqc_data" \ "path" should existAsFile))
 }
