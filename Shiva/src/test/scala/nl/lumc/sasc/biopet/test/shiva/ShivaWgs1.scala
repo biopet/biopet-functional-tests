@@ -1,6 +1,8 @@
 package nl.lumc.sasc.biopet.test.shiva
 
-import nl.lumc.sasc.biopet.test.{ TestReference, Samples }
+import java.io.File
+
+import nl.lumc.sasc.biopet.test.{Biopet, TestReference, Samples}
 import nl.lumc.sasc.biopet.test.utils._
 
 /**
@@ -8,6 +10,7 @@ import nl.lumc.sasc.biopet.test.utils._
  */
 trait ShivaWgs1 extends ShivaSuccess with TestReference {
   override def configs = super.configs ::: Samples.wgs1Config :: Nil
+  override def referenceVcf = Some(Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "wgs1.vcf.gz"))
 
   def samples = Map("wgs1" -> List("lib1"))
 }
