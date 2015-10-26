@@ -27,6 +27,10 @@ class BcftoolsTest extends ShivaVariantcallingWgs1 {
   override def variantcallers = List("bcftools")
 }
 
+class BcftoolsSingleSampleTest extends ShivaVariantcallingWgs1 {
+  override def variantcallers = List("bcftools_singlesample")
+}
+
 class FreebayesTest extends ShivaVariantcallingWgs1 {
   override def variantcallers = List("freebayes")
 }
