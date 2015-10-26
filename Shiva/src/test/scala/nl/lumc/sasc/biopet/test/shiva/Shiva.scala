@@ -41,6 +41,10 @@ trait Shiva extends Pipeline {
 
   def dbsnpVcfFile: Option[File] = None
 
+  def referenceVcf: Option[File] = None
+
+  def referenceVcfRegions: Option[File] = None
+
   def variantcallers: List[String] = Nil
 
   val variantcallersConfig = if (variantcallers.nonEmpty) Some(createTempConfig(Map("variantcallers" -> variantcallers))) else None
@@ -59,7 +63,9 @@ trait Shiva extends Pipeline {
     cmdConfig("use_indel_realigner", useIndelRealigner) ++
     cmdConfig("use_base_recalibration", useBaseRecalibration) ++
     cmdConfig("use_analyze_covariates", useAnalyzeCovariates) ++
-    cmdConfig("dbsnp", dbsnpVcfFile)
+    cmdConfig("dbsnp", dbsnpVcfFile) ++
+    cmdConfig("reference_vcf", referenceVcf) ++
+    cmdConfig("reference_vcf_regions", referenceVcfRegions)
 }
 
 object Shiva {
