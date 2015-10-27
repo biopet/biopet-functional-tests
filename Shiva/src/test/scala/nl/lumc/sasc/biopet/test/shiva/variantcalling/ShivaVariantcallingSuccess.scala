@@ -15,9 +15,9 @@ trait ShivaVariantcallingSuccess extends ShivaVariantcalling with Variantcallers
   def variantcallerProvider = Shiva.validVariantcallers.map(Array(_)).toArray
 
   @Test(dataProvider = "variantcallers", dependsOnGroups = Array("parseSummary"))
-  def testVariantcaller(variantcaller: String): Unit = {
+  def testVariantcaller(variantcaller: String): Unit = withClue(s"variantcaller: $variantcaller") {
     val dir = new File(outputDir, variantcaller)
-    val vcfstats = this.summary \ "shivavariantcalling" \ s"${namePrefix.get}-vcfstats-$variantcaller"
+    val vcfstats = this.summary \ "shivavariantcalling" \ "stats" \ s"${namePrefix.get}-vcfstats-$variantcaller"
     if (variantcallers.contains(variantcaller)) {
       assert(dir.exists())
       assert(dir.isDirectory)
