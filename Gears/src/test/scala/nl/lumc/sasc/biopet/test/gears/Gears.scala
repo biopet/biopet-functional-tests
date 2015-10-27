@@ -8,9 +8,7 @@ import nl.lumc.sasc.biopet.test.Pipeline._
 /**
  * Created by waiyileung on 05-10-15.
  */
-trait GearsRun extends Pipeline {
-  def summaryFile = new File(outputDir, s"${pipelineName}.summary.json")
-
+trait Gears extends Pipeline {
   def pipelineName = "gears"
 
   def paired = r2.isDefined
