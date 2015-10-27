@@ -149,11 +149,11 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
   def testLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "bamFile" \ "path"
+    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "preProcessBam" \ "path"
     summaryPath shouldBe a[JString]
     val file = new File(summaryPath.extract[String])
     file.getParentFile shouldBe libraryDir(sample, lib)
-    file.getName shouldBe s"$sample-$lib.final.bam"
+    file.getName should not be s"$sample-$lib.final.bam"
     if (samples(sample).size == 1) {
       assert(file.exists())
       val reader = SamReaderFactory.makeDefault.open(file)
