@@ -22,7 +22,7 @@ trait VariantcallersExecutables extends SummaryPipeline {
   else addNotExecutable("freebayes")
 
   if (variantcallers.contains("bcftools") ||
-    variantcallers.contains("bcftools_singlesample")) addExecutable(Executable("bcftools", Some(""".+""".r)))
+    variantcallers.contains("bcftools_singlesample")) addExecutable(Executable("bcftoolscall", Some(""".+""".r)))
   else addNotExecutable("bcftools")
 
   if (variantcallers.contains("raw")) addExecutable(Executable("mpileuptovcf", Some(""".+""".r)))
