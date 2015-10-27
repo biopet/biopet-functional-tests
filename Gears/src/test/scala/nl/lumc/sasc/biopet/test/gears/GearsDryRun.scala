@@ -18,5 +18,5 @@ class GearsFastQDryRunTest extends GearsRun {
 class GearsBamDryRunTest extends GearsRun {
   override def run = false
 
-  override def r1 = Some(new File(Biopet.fixtureFile("gears" + File.separator + "hpv_simu.bam").getAbsolutePath))
+  override def bam = Some(new File(Biopet.fixtureFile("gears" + File.separator + "hpv_simu.bam").getAbsolutePath))
 }
