@@ -13,17 +13,6 @@ trait ShivaWgs1Wgs2 extends ShivaSuccess with TestReference {
   override def configs = super.configs ::: Samples.wgs1Config :: Samples.wgs2Config :: Nil
   override def referenceVcf = Some(Biopet.fixtureFile("shiva" + File.separator + "wgs1.wgs2.vcf.gz"))
 
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testMultisampleConcordance: Unit = {
-    val concordance = summary \ "shivavariantcalling" \ "stats" \ "multisample-genotype_concordance-final"
-    if (!multisampleVariantcalling.contains(false) && referenceVcf.isDefined) {
-      concordance shouldBe a[JObject]
-      (concordance \ "genotypeSummary" \ "Overall_Genotype_Concordance").extract[Double] should be > 0.9
-    } else {
-      concordance shouldBe JNothing
-    }
-  }
-
   def samples = Map("wgs1" -> List("lib1"), "wgs2" -> List("lib1", "lib2"))
 }
 

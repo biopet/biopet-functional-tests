@@ -35,6 +35,59 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
     addNotExecutable("printreads")
   }
 
+  def minOverallConcordance = 0.9
+  def minSensitivity = 0.9
+  def maxDiscrepancy = 0.1
+
+  def addConcordanceChecks(path: Seq[String], condition: Boolean): Unit = {
+    addSummaryTest(path,
+      if (condition && referenceVcf.isDefined)
+        Seq(
+        v => (v \ "Overall_Genotype_Concordance").extract[Double] should be > minOverallConcordance,
+        v => (v \ "Non-Reference_Sensitivity").extract[Double] should be > minSensitivity,
+        v => (v \ "Non-Reference_Discrepancy").extract[Double] should be < maxDiscrepancy
+      )
+      else Seq(_ shouldBe JNothing)
+    )
+  }
+
+  ("final" :: Shiva.validVariantcallers).foreach {
+    case variantcaller =>
+      (samples.keySet + "ALL").foreach {
+        case sample =>
+          addConcordanceChecks(
+            Seq("shivavariantcalling", "stats", s"multisample-genotype_concordance-$variantcaller", "genotypeSummary", sample),
+            !multisampleVariantcalling.contains(false) && (variantcallers.contains(variantcaller) || variantcaller == "final")
+          )
+      }
+
+      samples.keySet.foreach {
+        case sample =>
+          addConcordanceChecks(
+            Seq("samples", sample, "shivavariantcalling", "stats", s"$sample-genotype_concordance-$variantcaller", "genotypeSummary", sample),
+            singleSampleVariantcalling.contains(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
+          )
+          addConcordanceChecks(
+            Seq("samples", sample, "shivavariantcalling", "stats", s"$sample-genotype_concordance-$variantcaller", "genotypeSummary", "ALL"),
+            singleSampleVariantcalling.contains(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
+          )
+      }
+
+      samples.foreach {
+        case (sample, libs) => libs.foreach {
+          case lib =>
+            addConcordanceChecks(
+              Seq("samples", sample, "libraries", lib, "shivavariantcalling", "stats", s"$sample-genotype_concordance-$variantcaller", "genotypeSummary", sample),
+              libraryVariantcalling.contains(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
+            )
+            addConcordanceChecks(
+              Seq("samples", sample, "libraries", lib, "shivavariantcalling", "stats", s"$sample-genotype_concordance-$variantcaller", "genotypeSummary", "ALL"),
+              libraryVariantcalling.contains(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
+            )
+        }
+      }
+  }
+
   @DataProvider(name = "variantcallers")
   def variantcallerProvider = Shiva.validVariantcallers.map(Array(_)).toArray
 
