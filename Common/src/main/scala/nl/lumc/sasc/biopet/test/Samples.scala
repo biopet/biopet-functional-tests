@@ -72,4 +72,18 @@ object Samples {
     )
   )
   val wgs1BamWrongHeaderConfig = createTempConfig(wgs1BamWrongHeader, "wgs1Bam")
+  
+  val na12878Gatc30x = Map("samples" ->
+    Map("wgs1" ->
+      Map("libraries" ->
+        Map("lib1" ->
+          Map(
+            "R1" -> Biopet.fixtureFile("samples" + File.separator + "NA12878" + File.separator + "gcat_set_025_1.fastq.gz").getAbsolutePath,
+            "R2" -> Biopet.fixtureFile("samples" + File.separator + "NA12878" + File.separator + "gcat_set_025_2.fastq.gz").getAbsolutePath
+          )
+        )
+      )
+    )
+  )
+  val na12878Gatc30xConfig = createTempConfig(na12878Gatc30x, "na12878Gatc30x")
 }
