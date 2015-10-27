@@ -33,7 +33,7 @@ class ShivaWrongBamHeaderTest extends Shiva with PipelineFail with TestReference
   logMustNotHave("""FunctionEdge - Starting""".r)
 }
 
-class ShivaWrongMd5Test extends Shiva with PipelineFail {
+class ShivaWrongMd5Test extends Shiva with PipelineFail with TestReference {
   override def variantcallers = "haplotypecaller" :: Nil
   override def configs = super.configs ::: Samples.wgs1Config :: Nil
   override def args = super.args ++ cmdConfig("samples:wgs1:libraries:lib1:R1_md5", "this_should_not_match_md5")
