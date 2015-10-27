@@ -72,7 +72,7 @@ object Samples {
     )
   )
   val wgs1BamWrongHeaderConfig = createTempConfig(wgs1BamWrongHeader, "wgs1Bam")
-  
+
   val na12878Gatc30x = Map("samples" ->
     Map("wgs1" ->
       Map("libraries" ->
