@@ -43,9 +43,9 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
     addSummaryTest(path,
       if (condition && referenceVcf.isDefined)
         Seq(
-        v => (v \ "Overall_Genotype_Concordance").extract[Double] should be > minOverallConcordance,
-        v => (v \ "Non-Reference_Sensitivity").extract[Double] should be > minSensitivity,
-        v => (v \ "Non-Reference_Discrepancy").extract[Double] should be < maxDiscrepancy
+        v => (v \ "Overall_Genotype_Concordance").extract[Double] should be >= minOverallConcordance,
+        v => (v \ "Non-Reference_Sensitivity").extract[Double] should be >= minSensitivity,
+        v => (v \ "Non-Reference_Discrepancy").extract[Double] should be <= maxDiscrepancy
       )
       else Seq(_ shouldBe JNothing)
     )
