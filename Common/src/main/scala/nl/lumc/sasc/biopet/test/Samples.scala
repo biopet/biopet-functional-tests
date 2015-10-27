@@ -30,15 +30,15 @@ object Samples {
         Map("lib1" ->
           Map(
             "R1" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib1_R1.fq.gz").getAbsolutePath,
-            "R1_md5" -> "02f9197c80d6a249e8b06173b1a24c07",
+            "R1_md5" -> "6fb02af910026041f9ea76cd28968732",
             "R2" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib1_R2.fq.gz").getAbsolutePath,
-            "R2_md5" -> "cffeb566425da8080dc8b425e5c9e6f9"
+            "R2_md5" -> "537ffc52342314d839e7fdd91bbdccd0"
           ), "lib2" ->
           Map(
             "R1" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib2_R1.fq.gz").getAbsolutePath,
-            "R1_md5" -> "54d2e6c92ee8899dd2432a8c66124f29",
+            "R1_md5" -> "df64e84fdc9a2d7a9301f2aac0071aee",
             "R2" -> Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2-lib2_R2.fq.gz").getAbsolutePath,
-            "R2_md5" -> "c8a491e3d587646dcac5a201a2520e47"
+            "R2_md5" -> "47a65ad648ac08e802c07669629054ea"
           )
         )
       )
