@@ -27,7 +27,7 @@ class ShivaNoOutputDirTest extends Shiva with PipelineFail with TestReference {
   logMustHave("""Value does not exist but is required, key: output_dir""".r)
 }
 
-class ShivaWrongBamHeader extends Shiva with PipelineFail with TestReference {
+class ShivaWrongBamHeaderTest extends Shiva with PipelineFail with TestReference {
   override def configs = super.configs ::: Samples.wgs1BamWrongHeaderConfig :: Nil
   //TODO: Add log checks
   logMustNotHave("""FunctionEdge - Starting""".r)

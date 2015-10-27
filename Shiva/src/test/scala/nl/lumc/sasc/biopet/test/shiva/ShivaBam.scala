@@ -5,7 +5,7 @@ import nl.lumc.sasc.biopet.test.{ TestReference, Samples }
 /**
  * Created by pjvan_thof on 10/22/15.
  */
-class ShivaWgs1Bam extends ShivaSuccess with TestReference {
+class ShivaWgs1BamTest extends ShivaSuccess with TestReference {
   override def configs = super.configs ::: Samples.wgs1BamConfig :: Nil
   override def variantcallers = List("unifiedgenotyper")
   override def aligner = Some("bwa-mem")
@@ -14,7 +14,7 @@ class ShivaWgs1Bam extends ShivaSuccess with TestReference {
   addNotExecutable("bwamem")
 }
 
-class ShivaWgs1BamToFastq extends ShivaSuccess with TestReference {
+class ShivaWgs1BamToFastqTest extends ShivaSuccess with TestReference {
   override def configs = super.configs ::: Samples.wgs1BamConfig :: Nil
   override def variantcallers = List("unifiedgenotyper")
   override def aligner = Some("bwa-mem")
@@ -25,7 +25,7 @@ class ShivaWgs1BamToFastq extends ShivaSuccess with TestReference {
   addExecutable(Executable("samtofastq", Some(""".+""".r)))
 }
 
-class ShivaWgs1BamReplaceReadGroup extends ShivaSuccess with TestReference {
+class ShivaWgs1BamReplaceReadGroupTest extends ShivaSuccess with TestReference {
   override def configs = super.configs ::: Samples.wgs1BamConfig :: Nil
   override def variantcallers = List("unifiedgenotyper")
   override def aligner = Some("bwa-mem")
