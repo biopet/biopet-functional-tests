@@ -206,7 +206,6 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
     summaryPath shouldBe a[JString]
     val file = new File(summaryPath.extract[String])
     file.getParentFile shouldBe libraryDir(sample, lib)
-    file.getName should not be s"$sample-$lib.final.bam"
     if (samples(sample).size == 1) {
       assert(file.exists())
       val reader = SamReaderFactory.makeDefault.open(file)
