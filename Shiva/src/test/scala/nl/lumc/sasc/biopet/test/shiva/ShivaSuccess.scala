@@ -38,6 +38,19 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
     addNotExecutable("printreads")
   }
 
+  samples.foreach {
+    case (sampleName, libs) =>
+      addSummaryTest(Seq("samples", sampleName, "shiva", "settings"), Seq(
+        _ \ "single_sample_variantcalling" shouldBe singleSampleVariantcalling.getOrElse(false)
+      ))
+      libs.foreach {
+        case lib =>
+          addSummaryTest(Seq("samples", sampleName, "libraries", lib, "shiva", "settings"), Seq(
+            _ \ "library_variantcalling" shouldBe libraryVariantcalling.getOrElse(false)
+          ))
+      }
+  }
+
   addSummaryTest(Seq("shiva", "settings"), Seq(
     _ \ "multisample_variantcalling" shouldBe JBool(multisampleVariantcalling.getOrElse(true)),
     _ \ "sv_calling" shouldBe JBool(svCalling.getOrElse(false)),
