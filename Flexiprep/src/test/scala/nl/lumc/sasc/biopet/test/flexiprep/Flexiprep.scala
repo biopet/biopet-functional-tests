@@ -2,11 +2,11 @@ package nl.lumc.sasc.biopet.test.flexiprep
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.{ SummaryPipeline, Pipeline }
 import nl.lumc.sasc.biopet.test.Pipeline._
+import nl.lumc.sasc.biopet.test.utils._
+import nl.lumc.sasc.biopet.test.{Pipeline, SummaryPipeline}
 import org.json4s._
 import org.testng.annotations.Test
-import nl.lumc.sasc.biopet.test.utils._
 
 /** Base trait for Flexiprep pipeline run tests. */
 trait FlexiprepRun extends Pipeline {
@@ -56,8 +56,8 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   addExecutable(Executable("seqtkseq", Some(""".+""".r)))
   if (r2.isDefined) addExecutable(Executable("fastqsync", Some(""".+""".r)))
   if (!skipTrim.contains(true)) addExecutable(Executable("sickle", Some(""".+""".r)))
-  else addNotExecutable("sickle")
-  if (skipClip.contains(true)) addNotExecutable("cutadapt")
+  else addNotHavingExecutable("sickle")
+  if (skipClip.contains(true)) addNotHavingExecutable("cutadapt")
 
   override def summaryRoot = summaryLibrary(sampleId, libId)
 

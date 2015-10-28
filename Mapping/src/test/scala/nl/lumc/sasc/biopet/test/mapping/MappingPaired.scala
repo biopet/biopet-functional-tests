@@ -74,3 +74,4 @@ class MappingPairedChunkMetricsTest extends MappingPaired {
   override def configChunking = Some(true)
   override def configNumberChunks = Some(4)
 }
+

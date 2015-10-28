@@ -2,9 +2,9 @@ package nl.lumc.sasc.biopet.test
 
 import java.io.File
 
-import org.testng.annotations.{ DataProvider, Test }
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import org.testng.annotations.{DataProvider, Test}
 
 import scala.util.matching.Regex
 
@@ -94,7 +94,7 @@ trait SummaryPipeline extends Pipeline {
   private var notExecutables: Set[String] = Set()
 
   /** With this method an executable can be added that must not exists in the summary */
-  def addNotExecutable(exe: String): Unit = notExecutables += exe
+  def addNotHavingExecutable(exe: String): Unit = notExecutables += exe
 
   @DataProvider(name = "notExecutables")
   def notExecutablesProvider = notExecutables.map(Array(_)).toArray
