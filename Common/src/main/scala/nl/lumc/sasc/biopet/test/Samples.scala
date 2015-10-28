@@ -52,7 +52,7 @@ object Samples {
         Map("lib1" ->
           Map(
             "bam" -> Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "wgs1.bam").getAbsolutePath,
-            "bam_md5" -> "f69ad453cc62c703d394188120fe03fd"
+            "bam_md5" -> "688b8d24b388e24b09ad9239dfe387fb"
           )
         )
       )
