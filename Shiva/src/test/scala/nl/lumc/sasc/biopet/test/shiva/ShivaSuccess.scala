@@ -15,6 +15,9 @@ import scala.collection.JavaConversions._
  */
 trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExecutables {
 
+  logMustNotHave("""Script failed with \d+ total jobs""".r)
+  logMustHave("""Script completed successfully with \d+ total jobs""".r)
+
   if (dbsnpVcfFile.isEmpty && !useBaseRecalibration.contains(false))
     logMustHave("""No Known site found, skipping base recalibration""".r)
   else logMustNotHave("""No Known site found, skipping base recalibration""".r)
