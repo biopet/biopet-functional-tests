@@ -42,7 +42,9 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
     _ \ "multisample_variantcalling" shouldBe JBool(multisampleVariantcalling.getOrElse(true)),
     _ \ "sv_calling" shouldBe JBool(svCalling.getOrElse(false)),
     _ \ "annotation" shouldBe JBool(annotation.getOrElse(false)),
-    _ \ "reference" shouldBe a[JObject]
+    _ \ "reference" shouldBe a[JObject],
+    _ \ "regions_of_interest" should not be JNothing,
+    _ \ "amplicon_bed" should not be JNothing
   ))
 
   def minOverallConcordance = 0.9
