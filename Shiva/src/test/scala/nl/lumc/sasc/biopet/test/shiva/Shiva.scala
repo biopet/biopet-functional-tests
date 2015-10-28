@@ -47,6 +47,8 @@ trait Shiva extends Pipeline {
 
   def variantcallers: List[String] = Nil
 
+  def annotation: Option[Boolean] = None
+
   val variantcallersConfig = if (variantcallers.nonEmpty) Some(createTempConfig(Map("variantcallers" -> variantcallers))) else None
 
   override def configs = super.configs ::: variantcallersConfig.map(_ :: Nil).getOrElse(Nil)
@@ -63,6 +65,7 @@ trait Shiva extends Pipeline {
     cmdConfig("use_indel_realigner", useIndelRealigner) ++
     cmdConfig("use_base_recalibration", useBaseRecalibration) ++
     cmdConfig("use_analyze_covariates", useAnalyzeCovariates) ++
+    cmdConfig("annotation", annotation) ++
     cmdConfig("dbsnp", dbsnpVcfFile) ++
     cmdConfig("reference_vcf", referenceVcf) ++
     cmdConfig("reference_vcf_regions", referenceVcfRegions)

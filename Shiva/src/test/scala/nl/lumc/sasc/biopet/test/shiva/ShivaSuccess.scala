@@ -38,6 +38,13 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
     addNotExecutable("printreads")
   }
 
+  addSummaryTest(Seq("shiva", "settings"), Seq(
+    _ \ "multisample_variantcalling" shouldBe JBool(multisampleVariantcalling.getOrElse(true)),
+    _ \ "sv_calling" shouldBe JBool(svCalling.getOrElse(false)),
+    _ \ "annotation" shouldBe JBool(annotation.getOrElse(false)),
+    _ \ "reference" shouldBe a[JObject]
+  ))
+
   def minOverallConcordance = 0.9
   def minSensitivity = 0.9
   def maxDiscrepancy = 0.1
