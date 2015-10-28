@@ -60,9 +60,8 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
     _ \ "amplicon_bed" should not be JNothing
   ))
 
-  def minOverallConcordance = 0.9
-  def minSensitivity = 0.9
-  def maxDiscrepancy = 0.1
+  def minPrecision = 0.95
+  def minRecall = 0.95
 
   def addConcordanceChecks(path: Seq[String], condition: Boolean): Unit = {
     addSummaryTest(path,
@@ -70,16 +69,10 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
         Seq(
         v => {
           v \ "Overall_Genotype_Concordance" should not be JNothing
-          (v \ "Overall_Genotype_Concordance").extract[Double] should be >= minOverallConcordance
+          (v \ "Overall_Genotype_Concordance").extract[Double] should be >= (List(minPrecision, minRecall).sum / 2)
         },
-        v => {
-          v \ "Non-Reference_Sensitivity" should not be JNothing
-          (v \ "Non-Reference_Sensitivity").extract[Double] should be >= minSensitivity
-        },
-        v => {
-          v \ "Non-Reference_Discrepancy" should not be JNothing
-          (v \ "Non-Reference_Discrepancy").extract[Double] should be <= maxDiscrepancy
-        }
+        _ \ "Non-Reference_Sensitivity" should not be JNothing,
+        _ \ "Non-Reference_Discrepancy" should not be JNothing
       )
       else Seq(_ shouldBe JNothing)
     )
