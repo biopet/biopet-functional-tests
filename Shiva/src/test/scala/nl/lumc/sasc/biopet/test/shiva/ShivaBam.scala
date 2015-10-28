@@ -26,7 +26,7 @@ class ShivaWgs1BamToFastqTest extends ShivaSuccess with TestReference {
 }
 
 class ShivaWgs1BamReplaceReadGroupTest extends ShivaSuccess with TestReference {
-  override def configs = super.configs ::: Samples.wgs1BamConfig :: Nil
+  override def configs = super.configs ::: Samples.wgs1BamWrongHeaderConfig :: Nil
   override def variantcallers = List("unifiedgenotyper")
   override def aligner = Some("bwa-mem")
   override def correctReadgroups = Some(true)
