@@ -33,6 +33,6 @@ trait Toucan extends Pipeline {
     cmdConfig("gonl_vcf", goNLFile) ++
     cmdConfig("exac_vcf", exacFile) ++
     cmdConfig("mode", normalizerMode) ++
-    cmdCondition("--keep_intermediates", keepIntermediates)
+    cmdCondition("-keepIntermediates", keepIntermediates)
 
 }
