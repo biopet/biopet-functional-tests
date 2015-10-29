@@ -37,7 +37,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   def exitValue = _exitValue
 
   /** Memory for biopet process */
-  def memoryArg = "-Xmx150m"
+  def memoryArg = "-Xmx120m"
 
   /** This is the retry option for the pipeline, default is 5 */
   def retries = Option(6)
