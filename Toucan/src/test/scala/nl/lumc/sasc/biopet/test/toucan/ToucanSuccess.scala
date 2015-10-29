@@ -17,11 +17,11 @@ trait ToucanSuccess extends Toucan {
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
 
-  def outputPath: String =  outputDir.getAbsolutePath +
+  def outputPath: String = outputDir.getAbsolutePath +
     File.separator +
     (this.inputVcf map
-    { x => x.getName } map
-    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") } getOrElse "")
+      { x => x.getName } map
+      { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") } getOrElse "")
 
   @Test def testOutputFile = {
     assert(outputPath.nonEmpty)
@@ -83,15 +83,15 @@ trait ToucanWithGoNL extends ToucanSuccess {
   override def outputPath = outputDir.getAbsolutePath +
     File.separator +
     (this.inputVcf map
-    { x => x.getAbsolutePath } map
-    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.vcf.gz") } getOrElse "")
+      { x => x.getAbsolutePath } map
+      { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.vcf.gz") } getOrElse "")
 }
 
 trait ToucanWithExac extends ToucanSuccess {
 
   override def exacFile = Some(Biopet.fixtureFile("toucan" + File.separator + "ExAC.r0.3.sites.vep.vcf.gz"))
 
-  override def outputPath =  outputDir.getAbsolutePath +
+  override def outputPath = outputDir.getAbsolutePath +
     File.separator +
     (inputVcf map
       { x => x.getAbsolutePath } map
@@ -107,18 +107,21 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
   override def outputPath = outputDir.getAbsolutePath +
     File.separator +
     (this.inputVcf map
-    { x => x.getAbsolutePath } map
-    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.exac.vcf.gz") } getOrElse "")
+      { x => x.getAbsolutePath } map
+      { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.exac.vcf.gz") } getOrElse "")
 }
 
+class ToucanGoNLPlainTest extends ToucanPlain with ToucanWithGoNL
 class ToucanGoNLIntermediateTest extends ToucanKeepIntermediates with ToucanWithGoNL
 class ToucanGoNLExplodeTest extends ToucanNormalizerExplode with ToucanWithGoNL
 class ToucanGoNLExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithGoNL
 
+class ToucanExacPlainTest extends ToucanPlain with ToucanWithGoNL
 class ToucanExacIntermediateTest extends ToucanKeepIntermediates with ToucanWithExac
 class ToucanExacExplodeTest extends ToucanNormalizerExplode with ToucanWithExac
 class ToucanExacExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithExac
 
+class ToucanGoNLExacPlainTest extends ToucanPlain with ToucanWithGoNLAndExac
 class ToucanGoNLExacIntermediateTest extends ToucanKeepIntermediates with ToucanWithGoNLAndExac
 class ToucanGoNLExacExplodeTest extends ToucanNormalizerExplode with ToucanWithGoNLAndExac
 class ToucanGoNLExacExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithGoNLAndExac
@@ -126,3 +129,4 @@ class ToucanGoNLExacExplodeIntermediateTest extends ToucanExplodeKeepIntermediat
 class ToucanPlainTest extends ToucanPlain
 class ToucanPlainIntermediateTest extends ToucanPlain with ToucanKeepIntermediates
 class ToucanPlainExplodeTest extends ToucanPlain with ToucanNormalizerExplode
+class ToucanPlainExplodeIntermediateTest extends ToucanPlain with ToucanExplodeKeepIntermediates
