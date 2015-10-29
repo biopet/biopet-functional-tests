@@ -61,7 +61,14 @@ trait Pipeline extends TestNGSuite with Matchers {
   @Test(dataProvider = "not_allowed_reties", dependsOnGroups = Array("parseLog"))
   def testRetry(dummy: String, retry: Int): Unit = {
     val s = s"Reset for retry attempt $retry of ${retries.getOrElse(0)}"
-    require(!logLines.exists(_.contains(s)), s"${retry}e retry found but not allowed")
+    val ordinality = retry match {
+      case tenToTwenty if 10 to 20 contains tenToTwenty => "th"
+      case first if first.toString.endsWith("1") => "st"
+      case second if second.toString.endsWith("2") => "nd"
+      case third if third.toString.endsWith("3") => "rd"
+      case _ => "th"
+    }
+    require(!logLines.exists(_.contains(s)), s"${retry}${ordinality} retry found but not allowed")
   }
 
   @Test(priority = -1) def exitcode() = exitValue shouldBe 0
