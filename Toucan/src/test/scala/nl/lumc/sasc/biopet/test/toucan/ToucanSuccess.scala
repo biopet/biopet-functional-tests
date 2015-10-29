@@ -118,7 +118,7 @@ class ToucanGoNLIntermediateTest extends ToucanKeepIntermediates with ToucanWith
 class ToucanGoNLExplodeTest extends ToucanNormalizerExplode with ToucanWithGoNL
 class ToucanGoNLExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithGoNL
 
-class ToucanExacPlainTest extends ToucanPlain with ToucanWithGoNL
+class ToucanExacPlainTest extends ToucanPlain with ToucanWithExac
 class ToucanExacIntermediateTest extends ToucanKeepIntermediates with ToucanWithExac
 class ToucanExacExplodeTest extends ToucanNormalizerExplode with ToucanWithExac
 class ToucanExacExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithExac
