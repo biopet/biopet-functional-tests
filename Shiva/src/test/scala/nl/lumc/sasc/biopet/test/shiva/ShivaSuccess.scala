@@ -104,11 +104,11 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
         case (sample, libs) => libs.foreach {
           case lib =>
             addConcordanceChecks(
-              Seq("samples", sample, "libraries", lib, "shivavariantcalling", "stats", s"$sample-genotype_concordance-$variantcaller", "genotypeSummary", sample),
+              Seq("samples", sample, "libraries", lib, "shivavariantcalling", "stats", s"$sample-$lib-genotype_concordance-$variantcaller", "genotypeSummary", sample),
               libraryVariantcalling.contains(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
             )
             addConcordanceChecks(
-              Seq("samples", sample, "libraries", lib, "shivavariantcalling", "stats", s"$sample-genotype_concordance-$variantcaller", "genotypeSummary", "ALL"),
+              Seq("samples", sample, "libraries", lib, "shivavariantcalling", "stats", s"$sample-$lib-genotype_concordance-$variantcaller", "genotypeSummary", "ALL"),
               libraryVariantcalling.contains(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
             )
         }
