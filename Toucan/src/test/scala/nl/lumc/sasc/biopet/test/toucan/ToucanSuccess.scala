@@ -17,20 +17,21 @@ trait ToucanSuccess extends Toucan {
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
 
-  def outputPath: Option[String] = this.inputVcf map
-    { x => x.getAbsolutePath } map
-    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") }
+  def outputPath: String =  outputDir.getAbsolutePath +
+    File.separator +
+    (this.inputVcf map
+    { x => x.getName } map
+    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") } getOrElse "")
 
   @Test def testOutputFile = {
-    val path = outputPath getOrElse ""
-    assert(path.nonEmpty)
-    val outputFile = new File(path)
-    assert(outputFile.exists(), s"""Expected output file $path does not exist""")
+    assert(outputPath.nonEmpty)
+    val outputFile = new File(outputPath)
+    assert(outputFile.exists(), s"""Expected output file $outputPath does not exist""")
   }
 
   @Test(dependsOnMethods = Array("testOutputFile"))
   def allPositionsPresent = {
-    val outputReader = new VCFFileReader(new File(outputPath.get))
+    val outputReader = new VCFFileReader(new File(outputPath))
 
     inputVcf map
       { x => new VCFFileReader(x) } map
@@ -48,9 +49,9 @@ trait ToucanSuccess extends Toucan {
 
 trait ToucanPlain extends ToucanSuccess {
 
-  override def outputPath = this.inputVcf map
-    { x => x.getAbsolutePath } map
-    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") }
+  override def outputPath = outputDir.getAbsolutePath + (this.inputVcf map
+    { x => x.getName } map
+    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") } getOrElse "")
 }
 
 trait ToucanKeepIntermediates extends ToucanSuccess {
@@ -79,18 +80,22 @@ trait ToucanWithGoNL extends ToucanSuccess {
   override def goNLFile = Some(Biopet.fixtureFile("toucan" + File.separator +
     "gonl_allchroms_snpindels.sorted.chr.vcf.gz"))
 
-  override def outputPath = this.inputVcf map
+  override def outputPath = outputDir.getAbsolutePath +
+    File.separator +
+    (this.inputVcf map
     { x => x.getAbsolutePath } map
-    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.vcf.gz") }
+    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.vcf.gz") } getOrElse "")
 }
 
 trait ToucanWithExac extends ToucanSuccess {
 
   override def exacFile = Some(Biopet.fixtureFile("toucan" + File.separator + "ExAC.r0.3.sites.vep.vcf.gz"))
 
-  override def outputPath = this.inputVcf map
-    { x => x.getAbsolutePath } map
-    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.exac.vcf.gz") }
+  override def outputPath =  outputDir.getAbsolutePath +
+    File.separator +
+    (inputVcf map
+      { x => x.getAbsolutePath } map
+      { x => x.replaceAll(".vcf.gz$", ".vep.normalized.exac.vcf.gz") } getOrElse "")
 }
 
 trait ToucanWithGoNLAndExac extends ToucanSuccess {
@@ -99,9 +104,11 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
   override def goNLFile = Some(Biopet.fixtureFile("toucan" + File.separator +
     "gonl_allchroms_snpindels.sorted.chr.vcf.gz"))
 
-  override def outputPath = this.inputVcf map
+  override def outputPath = outputDir.getAbsolutePath +
+    File.separator +
+    (this.inputVcf map
     { x => x.getAbsolutePath } map
-    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.exac.vcf.gz") }
+    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.exac.vcf.gz") } getOrElse "")
 }
 
 class ToucanGoNLIntermediateTest extends ToucanKeepIntermediates with ToucanWithGoNL
