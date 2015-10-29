@@ -29,8 +29,8 @@ class ShivaNoOutputDirTest extends Shiva with PipelineFail with TestReference {
 
 class ShivaWrongBamHeaderTest extends Shiva with PipelineFail with TestReference {
   override def configs = super.configs ::: Samples.wgs1BamWrongHeaderConfig :: Nil
-  //TODO: Add log checks
   logMustNotHave("""FunctionEdge - Starting""".r)
+  logMustHave("""Sample readgroup and/or library of input bamfile is not correct,""".r)
 }
 
 class ShivaWrongMd5Test extends Shiva with PipelineFail with TestReference {
@@ -38,5 +38,5 @@ class ShivaWrongMd5Test extends Shiva with PipelineFail with TestReference {
   override def configs = super.configs ::: Samples.wgs1Config :: Nil
   override def args = super.args ++ cmdConfig("samples:wgs1:libraries:lib1:R1_md5", "this_should_not_match_md5")
   logMustHave("""FunctionEdge - Starting""".r)
-  //TODO: Add log checks
+  logMustHave("""md5sum is not as expected, aborting pipeline""".r)
 }
