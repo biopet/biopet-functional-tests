@@ -49,7 +49,9 @@ trait ToucanSuccess extends Toucan {
 
 trait ToucanPlain extends ToucanSuccess {
 
-  override def outputPath = outputDir.getAbsolutePath + (this.inputVcf map
+  override def outputPath = outputDir.getAbsolutePath +
+    File.separator +
+    (this.inputVcf map
     { x => x.getName } map
     { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") } getOrElse "")
 }
@@ -58,9 +60,9 @@ trait ToucanKeepIntermediates extends ToucanSuccess {
   override def keepIntermediates = true
 
   def intermediates: List[File] = List(new File(this.
-    inputVcf.
+    outputDir.getAbsolutePath + File.separator + inputVcf.
     map(x => x.
-      getAbsolutePath.
+      getName.
       replaceAll(".vcf.gz", ".vep.vcf")).
     getOrElse("")))
 
@@ -83,7 +85,7 @@ trait ToucanWithGoNL extends ToucanSuccess {
   override def outputPath = outputDir.getAbsolutePath +
     File.separator +
     (this.inputVcf map
-      { x => x.getAbsolutePath } map
+      { x => x.getName } map
       { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.vcf.gz") } getOrElse "")
 }
 
@@ -94,7 +96,7 @@ trait ToucanWithExac extends ToucanSuccess {
   override def outputPath = outputDir.getAbsolutePath +
     File.separator +
     (inputVcf map
-      { x => x.getAbsolutePath } map
+      { x => x.getName } map
       { x => x.replaceAll(".vcf.gz$", ".vep.normalized.exac.vcf.gz") } getOrElse "")
 }
 
@@ -107,7 +109,7 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
   override def outputPath = outputDir.getAbsolutePath +
     File.separator +
     (this.inputVcf map
-      { x => x.getAbsolutePath } map
+      { x => x.getName } map
       { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.exac.vcf.gz") } getOrElse "")
 }
 
