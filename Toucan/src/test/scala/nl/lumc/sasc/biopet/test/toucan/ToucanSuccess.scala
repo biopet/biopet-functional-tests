@@ -33,35 +33,58 @@ trait ToucanSuccess extends Toucan {
     val outputReader = new VCFFileReader(new File(outputPath.get))
 
     inputVcf map
-      {x => new VCFFileReader(x)} map
-      {x => x.iterator()} foreach
-      {x => x foreach
-        { y =>
-        val query = outputReader.query(y.getContig, y.getStart, y.getEnd)
-          assert(query.nonEmpty, s"""Position ${y.getStart} not found on contig ${y.getContig} in output file""")
-        }
+      { x => new VCFFileReader(x) } map
+      { x => x.iterator() } foreach
+      { x =>
+        x foreach
+          { y =>
+            val query = outputReader.query(y.getContig, y.getStart, y.getEnd)
+            assert(query.nonEmpty, s"""Position ${y.getStart} not found on contig ${y.getContig} in output file""")
+          }
       }
   }
 
 }
 
-class TestPlain extends ToucanSuccess {
+trait ToucanPlain extends ToucanSuccess {
 
   override def outputPath = this.inputVcf map
-      { x => x.getAbsolutePath } map
-      { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") }
+    { x => x.getAbsolutePath } map
+    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") }
 }
 
-class TestWithGoNL extends ToucanSuccess {
+trait ToucanKeepIntermediates extends ToucanSuccess {
+  override def keepIntermediates = true
+
+  def intermediates: List[File] = List(new File(this.
+    inputVcf.
+    map(x => x.
+      getAbsolutePath.
+      replaceAll(".vcf.gz", ".vep.vcf")).
+    getOrElse("")))
+
+  @Test
+  def testIntermediateExistence = {
+    intermediates.foreach(x => assert(x.exists(), s"""Intermediate file $x not found"""))
+  }
+}
+
+trait ToucanNormalizerExplode extends ToucanSuccess {
+  override def normalizerMode = "explode"
+}
+
+trait ToucanExplodeKeepIntermediates extends ToucanKeepIntermediates with ToucanNormalizerExplode
+
+trait ToucanWithGoNL extends ToucanSuccess {
   override def goNLFile = Some(Biopet.fixtureFile("toucan" + File.separator +
     "gonl_allchroms_snpindels.sorted.chr.vcf.gz"))
 
   override def outputPath = this.inputVcf map
-     { x => x.getAbsolutePath } map
-     { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.vcf.gz") }
+    { x => x.getAbsolutePath } map
+    { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.vcf.gz") }
 }
 
-class TestWithExac extends ToucanSuccess {
+trait ToucanWithExac extends ToucanSuccess {
 
   override def exacFile = Some(Biopet.fixtureFile("toucan" + File.separator + "ExAC.r0.3.sites.vep.vcf.gz"))
 
@@ -70,7 +93,7 @@ class TestWithExac extends ToucanSuccess {
     { x => x.replaceAll(".vcf.gz$", ".vep.normalized.exac.vcf.gz") }
 }
 
-class TestWithGoNLAndExac extends ToucanSuccess {
+trait ToucanWithGoNLAndExac extends ToucanSuccess {
 
   override def exacFile = Some(Biopet.fixtureFile("toucan" + File.separator + "ExAC.r0.3.sites.vep.vcf.gz"))
   override def goNLFile = Some(Biopet.fixtureFile("toucan" + File.separator +
@@ -80,3 +103,16 @@ class TestWithGoNLAndExac extends ToucanSuccess {
     { x => x.getAbsolutePath } map
     { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.exac.vcf.gz") }
 }
+
+
+class TestToucanGoNLIntermediate extends ToucanKeepIntermediates with ToucanWithGoNL
+class TestToucanGoNLExplode extends ToucanNormalizerExplode with ToucanWithGoNL
+class TestToucanGoNLExplodeIntermediate extends ToucanExplodeKeepIntermediates with ToucanWithGoNL
+
+class TestToucanExacIntermediate extends ToucanKeepIntermediates with ToucanWithExac
+class TestToucanExacExplode extends ToucanNormalizerExplode with ToucanWithExac
+class TestToucanExacExplodeIntermediate extends ToucanExplodeKeepIntermediates with ToucanWithExac
+
+class TestToucanGoNLExacIntermediate extends ToucanKeepIntermediates with ToucanWithGoNLAndExac
+class TestToucanGoNLExacExplode extends ToucanNormalizerExplode with ToucanWithGoNLAndExac
+class TestToucanGoNLExacExplodeIntermediate extends ToucanExplodeKeepIntermediates with ToucanWithGoNLAndExac

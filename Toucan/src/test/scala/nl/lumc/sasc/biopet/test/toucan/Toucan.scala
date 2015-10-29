@@ -23,10 +23,16 @@ trait Toucan extends Pipeline {
 
   def exacFile: Option[File] = None
 
+  def keepIntermediates: Boolean = false
+
+  def normalizerMode: String = "standard"
+
   def args = cmdArg("-I", inputVcf) ++
     cmdConfig("species", referenceSpecies) ++
     cmdConfig("reference_name", referenceName) ++
     cmdConfig("gonl_vcf", goNLFile) ++
-    cmdConfig("exac_vcf", exacFile)
+    cmdConfig("exac_vcf", exacFile) ++
+    cmdConfig("mode", normalizerMode) ++
+    cmdCondition("--keep_intermediates", keepIntermediates)
 
 }
