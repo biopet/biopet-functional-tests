@@ -2,12 +2,15 @@ package nl.lumc.sasc.biopet.test.toucan
 
 import java.io.File
 
+import nl.lumc.sasc.biopet.test.Biopet
 import org.testng.annotations.Test
 
 /**
  * Created by ahbbollen on 22-10-15.
  */
 trait ToucanSuccess extends Toucan {
+
+  override def inputVcf = Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
 
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
@@ -33,9 +36,8 @@ class TestPlain extends ToucanSuccess {
 }
 
 class TestWithGoNL extends ToucanSuccess {
-  //TODO: set this!
-  //override def exacFile = Some(new File("path/to/file.vcf.gz"))
-  //override def goNLFile = Some(new File("path/to/file.vcf.gz"))
+  override def goNLFile = Some(Biopet.fixtureFile("toucan" + File.separator +
+    "gonl_allchroms_snpindels.sorted.chr.vcf.gz"))
 
   override def outputPath = this.inputVcf map
      { x => x.getAbsolutePath } map
@@ -44,8 +46,7 @@ class TestWithGoNL extends ToucanSuccess {
 
 class TestWithExac extends ToucanSuccess {
 
-  //TODO: set this!
-  //override def exacFile = Some(new File("path/to/file.vcf.gz"))
+  override def exacFile = Some(Biopet.fixtureFile("toucan" + File.separator + "ExAC.r0.3.sites.vep.vcf.gz"))
 
   override def outputPath = this.inputVcf map
     { x => x.getAbsolutePath } map
@@ -54,9 +55,10 @@ class TestWithExac extends ToucanSuccess {
 
 class TestWithGoNLAndExac extends ToucanSuccess {
 
-  //TODO: set this!
-  //override def exacFile = Some(new File("path/to/file.vcf.gz"))
-  //override def goNLFile = Some(new File("path/to/file.vcf.gz"))
+  override def exacFile = Some(Biopet.fixtureFile("toucan" + File.separator + "ExAC.r0.3.sites.vep.vcf.gz"))
+  override def goNLFile = Some(Biopet.fixtureFile("toucan" + File.separator +
+    "gonl_allchroms_snpindels.sorted.chr.vcf.gz"))
+
   override def outputPath = this.inputVcf map
     { x => x.getAbsolutePath } map
     { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.exac.vcf.gz") }
