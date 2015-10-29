@@ -13,8 +13,9 @@ trait Gears extends Pipeline {
 
   def paired = r2.isDefined
 
-  override def args = cmdArg("-R1", r1) ++ cmdArg("-R2", r2) ++
-    cmdArg("-bam", bam) ++ cmdArg("--outputName", outputName)
+  def sampleId = Option("sampleName")
+
+  def libId = None
 
   def r1: Option[File] = None
 
@@ -23,4 +24,9 @@ trait Gears extends Pipeline {
   def bam: Option[File] = None
 
   def outputName: Option[String] = None
+
+  override def args = cmdArg("-sample", sampleId) ++ cmdArg("-library", libId) ++
+    cmdArg("-R1", r1) ++ cmdArg("-R2", r2) ++
+    cmdArg("-bam", bam) ++ cmdArg("--outputName", outputName)
+
 }
