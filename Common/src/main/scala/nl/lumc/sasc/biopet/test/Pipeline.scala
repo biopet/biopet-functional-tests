@@ -40,13 +40,13 @@ trait Pipeline extends TestNGSuite with Matchers {
   def memoryArg = "-Xmx150m"
 
   /** This is the retry option for the pipeline, default is 5 */
-  def retries = Option(5)
+  def retries = Option(6)
 
   /**
    * Allowed retries, test will be generated from `allowRetries` until `retries`
    * Default is 0 so no retries are allowed
    */
-  def allowRetries = 0
+  def allowRetries = 1
 
   /** This enabled the "--disablescatter" option on the commandline, default enabled */
   def disablescatter = true
