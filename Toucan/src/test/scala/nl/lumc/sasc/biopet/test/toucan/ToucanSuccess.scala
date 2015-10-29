@@ -2,8 +2,10 @@ package nl.lumc.sasc.biopet.test.toucan
 
 import java.io.File
 
+import htsjdk.variant.vcf.VCFFileReader
 import nl.lumc.sasc.biopet.test.Biopet
 import org.testng.annotations.Test
+import scala.collection.JavaConversions._
 
 /**
  * Created by ahbbollen on 22-10-15.
@@ -24,6 +26,21 @@ trait ToucanSuccess extends Toucan {
     assert(path.nonEmpty)
     val outputFile = new File(path)
     assert(outputFile.exists(), s"""Expected output file $path does not exist""")
+  }
+
+  @Test(dependsOnMethods = Array("testOutputFile"))
+  def allPositionsPresent = {
+    val outputReader = new VCFFileReader(new File(outputPath.get))
+
+    inputVcf map
+      {x => new VCFFileReader(x)} map
+      {x => x.iterator()} foreach
+      {x => x foreach
+        { y =>
+        val query = outputReader.query(y.getContig, y.getStart, y.getEnd)
+          assert(query.nonEmpty, s"""Position ${y.getStart} not found on contig ${y.getContig} in output file""")
+        }
+      }
   }
 
 }
