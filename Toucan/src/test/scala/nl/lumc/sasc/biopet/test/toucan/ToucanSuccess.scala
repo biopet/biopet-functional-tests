@@ -104,7 +104,6 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
     { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.exac.vcf.gz") }
 }
 
-
 class TestToucanGoNLIntermediate extends ToucanKeepIntermediates with ToucanWithGoNL
 class TestToucanGoNLExplode extends ToucanNormalizerExplode with ToucanWithGoNL
 class TestToucanGoNLExplodeIntermediate extends ToucanExplodeKeepIntermediates with ToucanWithGoNL
