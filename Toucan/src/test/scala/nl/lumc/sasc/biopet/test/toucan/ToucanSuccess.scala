@@ -104,14 +104,18 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
     { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.exac.vcf.gz") }
 }
 
-class TestToucanGoNLIntermediate extends ToucanKeepIntermediates with ToucanWithGoNL
-class TestToucanGoNLExplode extends ToucanNormalizerExplode with ToucanWithGoNL
-class TestToucanGoNLExplodeIntermediate extends ToucanExplodeKeepIntermediates with ToucanWithGoNL
+class ToucanGoNLIntermediateTest extends ToucanKeepIntermediates with ToucanWithGoNL
+class ToucanGoNLExplodeTest extends ToucanNormalizerExplode with ToucanWithGoNL
+class ToucanGoNLExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithGoNL
 
-class TestToucanExacIntermediate extends ToucanKeepIntermediates with ToucanWithExac
-class TestToucanExacExplode extends ToucanNormalizerExplode with ToucanWithExac
-class TestToucanExacExplodeIntermediate extends ToucanExplodeKeepIntermediates with ToucanWithExac
+class ToucanExacIntermediateTest extends ToucanKeepIntermediates with ToucanWithExac
+class ToucanExacExplodeTest extends ToucanNormalizerExplode with ToucanWithExac
+class ToucanExacExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithExac
 
-class TestToucanGoNLExacIntermediate extends ToucanKeepIntermediates with ToucanWithGoNLAndExac
-class TestToucanGoNLExacExplode extends ToucanNormalizerExplode with ToucanWithGoNLAndExac
-class TestToucanGoNLExacExplodeIntermediate extends ToucanExplodeKeepIntermediates with ToucanWithGoNLAndExac
+class ToucanGoNLExacIntermediateTest extends ToucanKeepIntermediates with ToucanWithGoNLAndExac
+class ToucanGoNLExacExplodeTest extends ToucanNormalizerExplode with ToucanWithGoNLAndExac
+class ToucanGoNLExacExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithGoNLAndExac
+
+class ToucanPlainTest extends ToucanPlain
+class ToucanPlainIntermediateTest extends ToucanPlain with ToucanKeepIntermediates
+class ToucanPlainExplodeTest extends ToucanPlain with ToucanNormalizerExplode
