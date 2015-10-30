@@ -218,13 +218,17 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
     val file = new File(summaryPath.extract[String])
     file.getParentFile shouldBe libraryDir(sample, lib)
     file.getName shouldBe s"$sample-$lib.final.bam"
-    assert(file.exists())
+    val replacejob = new File(libraryDir(sample, lib), s".$sample-$lib.final.bam.addorreplacereadgroups.out")
+    if (replacejob.exists()) assert(!file.exists())
+    else {
+      assert(file.exists())
 
-    val reader = SamReaderFactory.makeDefault.open(file)
-    val header = reader.getFileHeader
-    assert(!header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
-    assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
-    reader.close()
+      val reader = SamReaderFactory.makeDefault.open(file)
+      val header = reader.getFileHeader
+      assert(!header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
+      assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
+      reader.close()
+    }
   }
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
