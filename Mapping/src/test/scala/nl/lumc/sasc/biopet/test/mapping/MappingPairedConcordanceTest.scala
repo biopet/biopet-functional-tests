@@ -34,7 +34,7 @@ class MappingPairedConcordanceTest(testSetName: String) extends MappingPaired {
     val biopetFlagstat = summary \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat"
 
     // These values derive from a reference bam
-    biopetFlagstat \ "Mapped" shouldBe this.summaryRef \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat" \ "Mapped"
+    (biopetFlagstat \ "Mapped" / this.summaryRef \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat" \ "Mapped") should be > 0.99
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
@@ -42,14 +42,14 @@ class MappingPairedConcordanceTest(testSetName: String) extends MappingPaired {
     val biopetFlagstat = summary \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat"
 
     // These values derive from a reference bam
-    biopetFlagstat \ "Unmapped" shouldBe this.summaryRef \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat" \ "Unmapped"
+    (biopetFlagstat \ "Unmapped" / this.summaryRef \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat" \ "Unmapped") should be > 0.99
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def numReadInput: Unit = {
     val biopetFlagstat = summary \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat"
 
-    biopetFlagstat \ "All" shouldBe this.summaryRef \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat" \ "All"
+    (biopetFlagstat \ "All" / this.summaryRef \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat" \ "All") should be > 0.99
   }
 
   @BeforeClass
