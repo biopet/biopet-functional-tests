@@ -17,6 +17,7 @@ class MappingPairedConcordanceTest(testSetName: String) extends MappingPaired {
 
   var referenceBam: File = _
   var summaryRefFile: File = _
+  var summaryRef: JValue = _
   private var _ref_summary: JValue = _
 
   override def configChunking = Some(true)
@@ -33,7 +34,7 @@ class MappingPairedConcordanceTest(testSetName: String) extends MappingPaired {
     val biopetFlagstat = summary \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat"
 
     // These values derive from a reference bam
-    biopetFlagstat \ "Mapped" shouldBe JInt(BigInt(100000))
+    biopetFlagstat \ "Mapped" shouldBe this.summaryRef \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat" \ "Mapped"
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
@@ -41,14 +42,14 @@ class MappingPairedConcordanceTest(testSetName: String) extends MappingPaired {
     val biopetFlagstat = summary \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat"
 
     // These values derive from a reference bam
-    biopetFlagstat \ "Unmapped" shouldBe JInt(BigInt(100000))
+    biopetFlagstat \ "Unmapped" shouldBe this.summaryRef \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat" \ "Unmapped"
   }
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def numReadInput: Unit = {
     val biopetFlagstat = summary \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat"
 
-    biopetFlagstat \ "All" shouldBe JInt(BigInt(1000000))
+    biopetFlagstat \ "All" shouldBe this.summaryRef \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat" \ "All"
   }
 
   @BeforeClass
@@ -58,6 +59,7 @@ class MappingPairedConcordanceTest(testSetName: String) extends MappingPaired {
     // loading the reference bam file for comparison
     this.referenceBam = new File(Biopet.fixtureDir, s"${testSetName}.bam")
     this.summaryRefFile = new File(Biopet.fixtureDir + File.separator + s"${testSetName}.json")
+    this.summaryRef = parse(this.summaryRefFile)
   }
 //
 //  @Test
