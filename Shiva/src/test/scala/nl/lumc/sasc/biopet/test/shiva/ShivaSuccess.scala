@@ -249,7 +249,10 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
         assert(header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
       else assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
       reader.close()
-    } else assert(!file.exists())
+    } else {
+      val mappingBam = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "bamFile" \ "path"
+      if (mappingBam != summaryPath) assert(!file.exists())
+    }
   }
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
