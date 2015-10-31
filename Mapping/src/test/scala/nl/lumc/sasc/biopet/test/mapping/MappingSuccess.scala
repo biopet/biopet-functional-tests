@@ -36,7 +36,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     addNotExecutable("fastqsync")
   }
 
-  if (aligner.isEmpty || aligner == Some("bwamem")) {
+  if (aligner.isEmpty || aligner == Some("bwa-mem")) {
     addExecutable(Executable("bwamem", Some(""".+""".r)))
     addExecutable(Executable("sortsam", Some(""".+""".r)))
   } else addNotExecutable("bwamem")
