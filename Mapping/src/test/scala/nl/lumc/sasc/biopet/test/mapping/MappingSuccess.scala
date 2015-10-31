@@ -48,7 +48,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   if (aligner == Some("gsnap")) {
     addExecutable(Executable("gsnap", Some(""".+""".r)))
-    addExecutable(Executable("reorderSam", Some(""".+""".r)))
+    addExecutable(Executable("reordersam", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
   } else addNotExecutable("gsnap")
 
