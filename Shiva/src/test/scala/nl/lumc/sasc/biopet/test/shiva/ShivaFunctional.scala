@@ -11,6 +11,8 @@ class ShivaBiopetplanet30xTest extends ShivaSuccess {
   override def referenceSpecies = Some("H.sapiens")
   override def referenceName = Some("GRCh37")
 
+  override def variantcallers = List("haplotypecaller" ,"haplotypecaller_gvcf", "unifiedgenotyper")
+
   override def configs = super.configs ::: Samples.na12878Gatc30xConfig :: Nil
 
   override def functionalTest = true
