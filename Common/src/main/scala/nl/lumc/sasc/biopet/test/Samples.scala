@@ -74,12 +74,12 @@ object Samples {
   val wgs1BamWrongHeaderConfig = createTempConfig(wgs1BamWrongHeader, "wgs1Bam")
 
   val na12878Gatc30x = Map("samples" ->
-    Map("wgs1" ->
+    Map("NA12878" ->
       Map("libraries" ->
-        Map("lib1" ->
+        Map("biopetplanet-30x" ->
           Map(
-            "R1" -> Biopet.fixtureFile("samples" + File.separator + "NA12878" + File.separator + "gcat_set_025_1.fastq.gz").getAbsolutePath,
-            "R2" -> Biopet.fixtureFile("samples" + File.separator + "NA12878" + File.separator + "gcat_set_025_2.fastq.gz").getAbsolutePath
+            "R1" -> Biopet.fixtureFile(List("samples", "NA12878", "biopetplanet-30x", "gcat_set_025_1.fastq.gz").mkString(File.separator)).getAbsolutePath,
+            "R1" -> Biopet.fixtureFile(List("samples", "NA12878", "biopetplanet-30x", "gcat_set_025_2.fastq.gz").mkString(File.separator)).getAbsolutePath
           )
         )
       )

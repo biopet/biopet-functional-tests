@@ -49,6 +49,8 @@ trait Shiva extends Pipeline {
 
   def annotation: Option[Boolean] = None
 
+  def ampliconBed: Option[File] = None
+
   val variantcallersConfig = if (variantcallers.nonEmpty) Some(createTempConfig(Map("variantcallers" -> variantcallers))) else None
 
   override def configs = super.configs ::: variantcallersConfig.map(_ :: Nil).getOrElse(Nil)
@@ -68,7 +70,8 @@ trait Shiva extends Pipeline {
     cmdConfig("annotation", annotation) ++
     cmdConfig("dbsnp", dbsnpVcfFile) ++
     cmdConfig("reference_vcf", referenceVcf) ++
-    cmdConfig("reference_vcf_regions", referenceVcfRegions)
+    cmdConfig("reference_vcf_regions", referenceVcfRegions) ++
+    cmdConfig("amplicon_bed", ampliconBed)
 }
 
 object Shiva {
