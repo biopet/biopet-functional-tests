@@ -58,6 +58,7 @@
                     <argLine>-Xmx200m</argLine>
                     <!--<reuseForks>false</reuseForks>-->
                     <workingDirectory>${project.build.directory}</workingDirectory>
+                    <runOrder>balanced</runOrder>
                 </configuration>
             </plugin>
             <plugin>
