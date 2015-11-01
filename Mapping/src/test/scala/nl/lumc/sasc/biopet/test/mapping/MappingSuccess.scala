@@ -52,7 +52,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
   } else addNotExecutable("gsnap")
 
-  if (aligner == Some("star-2pass") || aligner == Some("star-2pass")) {
+  if (aligner == Some("star") || aligner == Some("star-2pass")) {
     addExecutable(Executable("star", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
   } else addNotExecutable("star")
