@@ -17,6 +17,8 @@ class ShivaBiopetplanet30xTest extends ShivaSuccess {
 
   override def functionalTest = true
 
+  override def disablescatter = false
+
   def samples = Map("NA12878" -> List("biopetplanet-30x"))
 
   override def ampliconBed =
