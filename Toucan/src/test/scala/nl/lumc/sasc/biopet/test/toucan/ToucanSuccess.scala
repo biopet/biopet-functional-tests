@@ -2,6 +2,7 @@ package nl.lumc.sasc.biopet.test.toucan
 
 import java.io.File
 
+import htsjdk.variant.variantcontext.VariantContext
 import htsjdk.variant.vcf.VCFFileReader
 import nl.lumc.sasc.biopet.test.Biopet
 import org.testng.annotations.Test
@@ -14,6 +15,8 @@ trait ToucanSuccess extends Toucan {
 
   override def inputVcf = Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
 
+  def knownNormalized: File = Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vep.standard.vcf.gz")
+
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
 
@@ -22,7 +25,6 @@ trait ToucanSuccess extends Toucan {
     (this.inputVcf map
       { x => x.getName } map
       { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") } getOrElse "")
-
   def intermediates: List[File] = List(new File(this.
     outputDir.getAbsolutePath + File.separator + inputVcf.
     map(x => x.
@@ -52,6 +54,49 @@ trait ToucanSuccess extends Toucan {
       }
   }
 
+  def allPositionsIdentical = {
+    val outputReader = new VCFFileReader(new File(outputPath))
+    inputVcf map {
+      x => new VCFFileReader(x)
+    } map {
+      x => x.iterator()
+    } foreach {
+      x =>
+        x foreach {
+          y =>
+            outputReader.query(y.getContig, y.getStart, y.getEnd) foreach {
+              z => assert(sameVariant(y, z))
+            }
+        }
+    }
+  }
+
+  /**
+   * Tests whether general information of variant is the same
+   * That is:
+   * Position, REF, ALT and Genotypes (GT, GQ, DP and PL)
+   * @param v1 variant 1
+   * @param v2 variant 2
+   * @return true if identical, false if not
+   */
+  def sameVariant(v1: VariantContext, v2: VariantContext): Boolean = {
+    val sameAltAllele = (for ((a1, a2) <- v1.getAlternateAlleles zip v2.getAlternateAlleles)
+      yield a1.equals(a2)).forall(x => x)
+    v1.getContig == v2.getContig &&
+      v1.getStart == v2.getStart &&
+      v1.getEnd == v2.getEnd &&
+      v1.getReference.equals(v2.getReference) &&
+      sameAltAllele &&
+      v1.getSampleNamesOrderedByName == v2.getSampleNamesOrderedByName &&
+      (for ((n1, n2) <- v1.getSampleNamesOrderedByName zip v2.getSampleNamesOrderedByName)
+        yield v1.getGenotype(n1).getDP == v2.getGenotype(n2).getDP &&
+        v1.getGenotype(n1).getAD == v2.getGenotype(n2).getAD &&
+        v1.getGenotype(n1).getType.toString == v2.getGenotype(n2).getType.toString &&
+        v1.getGenotype(n1).getLikelihoodsString == v2.getGenotype(n2).getLikelihoodsString &&
+        v1.getGenotype(n1).getGQ == v2.getGenotype(n2).getGQ &&
+        v1.getGenotype(n1).getGenotypeString == v2.getGenotype(n2).getGenotypeString).forall(x => x)
+  }
+
 }
 
 trait ToucanPlain extends ToucanSuccess {
@@ -65,8 +110,10 @@ trait ToucanPlain extends ToucanSuccess {
   @Test
   def sameAmountVariants = {
     val inputReader = new VCFFileReader(inputVcf getOrElse new File(""))
+    val inputSize = inputReader.foldLeft(0)((ac, _) => ac + 1)
     val outputReader = new VCFFileReader(new File(outputPath))
-    assert(inputReader.size == outputReader.size)
+    val outputSize = outputReader.foldLeft(0)((ac, _) => ac + 1)
+    assert(inputSize == outputSize)
     inputReader.close()
     outputReader.close()
   }
@@ -85,12 +132,18 @@ trait ToucanNormalizerExplode extends ToucanSuccess {
   override def normalizerMode = "explode"
 
   @Test
-  def testEqualOrGreaterAmountVariants = {
+  def testAmountVariants = {
     val inputReader = new VCFFileReader(inputVcf getOrElse new File(""))
     val outputReader = new VCFFileReader(new File(outputPath))
-    assert(outputReader.size >= inputReader.size)
+    val inputSize = inputReader.foldLeft(0)((ac, _) => ac + 1)
+    val outputSize = outputReader.foldLeft(0)((ac, _) => ac + 1)
+    assert(outputSize >= inputSize)
     inputReader.close()
     outputReader.close()
+  }
+
+  override def knownNormalized = {
+    Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vep.exploded.vcf.gz")
   }
 }
 
@@ -195,5 +248,5 @@ class ToucanGoNLExacExplodeIntermediateTest extends ToucanExplodeKeepIntermediat
 
 class ToucanPlainTest extends ToucanPlain
 class ToucanPlainIntermediateTest extends ToucanPlain with ToucanKeepIntermediates
-class ToucanPlainExplodeTest extends ToucanPlain with ToucanNormalizerExplode
-class ToucanPlainExplodeIntermediateTest extends ToucanPlain with ToucanExplodeKeepIntermediates
+class ToucanPlainExplodeTest extends ToucanNormalizerExplode
+class ToucanPlainExplodeIntermediateTest extends ToucanExplodeKeepIntermediates
