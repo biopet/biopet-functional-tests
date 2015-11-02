@@ -54,6 +54,7 @@ trait ToucanSuccess extends Toucan {
       }
   }
 
+  @Test
   def allPositionsIdentical = {
     val outputReader = new VCFFileReader(new File(outputPath))
     inputVcf map {
@@ -144,6 +145,15 @@ trait ToucanNormalizerExplode extends ToucanSuccess {
 
   override def knownNormalized = {
     Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vep.exploded.vcf.gz")
+  }
+
+  @Test
+  def testNormalizedAmountVariants = {
+    val outputReader = new VCFFileReader(new File(outputPath))
+    val knownReader = new VCFFileReader(knownNormalized)
+    val outputSize = outputReader.foldLeft(0)((ac, _) => ac + 1)
+    val knownSize = knownReader.foldLeft(0)((ac, _) => ac + 1)
+    assert(outputSize == knownSize)
   }
 }
 
