@@ -26,7 +26,7 @@ class ShivaBiopetplanet30xTest extends ShivaSuccess {
       .mkString(File.separator)))
 
   override def referenceVcf =
-    Some(Biopet.fixtureFile(List("samples", "NA12878", "giab.v2.19.confidence.bed.gz")
+    Some(Biopet.fixtureFile(List("samples", "NA12878", "giab.v2.19.vcf.gz")
       .mkString(File.separator)))
   override def referenceVcfRegions =
     Some(Biopet.fixtureFile(List("samples", "NA12878", "biopetplanet-30x", "gcat_set_025.confidence.bed")
