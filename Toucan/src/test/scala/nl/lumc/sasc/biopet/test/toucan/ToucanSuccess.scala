@@ -61,6 +61,15 @@ trait ToucanPlain extends ToucanSuccess {
     (this.inputVcf map
       { x => x.getName } map
       { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") } getOrElse "")
+
+  @Test
+  def sameAmountVariants = {
+    val inputReader = new VCFFileReader(inputVcf getOrElse new File(""))
+    val outputReader = new VCFFileReader(new File(outputPath))
+    assert(inputReader.size == outputReader.size)
+    inputReader.close()
+    outputReader.close()
+  }
 }
 
 trait ToucanKeepIntermediates extends ToucanSuccess {
@@ -74,6 +83,15 @@ trait ToucanKeepIntermediates extends ToucanSuccess {
 
 trait ToucanNormalizerExplode extends ToucanSuccess {
   override def normalizerMode = "explode"
+
+  @Test
+  def testEqualOrGreaterAmountVariants = {
+    val inputReader = new VCFFileReader(inputVcf getOrElse new File(""))
+    val outputReader = new VCFFileReader(new File(outputPath))
+    assert(outputReader.size >= inputReader.size)
+    inputReader.close()
+    outputReader.close()
+  }
 }
 
 trait ToucanExplodeKeepIntermediates extends ToucanKeepIntermediates with ToucanNormalizerExplode
@@ -92,6 +110,13 @@ trait ToucanWithGoNL extends ToucanSuccess {
       (this.inputVcf map { x => x.getName } map { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") } getOrElse "")
     super.intermediates :+ new File(norm)
   }
+
+  @Test
+  def testAFField = {
+    val reader = new VCFFileReader(new File(outputPath))
+    reader.foreach(x => assert(x.hasAttribute("AF_gonl")))
+    reader.close()
+  }
 }
 
 trait ToucanWithExac extends ToucanSuccess {
@@ -107,6 +132,13 @@ trait ToucanWithExac extends ToucanSuccess {
       File.separator +
       (this.inputVcf map { x => x.getName } map { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") } getOrElse "")
     super.intermediates :+ new File(norm)
+  }
+
+  @Test
+  def testAFField = {
+    val reader = new VCFFileReader(new File(outputPath))
+    reader.foreach(x => assert(x.hasAttribute("AF_exac")))
+    reader.close()
   }
 }
 
@@ -129,6 +161,20 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
       File.separator +
       (this.inputVcf map { x => x.getName } map { x => x.replaceAll(".vcf.gz$", ".vep.normalized.gonl.vcf.gz") } getOrElse "")
     super.intermediates :+ new File(norm) :+ new File(gonl)
+  }
+
+  @Test
+  def testGoNLAFField = {
+    val reader = new VCFFileReader(new File(outputPath))
+    reader.foreach(x => assert(x.hasAttribute("AF_gonl")))
+    reader.close()
+  }
+
+  @Test
+  def testExacAFField = {
+    val reader = new VCFFileReader(new File(outputPath))
+    reader.foreach(x => assert(x.hasAttribute("AF_exac")))
+    reader.close()
   }
 }
 
