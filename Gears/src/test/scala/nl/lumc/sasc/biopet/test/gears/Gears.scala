@@ -8,15 +8,14 @@ import nl.lumc.sasc.biopet.test.Pipeline._
 /**
  * Created by waiyileung on 05-10-15.
  */
-trait GearsRun extends Pipeline {
-  def summaryFile = new File(outputDir, s"${pipelineName}.summary.json")
-
+trait Gears extends Pipeline {
   def pipelineName = "gears"
 
   def paired = r2.isDefined
 
-  override def args = cmdArg("-R1", r1) ++ cmdArg("-R2", r2) ++
-    cmdArg("-bam", bam) ++ cmdArg("--outputName", outputName)
+  def sampleId = Option("sampleName")
+
+  def libId = None
 
   def r1: Option[File] = None
 
@@ -25,4 +24,9 @@ trait GearsRun extends Pipeline {
   def bam: Option[File] = None
 
   def outputName: Option[String] = None
+
+  override def args = cmdArg("-sample", sampleId) ++ cmdArg("-library", libId) ++
+    cmdArg("-R1", r1) ++ cmdArg("-R2", r2) ++
+    cmdArg("-bam", bam) ++ cmdArg("--outputName", outputName)
+
 }
