@@ -2,92 +2,46 @@ package nl.lumc.sasc.biopet.test.mapping
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.mapping.reference.ReferencePairedTemplate
+import nl.lumc.sasc.biopet.test.{Biopet, SummaryPipeline}
 import org.json4s._
-import org.json4s.jackson.JsonMethods._
-import org.testng.annotations.{BeforeClass, Test}
+import org.testng.annotations.Test
 
 import scala.io.Source
 
 /**
  * Created by wyleung on 26-10-15.
  */
-class MappingPairedConcordanceTest(testSetName: String) extends MappingPaired {
-
-  var referenceBam: File = _
-  var summaryRefFile: File = _
-  var summaryRef: JValue = _
-  private var _ref_summary: JValue = _
-
-  override def configChunking = Some(true)
-
-  override def configChunksize = Some(1000)
+class MappingPairedConcordanceTest(testSetName: String) extends MappingPaired with SummaryPipeline {
+  /** JSON paths for summary. */
+  protected val bamMetricsPath = Seq("samples", sampleId, "libraries", libId, "bammetrics")
+  protected val statsPath = bamMetricsPath :+ "stats"
 
   override def functionalTest = true
 
-  @Test(groups = Array("parseRefSummary"))
-  def parseRefSummary(): Unit = _ref_summary = parse(summaryRefFile)
+  addSummaryTest(statsPath :+ "biopet_flagstat",
+    Seq(
+      _ \ "All" should haveValue(20000),
+      _ \ "Mapped" shouldBe 19800 +- 200,
+      _ \ "ProperPair" shouldBe 20000 +- 100,
+      _ \ "ReadPaired" shouldBe 20000,
+      _ \ "SecondOfPair" shouldBe 10000,
+      _ \ "FirstOfPair" shouldBe 10000,
+      _ \ "Duplicates" should be < 10,
+      _ \ "MAPQ>30" shouldBe 19500 +- 500,
+      _ \ "MAPQ>40" shouldBe 19500 +- 500,
+      _ \ "MAPQ>50" shouldBe 19500 +- 500
+    ))
 
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def numReadAlignedMapped: Unit = {
-    val biopetFlagstat = summary \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat"
-
-    // These values derive from a reference bam
-    (biopetFlagstat \ "Mapped" / this.summaryRef \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat" \ "Mapped") should be > 0.99
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def numReadAlignedUnMapped: Unit = {
-    val biopetFlagstat = summary \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat"
-
-    // These values derive from a reference bam
-    (biopetFlagstat \ "Unmapped" / this.summaryRef \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat" \ "Unmapped") should be > 0.99
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def numReadInput: Unit = {
-    val biopetFlagstat = summary \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat"
-
-    (biopetFlagstat \ "All" / this.summaryRef \ "samples" \ sampleId.get \ "bammetrics" \ "stats" \ "biopet_flagstat" \ "All") should be > 0.99
-  }
-
-  @BeforeClass
-  def loadTestSet: Unit = {
-
-    println(s"Loading ${testSetName}")
-    // loading the reference bam file for comparison
-    this.referenceBam = new File(Biopet.fixtureDir, s"${testSetName}.bam")
-    this.summaryRefFile = new File(Biopet.fixtureDir + File.separator + s"${testSetName}.json")
-    this.summaryRef = parse(this.summaryRefFile)
-  }
-//
-//  @Test
-//  def containsReadID: Unit = {
-//    val testSet = loadBamToList(finalBamFile)
-//
-//  }
-
-  /*
-  * Extracts alignment records and extracts some properties to test on
-//  * */
-//  def loadBamToList(bamfile: File): Iterable[List[Any]] = {
-//    val inputSam = SamReaderFactory.makeDefault.open(bamfile)
-//    val samIterator = inputSam.iterator().toIterable
-//
-//    val testSet: Iterable[List[Any]] = for (read <- samIterator) yield List(read.getReadName, read.getCigarString, read.getAlignmentStart, read.getReadNegativeStrandFlag)
-//
-//    inputSam.close()
-//    testSet
-//  }
+  addSummaryTest(statsPath :+ "CollectInsertSizeMetrics" :+ "metrics",
+    Seq(
+      _ \ "READ_PAIRS" shouldBe 10000 +- 50,
+      _ \ "MEDIAN_INSERT_SIZE" shouldBe 500 +- 15,
+      _ \ "MEAN_INSERT_SIZE" shouldBe 500.0 +- 15.0,
+      _ \ "PAIR_ORIENTATION" should haveValue("FR")
+    ))
 
 }
-
-class MappingConcordanceTestDNA extends MappingPairedConcordanceTest("dna-set")
-//class MappingConcordanceTestRNA extends MappingPairedConcordanceTest("rna-set")
-
-
-
 
 trait MappingWiggleConcordance extends MappingPairedWigTest {
   override def functionalTest = true
@@ -103,7 +57,7 @@ trait MappingWiggleConcordance extends MappingPairedWigTest {
     tableB.size shouldBe tableA.size
 
     // function: do a correlation computation for file A and B
-    val correlationScore: Double = pearsonScore( tableA.values.toList, tableB.values.toList ).getOrElse(0.0)
+    val correlationScore: Double = pearsonScore(tableA.values.toList, tableB.values.toList).getOrElse(0.0)
 
     // in the comparison we allow 1 percent difference.
     correlationScore should be > 0.99
@@ -133,25 +87,25 @@ trait MappingWiggleConcordance extends MappingPairedWigTest {
 
     // sum up the products
     val pSum = (a.view.zipWithIndex foldLeft 0.0) {
-      case (acc, (value,index)) => acc + (value * b(index))
+      case (acc, (value, index)) => acc + (value * b(index))
     }
 
     //  // calculate the pearson score
-    val numerator = pSum - (sum1*sum2/n)
-    val denominator = Math.sqrt( (sum1Sq-Math.pow(sum1,2)/n) * (sum2Sq-Math.pow(sum2,2)/n))
-    if (denominator == 0) None else Some(numerator/denominator)
+    val numerator = pSum - (sum1 * sum2 / n)
+    val denominator = Math.sqrt((sum1Sq - Math.pow(sum1, 2) / n) * (sum2Sq - Math.pow(sum2, 2) / n))
+    if (denominator == 0) None else Some(numerator / denominator)
   }
 
   /**
    * Wigglefile loader
    *
    * @param wiggleFile Path to wiggleFile (as File-object)
-   **/
-  def loadWiggleFile( wiggleFile: File ): Map[String,Double] = {
+   */
+  def loadWiggleFile(wiggleFile: File): Map[String, Double] = {
     val reader = Source.fromFile(wiggleFile)
     val lines = reader.getLines()
       .map(line => parseWiggleLine(line))
-      .filterNot( _ == Map.empty)
+      .filterNot(_ == Map.empty)
     lines
   }
 
@@ -159,7 +113,7 @@ trait MappingWiggleConcordance extends MappingPairedWigTest {
    * Converts wiggle line to a Map(binstart -> value)
    *
    * @param wiggleLine Raw line taken from the wiggle
-   **/
+   */
   def parseWiggleLine(wiggleLine: String): Map[String, Double] = {
     var result: Map[String, Double] = Map.empty
 
