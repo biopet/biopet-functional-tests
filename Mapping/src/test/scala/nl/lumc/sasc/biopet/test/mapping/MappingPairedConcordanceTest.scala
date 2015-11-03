@@ -14,7 +14,10 @@ import scala.io.Source
  */
 class MappingPairedConcordanceTest(testSetName: String) extends MappingPaired with SummaryPipeline {
   /** JSON paths for summary. */
-  protected val bamMetricsPath = Seq("samples", sampleId, "libraries", libId, "bammetrics")
+  protected val bamMetricsPath = (sampleId, libId) match {
+    case (Some(sid), Some(lid)) => Seq("samples", sid, "libraries", lid, "bammetrics")
+    case otherwise => Seq()
+  }
   protected val statsPath = bamMetricsPath :+ "stats"
 
   override def functionalTest = true
@@ -24,10 +27,10 @@ class MappingPairedConcordanceTest(testSetName: String) extends MappingPaired wi
       _ \ "All" should haveValue(20000),
       _ \ "Mapped" shouldBe 19800 +- 200,
       _ \ "ProperPair" shouldBe 20000 +- 100,
-      _ \ "ReadPaired" shouldBe 20000,
-      _ \ "SecondOfPair" shouldBe 10000,
-      _ \ "FirstOfPair" shouldBe 10000,
-      _ \ "Duplicates" should be < 10,
+      _ \ "ReadPaired" shouldBe haveValue(20000),
+      _ \ "FirstOfPair" shouldBe haveValue(10000),
+      _ \ "SecondOfPair" shouldBe haveValue(10000),
+      x => (x \ "Duplicates").extract[Int] should be < 10,
       _ \ "MAPQ>30" shouldBe 19500 +- 500,
       _ \ "MAPQ>40" shouldBe 19500 +- 500,
       _ \ "MAPQ>50" shouldBe 19500 +- 500
@@ -43,13 +46,15 @@ class MappingPairedConcordanceTest(testSetName: String) extends MappingPaired wi
 
 }
 
-trait MappingWiggleConcordance extends MappingPairedWigTest {
+trait MappingPairedWiggleConcordance extends MappingPaired {
   override def functionalTest = true
+
+  override def generateWig = Some(true)
 
   @Test()
   def similarWiggleTrack: Unit = {
     // Loading the reference wiggle (A)
-    val referenceWiggle = new File(Biopet.fixtureDir, "mapping/default.wig")
+    val referenceWiggle = new File(Biopet.fixtureDir + File.separator + "mapping", "wgs1-testlib.final.bam.wig")
 
     val tableA = loadWiggleFile(referenceWiggle)
     val tableB = loadWiggleFile(finalWigFile)
@@ -57,7 +62,10 @@ trait MappingWiggleConcordance extends MappingPairedWigTest {
     tableB.size shouldBe tableA.size
 
     // function: do a correlation computation for file A and B
-    val correlationScore: Double = pearsonScore(tableA.values.toList, tableB.values.toList).getOrElse(0.0)
+    val valuesA = tableA.foldRight(List[Double]())((A, B) => B :+ A.head._2)
+    val valuesB = tableB.foldRight(List[Double]())((A, B) => B :+ A.head._2)
+
+    val correlationScore: Double = pearsonScore(valuesA, valuesB).getOrElse(0.0)
 
     // in the comparison we allow 1 percent difference.
     correlationScore should be > 0.99
@@ -101,12 +109,12 @@ trait MappingWiggleConcordance extends MappingPairedWigTest {
    *
    * @param wiggleFile Path to wiggleFile (as File-object)
    */
-  def loadWiggleFile(wiggleFile: File): Map[String, Double] = {
+  def loadWiggleFile(wiggleFile: File): List[Map[String, Double]] = {
     val reader = Source.fromFile(wiggleFile)
     val lines = reader.getLines()
       .map(line => parseWiggleLine(line))
       .filterNot(_ == Map.empty)
-    lines
+    lines.toList
   }
 
   /**
@@ -130,6 +138,4 @@ trait MappingWiggleConcordance extends MappingPairedWigTest {
   }
 }
 
-class MappingWiggleBWA extends ReferencePairedTemplate("bwa-mem") with MappingWiggleConcordance
-//class MappingWiggleStar extends ReferencePairedTemplate("star") with MappingWiggleConcordance
-//class MappingWiggleBowtie extends ReferencePairedTemplate("bowtie") with MappingWiggleConcordance
+class MappingWiggleBWA extends ReferencePairedTemplate("bwa-mem") with MappingPairedWiggleConcordance
