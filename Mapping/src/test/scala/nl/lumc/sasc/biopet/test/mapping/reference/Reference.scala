@@ -3,7 +3,7 @@ package nl.lumc.sasc.biopet.test.mapping.reference
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.Biopet
-import nl.lumc.sasc.biopet.test.mapping.{ MappingSuccess, Mapping }
+import nl.lumc.sasc.biopet.test.mapping.{Mapping, MappingSuccess}
 
 /**
  * Created by pjvanthof on 06/08/15.
@@ -13,6 +13,9 @@ class ReferenceSingleTemplate(aln: String) extends MappingSuccess {
   override def functionalTest = true
   override def skipFlexiprep = Some(true)
   override def skipMetrics = Some(true)
+
+  // we do a R1 only alignment, so enforce paired to be disabled
+  override def paired = false
 }
 
 class ReferencePairedTemplate(aln: String) extends MappingSuccess {
