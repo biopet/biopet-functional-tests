@@ -66,7 +66,7 @@ trait ToucanSuccess extends Toucan {
         x foreach {
           y =>
             outputReader.query(y.getContig, y.getStart, y.getEnd) foreach {
-              z => assert(sameVariant(y, z))
+              z => assert(sameVariant(y, z), s"""Variant at ${y.getContig}:${y.getStart} is not identical in output file""")
             }
         }
     }
