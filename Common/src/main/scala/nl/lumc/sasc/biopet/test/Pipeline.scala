@@ -1,11 +1,11 @@
 package nl.lumc.sasc.biopet.test
 
-import java.io.{File, PrintWriter}
+import java.io.{ File, PrintWriter }
 
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
 import org.testng.SkipException
-import org.testng.annotations.{BeforeClass, DataProvider, Test}
+import org.testng.annotations.{ BeforeClass, DataProvider, Test }
 
 import scala.io.Source
 import scala.sys.process._

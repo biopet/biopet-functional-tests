@@ -5,9 +5,9 @@ import java.io.File
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatest.matchers._
-import org.testng.annotations.{DataProvider, Test}
+import org.testng.annotations.{ DataProvider, Test }
 
-import scala.collection.mutable.{Map => MutMap}
+import scala.collection.mutable.{ Map => MutMap }
 import scala.util.matching.Regex
 
 /**

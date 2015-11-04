@@ -3,7 +3,7 @@ package nl.lumc.sasc.biopet.test.mapping
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.mapping.reference.ReferencePairedTemplate
-import nl.lumc.sasc.biopet.test.{Biopet, SummaryPipeline}
+import nl.lumc.sasc.biopet.test.{ Biopet, SummaryPipeline }
 import org.json4s._
 import org.testng.annotations.Test
 
@@ -17,7 +17,7 @@ trait MappingPairedConcordanceTest extends MappingPaired with SummaryPipeline {
   /** JSON paths for summary. */
   protected val bamMetricsPath = (sampleId, libId) match {
     case (Some(sid), Some(lid)) => Seq("samples", sid, "libraries", lid, "bammetrics")
-    case otherwise => Seq()
+    case otherwise              => Seq()
   }
   protected val statsPath = bamMetricsPath :+ "stats"
 
@@ -61,9 +61,6 @@ trait MappingPairedDNA extends MappingPairedConcordanceTest {
 class MappingPairedDNATest extends MappingPairedDNA
 
 //class MappingPairedRNA extends MappingPairedConcordanceTest
-
-
-
 
 trait MappingPairedWiggleConcordance extends MappingPaired {
   override def functionalTest = true

@@ -65,18 +65,21 @@ trait Mapping extends Pipeline {
   def generateWig: Option[Boolean] = None
   def chunkMetrics: Option[Boolean] = None
 
-  def args = cmdArg("-sample", sampleId) ++ cmdArg("-library", libId) ++
-    cmdArg("-R1", r1) ++ cmdCondition(cmdArg("-R2", r2).mkString(" "), paired) ++
-    cmdConfig("species", referenceSpecies) ++
-    cmdConfig("reference_name", referenceName) ++
-    cmdConfig("aligner", aligner) ++
-    cmdConfig("skip_markduplicates", skipMarkDuplicates) ++
-    cmdConfig("skip_flexiprep", skipFlexiprep) ++
-    cmdConfig("skip_metrics", skipMetrics) ++
-    cmdConfig("chunking", configChunking) ++
-    cmdConfig("generate_wig", generateWig) ++
-    cmdConfig("chunk_metrics", chunkMetrics) ++
-    cmdConfig("number_chunks", configNumberChunks) ++
-    cmdConfig("chunksize", configChunksize)
+  def args = {
+    cmdArg("-sample", sampleId) ++ cmdArg("-library", libId) ++
+      cmdArg("-R1", r1) ++
+      cmdArg("-R2", (if (paired) r2 else None)) ++
+      cmdConfig("species", referenceSpecies) ++
+      cmdConfig("reference_name", referenceName) ++
+      cmdConfig("aligner", aligner) ++
+      cmdConfig("skip_markduplicates", skipMarkDuplicates) ++
+      cmdConfig("skip_flexiprep", skipFlexiprep) ++
+      cmdConfig("skip_metrics", skipMetrics) ++
+      cmdConfig("chunking", configChunking) ++
+      cmdConfig("generate_wig", generateWig) ++
+      cmdConfig("chunk_metrics", chunkMetrics) ++
+      cmdConfig("number_chunks", configNumberChunks) ++
+      cmdConfig("chunksize", configChunksize)
+  }
 
 }
