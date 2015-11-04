@@ -1,11 +1,11 @@
 package nl.lumc.sasc.biopet.test
 
-import java.io.{ File, PrintWriter }
+import java.io.{File, PrintWriter}
 
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
 import org.testng.SkipException
-import org.testng.annotations.{ DataProvider, Test, BeforeClass }
+import org.testng.annotations.{BeforeClass, DataProvider, Test}
 
 import scala.io.Source
 import scala.sys.process._
@@ -51,14 +51,14 @@ trait Pipeline extends TestNGSuite with Matchers {
     _exitValue = Pipeline.runPipeline(pipelineName, outputDir, outputDirArg, args, logFile, memoryArg, retries, run)
   }
 
-  @DataProvider(name = "not_allowed_reties")
+  @DataProvider(name = "not_allowed_retries")
   def notAllowedRetries = {
     (for (i <- (allowRetries + 1) to retries.getOrElse(1)) yield {
       Array("d", i)
     }).toArray
   }
 
-  @Test(dataProvider = "not_allowed_reties", dependsOnGroups = Array("parseLog"))
+  @Test(dataProvider = "not_allowed_retries", dependsOnGroups = Array("parseLog"))
   def testRetry(dummy: String, retry: Int): Unit = {
     val s = s"Reset for retry attempt $retry of ${retries.getOrElse(0)}"
     require(!logLines.exists(_.contains(s)), s"${retry}e retry found but not allowed")
