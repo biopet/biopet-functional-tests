@@ -10,6 +10,8 @@ import nl.lumc.sasc.biopet.test.{ Biopet, Samples }
 class ShivaBiopetplanet30xTest extends ShivaSuccess {
   override def referenceSpecies = Some("H.sapiens")
   override def referenceName = Some("GRCh37")
+  override def minPrecision = 0.945
+  override def minRecall = 0.945
 
   override def variantcallers = List("haplotypecaller", "haplotypecaller_gvcf", "unifiedgenotyper")
 
