@@ -102,6 +102,9 @@ trait ToucanSuccess extends Toucan {
 
 trait ToucanPlain extends ToucanSuccess {
 
+  logMustNotHave(".+VepNormalizer.+explode.+".r)
+  logMustHave(".+VepNormalizer.+standard.+".r)
+
   override def outputPath = outputDir.getAbsolutePath +
     File.separator +
     (this.inputVcf map
@@ -131,6 +134,9 @@ trait ToucanKeepIntermediates extends ToucanSuccess {
 
 trait ToucanNormalizerExplode extends ToucanSuccess {
   override def normalizerMode = "explode"
+
+  logMustHave(".+VepNormalizer.+explode.+".r)
+  logMustNotHave(".+VepNormalizer.+standard.+".r)
 
   @Test
   def testAmountVariants = {
