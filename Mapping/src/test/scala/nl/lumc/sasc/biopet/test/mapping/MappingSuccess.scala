@@ -73,6 +73,8 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   if (skipMarkDuplicates.contains(true)) addNotHavingExecutable("markduplicates")
   else addExecutable(Executable("markduplicates", Some(""".+""".r)))
 
+  override def summaryRoot = summaryLibrary(sampleId.get, libId.get)
+
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR2(): Unit = {
     val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "input_R2"
@@ -123,7 +125,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bai")
 
     assert(bamFile.exists(), s"Bamfile does not exist: $bamFile")
-    assert(baiFile.exists(), s"Bamfile idnex does not exist: $baiFile")
+    assert(baiFile.exists(), s"Bamfile index does not exist: $baiFile")
     assert(bamFile.length() > 0, s"$bamFile has size of 0 bytes")
     assert(baiFile.length() > 0, s"$baiFile has size of 0 bytes")
   }
@@ -141,8 +143,6 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
       assert(flexiprepDir.isDirectory, s"'$flexiprepDir' should be a directory")
     }
   }
-
-  override def summaryRoot = summaryLibrary(sampleId.get, libId.get)
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testSkipMetrics(): Unit = {
