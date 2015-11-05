@@ -7,4 +7,8 @@ import nl.lumc.sasc.biopet.test.Samples
  */
 class GentrapDryRunTest extends Gentrap {
   override def configs = super.configs ::: Samples.wgs1Config :: Nil
+
+  override def referenceSpecies = Some("H.sapiens")
+  override def referenceName = Some("GRCh38")
+
 }

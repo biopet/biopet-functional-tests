@@ -9,4 +9,8 @@ class GentrapTest extends GentrapSuccess {
   override def configs = super.configs ::: Samples.wgs1Config :: Nil
 
   def samples = Map("wgs1" -> List("lib1"))
+
+  override def referenceSpecies = Some("H.sapiens")
+  override def referenceName = Some("GRCh38")
+
 }
