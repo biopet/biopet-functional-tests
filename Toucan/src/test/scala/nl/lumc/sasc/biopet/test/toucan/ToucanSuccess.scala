@@ -57,18 +57,20 @@ trait ToucanSuccess extends Toucan {
   @Test
   def allPositionsIdentical = {
     val outputReader = new VCFFileReader(new File(outputPath))
-    inputVcf map {
-      x => new VCFFileReader(x)
-    } map {
-      x => x.iterator()
-    } foreach {
-      x =>
-        x foreach {
-          y =>
-            outputReader.query(y.getContig, y.getStart, y.getEnd) foreach {
-              z => assert(sameVariant(y, z), s"""Variant at ${y.getContig}:${y.getStart} is not identical in output file""")
-            }
+
+    val inputReader = new VCFFileReader(inputVcf getOrElse new File(""))
+
+    inputReader foreach { record =>
+      val q1 = inputReader.query(record.getContig, record.getStart, record.getEnd)
+      val q2 = outputReader.query(record.getContig, record.getStart, record.getEnd)
+
+      val compare = q1 map { x =>
+        q2 exists { y =>
+          sameVariant(x, y)
         }
+      } forall (z => z)
+
+      assert(compare, s"""Variant at ${record.getContig}:${record.getStart} has no identical variant in output file""")
     }
   }
 
@@ -97,7 +99,6 @@ trait ToucanSuccess extends Toucan {
         v1.getGenotype(n1).getGQ == v2.getGenotype(n2).getGQ &&
         v1.getGenotype(n1).getGenotypeString == v2.getGenotype(n2).getGenotypeString).forall(x => x)
   }
-
 }
 
 trait ToucanPlain extends ToucanSuccess {
@@ -239,14 +240,16 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
   @Test
   def testGoNLAFField = {
     val reader = new VCFFileReader(new File(outputPath))
-    reader.foreach(x => assert(x.hasAttribute("AF_gonl")))
+    assert(reader.getFileHeader.hasInfoLine("AF_gonl"))
+    //reader.foreach(x => assert(x.hasAttribute("AF_gonl")))
     reader.close()
   }
 
   @Test
   def testExacAFField = {
     val reader = new VCFFileReader(new File(outputPath))
-    reader.foreach(x => assert(x.hasAttribute("AF_exac")))
+    assert(reader.getFileHeader.hasInfoLine("AF_exac"))
+    //reader.foreach(x => assert(x.hasAttribute("AF_exac")))
     reader.close()
   }
 }
