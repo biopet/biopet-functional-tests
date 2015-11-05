@@ -32,7 +32,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     addExecutable(Executable("fastqc", Some(""".+""".r)))
     addExecutable(Executable("seqstat", Some(""".+""".r)))
     addExecutable(Executable("seqtkseq", Some(""".+""".r)))
-    if (r2.isDefined) addExecutable(Executable("fastqsync", Some(""".+""".r)))
+    if (paired) addExecutable(Executable("fastqsync", Some(""".+""".r)))
     else addNotHavingExecutable("fastqsync")
   } else {
     addNotHavingExecutable("fastqc")
@@ -78,7 +78,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR2(): Unit = {
     val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "input_R2"
-    if (r2.isDefined) {
+    if (paired) {
       validateSummaryFile(summaryFile, r2)
       assert(r2.get.exists(), "Input file is not there anymore")
     } else summaryFile shouldBe JNothing
