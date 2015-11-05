@@ -183,7 +183,9 @@ trait ToucanWithGoNL extends ToucanSuccess {
   @Test
   def testAFField = {
     val reader = new VCFFileReader(new File(outputPath))
-    reader.foreach(x => assert(x.hasAttribute("AF_gonl")))
+    assert(reader.getFileHeader.hasInfoLine("AF_gonl"))
+    // not all records will have an annotation
+    //reader.foreach(x => assert(x.hasAttribute("AF_gonl")))
     reader.close()
   }
 }
@@ -206,7 +208,9 @@ trait ToucanWithExac extends ToucanSuccess {
   @Test
   def testAFField = {
     val reader = new VCFFileReader(new File(outputPath))
-    reader.foreach(x => assert(x.hasAttribute("AF_exac")))
+    assert(reader.getFileHeader.hasInfoLine("AF_exac"))
+    // not all records will have an annotation
+    //reader.foreach(x => assert(x.hasAttribute("AF_exac")))
     reader.close()
   }
 }
