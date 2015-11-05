@@ -26,22 +26,22 @@ trait MappingPairedConcordanceTest extends MappingPaired with SummaryPipeline {
   addSummaryTest(statsPath :+ "biopet_flagstat",
     Seq(
       _ \ "All" should haveValue(20000),
-      _ \ "Mapped" shouldEqual 19800 +- 200,
-      _ \ "ProperPair" shouldEqual 20000 +- 100,
+      x => (x \ "Mapped").extract[Double] shouldEqual 19800 +- 200,
+      x => (x \ "ProperPair").extract[Double] shouldEqual 20000 +- 100,
       _ \ "ReadPaired" should haveValue(20000),
       _ \ "FirstOfPair" should haveValue(10000),
       _ \ "SecondOfPair" should haveValue(10000),
       x => (x \ "Duplicates").extract[Int] should be < 10,
-      _ \ "MAPQ>30" shouldEqual 19750 +- 250,
-      _ \ "MAPQ>40" shouldEqual 19750 +- 250,
-      _ \ "MAPQ>50" shouldEqual 19750 +- 250
+      x => (x \ "MAPQ>30").extract[Int] shouldEqual 19750 +- 250,
+      x => (x \ "MAPQ>40").extract[Int] shouldEqual 19750 +- 250,
+      x => (x \ "MAPQ>50").extract[Int] shouldEqual 19750 +- 250
     ))
 
   addSummaryTest(statsPath :+ "CollectInsertSizeMetrics" :+ "metrics",
     Seq(
-      _ \ "READ_PAIRS" shouldEqual 10000 +- 50,
-      _ \ "MEDIAN_INSERT_SIZE" shouldEqual 500 +- 15,
-      _ \ "MEAN_INSERT_SIZE" shouldEqual 500.0 +- 15.0,
+      x => (x \ "READ_PAIRS").extract[Int] shouldEqual 10000 +- 50,
+      x => (x \ "MEDIAN_INSERT_SIZE").extract[Int] shouldEqual 500 +- 15,
+      x => (x \ "MEAN_INSERT_SIZE").extract[Double] shouldEqual 500.0 +- 15.0,
       _ \ "PAIR_ORIENTATION" should haveValue("FR")
     ))
 
@@ -51,9 +51,9 @@ trait MappingPairedDNA extends MappingPairedConcordanceTest {
 
   addSummaryTest(statsPath :+ "wgs" :+ "metrics",
     Seq(
-      _ \ "MEDIAN_COVERAGE" shouldEqual 63 +- 2,
-      _ \ "MEAN_COVERAGE" shouldEqual 63.0 +- 2.0,
-      _ \ "SD_COVERAGE" shouldEqual 11.0 +- 2.0
+      x => (x \ "MEDIAN_COVERAGE").extract[Int] shouldEqual 63 +- 2,
+      x => (x \ "MEAN_COVERAGE").extract[Double] shouldEqual 63.0 +- 2.0,
+      x => (x \ "SD_COVERAGE").extract[Double] shouldEqual 11.0 +- 2.0
     ))
 
 }
