@@ -91,7 +91,7 @@ trait ToucanSuccess extends Toucan {
       v1.getSampleNamesOrderedByName == v2.getSampleNamesOrderedByName &&
       (for ((n1, n2) <- v1.getSampleNamesOrderedByName zip v2.getSampleNamesOrderedByName)
         yield v1.getGenotype(n1).getDP == v2.getGenotype(n2).getDP &&
-        v1.getGenotype(n1).getAD == v2.getGenotype(n2).getAD &&
+        v1.getGenotype(n1).getAD.toList == v2.getGenotype(n2).getAD.toList &&
         v1.getGenotype(n1).getType.toString == v2.getGenotype(n2).getType.toString &&
         v1.getGenotype(n1).getLikelihoodsString == v2.getGenotype(n2).getLikelihoodsString &&
         v1.getGenotype(n1).getGQ == v2.getGenotype(n2).getGQ &&
