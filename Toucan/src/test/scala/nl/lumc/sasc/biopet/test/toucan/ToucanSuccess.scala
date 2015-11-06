@@ -35,7 +35,7 @@ trait ToucanSuccess extends Toucan {
       replaceAll(".vcf.gz", ".vep.vcf")).
     getOrElse("")))
 
-  @Test def testOutputFile = {
+  @Test def testOutputFile() = {
     assert(outputPath.nonEmpty)
     val outputFile = new File(outputPath)
     assert(outputFile.exists(), s"""Expected output file $outputPath does not exist""")
@@ -58,7 +58,7 @@ trait ToucanSuccess extends Toucan {
   }
 
   @Test
-  def allPositionsIdentical = {
+  def allPositionsIdentical() = {
     val outputReader = new VCFFileReader(new File(outputPath))
 
     val inputReader = new VCFFileReader(inputVcf getOrElse new File(""))
@@ -95,7 +95,7 @@ trait ToucanSuccess extends Toucan {
   }
 
   @Test(dataProvider = "vep_field")
-  def hasVepField(f: String) = {
+  def testHasVepField(f: String) = {
     val outputReader = new VCFFileReader(new File(outputPath))
     val header = outputReader.getFileHeader
     assert(header.hasInfoLine(f), s"""Field $f does not exist in output file""")
@@ -103,7 +103,7 @@ trait ToucanSuccess extends Toucan {
   }
 
   @Test
-  def mustHaveConsequence = {
+  def mustHaveConsequence() = {
     val outputReader = new VCFFileReader(new File(outputPath))
     outputReader foreach { x =>
       assert(x.hasAttribute("VEP_Consequence"), s"""Variant at ${x.getContig}:${x.getStart} has no VEP consequence""")
@@ -149,7 +149,7 @@ trait ToucanPlain extends ToucanSuccess {
       { x => x.replaceAll(".vcf.gz$", ".vep.normalized.vcf.gz") } getOrElse "")
 
   @Test
-  def sameAmountVariants = {
+  def sameAmountVariants() = {
     val inputReader = new VCFFileReader(inputVcf getOrElse new File(""))
     val inputSize = inputReader.foldLeft(0)((ac, _) => ac + 1)
     val outputReader = new VCFFileReader(new File(outputPath))
@@ -164,7 +164,7 @@ trait ToucanKeepIntermediates extends ToucanSuccess {
   override def keepIntermediates = true
 
   @Test
-  def testIntermediateExistence = {
+  def testIntermediateExistence() = {
     intermediates.foreach(x => assert(x.exists(), s"""Intermediate file $x not found"""))
   }
 }
@@ -176,7 +176,7 @@ trait ToucanNormalizerExplode extends ToucanSuccess {
   logMustNotHave(".+VepNormalizer.+standard.+".r)
 
   @Test
-  def testAmountVariants = {
+  def testAmountVariants() = {
     val inputReader = new VCFFileReader(inputVcf getOrElse new File(""))
     val outputReader = new VCFFileReader(new File(outputPath))
     val inputSize = inputReader.foldLeft(0)((ac, _) => ac + 1)
@@ -191,7 +191,7 @@ trait ToucanNormalizerExplode extends ToucanSuccess {
   }
 
   @Test
-  def testNormalizedAmountVariants = {
+  def testNormalizedAmountVariants() = {
     val outputReader = new VCFFileReader(new File(outputPath))
     val knownReader = new VCFFileReader(knownNormalized)
     val outputSize = outputReader.foldLeft(0)((ac, _) => ac + 1)
@@ -222,7 +222,7 @@ trait ToucanWithGoNL extends ToucanSuccess {
   }
 
   @Test
-  def testAFField = {
+  def testAFField() = {
     val reader = new VCFFileReader(new File(outputPath))
     assert(reader.getFileHeader.hasInfoLine("AF_gonl"))
     // not all records will have an annotation
@@ -231,7 +231,7 @@ trait ToucanWithGoNL extends ToucanSuccess {
   }
 
   @Test
-  def testAFFieldType = {
+  def testAFFieldType() = {
     val reader = new VCFFileReader(new File(outputPath))
     val allDoubles = reader filter { r => r.hasAttribute("AF_gonl") } map { x => x.getAttribute("AF_gonl"): Any } map {
       case l if l.isInstanceOf[util.ArrayList[_]] => l.asInstanceOf[util.ArrayList[_]].toList map {
@@ -267,7 +267,7 @@ trait ToucanWithExac extends ToucanSuccess {
   }
 
   @Test
-  def testAFField = {
+  def testAFField() = {
     val reader = new VCFFileReader(new File(outputPath))
     assert(reader.getFileHeader.hasInfoLine("AF_exac"))
     // not all records will have an annotation
@@ -276,14 +276,14 @@ trait ToucanWithExac extends ToucanSuccess {
   }
 
   @Test
-  def testAFFieldType = {
+  def testAFFieldType() = {
     val reader = new VCFFileReader(new File(outputPath))
     val allDoubles = reader filter { r => r.hasAttribute("AF_exac") } map { x => x.getAttribute("AF_exac"): Any } map {
-      case l if l.isInstanceOf[util.ArrayList[_]] => l.asInstanceOf[util.ArrayList[_]].toList map {
+      case l : util.ArrayList[_] => l forall {
         case elD: Double => true
         case elS: String => toDouble(elS).nonEmpty
         case _           => false
-      } forall { y => y }
+      }
       case d: Double => true
       case s: String => toDouble(s).nonEmpty
       case _         => false
@@ -315,7 +315,7 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
   }
 
   @Test
-  def testGoNLAFField = {
+  def testGoNLAFField() = {
     val reader = new VCFFileReader(new File(outputPath))
     assert(reader.getFileHeader.hasInfoLine("AF_gonl"))
     //reader.foreach(x => assert(x.hasAttribute("AF_gonl")))
@@ -323,21 +323,21 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
   }
 
   @Test
-  def testExacAFField = {
+  def testExacAFField() = {
     val reader = new VCFFileReader(new File(outputPath))
     assert(reader.getFileHeader.hasInfoLine("AF_exac"))
     //reader.foreach(x => assert(x.hasAttribute("AF_exac")))
     reader.close()
   }
   @Test
-  def testExacAFFieldType = {
+  def testExacAFFieldType() = {
     val reader = new VCFFileReader(new File(outputPath))
     val allDoubles = reader filter { r => r.hasAttribute("AF_exac") } map { x => x.getAttribute("AF_exac"): Any } map {
-      case l if l.isInstanceOf[util.ArrayList[_]] => l.asInstanceOf[util.ArrayList[_]].toList map {
+      case l : util.ArrayList[_] => l forall {
         case elD: Double => true
         case elS: String => toDouble(elS).nonEmpty
         case _           => false
-      } forall { y => y }
+      }
       case d: Double => true
       case s: String => toDouble(s).nonEmpty
       case _         => false
@@ -347,14 +347,14 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
   }
 
   @Test
-  def testGoNLAFFieldType = {
+  def testGoNLAFFieldType() = {
     val reader = new VCFFileReader(new File(outputPath))
     val allDoubles = reader filter { r => r.hasAttribute("AF_gonl") } map { x => x.getAttribute("AF_gonl"): Any } map {
-      case l if l.isInstanceOf[util.ArrayList[_]] => l.asInstanceOf[util.ArrayList[_]].toList map {
+      case l : util.ArrayList[_] => l forall {
         case elD: Double => true
         case elS: String => toDouble(elS).nonEmpty
         case _           => false
-      } forall { y => y }
+      }
       case d: Double => true
       case s: String => toDouble(s).nonEmpty
       case _         => false

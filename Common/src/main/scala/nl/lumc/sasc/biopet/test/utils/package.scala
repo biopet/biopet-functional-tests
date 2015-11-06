@@ -50,4 +50,12 @@ package object utils {
       case e: Exception => None
     }
   }
+
+  def toInt(s:String) : Option[Int] = {
+    try {
+      Some(s.toInt)
+    } catch {
+      case e: Exception => None
+    }
+  }
 }
