@@ -106,6 +106,7 @@ trait ToucanSuccess extends Toucan {
     outputReader foreach { x =>
       assert(x.hasAttribute("VEP_Consequence"), s"""Variant at ${x.getContig}:${x.getStart} has no VEP consequence""")
     }
+    outputReader.close()
   }
 
   /**
