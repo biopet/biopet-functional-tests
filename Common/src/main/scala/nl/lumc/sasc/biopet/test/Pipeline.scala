@@ -135,7 +135,7 @@ object Pipeline {
       Biopet.queueArgs ++
       (if (pipeline.disablescatter) Seq("--disablescatter") else Seq()) ++
       cmdArg("-retry", pipeline.retries) ++
-      cmdCondition("-keepIntermediates", pipeline.keepIntermediates)
+      cmdCondition("-keepIntermediates", pipeline.keepIntermediates) ++
       cmdCondition("-run", pipeline.run) ++
       cmdConfig("output_dir", pipeline.outputDirArg) ++
       pipeline.configs.flatMap(x => Seq("-config", x.getAbsolutePath)) ++
