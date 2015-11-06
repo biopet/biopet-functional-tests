@@ -6,6 +6,7 @@ import java.util
 import htsjdk.variant.variantcontext.VariantContext
 import htsjdk.variant.vcf.VCFFileReader
 import nl.lumc.sasc.biopet.test.Biopet
+import nl.lumc.sasc.biopet.test.utils._
 import org.testng.annotations.{ DataProvider, Test }
 import scala.collection.JavaConversions._
 import scala.collection.immutable.Nil
@@ -41,7 +42,7 @@ trait ToucanSuccess extends Toucan {
   }
 
   @Test(dependsOnMethods = Array("testOutputFile"))
-  def allPositionsPresent = {
+  def allPositionsPresent() = {
     val outputReader = new VCFFileReader(new File(outputPath))
 
     inputVcf map
@@ -92,7 +93,7 @@ trait ToucanSuccess extends Toucan {
       "VEP_SYMBOL_SOURCE" :: "VEP_TREMBL" :: "VEP_cDNA_position" :: Nil
     fields.map(Array(_)).toArray
   }
-  1
+
   @Test(dataProvider = "vep_field")
   def hasVepField(f: String) = {
     val outputReader = new VCFFileReader(new File(outputPath))
@@ -119,13 +120,12 @@ trait ToucanSuccess extends Toucan {
    * @return true if identical, false if not
    */
   def sameVariant(v1: VariantContext, v2: VariantContext): Boolean = {
-    val sameAltAllele = (for ((a1, a2) <- v1.getAlternateAlleles zip v2.getAlternateAlleles)
-      yield a1.equals(a2)).forall(x => x)
     v1.getContig == v2.getContig &&
       v1.getStart == v2.getStart &&
       v1.getEnd == v2.getEnd &&
       v1.getReference.equals(v2.getReference) &&
-      sameAltAllele &&
+      (for ((a1, a2) <- v1.getAlternateAlleles zip v2.getAlternateAlleles)
+        yield a1.equals(a2)).forall(x => x) &&
       v1.getSampleNamesOrderedByName == v2.getSampleNamesOrderedByName &&
       (for ((n1, n2) <- v1.getSampleNamesOrderedByName zip v2.getSampleNamesOrderedByName)
         yield v1.getGenotype(n1).getDP == v2.getGenotype(n2).getDP &&
@@ -134,14 +134,6 @@ trait ToucanSuccess extends Toucan {
         v1.getGenotype(n1).getLikelihoodsString == v2.getGenotype(n2).getLikelihoodsString &&
         v1.getGenotype(n1).getGQ == v2.getGenotype(n2).getGQ &&
         v1.getGenotype(n1).getGenotypeString == v2.getGenotype(n2).getGenotypeString).forall(x => x)
-  }
-
-  def toDouble(s: String): Option[Double] = {
-    try {
-      Some(s.toDouble)
-    } catch {
-      case e: Exception => None
-    }
   }
 }
 
