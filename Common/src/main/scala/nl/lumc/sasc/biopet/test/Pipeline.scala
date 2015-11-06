@@ -51,6 +51,9 @@ trait Pipeline extends TestNGSuite with Matchers {
   /** This enabled the "--disablescatter" option on the commandline, default enabled */
   def disablescatter = true
 
+  /** Keep intermediates */
+  def keepIntermediates = false
+
   /** This are the config files given to the pipeline with the "-config" option */
   def configs: List[File] = Nil
 
@@ -132,6 +135,7 @@ object Pipeline {
       Biopet.queueArgs ++
       (if (pipeline.disablescatter) Seq("--disablescatter") else Seq()) ++
       cmdArg("-retry", pipeline.retries) ++
+      cmdCondition("-keepIntermediates", pipeline.keepIntermediates)
       cmdCondition("-run", pipeline.run) ++
       cmdConfig("output_dir", pipeline.outputDirArg) ++
       pipeline.configs.flatMap(x => Seq("-config", x.getAbsolutePath)) ++
