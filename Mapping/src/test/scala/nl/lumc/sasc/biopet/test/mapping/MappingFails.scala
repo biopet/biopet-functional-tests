@@ -74,17 +74,19 @@ class MappingDryRunPairedR2NotExistTest extends Mapping with PipelineFail {
   @Test def fileNotExist() = assert(!r2.get.exists(), s"this file should not exist: $r2")
 }
 
-class MappingNoOutputDir extends Mapping with PipelineFail {
+class MappingNoOutputDirTest extends Mapping with PipelineFail {
   override def outputDirArg = None
   override def r1 = Some(Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R1.fq.gz"))
 
   logMustNotHave("""FunctionEdge - Starting""".r)
+  logMustHave("""Value does not exist but is required, key: output_dir""".r)
 }
 
-class MappingDryRunNoOutputDir extends Mapping with PipelineFail {
+class MappingDryRunNoOutputDirTest extends Mapping with PipelineFail {
   override def outputDirArg = None
   override def run = false
   override def r1 = Some(Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R1.fq.gz"))
 
   logMustNotHave("""FunctionEdge - Starting""".r)
+  logMustHave("""Value does not exist but is required, key: output_dir""".r)
 }

@@ -5,13 +5,15 @@ import java.io.File
 import org.testng.annotations.{ DataProvider, Test }
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import org.scalatest._, matchers._
 
+import scala.collection.mutable.{ Map => MutMap }
 import scala.util.matching.Regex
 
 /**
  * Created by pjvanthof on 19/09/15.
  */
-trait SummaryPipeline extends Pipeline {
+trait SummaryPipeline extends Pipeline with JValueMatchers {
 
   implicit val formats = DefaultFormats
 
@@ -22,8 +24,27 @@ trait SummaryPipeline extends Pipeline {
   /** This will return the parsed summary, this method only work when the group "parseSummary" is done */
   def summary = _summary
 
+  type SummaryTestFunc = JValue => Unit
+
+  private val summaryTests: MutMap[Seq[String], Seq[SummaryTestFunc]] = MutMap()
+
+  def addSummaryTest(pathTokens: Seq[String], testFuncs: Seq[JValue => Unit]): Unit =
+    summaryTests(pathTokens) = summaryTests.getOrElse(pathTokens, Seq()) ++ testFuncs
+
   @Test(groups = Array("parseSummary"))
   def parseSummary(): Unit = _summary = parse(summaryFile)
+
+  @DataProvider(name = "summaryTests")
+  def summaryTestsProvider() = {
+    (for {
+      (pathTokens, testFuncs) <- summaryTests
+      testFunc <- testFuncs
+    } yield Array(pathTokens, pathTokens.foldLeft(summary) { case (curjv, p) => curjv \ p }, testFunc)).toArray
+  }
+
+  @Test(dataProvider = "summaryTests", dependsOnGroups = Array("parseSummary"))
+  def testSummaryValue(pathTokens: Seq[String], json: JValue, testFunc: SummaryTestFunc) =
+    withClue(s"Summary test on path '${pathTokens.mkString(" -> ")}'") { testFunc(json) }
 
   @Test(groups = Array("parseSummary"))
   def testSummaryFileExist(): Unit = assert(summaryFile.exists, "Summary file does not exist")
@@ -103,4 +124,109 @@ trait SummaryPipeline extends Pipeline {
   def testNotExecutables(exe: String): Unit = withClue(s"Executable: $exe") {
     summaryRoot \ pipelineName.toLowerCase \ "executables" \ exe shouldBe JNothing
   }
+}
+
+/** Trait for easier JValue matching. */
+trait JValueMatchers {
+
+  private def makeMatchResult(boolTest: => Boolean, obsValue: Any, expValue: Any): MatchResult =
+    MatchResult(boolTest,
+      s"""Value $obsValue can not be equalized to $expValue""",
+      s"""Value $obsValue can be equalized to $expValue""")
+
+  private def makeFileExistsMatchResult(boolTest: => Boolean, obsValue: Any): MatchResult =
+    MatchResult(boolTest,
+      s"""Value $obsValue can not be checked for file existence.""",
+      s"""Value $obsValue exists as a file.""")
+
+  class JValueFileExistMatcher() extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JString(s) => new java.io.File(s).exists()
+        case otherwise  => false
+      }
+      makeFileExistsMatchResult(testFunc, left)
+    }
+  }
+
+  class JValueIntMatcher(expectedValue: Int) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JInt(i)     => i == scala.math.BigInt(expectedValue)
+        case JDouble(d)  => d == expectedValue
+        case JDecimal(d) => d == scala.math.BigDecimal(expectedValue)
+        case otherwise   => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  class JValueDoubleMatcher(expectedValue: Double) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JInt(i)     => i.doubleValue() == expectedValue
+        case JDouble(d)  => d == expectedValue
+        case JDecimal(d) => d == scala.math.BigDecimal(expectedValue)
+        case otherwise   => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  class JValueBoolMatcher(expectedValue: Boolean) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JBool(i)  => i == expectedValue
+        case otherwise => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  class JValueStringMatcher(expectedValue: String) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JString(s) => s == expectedValue
+        case otherwise  => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  class JValueArrayMatcher(expectedValue: List[_]) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case a: JArray =>
+          val values = a.values
+          values.size == expectedValue.size && expectedValue.forall(values.contains)
+        case otherwise => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  class JValueEmptyMatcher(expectedValue: None.type) extends Matcher[JValue] {
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JNothing  => true
+        case otherwise => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  def haveValue(expectedValue: List[_]) = new JValueArrayMatcher(expectedValue)
+  def haveValue(expectedValue: Boolean) = new JValueBoolMatcher(expectedValue)
+  def haveValue(expectedValue: Int) = new JValueIntMatcher(expectedValue)
+  def haveValue(expectedValue: Double) = new JValueDoubleMatcher(expectedValue)
+  def haveValue(expectedValue: String) = new JValueStringMatcher(expectedValue)
+  def haveValue(expectedValue: Option[_]): Matcher[JValue] = expectedValue match {
+    case n @ None           => new JValueEmptyMatcher(n)
+    case Some(v: Int)       => new JValueIntMatcher(v)
+    case Some(v: Double)    => new JValueDoubleMatcher(v)
+    case Some(v: String)    => new JValueStringMatcher(v)
+    case Some(v: Option[_]) => haveValue(v)
+    case otherwise          => throw new RuntimeException(s"Unexpected type for testing JValue: $otherwise")
+  }
+  def existAsFile = new JValueFileExistMatcher
 }
