@@ -5,8 +5,9 @@ import java.io.File
 import htsjdk.variant.variantcontext.VariantContext
 import htsjdk.variant.vcf.VCFFileReader
 import nl.lumc.sasc.biopet.test.Biopet
-import org.testng.annotations.Test
+import org.testng.annotations.{ DataProvider, Test }
 import scala.collection.JavaConversions._
+import scala.collection.immutable.Nil
 
 /**
  * Created by ahbbollen on 22-10-15.
@@ -72,6 +73,31 @@ trait ToucanSuccess extends Toucan {
 
       assert(compare, s"""Variant at ${record.getContig}:${record.getStart} has no identical variant in output file""")
     }
+  }
+
+  @DataProvider(name = "vep_field")
+  def vepFields = {
+    val fields = "VEP_AA_MAF" :: "VEP_AFR_MAF" :: "VEP_AMR_MAF" ::
+      "VEP_ASN_MAF" :: "VEP_Allele" :: "VEP_Amino_acids" :: "VEP_BIOTYPE" ::
+      "VEP_CANONICAL" :: "VEP_CCDS" :: "VEP_CDS_position" :: "VEP_CLIN_SIG" ::
+      "VEP_Codons" :: "VEP_Consequence" :: "VEP_DISTANCE" :: "VEP_DOMAINS" ::
+      "VEP_EA_MAF" :: "VEP_ENSP" :: "VEP_EUR_MAF" :: "VEP_EXON" :: "VEP_Existing_variation" ::
+      "VEP_Feature" :: "VEP_Feature_type" :: "VEP_GMAF" :: "VEP_Gene" ::
+      "VEP_HGNC_ID" :: "VEP_HGVSc" :: "VEP_HGVSp" :: "VEP_HIGH_INF_POS" ::
+      "VEP_INTRON" :: "VEP_MOTIF_NAME" :: "VEP_MOTIF_POS" ::
+      "VEP_MOTIF_SCORE_CHANGE" :: "VEP_PUBMED" :: "VEP_PolyPhen" ::
+      "VEP_Protein_position" :: "VEP_SIFT" :: "VEP_SOMATIC" ::
+      "VEP_STRAND" :: "VEP_SWISSPROT" :: "VEP_SYMBOL" ::
+      "VEP_SYMBOL_SOURCE" :: "VEP_TREMBL" :: "VEP_cDNA_position" :: Nil
+    fields.map(Array(_)).toArray
+  }
+  1
+  @Test(dataProvider = "vep_field")
+  def hasVepField(f: String) = {
+    val outputReader = new VCFFileReader(new File(outputPath))
+    val header = outputReader.getFileHeader
+    assert(header.hasInfoLine(f), s"""Field $f does not exist in output file""")
+    outputReader.close()
   }
 
   /**
