@@ -100,6 +100,14 @@ trait ToucanSuccess extends Toucan {
     outputReader.close()
   }
 
+  @Test
+  def mustHaveConsequence = {
+    val outputReader = new VCFFileReader(new File(outputPath))
+    outputReader foreach { x =>
+      assert(x.hasAttribute("VEP_Consequence"), s"""Variant at ${x.getContig}:${x.getStart} has no VEP consequence""")
+    }
+  }
+
   /**
    * Tests whether general information of variant is the same
    * That is:
@@ -193,6 +201,10 @@ trait ToucanNormalizerExplode extends ToucanSuccess {
 trait ToucanExplodeKeepIntermediates extends ToucanKeepIntermediates with ToucanNormalizerExplode
 
 trait ToucanWithGoNL extends ToucanSuccess {
+
+  logMustHave(".+VcfWithVcf.+AF_gonl.+".r)
+  logMustNotHave(".+VcfWithVcf.+AF_exac.+".r)
+
   override def goNLFile = Some(Biopet.fixtureFile("toucan" + File.separator +
     "gonl_allchroms_snpindels.sorted.chr.vcf.gz"))
 
@@ -218,6 +230,9 @@ trait ToucanWithGoNL extends ToucanSuccess {
 }
 
 trait ToucanWithExac extends ToucanSuccess {
+
+  logMustNotHave(".+VcfWithVcf.+AF_gonl.+".r)
+  logMustHave(".+VcfWithVcf.+AF_exac.+".r)
 
   override def exacFile = Some(Biopet.fixtureFile("toucan" + File.separator + "ExAC.r0.3.sites.vep.vcf.gz"))
 
