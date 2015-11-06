@@ -51,7 +51,7 @@ package object utils {
     }
   }
 
-  def toInt(s:String) : Option[Int] = {
+  def toInt(s: String): Option[Int] = {
     try {
       Some(s.toInt)
     } catch {

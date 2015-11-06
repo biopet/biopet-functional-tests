@@ -279,7 +279,7 @@ trait ToucanWithExac extends ToucanSuccess {
   def testAFFieldType() = {
     val reader = new VCFFileReader(new File(outputPath))
     val allDoubles = reader filter { r => r.hasAttribute("AF_exac") } map { x => x.getAttribute("AF_exac"): Any } map {
-      case l : util.ArrayList[_] => l forall {
+      case l: util.ArrayList[_] => l forall {
         case elD: Double => true
         case elS: String => toDouble(elS).nonEmpty
         case _           => false
@@ -333,7 +333,7 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
   def testExacAFFieldType() = {
     val reader = new VCFFileReader(new File(outputPath))
     val allDoubles = reader filter { r => r.hasAttribute("AF_exac") } map { x => x.getAttribute("AF_exac"): Any } map {
-      case l : util.ArrayList[_] => l forall {
+      case l: util.ArrayList[_] => l forall {
         case elD: Double => true
         case elS: String => toDouble(elS).nonEmpty
         case _           => false
@@ -350,7 +350,7 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
   def testGoNLAFFieldType() = {
     val reader = new VCFFileReader(new File(outputPath))
     val allDoubles = reader filter { r => r.hasAttribute("AF_gonl") } map { x => x.getAttribute("AF_gonl"): Any } map {
-      case l : util.ArrayList[_] => l forall {
+      case l: util.ArrayList[_] => l forall {
         case elD: Double => true
         case elS: String => toDouble(elS).nonEmpty
         case _           => false
