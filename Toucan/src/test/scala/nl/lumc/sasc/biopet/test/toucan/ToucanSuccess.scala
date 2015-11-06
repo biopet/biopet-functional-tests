@@ -1,6 +1,7 @@
 package nl.lumc.sasc.biopet.test.toucan
 
 import java.io.File
+import java.util
 
 import htsjdk.variant.variantcontext.VariantContext
 import htsjdk.variant.vcf.VCFFileReader
@@ -134,6 +135,14 @@ trait ToucanSuccess extends Toucan {
         v1.getGenotype(n1).getGQ == v2.getGenotype(n2).getGQ &&
         v1.getGenotype(n1).getGenotypeString == v2.getGenotype(n2).getGenotypeString).forall(x => x)
   }
+
+  def toDouble(s: String): Option[Double] = {
+    try {
+      Some(s.toDouble)
+    } catch {
+      case e: Exception => None
+    }
+  }
 }
 
 trait ToucanPlain extends ToucanSuccess {
@@ -228,6 +237,23 @@ trait ToucanWithGoNL extends ToucanSuccess {
     //reader.foreach(x => assert(x.hasAttribute("AF_gonl")))
     reader.close()
   }
+
+  @Test
+  def testAFFieldType = {
+    val reader = new VCFFileReader(new File(outputPath))
+    val allDoubles = reader filter { r => r.hasAttribute("AF_gonl") } map { x => x.getAttribute("AF_gonl"): Any } map {
+      case l if l.isInstanceOf[util.ArrayList[_]] => l.asInstanceOf[util.ArrayList[_]].toList map {
+        case elD: Double => true
+        case elS: String => toDouble(elS).nonEmpty
+        case _           => false
+      } forall { y => y }
+      case d: Double => true
+      case s: String => toDouble(s).nonEmpty
+      case _         => false
+    } forall { z => z }
+    assert(allDoubles)
+    reader.close()
+  }
 }
 
 trait ToucanWithExac extends ToucanSuccess {
@@ -254,6 +280,23 @@ trait ToucanWithExac extends ToucanSuccess {
     assert(reader.getFileHeader.hasInfoLine("AF_exac"))
     // not all records will have an annotation
     //reader.foreach(x => assert(x.hasAttribute("AF_exac")))
+    reader.close()
+  }
+
+  @Test
+  def testAFFieldType = {
+    val reader = new VCFFileReader(new File(outputPath))
+    val allDoubles = reader filter { r => r.hasAttribute("AF_exac") } map { x => x.getAttribute("AF_exac"): Any } map {
+      case l if l.isInstanceOf[util.ArrayList[_]] => l.asInstanceOf[util.ArrayList[_]].toList map {
+        case elD: Double => true
+        case elS: String => toDouble(elS).nonEmpty
+        case _           => false
+      } forall { y => y }
+      case d: Double => true
+      case s: String => toDouble(s).nonEmpty
+      case _         => false
+    } forall { z => z }
+    assert(allDoubles)
     reader.close()
   }
 }
@@ -292,6 +335,39 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
     val reader = new VCFFileReader(new File(outputPath))
     assert(reader.getFileHeader.hasInfoLine("AF_exac"))
     //reader.foreach(x => assert(x.hasAttribute("AF_exac")))
+    reader.close()
+  }
+  @Test
+  def testExacAFFieldType = {
+    val reader = new VCFFileReader(new File(outputPath))
+    val allDoubles = reader filter { r => r.hasAttribute("AF_exac") } map { x => x.getAttribute("AF_exac"): Any } map {
+      case l if l.isInstanceOf[util.ArrayList[_]] => l.asInstanceOf[util.ArrayList[_]].toList map {
+        case elD: Double => true
+        case elS: String => toDouble(elS).nonEmpty
+        case _           => false
+      } forall { y => y }
+      case d: Double => true
+      case s: String => toDouble(s).nonEmpty
+      case _         => false
+    } forall { z => z }
+    assert(allDoubles)
+    reader.close()
+  }
+
+  @Test
+  def testGoNLAFFieldType = {
+    val reader = new VCFFileReader(new File(outputPath))
+    val allDoubles = reader filter { r => r.hasAttribute("AF_gonl") } map { x => x.getAttribute("AF_gonl"): Any } map {
+      case l if l.isInstanceOf[util.ArrayList[_]] => l.asInstanceOf[util.ArrayList[_]].toList map {
+        case elD: Double => true
+        case elS: String => toDouble(elS).nonEmpty
+        case _           => false
+      } forall { y => y }
+      case d: Double => true
+      case s: String => toDouble(s).nonEmpty
+      case _         => false
+    } forall { z => z }
+    assert(allDoubles)
     reader.close()
   }
 }
