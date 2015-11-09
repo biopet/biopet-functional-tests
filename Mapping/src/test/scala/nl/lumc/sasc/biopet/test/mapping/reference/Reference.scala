@@ -110,7 +110,7 @@ class PairedBowtieCelegansWBcel235Test extends ReferencePairedTemplate("bowtie")
 class PairedTophatHsapiensGRCh38Test extends ReferencePairedTemplate("tophat") with HsapiensGRCh38
 class PairedTophatHsapiensGRCh37Test extends ReferencePairedTemplate("tophat") with HsapiensGRCh37
 //class PairedTophatMmusculusGRCm38Test extends ReferencePairedTemplate("tophat") with MmusculusGRCm38
-class PairedTophatRnorvegicusRnor_6Test extends ReferencePairedTemplate("tophat") with RnorvegicusRnor_6
+//class PairedTophatRnorvegicusRnor_6Test extends ReferencePairedTemplate("tophat") with RnorvegicusRnor_6
 //class PairedTophatCelegansWBcel235Test extends ReferencePairedTemplate("tophat") with CelegansWBcel235
 
 class PairedGsnapHsapiensGRCh38Test extends ReferencePairedTemplate("gsnap") with HsapiensGRCh38
