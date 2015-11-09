@@ -42,7 +42,7 @@ trait SummaryPipeline extends Pipeline with JValueMatchers {
     } yield Array(pathTokens, pathTokens.foldLeft(summary) { case (curjv, p) => curjv \ p }, testFunc)).toArray
   }
 
-  @Test(dataProvider = "summaryTests")
+  @Test(dataProvider = "summaryTests", dependsOnGroups = Array("parseSummary"))
   def testSummaryValue(pathTokens: Seq[String], json: JValue, testFunc: SummaryTestFunc) =
     withClue(s"Summary test on path '${pathTokens.mkString(" -> ")}'") { testFunc(json) }
 
