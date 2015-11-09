@@ -66,7 +66,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   if (aligner.contains("tophat")) {
     addExecutable(Executable("tophat", Some(""".+""".r)))
-    addExecutable(Executable("reorderSam", Some(""".+""".r)))
+    addExecutable(Executable("reordersam", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
   } else addNotHavingExecutable("tophat")
 
