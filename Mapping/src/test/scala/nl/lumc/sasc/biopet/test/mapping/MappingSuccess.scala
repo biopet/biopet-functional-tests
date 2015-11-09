@@ -43,28 +43,28 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     addNotHavingExecutable("fastqsync")
   }
 
-  if (aligner.isEmpty || aligner == Some("bwamem")) {
+  if (aligner.isEmpty || aligner.contains("bwa-mem")) {
     addExecutable(Executable("bwamem", Some(""".+""".r)))
     addExecutable(Executable("sortsam", Some(""".+""".r)))
   } else addNotHavingExecutable("bwamem")
 
-  if (aligner == Some("bowtie")) {
+  if (aligner.contains("bowtie")) {
     addExecutable(Executable("bowtie", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
   } else addNotHavingExecutable("bowtie")
 
-  if (aligner == Some("gsnap")) {
+  if (aligner.contains("gsnap")) {
     addExecutable(Executable("gsnap", Some(""".+""".r)))
     addExecutable(Executable("reorderSam", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
   } else addNotHavingExecutable("gsnap")
 
-  if (aligner == Some("star-2pass") || aligner == Some("star-2pass")) {
+  if (aligner.contains("star") || aligner.contains("star-2pass")) {
     addExecutable(Executable("star", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
   } else addNotHavingExecutable("star")
 
-  if (aligner == Some("tophat")) {
+  if (aligner.contains("tophat")) {
     addExecutable(Executable("tophat", Some(""".+""".r)))
     addExecutable(Executable("reorderSam", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))

@@ -26,12 +26,12 @@ trait MappingPairedConcordanceTest extends MappingPaired with SummaryPipeline {
   addSummaryTest(statsPath :+ "biopet_flagstat",
     Seq(
       _ \ "All" should haveValue(20000),
-      x => (x \ "Mapped").extract[Double] shouldEqual 19800 +- 200,
-      x => (x \ "ProperPair").extract[Double] shouldEqual 20000 +- 100,
+      x => (x \ "Mapped").extract[Int] shouldEqual 19800 +- 200,
+      x => (x \ "ProperPair").extract[Int] shouldEqual 20000 +- 100,
       _ \ "ReadPaired" should haveValue(20000),
       _ \ "FirstOfPair" should haveValue(10000),
       _ \ "SecondOfPair" should haveValue(10000),
-      x => (x \ "Duplicates").extract[Int] should be < 10,
+      x => (x \ "Duplicates").extract[Int] should be <= 10,
       x => (x \ "MAPQ>30").extract[Int] shouldEqual 19750 +- 250,
       x => (x \ "MAPQ>40").extract[Int] shouldEqual 19750 +- 250,
       x => (x \ "MAPQ>50").extract[Int] shouldEqual 19750 +- 250
