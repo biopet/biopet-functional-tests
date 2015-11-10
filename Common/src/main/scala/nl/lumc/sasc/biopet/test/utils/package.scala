@@ -69,7 +69,7 @@ package object utils {
     */
   def pearsonScore(a: List[Double], b: List[Double]): Option[Double] = {
 
-    assert(a.size == b.size, "Sizes of both Maps are not equal")
+    assert(a.size == b.size, "Sizes of both Lists are not equal")
     val n = a.size
     // add up all the preferences
     val sum1 = a.sum

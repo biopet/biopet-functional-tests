@@ -18,12 +18,10 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   def summaryFile = new File(outputDir, s"${sampleId.get}-${libId.get}.summary.json")
 
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testInputFileR1(): Unit = {
-    val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "input_R1"
-    validateSummaryFile(summaryFile, r1)
-    assert(r1.get.exists(), "Input file is not there anymore")
-  }
+  override def summaryRoot = summaryLibrary(sampleId.get, libId.get)
+
+  def finalBamFile: File = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
+  def finalWigFile: File = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam.wig")
 
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
@@ -73,8 +71,12 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   if (skipMarkDuplicates.contains(true)) addNotHavingExecutable("markduplicates")
   else addExecutable(Executable("markduplicates", Some(""".+""".r)))
 
-  override def summaryRoot = summaryLibrary(sampleId.get, libId.get)
-
+  @Test(dependsOnGroups = Array("parseSummary"))
+  def testInputFileR1(): Unit = {
+    val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "input_R1"
+    validateSummaryFile(summaryFile, r1)
+    assert(r1.get.exists(), "Input file is not there anymore")
+  }
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR2(): Unit = {
     val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "input_R2"
@@ -103,9 +105,6 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     assert(finalBamFile.exists())
     assert(finalBamFile.length() > 0, s"$finalBamFile has size of 0 bytes")
   }
-
-  def finalBamFile: File = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
-  def finalWigFile: File = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam.wig")
 
   @Test
   def testFinalBaiFile(): Unit = {
@@ -185,10 +184,9 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test
   def testWig(): Unit = {
-    val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
-    val wig = new File(outputDir, bamFile.getName + ".wig")
-    val tdf = new File(outputDir, bamFile.getName + ".tdf")
-    val bw = new File(outputDir, bamFile.getName + ".bw")
+    val wig = new File(outputDir, finalBamFile.getName + ".wig")
+    val tdf = new File(outputDir, finalBamFile.getName + ".tdf")
+    val bw = new File(outputDir, finalBamFile.getName + ".bw")
     val generateWig = this.generateWig.getOrElse(false)
     assert(wig.exists() == generateWig)
     assert(tdf.exists() == generateWig)
@@ -197,13 +195,12 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test
   def testReadgroup(): Unit = {
-    val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
-    val inputSam = SamReaderFactory.makeDefault.open(bamFile)
+    val inputSam = SamReaderFactory.makeDefault.open(finalBamFile)
     val header = inputSam.getFileHeader
     assert(header.getReadGroups.size() == 1)
     val id = readgroupId.getOrElse(sampleId.get + "-" + libId.get)
     val readgroup = header.getReadGroup(id)
-    assert(readgroup != null, s"Readgroup '$id' does not exist in $bamFile")
+    assert(readgroup != null, s"Readgroup '$id' does not exist in $finalBamFile")
 
     readgroup.getSample shouldBe sampleId.get
     readgroup.getLibrary shouldBe libId.get
