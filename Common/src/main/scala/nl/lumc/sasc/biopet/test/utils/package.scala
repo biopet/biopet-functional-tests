@@ -6,6 +6,8 @@ import java.util.zip.GZIPInputStream
 import org.apache.commons.codec.digest.DigestUtils
 import org.json4s.jackson.Serialization
 
+import scala.io.Source
+
 /**
  * Created by pjvan_thof on 10/2/15.
  */
@@ -58,4 +60,51 @@ package object utils {
       case e: Exception => None
     }
   }
+
+
+  /**
+    *
+    * Taken from http://alvinalexander.com/scala/scala-pearson-correlation-score-algorithm-programming-collective-intelligence
+    * @param a List containing Doubles
+    * @param b List containing Doubles
+    * @return
+    */
+  def pearsonScore(a: List[Double], b: List[Double]): Option[Double] = {
+
+    assert(a.size == b.size, "Sizes of both Maps are not equal")
+    val n = a.size
+    // add up all the preferences
+    val sum1 = a.sum
+    val sum2 = b.sum
+
+    // sum up the squares
+    val sum1Sq = a.foldLeft(0.0)(_ + Math.pow(_, 2))
+    val sum2Sq = b.foldLeft(0.0)(_ + Math.pow(_, 2))
+
+    // sum up the products
+    val pSum = (a.view.zipWithIndex foldLeft 0.0) {
+      case (acc, (value, index)) => acc + (value * b(index))
+    }
+
+    //  // calculate the pearson score
+    val numerator = pSum - (sum1 * sum2 / n)
+    val denominator = Math.sqrt((sum1Sq - Math.pow(sum1, 2) / n) * (sum2Sq - Math.pow(sum2, 2) / n))
+    if (denominator == 0) None else Some(numerator / denominator)
+  }
+
+  /**
+    * Wigglefile loader
+    *
+    * @param wiggleFile Path to wiggleFile (as File-object)
+    */
+  def loadWiggleFile(wiggleFile: File): List[Double] = {
+    val reader = Source.fromFile(wiggleFile)
+    reader.getLines()
+      .filterNot(_.startsWith("track"))
+      .filterNot(_.startsWith("variableStep"))
+      .filterNot(_.startsWith("fixedStep"))
+      .map( _.stripLineEnd.split("\t").last.toDouble )
+      .toList
+  }
+
 }

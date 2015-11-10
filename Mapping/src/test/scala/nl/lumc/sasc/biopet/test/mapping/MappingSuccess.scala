@@ -105,6 +105,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   }
 
   def finalBamFile: File = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
+  def finalWigFile: File = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam.wig")
 
   @Test
   def testFinalBaiFile(): Unit = {
