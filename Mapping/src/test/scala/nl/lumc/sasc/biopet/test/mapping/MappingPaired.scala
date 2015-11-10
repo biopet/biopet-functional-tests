@@ -45,7 +45,7 @@ trait MappingPaired extends MappingSingle {
   protected val statsPath = bamMetricsPath :+ "stats"
 
   // add metrics test only when this is turned on in the pipeline
-  if (skipMetrics.contains(false)) {
+  if (!skipMetrics.contains(true)) {
 
     addSummaryTest(statsPath :+ "wgs" :+ "metrics",
       Seq(
