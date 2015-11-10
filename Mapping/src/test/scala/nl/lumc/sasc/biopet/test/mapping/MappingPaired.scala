@@ -125,7 +125,7 @@ class MappingPairedWigTest extends MappingPaired {
     val correlationScore: Double = pearsonScore(tableA, tableB).getOrElse(0.0)
 
     // in the comparison we allow 1 percent difference.
-    correlationScore should be > 0.99
+    correlationScore should be >= 0.99
   }
 
 }
