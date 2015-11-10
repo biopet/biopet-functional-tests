@@ -115,7 +115,7 @@ class MappingPairedWigTest extends MappingPaired {
   @Test()
   def similarWiggleTrack: Unit = {
     // Loading the reference wiggle (A)
-    val referenceWiggle = new File(Biopet.fixtureDir + File.separator + "mapping", "wgs1-testlib.final.bam.wig")
+    val referenceWiggle = Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "wgs1-testlib.final.bam.wig")
 
     val tableA = loadWiggleFile(referenceWiggle)
     val tableB = loadWiggleFile(finalWigFile)
