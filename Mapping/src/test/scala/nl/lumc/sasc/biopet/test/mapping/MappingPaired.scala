@@ -7,6 +7,8 @@ import nl.lumc.sasc.biopet.test.utils._
 import org.json4s._
 import org.testng.annotations.Test
 
+import scala.io.Source
+
 /**
   * Created by pjvan_thof on 10/7/15.
   */
@@ -92,6 +94,23 @@ class MappingPairedNoSkipTest extends MappingPaired {
 
 class MappingPairedWigTest extends MappingPaired {
   override def generateWig = Some(true)
+
+  /**
+    * Wigglefile loader
+    *
+    * @param wiggleFile Path to wiggleFile (as File-object)
+    */
+  def loadWiggleFile(wiggleFile: File): List[Double] = {
+    val reader = Source.fromFile(wiggleFile)
+    val wiggleValue = reader.getLines()
+      .filterNot(_.startsWith("track"))
+      .filterNot(_.startsWith("variableStep"))
+      .filterNot(_.startsWith("fixedStep"))
+      .map( _.stripLineEnd.split("\t").last.toDouble )
+      .toList
+    reader.close()
+    wiggleValue
+  }
 
   @Test()
   def similarWiggleTrack: Unit = {

@@ -1,12 +1,10 @@
 package nl.lumc.sasc.biopet.test
 
-import java.io.{ PrintWriter, FileInputStream, File }
+import java.io.{File, FileInputStream, PrintWriter}
 import java.util.zip.GZIPInputStream
 
 import org.apache.commons.codec.digest.DigestUtils
 import org.json4s.jackson.Serialization
-
-import scala.io.Source
 
 /**
  * Created by pjvan_thof on 10/2/15.
@@ -90,21 +88,6 @@ package object utils {
     val numerator = pSum - (sum1 * sum2 / n)
     val denominator = Math.sqrt((sum1Sq - Math.pow(sum1, 2) / n) * (sum2Sq - Math.pow(sum2, 2) / n))
     if (denominator == 0) None else Some(numerator / denominator)
-  }
-
-  /**
-    * Wigglefile loader
-    *
-    * @param wiggleFile Path to wiggleFile (as File-object)
-    */
-  def loadWiggleFile(wiggleFile: File): List[Double] = {
-    val reader = Source.fromFile(wiggleFile)
-    reader.getLines()
-      .filterNot(_.startsWith("track"))
-      .filterNot(_.startsWith("variableStep"))
-      .filterNot(_.startsWith("fixedStep"))
-      .map( _.stripLineEnd.split("\t").last.toDouble )
-      .toList
   }
 
 }
