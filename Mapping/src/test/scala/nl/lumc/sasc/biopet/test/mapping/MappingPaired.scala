@@ -10,8 +10,8 @@ import org.testng.annotations.Test
 import scala.io.Source
 
 /**
-  * Created by pjvan_thof on 10/7/15.
-  */
+ * Created by pjvan_thof on 10/7/15.
+ */
 trait MappingPaired extends MappingSingle {
   override def r1 = Some(Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R1.fq.gz"))
 
@@ -40,7 +40,7 @@ trait MappingPaired extends MappingSingle {
   /** JSON paths for summary. */
   protected val bamMetricsPath = (sampleId, libId) match {
     case (Some(sid), Some(lid)) => Seq("samples", sid, "libraries", lid, "bammetrics")
-    case otherwise => Seq()
+    case otherwise              => Seq()
   }
   protected val statsPath = bamMetricsPath :+ "stats"
 
@@ -77,7 +77,6 @@ trait MappingPaired extends MappingSingle {
       ))
   }
 
-
 }
 
 class MappingPairedDefaultTest extends MappingPaired
@@ -96,17 +95,17 @@ class MappingPairedWigTest extends MappingPaired {
   override def generateWig = Some(true)
 
   /**
-    * Wigglefile loader
-    *
-    * @param wiggleFile Path to wiggleFile (as File-object)
-    */
+   * Wigglefile loader
+   *
+   * @param wiggleFile Path to wiggleFile (as File-object)
+   */
   def loadWiggleFile(wiggleFile: File): List[Double] = {
     val reader = Source.fromFile(wiggleFile)
     val wiggleValue = reader.getLines()
       .filterNot(_.startsWith("track"))
       .filterNot(_.startsWith("variableStep"))
       .filterNot(_.startsWith("fixedStep"))
-      .map( _.stripLineEnd.split("\t").last.toDouble )
+      .map(_.stripLineEnd.split("\t").last.toDouble)
       .toList
     reader.close()
     wiggleValue

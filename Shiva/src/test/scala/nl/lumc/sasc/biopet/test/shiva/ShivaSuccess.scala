@@ -26,16 +26,16 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExec
     addExecutable(Executable("realignertargetcreator", Some(""".+""".r)))
     addExecutable(Executable("indelrealigner", Some(""".+""".r)))
   } else {
-    addNotExecutable("realignertargetcreator")
-    addNotExecutable("indelrealigner")
+    addNotHavingExecutable("realignertargetcreator")
+    addNotHavingExecutable("indelrealigner")
   }
 
   if (!useBaseRecalibration.contains(false) && dbsnpVcfFile.isDefined) {
     addExecutable(Executable("baserecalibrator", Some(""".+""".r)))
     addExecutable(Executable("printreads", Some(""".+""".r)))
   } else {
-    addNotExecutable("baserecalibrator")
-    addNotExecutable("printreads")
+    addNotHavingExecutable("baserecalibrator")
+    addNotHavingExecutable("printreads")
   }
 
   samples.foreach {
