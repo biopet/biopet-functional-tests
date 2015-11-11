@@ -18,6 +18,11 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   def summaryFile = new File(outputDir, s"${sampleId.get}-${libId.get}.summary.json")
 
+  override def summaryRoot = summaryLibrary(sampleId.get, libId.get)
+
+  def finalBamFile: File = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
+  def finalWigFile: File = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam.wig")
+
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
 
@@ -25,48 +30,46 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     addExecutable(Executable("fastqc", Some(""".+""".r)))
     addExecutable(Executable("seqstat", Some(""".+""".r)))
     addExecutable(Executable("seqtkseq", Some(""".+""".r)))
-    if (r2.isDefined) addExecutable(Executable("fastqsync", Some(""".+""".r)))
-    else addNotExecutable("fastqsync")
+    if (paired) addExecutable(Executable("fastqsync", Some(""".+""".r)))
+    else addNotHavingExecutable("fastqsync")
   } else {
-    addNotExecutable("fastqc")
-    addNotExecutable("seqtkseq")
-    addNotExecutable("seqstat")
-    addNotExecutable("sickle")
-    addNotExecutable("cutadapt")
-    addNotExecutable("fastqsync")
+    addNotHavingExecutable("fastqc")
+    addNotHavingExecutable("seqtkseq")
+    addNotHavingExecutable("seqstat")
+    addNotHavingExecutable("sickle")
+    addNotHavingExecutable("cutadapt")
+    addNotHavingExecutable("fastqsync")
   }
 
   if (aligner.isEmpty || aligner.contains("bwa-mem")) {
     addExecutable(Executable("bwamem", Some(""".+""".r)))
     addExecutable(Executable("sortsam", Some(""".+""".r)))
-  } else addNotExecutable("bwamem")
+  } else addNotHavingExecutable("bwamem")
 
   if (aligner.contains("bowtie")) {
     addExecutable(Executable("bowtie", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
-  } else addNotExecutable("bowtie")
+  } else addNotHavingExecutable("bowtie")
 
   if (aligner.contains("gsnap")) {
     addExecutable(Executable("gsnap", Some(""".+""".r)))
     addExecutable(Executable("reordersam", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
-  } else addNotExecutable("gsnap")
+  } else addNotHavingExecutable("gsnap")
 
   if (aligner.contains("star") || aligner.contains("star-2pass")) {
     addExecutable(Executable("star", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
-  } else addNotExecutable("star")
+  } else addNotHavingExecutable("star")
 
   if (aligner.contains("tophat")) {
     addExecutable(Executable("tophat", Some(""".+""".r)))
-    addExecutable(Executable("reorderSam", Some(""".+""".r)))
+    addExecutable(Executable("reordersam", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
-  } else addNotExecutable("tophat")
+  } else addNotHavingExecutable("tophat")
 
-  if (skipMarkDuplicates.contains(true)) addNotExecutable("markduplicates")
+  if (skipMarkDuplicates.contains(true)) addNotHavingExecutable("markduplicates")
   else addExecutable(Executable("markduplicates", Some(""".+""".r)))
-
-  override def summaryRoot = summaryLibrary(sampleId.get, libId.get)
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR1(): Unit = {
@@ -74,11 +77,10 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     validateSummaryFile(summaryFile, r1)
     assert(r1.get.exists(), "Input file is not there anymore")
   }
-
   @Test(dependsOnGroups = Array("parseSummary"))
   def testInputFileR2(): Unit = {
     val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "input_R2"
-    if (r2.isDefined) {
+    if (paired) {
       validateSummaryFile(summaryFile, r2)
       assert(r2.get.exists(), "Input file is not there anymore")
     } else summaryFile shouldBe JNothing
@@ -97,12 +99,11 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testFinalBamFile(): Unit = {
-    val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
     val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "output_bamfile"
-    validateSummaryFile(summaryFile, Some(bamFile))
+    validateSummaryFile(summaryFile, Some(finalBamFile))
 
-    assert(bamFile.exists())
-    assert(bamFile.length() > 0, s"$bamFile has size of 0 bytes")
+    assert(finalBamFile.exists())
+    assert(finalBamFile.length() > 0, s"$finalBamFile has size of 0 bytes")
   }
 
   @Test
@@ -124,7 +125,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bai")
 
     assert(bamFile.exists(), s"Bamfile does not exist: $bamFile")
-    assert(baiFile.exists(), s"Bamfile idnex does not exist: $baiFile")
+    assert(baiFile.exists(), s"Bamfile index does not exist: $baiFile")
     assert(bamFile.length() > 0, s"$bamFile has size of 0 bytes")
     assert(baiFile.length() > 0, s"$baiFile has size of 0 bytes")
   }
@@ -183,10 +184,9 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test
   def testWig(): Unit = {
-    val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
-    val wig = new File(outputDir, bamFile.getName + ".wig")
-    val tdf = new File(outputDir, bamFile.getName + ".tdf")
-    val bw = new File(outputDir, bamFile.getName + ".bw")
+    val wig = new File(outputDir, finalBamFile.getName + ".wig")
+    val tdf = new File(outputDir, finalBamFile.getName + ".tdf")
+    val bw = new File(outputDir, finalBamFile.getName + ".bw")
     val generateWig = this.generateWig.getOrElse(false)
     assert(wig.exists() == generateWig)
     assert(tdf.exists() == generateWig)
@@ -195,13 +195,12 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test
   def testReadgroup(): Unit = {
-    val bamFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
-    val inputSam = SamReaderFactory.makeDefault.open(bamFile)
+    val inputSam = SamReaderFactory.makeDefault.open(finalBamFile)
     val header = inputSam.getFileHeader
     assert(header.getReadGroups.size() == 1)
     val id = readgroupId.getOrElse(sampleId.get + "-" + libId.get)
     val readgroup = header.getReadGroup(id)
-    assert(readgroup != null, s"Readgroup '$id' does not exist in $bamFile")
+    assert(readgroup != null, s"Readgroup '$id' does not exist in $finalBamFile")
 
     readgroup.getSample shouldBe sampleId.get
     readgroup.getLibrary shouldBe libId.get

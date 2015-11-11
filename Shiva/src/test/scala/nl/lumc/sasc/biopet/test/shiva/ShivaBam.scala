@@ -11,7 +11,7 @@ class ShivaWgs1BamTest extends ShivaSuccess with TestReference {
   override def aligner = Some("bwa-mem")
   def samples = Map("wgs1" -> List("lib1"))
 
-  addNotExecutable("bwamem")
+  addNotHavingExecutable("bwamem")
 }
 
 class ShivaWgs1BamToFastqTest extends ShivaSuccess with TestReference {
@@ -32,6 +32,6 @@ class ShivaWgs1BamReplaceReadGroupTest extends ShivaSuccess with TestReference {
   override def correctReadgroups = Some(true)
   def samples = Map("wgs1" -> List("lib1"))
 
-  addNotExecutable("bwamem")
+  addNotHavingExecutable("bwamem")
   addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
 }

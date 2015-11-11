@@ -3,7 +3,7 @@ package nl.lumc.sasc.biopet.test.mapping.reference
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.Biopet
-import nl.lumc.sasc.biopet.test.mapping.{ MappingSuccess, Mapping }
+import nl.lumc.sasc.biopet.test.mapping.{ Mapping, MappingSuccess }
 
 /**
  * Created by pjvanthof on 06/08/15.
@@ -13,6 +13,8 @@ class ReferenceSingleTemplate(aln: String) extends MappingSuccess {
   override def functionalTest = true
   override def skipFlexiprep = Some(true)
   override def skipMetrics = Some(true)
+  // we do a R1 only alignment, so enforce paired to be disabled
+  override def paired = false
 }
 
 class ReferencePairedTemplate(aln: String) extends MappingSuccess {
@@ -108,7 +110,7 @@ class PairedBowtieCelegansWBcel235Test extends ReferencePairedTemplate("bowtie")
 class PairedTophatHsapiensGRCh38Test extends ReferencePairedTemplate("tophat") with HsapiensGRCh38
 class PairedTophatHsapiensGRCh37Test extends ReferencePairedTemplate("tophat") with HsapiensGRCh37
 //class PairedTophatMmusculusGRCm38Test extends ReferencePairedTemplate("tophat") with MmusculusGRCm38
-class PairedTophatRnorvegicusRnor_6Test extends ReferencePairedTemplate("tophat") with RnorvegicusRnor_6
+//class PairedTophatRnorvegicusRnor_6Test extends ReferencePairedTemplate("tophat") with RnorvegicusRnor_6
 //class PairedTophatCelegansWBcel235Test extends ReferencePairedTemplate("tophat") with CelegansWBcel235
 
 class PairedGsnapHsapiensGRCh38Test extends ReferencePairedTemplate("gsnap") with HsapiensGRCh38
