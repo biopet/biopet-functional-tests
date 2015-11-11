@@ -1,6 +1,6 @@
 package nl.lumc.sasc.biopet.test
 
-import java.io.{File, FileInputStream, PrintWriter}
+import java.io.{ File, FileInputStream, PrintWriter }
 import java.util.zip.GZIPInputStream
 
 import org.apache.commons.codec.digest.DigestUtils
@@ -59,14 +59,13 @@ package object utils {
     }
   }
 
-
   /**
-    *
-    * Taken from http://alvinalexander.com/scala/scala-pearson-correlation-score-algorithm-programming-collective-intelligence
-    * @param a List containing Doubles
-    * @param b List containing Doubles
-    * @return
-    */
+   *
+   * Taken from http://alvinalexander.com/scala/scala-pearson-correlation-score-algorithm-programming-collective-intelligence
+   * @param a List containing Doubles
+   * @param b List containing Doubles
+   * @return
+   */
   def pearsonScore(a: List[Double], b: List[Double]): Option[Double] = {
 
     assert(a.size == b.size, "Sizes of both Lists are not equal")
