@@ -51,8 +51,8 @@ object Biopet {
     }
   }
 
-  def fixtureFile(path: String): File = {
-    val file = new File(fixtureDir, path)
+  def fixtureFile(paths: String*): File = {
+    val file = new File(fixtureDir, paths.mkString(File.separator))
     require(file.exists(), "Fixture file does not exist: " + file)
     require(file.canRead(), "Fixture file is not readable: " + file)
     file.getAbsoluteFile
