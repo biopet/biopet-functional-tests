@@ -8,6 +8,24 @@ import nl.lumc.sasc.biopet.test.utils._
  * Created by pjvan_thof on 10/1/15.
  */
 object Samples {
+
+  val rna1 = Map("samples" ->
+    Map("rna1" ->
+      Map("libraries" ->
+        Map("lib1" ->
+          Map(
+            "R1" -> Biopet.fixtureFile("samples", "rna1", "1.fq").getAbsolutePath,
+            "R1_md5" -> "36c9badb9dbfdfbb94c7ad7512630146",
+            "R2" -> Biopet.fixtureFile("samples", "rna1", "2.fq").getAbsolutePath,
+            "R2_md5" -> "4e9bcbdf772a2bec9bce6ad70e614438"
+          )
+        )
+      )
+    )
+  )
+
+  val rna1Config = createTempConfig(Samples.rna1, "rna1")
+
   val wgs1 = Map("samples" ->
     Map("wgs1" ->
       Map("libraries" ->

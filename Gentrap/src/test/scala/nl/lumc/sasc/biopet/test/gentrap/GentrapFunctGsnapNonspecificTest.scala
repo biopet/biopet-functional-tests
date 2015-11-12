@@ -2,26 +2,24 @@ package nl.lumc.sasc.biopet.test.gentrap
 
 import nl.lumc.sasc.biopet.test.{ Biopet, Pipeline, Samples }, Pipeline._
 
-/**
- * Created by pjvanthof on 05/11/15.
- */
-class GentrapDryRunGsnapTest extends Gentrap with GentrapRefSeq {
+/** Functional test for Gentrap with complete options, using gsnap and non_specific strand protocol. */
+class GentrapFunctGsnapNonspecificTest extends GentrapSuccess with GentrapRefSeq {
 
-  override def run = false
+  override def functionalTest = true
+
+  def samples = Map("rna1" -> List("lib1"))
 
   override def expressionMeasures = List(
     "fragments_per_gene", "bases_per_gene", "bases_per_exon",
     "cufflinks_strict", "cufflinks_guided", "cufflinks_blind")
 
-  override def configs = super.configs :+ Samples.rna1Config
-
   override def strandProtocol = Option("non_specific")
+
+  override def configs = super.configs :+ Samples.rna1Config
 
   override def referenceSpecies = Option("H.sapiens")
 
   override def referenceName = Option("hg19_mini")
-
-  override def referenceFasta = Option(Biopet.fixtureFile("gentrap", "hg19_mini.fa"))
 
   override def aligner = Option("gsnap")
 

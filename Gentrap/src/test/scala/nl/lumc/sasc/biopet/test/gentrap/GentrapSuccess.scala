@@ -5,7 +5,7 @@ import nl.lumc.sasc.biopet.test.MultisampleSuccess
 /**
  * Created by pjvanthof on 05/11/15.
  */
-trait GentrapSuccess extends Gentrap with MultisampleSuccess {
+trait GentrapSuccess extends Gentrap with MultisampleSuccess { this: GentrapAnnotations =>
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
 }

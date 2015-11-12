@@ -2,54 +2,62 @@ package nl.lumc.sasc.biopet.test.gentrap
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.Pipeline
-import nl.lumc.sasc.biopet.test.Pipeline._
+import nl.lumc.sasc.biopet.test.{ Biopet, Pipeline }, Pipeline._
 import nl.lumc.sasc.biopet.test.utils._
 
-/**
- * Created by pjvan_thof on 5/26/15.
- */
-trait Gentrap extends Pipeline {
+trait Gentrap extends Pipeline { this: GentrapAnnotations =>
 
   def pipelineName = "gentrap"
 
-  def referenceSpecies: Option[String] = None
-
-  def referenceName: Option[String] = None
-
-  def aligner: Option[String] = None
-
   def summaryFile = new File(outputDir, s"gentrap.summary.json")
+
+  def removeRibosomalReads: Option[Boolean] = None
+
+  def callVariants: Option[Boolean] = None
 
   def expressionMeasures: List[String] = Nil
 
   def strandProtocol: Option[String] = None
 
-  def annotationRefflat: Option[File] = None
+  def expressionMeasuresConfig: Option[File] =
+    if (expressionMeasures.nonEmpty)
+      Option(createTempConfig(Map("expression_measures" -> expressionMeasures), "exp_measures"))
+    else None
 
-  def annotationGtf: Option[File] = None
+  def referenceSpecies: Option[String] = None
 
-  def annotationBed: Option[File] = None
+  def referenceName: Option[String] = None
 
-  def removeRibosomalReads: Option[Boolean] = None
+  def referenceFasta: Option[File] = Option(Biopet.fixtureFile("gentrap", "hg19_mini.fa"))
 
-  def ribosomalRefflat: Option[File] = None
+  def aligner: Option[String]
 
-  def callVariants: Option[Boolean] = None
-
-  def expressionMeasuresConfig = if (expressionMeasures.nonEmpty) Some(createTempConfig(Map("expression_measures" -> expressionMeasures))) else None
-
-  override def configs = super.configs ::: expressionMeasuresConfig.map(_ :: Nil).getOrElse(Nil)
+  override def configs = super.configs ++ expressionMeasuresConfig.toList
 
   def args = cmdConfig("species", referenceSpecies) ++
+    cmdConfig("reference_fasta", referenceFasta) ++
     cmdConfig("reference_name", referenceName) ++
-    cmdConfig("aligner", aligner) ++
     cmdConfig("strand_protocol", strandProtocol) ++
     cmdConfig("annotation_refflat", annotationRefflat) ++
     cmdConfig("annotation_gtf", annotationGtf) ++
     cmdConfig("annotation_bed", annotationBed) ++
     cmdConfig("remove_ribosomal_reads", removeRibosomalReads) ++
     cmdConfig("ribosomal_refflat", ribosomalRefflat) ++
-    cmdConfig("call_variants", callVariants)
+    cmdConfig("call_variants", callVariants) ++
+    cmdConfig("aligner", aligner)
+}
+
+trait GentrapAnnotations { this: Gentrap =>
+  def annotationRefflat: Option[File]
+  def annotationGtf: Option[File]
+  def annotationBed: Option[File]
+  def ribosomalRefflat: Option[File]
+}
+
+trait GentrapRefSeq extends GentrapAnnotations { this: Gentrap =>
+  def annotationRefflat = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.refFlat"))
+  def annotationGtf = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.gtf"))
+  def annotationBed = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.bed"))
+  def ribosomalRefflat: Option[File] = None
 }
 
