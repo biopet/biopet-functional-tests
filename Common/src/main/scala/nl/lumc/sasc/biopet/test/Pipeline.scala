@@ -5,7 +5,7 @@ import java.io.{ File, PrintWriter }
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
 import org.testng.SkipException
-import org.testng.annotations.{ DataProvider, Test, BeforeClass }
+import org.testng.annotations.{ BeforeClass, DataProvider, Test }
 
 import scala.io.Source
 import scala.sys.process._
@@ -73,14 +73,14 @@ trait Pipeline extends TestNGSuite with Matchers {
     _exitValue = Pipeline.runPipeline(this)
   }
 
-  @DataProvider(name = "not_allowed_reties")
+  @DataProvider(name = "not_allowed_retries")
   def notAllowedRetries = {
     (for (i <- (allowRetries + 1) to retries.getOrElse(1)) yield {
       Array("d", i)
     }).toArray
   }
 
-  @Test(dataProvider = "not_allowed_reties", dependsOnGroups = Array("parseLog"))
+  @Test(dataProvider = "not_allowed_retries", dependsOnGroups = Array("parseLog"))
   def testRetry(dummy: String, retry: Int): Unit = {
     val s = s"Reset for retry attempt $retry of ${retries.getOrElse(0)}"
     val ordinality = retry match {
@@ -88,6 +88,7 @@ trait Pipeline extends TestNGSuite with Matchers {
       case first if first.toString.endsWith("1") => "st"
       case second if second.toString.endsWith("2") => "nd"
       case third if third.toString.endsWith("3") => "rd"
+      case eighth if eighth.toString.endsWith("8") => "h"
       case _ => "th"
     }
     require(!logLines.exists(_.contains(s)), s"${retry}${ordinality} retry found but not allowed")
