@@ -26,8 +26,7 @@ object Samples {
             "R2_md5" -> "2fb79b450c09d3e1834dfc17a68960a6"
           )
         )
-      )
-  ),
+      ),
     "rna2" ->
       Map("libraries" ->
         Map("lib1" ->
@@ -39,6 +38,7 @@ object Samples {
           )
         )
       )
+  )
   )
 
   val rnaMultipleConfig = createTempConfig(Samples.rnaMultiple, "rnaMultiple")
