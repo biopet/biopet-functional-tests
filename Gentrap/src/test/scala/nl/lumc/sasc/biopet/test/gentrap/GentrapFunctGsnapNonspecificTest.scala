@@ -15,7 +15,7 @@ class GentrapFunctGsnapNonspecificTest extends GentrapSuccess with GentrapRefSeq
 
   override def strandProtocol = Option("non_specific")
 
-  override def configs = super.configs :+ Samples.rna1Config
+  override def configs = super.configs :+ Samples.rnaMultipleConfig
 
   override def referenceSpecies = Option("H.sapiens")
 

@@ -13,7 +13,7 @@ class GentrapDryRunGsnapTest extends Gentrap with GentrapRefSeq {
     "fragments_per_gene", "bases_per_gene", "bases_per_exon",
     "cufflinks_strict", "cufflinks_guided", "cufflinks_blind")
 
-  override def configs = super.configs :+ Samples.rna1Config
+  override def configs = super.configs :+ Samples.rnaMultipleConfig
 
   override def strandProtocol = Option("non_specific")
 

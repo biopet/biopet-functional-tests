@@ -9,22 +9,39 @@ import nl.lumc.sasc.biopet.test.utils._
  */
 object Samples {
 
-  val rna1 = Map("samples" ->
-    Map("rna1" ->
+  val rnaMultiple: Map[String, Any] = Map("samples" -> Map(
+    "rna1" ->
       Map("libraries" ->
-        Map("lib1" ->
-          Map(
-            "R1" -> Biopet.fixtureFile("samples", "rna1", "1.fq").getAbsolutePath,
-            "R1_md5" -> "36c9badb9dbfdfbb94c7ad7512630146",
-            "R2" -> Biopet.fixtureFile("samples", "rna1", "2.fq").getAbsolutePath,
-            "R2_md5" -> "4e9bcbdf772a2bec9bce6ad70e614438"
+        Map(
+          "lib1" -> Map(
+            "R1" -> Biopet.fixtureFile("samples", "rna1", "S17_L1_1.fq").getAbsolutePath,
+            "R1_md5" -> "73215e4a719d9d116d6eaa1a88a2f54c",
+            "R2" -> Biopet.fixtureFile("samples", "rna1", "S17_L1_2.fq").getAbsolutePath,
+            "R2_md5" -> "d93188b78c0dd6abc54f3d45ba1ed1d8"
+          ),
+          "lib2" -> Map(
+            "R1" -> Biopet.fixtureFile("samples", "rna1", "S17_L2_1.fq").getAbsolutePath,
+            "R1_md5" -> "8b3046b72be9a2d0f5073f4b30f2dbf1",
+            "R2" -> Biopet.fixtureFile("samples", "rna1", "S17_L2_2.fq").getAbsolutePath,
+            "R2_md5" -> "2fb79b450c09d3e1834dfc17a68960a6"
           )
         )
       )
-    )
+  ),
+    "rna2" ->
+      Map("libraries" ->
+        Map("lib1" ->
+          Map(
+            "R1" -> Biopet.fixtureFile("samples", "rna2", "S18_L1_1.fq").getAbsolutePath,
+            "R1_md5" -> "4f499f5bb4f6c305ee8e3fc1a38a3d78",
+            "R2" -> Biopet.fixtureFile("samples", "rna2", "S18_L1_2.fq").getAbsolutePath,
+            "R2_md5" -> "7829590a0cf6d66ec7d42d7df9c7c78b"
+          )
+        )
+      )
   )
 
-  val rna1Config = createTempConfig(Samples.rna1, "rna1")
+  val rnaMultipleConfig = createTempConfig(Samples.rnaMultiple, "rnaMultiple")
 
   val wgs1 = Map("samples" ->
     Map("wgs1" ->
