@@ -2,14 +2,14 @@ package nl.lumc.sasc.biopet.test.shiva
 
 import java.io.File
 
+import nl.lumc.sasc.biopet.test.aligners.BwaMem
+import nl.lumc.sasc.biopet.test.references.HsapiensGRCh37
 import nl.lumc.sasc.biopet.test.{ Biopet, Samples }
 
 /**
  * Created by pjvanthof on 01/11/15.
  */
-class ShivaBiopetplanet30xTest extends ShivaSuccess {
-  override def referenceSpecies = Some("H.sapiens")
-  override def referenceName = Some("GRCh37")
+class ShivaBiopetplanet30xTest extends ShivaSuccess with BwaMem with HsapiensGRCh37 {
   override def minPrecision = 0.945
   override def minRecall = 0.945
 

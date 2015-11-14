@@ -1,23 +1,23 @@
 package nl.lumc.sasc.biopet.test.shiva
 
-import nl.lumc.sasc.biopet.test.{ TestReference, Samples }
+import nl.lumc.sasc.biopet.test.Samples
+import nl.lumc.sasc.biopet.test.aligners.BwaMem
+import nl.lumc.sasc.biopet.test.references.TestReference
 
 /**
  * Created by pjvan_thof on 10/22/15.
  */
-class ShivaWgs1BamTest extends ShivaSuccess with TestReference {
+class ShivaWgs1BamTest extends ShivaSuccess with BwaMem with TestReference {
   override def configs = super.configs ::: Samples.wgs1BamConfig :: Nil
   override def variantcallers = List("unifiedgenotyper")
-  override def aligner = Some("bwa-mem")
   def samples = Map("wgs1" -> List("lib1"))
 
   addNotHavingExecutable("bwamem")
 }
 
-class ShivaWgs1BamToFastqTest extends ShivaSuccess with TestReference {
+class ShivaWgs1BamToFastqTest extends ShivaSuccess with BwaMem with TestReference {
   override def configs = super.configs ::: Samples.wgs1BamConfig :: Nil
   override def variantcallers = List("unifiedgenotyper")
-  override def aligner = Some("bwa-mem")
   override def bamToFastq = Some(true)
   def samples = Map("wgs1" -> List("lib1"))
 
@@ -25,10 +25,9 @@ class ShivaWgs1BamToFastqTest extends ShivaSuccess with TestReference {
   addExecutable(Executable("samtofastq", Some(""".+""".r)))
 }
 
-class ShivaWgs1BamReplaceReadGroupTest extends ShivaSuccess with TestReference {
+class ShivaWgs1BamReplaceReadGroupTest extends ShivaSuccess with BwaMem with TestReference {
   override def configs = super.configs ::: Samples.wgs1BamWrongHeaderConfig :: Nil
   override def variantcallers = List("unifiedgenotyper")
-  override def aligner = Some("bwa-mem")
   override def correctReadgroups = Some(true)
   def samples = Map("wgs1" -> List("lib1"))
 

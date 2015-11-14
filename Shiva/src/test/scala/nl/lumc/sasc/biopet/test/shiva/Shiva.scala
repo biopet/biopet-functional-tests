@@ -4,20 +4,16 @@ import java.io.File
 
 import nl.lumc.sasc.biopet.test.Pipeline
 import nl.lumc.sasc.biopet.test.Pipeline._
+import nl.lumc.sasc.biopet.test.aligners.Aligner
+import nl.lumc.sasc.biopet.test.references.Reference
 import nl.lumc.sasc.biopet.test.utils._
 
 /**
  * Created by pjvan_thof on 5/26/15.
  */
-trait Shiva extends Pipeline {
+trait Shiva extends Pipeline with Reference with Aligner {
 
   def pipelineName = "shiva"
-
-  def referenceSpecies: Option[String] = None
-
-  def referenceName: Option[String] = None
-
-  def aligner: Option[String] = None
 
   def summaryFile = new File(outputDir, s"Shiva.summary.json")
 
@@ -56,9 +52,6 @@ trait Shiva extends Pipeline {
   override def configs = super.configs ::: variantcallersConfig.map(_ :: Nil).getOrElse(Nil)
 
   override def args = super.args ++
-    cmdConfig("species", referenceSpecies) ++
-    cmdConfig("reference_name", referenceName) ++
-    cmdConfig("aligner", aligner) ++
     cmdConfig("bam_to_fastq", bamToFastq) ++
     cmdConfig("correct_readgroups", correctReadgroups) ++
     cmdConfig("library_variantcalling", libraryVariantcalling) ++
