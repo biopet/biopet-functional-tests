@@ -17,8 +17,6 @@ class ShivaBiopetplanet30xTest extends ShivaSuccess with BwaMem with HsapiensGRC
 
   override def configs = super.configs ::: Samples.na12878Gatc30xConfig :: Nil
 
-  override def functionalTest = true
-
   override def disablescatter = false
 
   def samples = Map("NA12878" -> List("biopetplanet-30x"))

@@ -9,6 +9,8 @@ trait RnorvegicusRnor_6 extends Reference {
   def referenceSpecies = Some("R.norvegicus")
   def referenceName = Some("Rnor_6.0")
 
+  override def functionalTest = true
+
   /** This value should be in the global config */
   def referenceFasta = None
 

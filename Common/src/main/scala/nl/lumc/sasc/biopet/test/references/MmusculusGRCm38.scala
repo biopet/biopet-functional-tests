@@ -9,6 +9,8 @@ trait MmusculusGRCm38 extends Reference {
   def referenceSpecies = Some("M.musculus")
   def referenceName = Some("GRCm38")
 
+  override def functionalTest = true
+
   /** This value should be in the global config */
   def referenceFasta = None
 

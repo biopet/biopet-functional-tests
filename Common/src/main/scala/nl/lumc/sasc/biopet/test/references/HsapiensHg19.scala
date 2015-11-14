@@ -9,6 +9,8 @@ trait HsapiensHg19 extends Reference {
   def referenceSpecies = Some("H.sapiens")
   def referenceName = Some("hg19")
 
+  override def functionalTest = true
+
   /** This value should be in the global config */
   def referenceFasta = None
 

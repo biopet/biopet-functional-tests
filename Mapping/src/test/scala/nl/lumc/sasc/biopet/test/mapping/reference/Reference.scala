@@ -11,7 +11,6 @@ import nl.lumc.sasc.biopet.test.mapping.{ Mapping, MappingSuccess }
  * Created by pjvanthof on 06/08/15.
  */
 trait ReferenceSingleTemplate extends MappingSuccess {
-  override def functionalTest = true
   override def skipFlexiprep = Some(true)
   override def skipMetrics = Some(true)
   // we do a R1 only alignment, so enforce paired to be disabled
@@ -19,7 +18,6 @@ trait ReferenceSingleTemplate extends MappingSuccess {
 }
 
 trait ReferencePairedTemplate extends MappingSuccess {
-  override def functionalTest = true
   override def skipFlexiprep = Some(true)
   override def skipMetrics = Some(true)
 }

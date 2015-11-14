@@ -8,8 +8,10 @@ import scala.reflect.io
  * Created by pjvanthof on 14/11/15.
  */
 trait CelegansWBcel235 extends Reference {
-  override def referenceSpecies = Some("C.elegans")
-  override def referenceName = Some("WBcel235")
+  def referenceSpecies = Some("C.elegans")
+  def referenceName = Some("WBcel235")
+
+  override def functionalTest = true
 
   /** This value should be in the global config */
   def referenceFasta = None
