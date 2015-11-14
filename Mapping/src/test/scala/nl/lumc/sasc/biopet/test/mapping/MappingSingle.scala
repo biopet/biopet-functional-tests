@@ -2,14 +2,16 @@ package nl.lumc.sasc.biopet.test.mapping
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.{ TestReference, Biopet }
+import nl.lumc.sasc.biopet.test.aligners.BwaMem
+import nl.lumc.sasc.biopet.test.references.TestReference
+import nl.lumc.sasc.biopet.test.Biopet
 import org.json4s._
 import org.testng.annotations.Test
 
 /**
  * Created by pjvan_thof on 10/7/15.
  */
-trait MappingSingle extends MappingSuccess with TestReference {
+trait MappingSingle extends MappingSuccess with TestReference with BwaMem {
   override def r1 = Some(Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R1.fq.gz"))
 
   @Test(dependsOnGroups = Array("parseSummary"))

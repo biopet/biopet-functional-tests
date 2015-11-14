@@ -31,7 +31,7 @@ trait ShivaVariantcalling extends Pipeline {
 
   override def configs = super.configs ::: variantcallersConfig.map(_ :: Nil).getOrElse(Nil)
 
-  def args = bamFiles.flatMap(x => Seq("-BAM", x.getAbsolutePath)) ++
+  override def args = bamFiles.flatMap(x => Seq("-BAM", x.getAbsolutePath)) ++
     cmdConfig("species", referenceSpecies) ++
     cmdConfig("reference_name", referenceName) ++
     cmdConfig("name_prefix", namePrefix)

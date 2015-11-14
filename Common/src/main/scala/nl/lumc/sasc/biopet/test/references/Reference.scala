@@ -15,15 +15,8 @@ trait Reference extends Pipeline {
 
   def referenceFasta: Option[File]
 
-  abstract override def args = super.args ++
+  override def args = super.args ++
     cmdConfig("species", referenceSpecies) ++
     cmdConfig("reference_name", referenceName) ++
     cmdConfig("reference_fasta", referenceFasta)
 }
-
-
-
-
-
-
-

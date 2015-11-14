@@ -5,9 +5,9 @@ import java.io.File
 /**
  * Created by pjvanthof on 14/11/15.
  */
-trait HsapiensGRCh38 extends Reference {
-  def referenceSpecies = Some("H.sapiens")
-  def referenceName = Some("GRCh38")
+trait MmusculusGRCm38 extends Reference {
+  def referenceSpecies = Some("M.musculus")
+  def referenceName = Some("GRCm38")
 
   /** This value should be in the global config */
   def referenceFasta = None

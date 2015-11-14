@@ -4,25 +4,21 @@ import java.io.File
 
 import nl.lumc.sasc.biopet.test.Pipeline
 import nl.lumc.sasc.biopet.test.Pipeline._
+import nl.lumc.sasc.biopet.test.aligners.Aligner
+import nl.lumc.sasc.biopet.test.references.Reference
 
 import scala.math._
 
 /**
  * Created by pjvan_thof on 5/26/15.
  */
-trait Mapping extends Pipeline {
+trait Mapping extends Pipeline with Reference with Aligner {
 
   def pipelineName = "mapping"
 
   def sampleId = Option("sampleName")
 
   def libId = Option("libName")
-
-  def referenceSpecies: Option[String] = None
-
-  def referenceName: Option[String] = None
-
-  def aligner: Option[String] = None
 
   def r1: Option[File] = None
 
@@ -65,21 +61,16 @@ trait Mapping extends Pipeline {
   def generateWig: Option[Boolean] = None
   def chunkMetrics: Option[Boolean] = None
 
-  def args = {
+  override def args = super.args ++
     cmdArg("-sample", sampleId) ++ cmdArg("-library", libId) ++
-      cmdArg("-R1", r1) ++
-      cmdArg("-R2", (if (paired) r2 else None)) ++
-      cmdConfig("species", referenceSpecies) ++
-      cmdConfig("reference_name", referenceName) ++
-      cmdConfig("aligner", aligner) ++
-      cmdConfig("skip_markduplicates", skipMarkDuplicates) ++
-      cmdConfig("skip_flexiprep", skipFlexiprep) ++
-      cmdConfig("skip_metrics", skipMetrics) ++
-      cmdConfig("chunking", configChunking) ++
-      cmdConfig("generate_wig", generateWig) ++
-      cmdConfig("chunk_metrics", chunkMetrics) ++
-      cmdConfig("number_chunks", configNumberChunks) ++
-      cmdConfig("chunksize", configChunksize)
-  }
-
+    cmdArg("-R1", r1) ++
+    cmdArg("-R2", (if (paired) r2 else None)) ++
+    cmdConfig("skip_markduplicates", skipMarkDuplicates) ++
+    cmdConfig("skip_flexiprep", skipFlexiprep) ++
+    cmdConfig("skip_metrics", skipMetrics) ++
+    cmdConfig("chunking", configChunking) ++
+    cmdConfig("generate_wig", generateWig) ++
+    cmdConfig("chunk_metrics", chunkMetrics) ++
+    cmdConfig("number_chunks", configNumberChunks) ++
+    cmdConfig("chunksize", configChunksize)
 }

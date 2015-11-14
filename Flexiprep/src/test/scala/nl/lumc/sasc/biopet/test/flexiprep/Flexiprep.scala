@@ -33,7 +33,7 @@ trait FlexiprepRun extends Pipeline {
 
   def keepQcFastqFiles: Option[Boolean] = None
 
-  def args = Seq("-sample", sampleId, "-library", libId) ++
+  override def args = super.args ++ Seq("-sample", sampleId, "-library", libId) ++
     cmdArg("-R1", r1) ++ cmdArg("-R2", r2) ++
     cmdConfig("keepQcFastqFiles", keepQcFastqFiles) ++
     cmdConfig("skip_clip", skipClip) ++

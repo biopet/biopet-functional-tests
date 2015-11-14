@@ -55,7 +55,8 @@ trait Shiva extends Pipeline {
 
   override def configs = super.configs ::: variantcallersConfig.map(_ :: Nil).getOrElse(Nil)
 
-  def args = cmdConfig("species", referenceSpecies) ++
+  override def args = super.args ++
+    cmdConfig("species", referenceSpecies) ++
     cmdConfig("reference_name", referenceName) ++
     cmdConfig("aligner", aligner) ++
     cmdConfig("bam_to_fastq", bamToFastq) ++

@@ -2,12 +2,14 @@ package nl.lumc.sasc.biopet.test.references
 
 import java.io.File
 
+import scala.reflect.io
+
 /**
  * Created by pjvanthof on 14/11/15.
  */
-trait HsapiensGRCh38 extends Reference {
-  def referenceSpecies = Some("H.sapiens")
-  def referenceName = Some("GRCh38")
+trait CelegansWBcel235 extends Reference {
+  override def referenceSpecies = Some("C.elegans")
+  override def referenceName = Some("WBcel235")
 
   /** This value should be in the global config */
   def referenceFasta = None
@@ -29,5 +31,4 @@ trait HsapiensGRCh38 extends Reference {
 
   /** This value should be in the global config */
   def starGenomeDir: Option[File] = None
-
 }
