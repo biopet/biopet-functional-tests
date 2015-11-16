@@ -29,4 +29,3 @@ object Rna2 {
   val lib1ConfigFile = createTempConfig(lib1ConfigMap, "rna1-lib1")
 }
 
-

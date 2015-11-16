@@ -2,6 +2,8 @@ package nl.lumc.sasc.biopet.test.references
 
 import java.io.File
 
+import nl.lumc.sasc.biopet.test.Biopet
+
 /**
  * Created by pjvanthof on 14/11/15.
  */
@@ -33,3 +35,4 @@ trait HsapiensGRCh38 extends Reference {
   def starGenomeDir: Option[File] = None
 
 }
+

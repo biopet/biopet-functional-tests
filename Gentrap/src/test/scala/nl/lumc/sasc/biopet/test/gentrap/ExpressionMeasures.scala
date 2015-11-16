@@ -5,10 +5,10 @@ import nl.lumc.sasc.biopet.test.{ Pipeline, SummaryPipeline }
 import nl.lumc.sasc.biopet.test.utils._
 
 /**
-  * Copyright (c) 2015 Leiden University Medical Center - Sequencing Analysis Support Core <sasc@lumc.nl>
-  *
-  * @author Wibowo Arindrarto <w.arindrarto@lumc.nl>
-  */
+ * Copyright (c) 2015 Leiden University Medical Center - Sequencing Analysis Support Core <sasc@lumc.nl>
+ *
+ * @author Wibowo Arindrarto <w.arindrarto@lumc.nl>
+ */
 trait ExpressionMeasures extends Pipeline {
 
   def expressionMeasures: List[String] = Nil
@@ -60,3 +60,7 @@ trait CufflinksBlind extends ExpressionMeasures {
     case _                  =>
   }
 }
+
+trait AllExpressionMeasures extends FragmentsPerGene
+  with BasesPerGene with BasesPerExon
+  with CufflinksStrict with CufflinksGuided with CufflinksBlind

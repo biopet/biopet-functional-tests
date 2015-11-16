@@ -2,10 +2,11 @@ package nl.lumc.sasc.biopet.test.gentrap
 
 import java.io.File
 
+import nl.lumc.sasc.biopet.test.references.Reference
 import nl.lumc.sasc.biopet.test.{ Biopet, Pipeline }, Pipeline._
 import nl.lumc.sasc.biopet.test.utils._
 
-trait Gentrap extends Pipeline { this: GentrapAnnotations =>
+trait Gentrap extends Pipeline { this: GentrapAnnotations with Reference with ExpressionMeasures =>
 
   def pipelineName = "gentrap"
 
@@ -15,26 +16,13 @@ trait Gentrap extends Pipeline { this: GentrapAnnotations =>
 
   def callVariants: Option[Boolean] = None
 
-  def expressionMeasures: List[String] = Nil
-
   def strandProtocol: Option[String] = None
-
-  def expressionMeasuresConfig: Option[File] =
-    if (expressionMeasures.nonEmpty)
-      Option(createTempConfig(Map("expression_measures" -> expressionMeasures), "exp_measures"))
-    else None
-
-  def referenceSpecies: Option[String] = None
-
-  def referenceName: Option[String] = None
-
-  def referenceFasta: Option[File] = Option(Biopet.fixtureFile("gentrap", "hg19_mini.fa"))
 
   def aligner: Option[String]
 
   override def configs = super.configs ++ expressionMeasuresConfig.toList
 
-  def args = cmdConfig("species", referenceSpecies) ++
+  override def args = super.args ++ cmdConfig("species", referenceSpecies) ++
     cmdConfig("reference_fasta", referenceFasta) ++
     cmdConfig("reference_name", referenceName) ++
     cmdConfig("strand_protocol", strandProtocol) ++
