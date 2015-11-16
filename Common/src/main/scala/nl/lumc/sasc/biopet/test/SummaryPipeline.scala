@@ -115,7 +115,10 @@ trait SummaryPipeline extends Pipeline with JValueMatchers {
   private var notExecutables: Set[String] = Set()
 
   /** With this method an executable can be added that must not exists in the summary */
-  def addNotHavingExecutable(exe: String): Unit = notExecutables += exe
+  def addNotHavingExecutable(exe: String): Unit = {
+    if (notExecutables == null) notExecutables = Set()
+    notExecutables += exe
+  }
 
   @DataProvider(name = "notExecutables")
   def notExecutablesProvider = notExecutables.map(Array(_)).toArray
