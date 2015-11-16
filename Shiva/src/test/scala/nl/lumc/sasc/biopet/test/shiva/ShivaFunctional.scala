@@ -4,16 +4,16 @@ import java.io.File
 
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references.HsapiensGRCh37
+import nl.lumc.sasc.biopet.test.shiva.variantcallers._
 import nl.lumc.sasc.biopet.test.{ Biopet, Samples }
 
 /**
  * Created by pjvanthof on 01/11/15.
  */
-class ShivaBiopetplanet30xTest extends ShivaSuccess with BwaMem with HsapiensGRCh37 {
+class ShivaBiopetplanet30xTest extends ShivaSuccess with BwaMem with HsapiensGRCh37
+  with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
   override def minPrecision = 0.945
   override def minRecall = 0.945
-
-  override def variantcallers = List("haplotypecaller", "haplotypecaller_gvcf", "unifiedgenotyper")
 
   override def configs = super.configs ::: Samples.na12878Gatc30xConfig :: Nil
 

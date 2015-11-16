@@ -4,12 +4,13 @@ import java.io.File
 
 import nl.lumc.sasc.biopet.test.Pipeline
 import nl.lumc.sasc.biopet.test.Pipeline._
+import nl.lumc.sasc.biopet.test.shiva.variantcallers.Variantcallers
 import nl.lumc.sasc.biopet.test.utils._
 
 /**
  * Created by pjvan_thof on 5/26/15.
  */
-trait ShivaVariantcalling extends Pipeline {
+trait ShivaVariantcalling extends Pipeline with Variantcallers {
 
   def pipelineName = "shivavariantcalling"
 
@@ -24,12 +25,6 @@ trait ShivaVariantcalling extends Pipeline {
   def bamFiles: List[File]
 
   def summaryFile = new File(outputDir, s"ShivaVariantcalling.summary.json")
-
-  def variantcallers: List[String] = Nil
-
-  val variantcallersConfig = if (variantcallers.nonEmpty) Some(createTempConfig(Map("variantcallers" -> variantcallers))) else None
-
-  override def configs = super.configs ::: variantcallersConfig.map(_ :: Nil).getOrElse(Nil)
 
   override def args = bamFiles.flatMap(x => Seq("-BAM", x.getAbsolutePath)) ++
     cmdConfig("species", referenceSpecies) ++

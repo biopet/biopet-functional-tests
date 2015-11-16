@@ -6,12 +6,13 @@ import nl.lumc.sasc.biopet.test.Pipeline
 import nl.lumc.sasc.biopet.test.Pipeline._
 import nl.lumc.sasc.biopet.test.aligners.Aligner
 import nl.lumc.sasc.biopet.test.references.Reference
+import nl.lumc.sasc.biopet.test.shiva.variantcallers.Variantcallers
 import nl.lumc.sasc.biopet.test.utils._
 
 /**
  * Created by pjvan_thof on 5/26/15.
  */
-trait Shiva extends Pipeline with Reference with Aligner {
+trait Shiva extends Pipeline with Reference with Aligner with Variantcallers {
 
   def pipelineName = "shiva"
 
@@ -41,15 +42,9 @@ trait Shiva extends Pipeline with Reference with Aligner {
 
   def referenceVcfRegions: Option[File] = None
 
-  def variantcallers: List[String] = Nil
-
   def annotation: Option[Boolean] = None
 
   def ampliconBed: Option[File] = None
-
-  val variantcallersConfig = if (variantcallers.nonEmpty) Some(createTempConfig(Map("variantcallers" -> variantcallers))) else None
-
-  override def configs = super.configs ::: variantcallersConfig.map(_ :: Nil).getOrElse(Nil)
 
   override def args = super.args ++
     cmdConfig("bam_to_fastq", bamToFastq) ++
