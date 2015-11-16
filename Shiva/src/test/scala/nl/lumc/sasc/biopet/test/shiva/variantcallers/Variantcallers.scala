@@ -29,8 +29,8 @@ trait Haplotypecaller extends Variantcallers {
   override def variantcallers = "haplotypecaller" :: super.variantcallers
 
   this match {
-    //case s: SummaryPipeline => s.addExecutable(s.Executable("haplotypecaller", Some(""".+""".r)))
-    case _ =>
+    case s: SummaryPipeline => s.addExecutable(Executable("haplotypecaller", Some(""".+""".r)))
+    case _                  =>
   }
 }
 
