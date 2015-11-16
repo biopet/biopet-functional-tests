@@ -2,16 +2,14 @@ package nl.lumc.sasc.biopet.test
 
 import java.io.File
 
+import nl.lumc.sasc.biopet.test.samples.Samples
 import org.json4s._
 import org.testng.annotations.{ DataProvider, Test }
 
 /**
  * Created by pjvan_thof on 10/19/15.
  */
-trait MultisampleSuccess extends SummaryPipeline {
-  /** This should return a Map[<sampleName>, List[<libName>]] */
-  def samples: Map[String, List[String]]
-
+trait MultisampleSuccess extends SummaryPipeline with Samples {
   @DataProvider(name = "samples")
   def sampleNames = samples.keySet.map(Array(_)).toArray
 

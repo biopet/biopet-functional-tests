@@ -1,18 +1,14 @@
 package nl.lumc.sasc.biopet.test.shiva
 
-import nl.lumc.sasc.biopet.test.Samples
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references.TestReference
+import nl.lumc.sasc.biopet.test.samples.Wgs1
 import nl.lumc.sasc.biopet.test.shiva.variantcallers._
 
 /**
  * Created by pjvan_thof on 10/1/15.
  */
-trait ShivaWgs1 extends ShivaSuccess with BwaMem with TestReference {
-  override def configs = super.configs ::: Samples.wgs1Config :: Nil
-
-  def samples = Map("wgs1" -> List("lib1"))
-}
+trait ShivaWgs1 extends ShivaSuccess with BwaMem with TestReference with Wgs1
 
 class Wgs1HaplotypeCallerTest extends ShivaWgs1 with Haplotypecaller
 

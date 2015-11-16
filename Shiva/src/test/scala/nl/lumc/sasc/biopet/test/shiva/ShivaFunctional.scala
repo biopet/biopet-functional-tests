@@ -4,22 +4,19 @@ import java.io.File
 
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references.HsapiensGRCh37
+import nl.lumc.sasc.biopet.test.samples.NA12878Bioplanet30x
 import nl.lumc.sasc.biopet.test.shiva.variantcallers._
-import nl.lumc.sasc.biopet.test.{ Biopet, Samples }
+import nl.lumc.sasc.biopet.test.Biopet
 
 /**
  * Created by pjvanthof on 01/11/15.
  */
-class ShivaBiopetplanet30xTest extends ShivaSuccess with BwaMem with HsapiensGRCh37
+class ShivaBiopetplanet30xTest extends ShivaSuccess with BwaMem with HsapiensGRCh37 with NA12878Bioplanet30x
   with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
   override def minPrecision = 0.945
   override def minRecall = 0.945
 
-  override def configs = super.configs ::: Samples.na12878Gatc30xConfig :: Nil
-
   override def disablescatter = false
-
-  def samples = Map("NA12878" -> List("biopetplanet-30x"))
 
   override def ampliconBed =
     Some(Biopet.fixtureFile(List("samples", "NA12878", "biopetplanet-30x", "gcat_set_025.bed")
@@ -28,6 +25,7 @@ class ShivaBiopetplanet30xTest extends ShivaSuccess with BwaMem with HsapiensGRC
   override def referenceVcf =
     Some(Biopet.fixtureFile(List("samples", "NA12878", "giab.v2.19.vcf.gz")
       .mkString(File.separator)))
+
   override def referenceVcfRegions =
     Some(Biopet.fixtureFile(List("samples", "NA12878", "biopetplanet-30x", "gcat_set_025.confidence.bed")
       .mkString(File.separator)))

@@ -4,18 +4,14 @@ import java.io.File
 
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references.TestReference
+import nl.lumc.sasc.biopet.test.samples.Wgs2
 import nl.lumc.sasc.biopet.test.shiva.variantcallers._
-import nl.lumc.sasc.biopet.test.{ Biopet, Samples }
+import nl.lumc.sasc.biopet.test.Biopet
 
 /**
  * Created by pjvan_thof on 10/23/15.
  */
-trait ShivaWgs2 extends ShivaSuccess with BwaMem with TestReference {
-  override def configs = super.configs ::: Samples.wgs2Config :: Nil
-  override def referenceVcf = Some(Biopet.fixtureFile("samples" + File.separator + "wgs2" + File.separator + "wgs2.vcf.gz"))
-
-  def samples = Map("wgs2" -> List("lib1", "lib2"))
-}
+trait ShivaWgs2 extends ShivaSuccess with BwaMem with TestReference with Wgs2
 
 class Wgs2HaplotypeCallerTest extends ShivaWgs2 with Haplotypecaller
 
