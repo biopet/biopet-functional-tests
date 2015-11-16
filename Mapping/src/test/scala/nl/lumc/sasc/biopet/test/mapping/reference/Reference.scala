@@ -3,135 +3,109 @@ package nl.lumc.sasc.biopet.test.mapping.reference
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.Biopet
+import nl.lumc.sasc.biopet.test.aligners._
+import nl.lumc.sasc.biopet.test.references
 import nl.lumc.sasc.biopet.test.mapping.{ Mapping, MappingSuccess }
 
 /**
  * Created by pjvanthof on 06/08/15.
  */
-class ReferenceSingleTemplate(aln: String) extends MappingSuccess {
-  override def aligner = Some(aln)
-  override def functionalTest = true
+trait ReferenceSingleTemplate extends MappingSuccess {
   override def skipFlexiprep = Some(true)
   override def skipMetrics = Some(true)
   // we do a R1 only alignment, so enforce paired to be disabled
   override def paired = false
 }
 
-class ReferencePairedTemplate(aln: String) extends MappingSuccess {
-  override def aligner = Some(aln)
-  override def functionalTest = true
+trait ReferencePairedTemplate extends MappingSuccess {
   override def skipFlexiprep = Some(true)
   override def skipMetrics = Some(true)
 }
 
-trait HsapiensGRCh38 extends Mapping {
-  override def referenceSpecies = Some("H.sapiens")
-  override def referenceName = Some("GRCh38")
+trait HsapiensGRCh38 extends Mapping with references.HsapiensGRCh38 {
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
 }
 
-trait HsapiensGRCh37 extends Mapping {
-  override def referenceSpecies = Some("H.sapiens")
-  override def referenceName = Some("GRCh37")
+trait HsapiensGRCh37 extends Mapping with references.HsapiensGRCh37 {
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
 }
 
-trait MmusculusGRCm38 extends Mapping {
-  override def referenceSpecies = Some("M.musculus")
-  override def referenceName = Some("GRCm38")
-
+trait MmusculusGRCm38 extends Mapping with references.MmusculusGRCm38 {
   //TODO: M.musculus specific files
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
 }
 
-trait RnorvegicusRnor_6 extends Mapping {
-  override def referenceSpecies = Some("R.norvegicus")
-  override def referenceName = Some("Rnor_6.0")
-
+trait RnorvegicusRnor_6 extends Mapping with references.RnorvegicusRnor_6 {
   //TODO: R.norvegicus specific files
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
 }
 
-trait CelegansWBcel235 extends Mapping {
-  override def referenceSpecies = Some("C.elegans")
-  override def referenceName = Some("WBcel235")
-
+trait CelegansWBcel235 extends Mapping with references.CelegansWBcel235 {
   //TODO: C.elegans specific files
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
 }
 
-class SingleBwamemHsapiensGRCh38Test extends ReferenceSingleTemplate("bwa-mem") with HsapiensGRCh38
-class SingleBwamemHsapiensGRCh37Test extends ReferenceSingleTemplate("bwa-mem") with HsapiensGRCh37
-class SingleBwamemMmusculusGRCm38Test extends ReferenceSingleTemplate("bwa-mem") with MmusculusGRCm38
-class SingleBwamemRnorvegicusRnor_6Test extends ReferenceSingleTemplate("bwa-mem") with RnorvegicusRnor_6
-class SingleBwamemCelegansWBcel235Test extends ReferenceSingleTemplate("bwa-mem") with CelegansWBcel235
+class SingleBwamemHsapiensGRCh38Test extends ReferenceSingleTemplate with BwaMem with HsapiensGRCh38
+class SingleBwamemHsapiensGRCh37Test extends ReferenceSingleTemplate with BwaMem with HsapiensGRCh37
+class SingleBwamemMmusculusGRCm38Test extends ReferenceSingleTemplate with BwaMem with MmusculusGRCm38
+class SingleBwamemRnorvegicusRnor_6Test extends ReferenceSingleTemplate with BwaMem with RnorvegicusRnor_6
+class SingleBwamemCelegansWBcel235Test extends ReferenceSingleTemplate with BwaMem with CelegansWBcel235
 
-class SingleBowtieHsapiensGRCh38Test extends ReferenceSingleTemplate("bowtie") with HsapiensGRCh38
-class SingleBowtieHsapiensGRCh37Test extends ReferenceSingleTemplate("bowtie") with HsapiensGRCh37
-class SingleBowtieMmusculusGRCm38Test extends ReferenceSingleTemplate("bowtie") with MmusculusGRCm38
-class SingleBowtieRnorvegicusRnor_6Test extends ReferenceSingleTemplate("bowtie") with RnorvegicusRnor_6
-class SingleBowtieCelegansWBcel235Test extends ReferenceSingleTemplate("bowtie") with CelegansWBcel235
+class SingleBowtieHsapiensGRCh38Test extends ReferenceSingleTemplate with Bowtie with HsapiensGRCh38
+class SingleBowtieHsapiensGRCh37Test extends ReferenceSingleTemplate with Bowtie with HsapiensGRCh37
+class SingleBowtieMmusculusGRCm38Test extends ReferenceSingleTemplate with Bowtie with MmusculusGRCm38
+class SingleBowtieRnorvegicusRnor_6Test extends ReferenceSingleTemplate with Bowtie with RnorvegicusRnor_6
+class SingleBowtieCelegansWBcel235Test extends ReferenceSingleTemplate with Bowtie with CelegansWBcel235
 
-class SingleTophatHsapiensGRCh38Test extends ReferenceSingleTemplate("tophat") with HsapiensGRCh38
-class SingleTophatHsapiensGRCh37Test extends ReferenceSingleTemplate("tophat") with HsapiensGRCh37
-//class SingleTophatMmusculusGRCm38Test extends ReferenceSingleTemplate("tophat") with MmusculusGRCm38
-class SingleTophatRnorvegicusRnor_6Test extends ReferenceSingleTemplate("tophat") with RnorvegicusRnor_6
-//class SingleTophatCelegansWBcel235Test extends ReferenceSingleTemplate("tophat") with CelegansWBcel235
+class SingleTophatHsapiensGRCh38Test extends ReferenceSingleTemplate with Tophat with HsapiensGRCh38
+class SingleTophatHsapiensGRCh37Test extends ReferenceSingleTemplate with Tophat with HsapiensGRCh37
+//class SingleTophatMmusculusGRCm38Test extends ReferenceSingleTemplate with Tophat with MmusculusGRCm38
+class SingleTophatRnorvegicusRnor_6Test extends ReferenceSingleTemplate with Tophat with RnorvegicusRnor_6
+//class SingleTophatCelegansWBcel235Test extends ReferenceSingleTemplate with Tophat with CelegansWBcel235
 
-class SingleGsnapHsapiensGRCh38Test extends ReferenceSingleTemplate("gsnap") with HsapiensGRCh38
-class SingleGsnapHsapiensGRCh37Test extends ReferenceSingleTemplate("gsnap") with HsapiensGRCh37
-//class SingleGsnapMmusculusGRCm38Test extends ReferenceSingleTemplate("gsnap") with MmusculusGRCm38
-class SingleGsnapRnorvegicusRnor_6Test extends ReferenceSingleTemplate("gsnap") with RnorvegicusRnor_6
-class SingleGsnapCelegansWBcel235Test extends ReferenceSingleTemplate("gsnap") with CelegansWBcel235
+class SingleGsnapHsapiensGRCh38Test extends ReferenceSingleTemplate with Gsnap with HsapiensGRCh38
+class SingleGsnapHsapiensGRCh37Test extends ReferenceSingleTemplate with Gsnap with HsapiensGRCh37
+//class SingleGsnapMmusculusGRCm38Test extends ReferenceSingleTemplate with Gsnap with MmusculusGRCm38
+class SingleGsnapRnorvegicusRnor_6Test extends ReferenceSingleTemplate with Gsnap with RnorvegicusRnor_6
+class SingleGsnapCelegansWBcel235Test extends ReferenceSingleTemplate with Gsnap with CelegansWBcel235
 
-class SingleStarHsapiensGRCh38Test extends ReferenceSingleTemplate("star") with HsapiensGRCh38
-class SingleStarHsapiensGRCh37Test extends ReferenceSingleTemplate("star") with HsapiensGRCh37
-class SingleStarMmusculusGRCm38Test extends ReferenceSingleTemplate("star") with MmusculusGRCm38
-class SingleStarRnorvegicusRnor_6Test extends ReferenceSingleTemplate("star") with RnorvegicusRnor_6
-class SingleStarCelegansWBcel235Test extends ReferenceSingleTemplate("star") with CelegansWBcel235
+class SingleStarHsapiensGRCh38Test extends ReferenceSingleTemplate with Star with HsapiensGRCh38
+class SingleStarHsapiensGRCh37Test extends ReferenceSingleTemplate with Star with HsapiensGRCh37
+class SingleStarMmusculusGRCm38Test extends ReferenceSingleTemplate with Star with MmusculusGRCm38
+class SingleStarRnorvegicusRnor_6Test extends ReferenceSingleTemplate with Star with RnorvegicusRnor_6
+class SingleStarCelegansWBcel235Test extends ReferenceSingleTemplate with Star with CelegansWBcel235
 
-class PairedBwamemHsapiensGRCh38Test extends ReferencePairedTemplate("bwa-mem") with HsapiensGRCh38
-class PairedBwamemHsapiensGRCh37Test extends ReferencePairedTemplate("bwa-mem") with HsapiensGRCh37
-class PairedBwamemMmusculusGRCm38Test extends ReferencePairedTemplate("bwa-mem") with MmusculusGRCm38
-class PairedBwamemRnorvegicusRnor_6Test extends ReferencePairedTemplate("bwa-mem") with RnorvegicusRnor_6
-class PairedBwamemCelegansWBcel235Test extends ReferencePairedTemplate("bwa-mem") with CelegansWBcel235
+class PairedBwamemHsapiensGRCh38Test extends ReferencePairedTemplate with BwaMem with HsapiensGRCh38
+class PairedBwamemHsapiensGRCh37Test extends ReferencePairedTemplate with BwaMem with HsapiensGRCh37
+class PairedBwamemMmusculusGRCm38Test extends ReferencePairedTemplate with BwaMem with MmusculusGRCm38
+class PairedBwamemRnorvegicusRnor_6Test extends ReferencePairedTemplate with BwaMem with RnorvegicusRnor_6
+class PairedBwamemCelegansWBcel235Test extends ReferencePairedTemplate with BwaMem with CelegansWBcel235
 
-class PairedBowtieHsapiensGRCh38Test extends ReferencePairedTemplate("bowtie") with HsapiensGRCh38
-class PairedBowtieHsapiensGRCh37Test extends ReferencePairedTemplate("bowtie") with HsapiensGRCh37
-class PairedBowtieMmusculusGRCm38Test extends ReferencePairedTemplate("bowtie") with MmusculusGRCm38
-class PairedBowtieRnorvegicusRnor_6Test extends ReferencePairedTemplate("bowtie") with RnorvegicusRnor_6
-class PairedBowtieCelegansWBcel235Test extends ReferencePairedTemplate("bowtie") with CelegansWBcel235
+class PairedBowtieHsapiensGRCh38Test extends ReferencePairedTemplate with Bowtie with HsapiensGRCh38
+class PairedBowtieHsapiensGRCh37Test extends ReferencePairedTemplate with Bowtie with HsapiensGRCh37
+class PairedBowtieMmusculusGRCm38Test extends ReferencePairedTemplate with Bowtie with MmusculusGRCm38
+class PairedBowtieRnorvegicusRnor_6Test extends ReferencePairedTemplate with Bowtie with RnorvegicusRnor_6
+class PairedBowtieCelegansWBcel235Test extends ReferencePairedTemplate with Bowtie with CelegansWBcel235
 
-class PairedTophatHsapiensGRCh38Test extends ReferencePairedTemplate("tophat") with HsapiensGRCh38
-class PairedTophatHsapiensGRCh37Test extends ReferencePairedTemplate("tophat") with HsapiensGRCh37
-//class PairedTophatMmusculusGRCm38Test extends ReferencePairedTemplate("tophat") with MmusculusGRCm38
-//class PairedTophatRnorvegicusRnor_6Test extends ReferencePairedTemplate("tophat") with RnorvegicusRnor_6
-//class PairedTophatCelegansWBcel235Test extends ReferencePairedTemplate("tophat") with CelegansWBcel235
+class PairedTophatHsapiensGRCh38Test extends ReferencePairedTemplate with Tophat with HsapiensGRCh38
+class PairedTophatHsapiensGRCh37Test extends ReferencePairedTemplate with Tophat with HsapiensGRCh37
+//class PairedTophatMmusculusGRCm38Test extends ReferencePairedTemplate with Tophat with MmusculusGRCm38
+//class PairedTophatRnorvegicusRnor_6Test extends ReferencePairedTemplate with Tophat with RnorvegicusRnor_6
+//class PairedTophatCelegansWBcel235Test extends ReferencePairedTemplate with Tophat with CelegansWBcel235
 
-class PairedGsnapHsapiensGRCh38Test extends ReferencePairedTemplate("gsnap") with HsapiensGRCh38
-class PairedGsnapHsapiensGRCh37Test extends ReferencePairedTemplate("gsnap") with HsapiensGRCh37
-//class PairedGsnapMmusculusGRCm38Test extends ReferencePairedTemplate("gsnap") with MmusculusGRCm38
-class PairedGsnapRnorvegicusRnor_6Test extends ReferencePairedTemplate("gsnap") with RnorvegicusRnor_6
-class PairedGsnapCelegansWBcel235Test extends ReferencePairedTemplate("gsnap") with CelegansWBcel235
+class PairedGsnapHsapiensGRCh38Test extends ReferencePairedTemplate with Gsnap with HsapiensGRCh38
+class PairedGsnapHsapiensGRCh37Test extends ReferencePairedTemplate with Gsnap with HsapiensGRCh37
+//class PairedGsnapMmusculusGRCm38Test extends ReferencePairedTemplate  with Gsnap with MmusculusGRCm38
+class PairedGsnapRnorvegicusRnor_6Test extends ReferencePairedTemplate with Gsnap with RnorvegicusRnor_6
+class PairedGsnapCelegansWBcel235Test extends ReferencePairedTemplate with Gsnap with CelegansWBcel235
 
-class PairedStarHsapiensGRCh38Test extends ReferencePairedTemplate("star") with HsapiensGRCh38
-class PairedStarHsapiensGRCh37Test extends ReferencePairedTemplate("star") with HsapiensGRCh37
-class PairedStarMmusculusGRCm38Test extends ReferencePairedTemplate("star") with MmusculusGRCm38
-class PairedStarRnorvegicusRnor_6Test extends ReferencePairedTemplate("star") with RnorvegicusRnor_6
-class PairedStarCelegansWBcel235Test extends ReferencePairedTemplate("star") with CelegansWBcel235
-
-object Reference {
-  //FIXME: not a correct list yet
-  val aligners = List("bwa-mem", "bowtie", "tophat", "gsnap", "star")
-  val genomes: Map[String, List[String]] = Map(
-    "H.sapiens" -> List("GRCh38", "GRCh37"),
-    "M.musculus" -> List("GRCm38"),
-    "R.norvegicus" -> List("Rnor_6.0"),
-    "C.elegans" -> List("WBcel235")
-  )
-}
+class PairedStarHsapiensGRCh38Test extends ReferencePairedTemplate with Star with HsapiensGRCh38
+class PairedStarHsapiensGRCh37Test extends ReferencePairedTemplate with Star with HsapiensGRCh37
+class PairedStarMmusculusGRCm38Test extends ReferencePairedTemplate with Star with MmusculusGRCm38
+class PairedStarRnorvegicusRnor_6Test extends ReferencePairedTemplate with Star with RnorvegicusRnor_6
+class PairedStarCelegansWBcel235Test extends ReferencePairedTemplate with Star with CelegansWBcel235

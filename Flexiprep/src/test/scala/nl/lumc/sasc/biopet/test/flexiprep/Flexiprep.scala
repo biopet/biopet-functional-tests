@@ -3,6 +3,7 @@ package nl.lumc.sasc.biopet.test.flexiprep
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.Pipeline._
+import nl.lumc.sasc.biopet.test.SummaryPipeline.Executable
 import nl.lumc.sasc.biopet.test.utils._
 import nl.lumc.sasc.biopet.test.{ Biopet, Pipeline, SummaryPipeline }
 import org.json4s._
@@ -33,7 +34,7 @@ trait FlexiprepRun extends Pipeline {
 
   def keepQcFastqFiles: Option[Boolean] = None
 
-  def args = Seq("-sample", sampleId, "-library", libId) ++
+  override def args = super.args ++ Seq("-sample", sampleId, "-library", libId) ++
     cmdArg("-R1", r1) ++ cmdArg("-R2", r2) ++
     cmdConfig("keepQcFastqFiles", keepQcFastqFiles) ++
     cmdConfig("skip_clip", skipClip) ++
