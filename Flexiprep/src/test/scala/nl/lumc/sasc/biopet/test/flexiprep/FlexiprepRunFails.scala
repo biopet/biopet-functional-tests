@@ -18,7 +18,7 @@ class FlexiprepR1NotExistTest extends FlexiprepRun with PipelineFail {
   override def r1 = Some(new File(Biopet.fixtureDir, "This_should_not_exist.R1.fq"))
   logMustNotHave("""FunctionEdge - Starting""".r)
 
-  @Test def fileNotExist = assert(!r1.get.exists(), s"this file should not exist: $r1")
+  @Test def fileNotExist() = assert(!r1.get.exists(), s"this file should not exist: $r1")
 }
 
 class FlexiprepR2NotExistTest extends FlexiprepRun with PipelineFail {
@@ -26,7 +26,7 @@ class FlexiprepR2NotExistTest extends FlexiprepRun with PipelineFail {
   override def r2 = Some(new File(Biopet.fixtureDir, "this_should_not_exist.R2.fq"))
   logMustNotHave("""FunctionEdge - Starting""".r)
 
-  @Test def fileNotExist = assert(!r2.get.exists(), s"This file should not exist: $r2")
+  @Test def fileNotExist() = assert(!r2.get.exists(), s"This file should not exist: $r2")
 }
 
 class FlexiprepDryRunR1NotExistTest extends FlexiprepRun with PipelineFail {
@@ -34,7 +34,7 @@ class FlexiprepDryRunR1NotExistTest extends FlexiprepRun with PipelineFail {
   override def r1 = Some(new File(Biopet.fixtureDir, "This_should_not_exist.R1.fq"))
   logMustNotHave("""FunctionEdge - Starting""".r)
 
-  @Test def fileNotExist = assert(!r1.get.exists(), s"this file should not exist: $r1")
+  @Test def fileNotExist() = assert(!r1.get.exists(), s"this file should not exist: $r1")
 }
 
 class FlexiprepDryRunR2NotExistTest extends FlexiprepRun with PipelineFail {
@@ -43,7 +43,7 @@ class FlexiprepDryRunR2NotExistTest extends FlexiprepRun with PipelineFail {
   override def r2 = Some(new File(Biopet.fixtureDir, "this_should_not_exist.R2.fq"))
   logMustNotHave("""FunctionEdge - Starting""".r)
 
-  @Test def fileNotExist = assert(!r2.get.exists(), s"This file should not exist: $r2")
+  @Test def fileNotExist() = assert(!r2.get.exists(), s"This file should not exist: $r2")
 }
 
 class FlexiprepNoOutputDirTest extends FlexiprepRun with PipelineFail {
