@@ -15,7 +15,7 @@ trait Wgs1 extends Samples {
 }
 
 trait Wgs1Bam extends Samples {
-  override def samples = addSampleLibrary(super.samples, "wgs1", "bamLib")
+  override def samples = addSampleLibrary(super.samples, "wgs1", "lib1")
   override def configs = super.configs :+ Wgs1.bamConfigFile
 }
 
@@ -44,7 +44,7 @@ object Wgs1 {
   val bamConfigMap = Map("samples" ->
     Map("wgs1" ->
       Map("libraries" ->
-        Map("bamLib" ->
+        Map("lib1" ->
           Map(
             "bam" -> Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "wgs1.bam").getAbsolutePath,
             "bam_md5" -> "688b8d24b388e24b09ad9239dfe387fb"
