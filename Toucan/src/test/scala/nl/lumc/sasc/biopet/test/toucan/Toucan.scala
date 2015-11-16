@@ -25,7 +25,7 @@ trait Toucan extends Pipeline {
 
   def normalizerMode: String = "standard"
 
-  def args = cmdArg("-Input", inputVcf) ++
+  override def args = cmdArg("-Input", inputVcf) ++
     cmdConfig("species", referenceSpecies) ++
     cmdConfig("reference_name", referenceName) ++
     cmdConfig("gonl_vcf", goNLFile) ++

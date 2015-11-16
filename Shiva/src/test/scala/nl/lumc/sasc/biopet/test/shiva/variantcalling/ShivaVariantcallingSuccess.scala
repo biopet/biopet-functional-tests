@@ -10,7 +10,7 @@ import org.testng.annotations.{ Test, DataProvider }
 /**
  * Created by pjvan_thof on 10/16/15.
  */
-trait ShivaVariantcallingSuccess extends ShivaVariantcalling with VariantcallersExecutables {
+trait ShivaVariantcallingSuccess extends ShivaVariantcalling with SummaryPipeline {
   @DataProvider(name = "variantcallers")
   def variantcallerProvider = Shiva.validVariantcallers.map(Array(_)).toArray
 

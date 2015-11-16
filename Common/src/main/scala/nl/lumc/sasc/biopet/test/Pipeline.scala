@@ -30,7 +30,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   def pipelineName: String
 
   /** Args given on the commandline */
-  def args: Seq[String]
+  def args: Seq[String] = Seq()
 
   private var _exitValue = -1
   /** exitvalue of the pipeline, if this is -1 the pipeline is not executed yet */

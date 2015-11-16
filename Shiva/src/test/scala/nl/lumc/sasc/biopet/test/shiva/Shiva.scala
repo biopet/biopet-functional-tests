@@ -4,20 +4,17 @@ import java.io.File
 
 import nl.lumc.sasc.biopet.test.Pipeline
 import nl.lumc.sasc.biopet.test.Pipeline._
+import nl.lumc.sasc.biopet.test.aligners.Aligner
+import nl.lumc.sasc.biopet.test.references.Reference
+import nl.lumc.sasc.biopet.test.shiva.variantcallers.Variantcallers
 import nl.lumc.sasc.biopet.test.utils._
 
 /**
  * Created by pjvan_thof on 5/26/15.
  */
-trait Shiva extends Pipeline {
+trait Shiva extends Pipeline with Reference with Aligner with Variantcallers {
 
   def pipelineName = "shiva"
-
-  def referenceSpecies: Option[String] = None
-
-  def referenceName: Option[String] = None
-
-  def aligner: Option[String] = None
 
   def summaryFile = new File(outputDir, s"Shiva.summary.json")
 
@@ -45,19 +42,11 @@ trait Shiva extends Pipeline {
 
   def referenceVcfRegions: Option[File] = None
 
-  def variantcallers: List[String] = Nil
-
   def annotation: Option[Boolean] = None
 
   def ampliconBed: Option[File] = None
 
-  val variantcallersConfig = if (variantcallers.nonEmpty) Some(createTempConfig(Map("variantcallers" -> variantcallers))) else None
-
-  override def configs = super.configs ::: variantcallersConfig.map(_ :: Nil).getOrElse(Nil)
-
-  def args = cmdConfig("species", referenceSpecies) ++
-    cmdConfig("reference_name", referenceName) ++
-    cmdConfig("aligner", aligner) ++
+  override def args = super.args ++
     cmdConfig("bam_to_fastq", bamToFastq) ++
     cmdConfig("correct_readgroups", correctReadgroups) ++
     cmdConfig("library_variantcalling", libraryVariantcalling) ++

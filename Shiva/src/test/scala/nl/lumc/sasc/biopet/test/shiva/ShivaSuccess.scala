@@ -4,7 +4,7 @@ import java.io.File
 
 import htsjdk.samtools.SamReaderFactory
 import nl.lumc.sasc.biopet.test.MultisampleSuccess
-import nl.lumc.sasc.biopet.test.shiva.variantcalling.VariantcallersExecutables
+import nl.lumc.sasc.biopet.test.SummaryPipeline.Executable
 import org.json4s._
 import org.testng.annotations.{ DataProvider, Test }
 
@@ -13,7 +13,7 @@ import scala.collection.JavaConversions._
 /**
  * Created by pjvan_thof on 9/17/15.
  */
-trait ShivaSuccess extends Shiva with MultisampleSuccess with VariantcallersExecutables {
+trait ShivaSuccess extends Shiva with MultisampleSuccess {
 
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
