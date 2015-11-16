@@ -11,12 +11,12 @@ import nl.lumc.sasc.biopet.test.utils._
 trait Wgs2 extends Samples with Wgs2Lib1 with Wgs2Lib2
 
 trait Wgs2Lib1 extends Samples {
-  override def samples = addSampleLibrary(super.samples, "wgs1", "lib1")
+  override def samples = addSampleLibrary(super.samples, "wgs2", "lib1")
   override def configs = super.configs :+ Wgs2.lib1ConfigFile
 }
 
 trait Wgs2Lib2 extends Samples {
-  override def samples = addSampleLibrary(super.samples, "wgs1", "lib2")
+  override def samples = addSampleLibrary(super.samples, "wgs2", "lib2")
   override def configs = super.configs :+ Wgs2.lib2ConfigFile
 }
 
