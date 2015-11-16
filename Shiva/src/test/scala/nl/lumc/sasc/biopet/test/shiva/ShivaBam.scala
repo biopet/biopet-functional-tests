@@ -1,6 +1,7 @@
 package nl.lumc.sasc.biopet.test.shiva
 
 import nl.lumc.sasc.biopet.test.Samples
+import nl.lumc.sasc.biopet.test.SummaryPipeline.Executable
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references.TestReference
 import nl.lumc.sasc.biopet.test.shiva.variantcallers.Unifiedgenotyper

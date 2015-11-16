@@ -3,6 +3,7 @@ package nl.lumc.sasc.biopet.test.flexiprep
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.Pipeline._
+import nl.lumc.sasc.biopet.test.SummaryPipeline.Executable
 import nl.lumc.sasc.biopet.test.utils._
 import nl.lumc.sasc.biopet.test.{ Biopet, Pipeline, SummaryPipeline }
 import org.json4s._

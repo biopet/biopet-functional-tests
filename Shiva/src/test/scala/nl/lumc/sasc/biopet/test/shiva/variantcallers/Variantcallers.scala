@@ -1,5 +1,6 @@
 package nl.lumc.sasc.biopet.test.shiva.variantcallers
 
+import nl.lumc.sasc.biopet.test.SummaryPipeline.Executable
 import nl.lumc.sasc.biopet.test.{ Pipeline, SummaryPipeline }
 import nl.lumc.sasc.biopet.test.utils._
 
@@ -29,7 +30,7 @@ trait Haplotypecaller extends Variantcallers {
 
   this match {
     //case s: SummaryPipeline => s.addExecutable(s.Executable("haplotypecaller", Some(""".+""".r)))
-    case _                  =>
+    case _ =>
   }
 }
 
@@ -37,8 +38,8 @@ trait HaplotypecallerGvcf extends Variantcallers {
   override def variantcallers = "haplotypecaller_gvcf" :: super.variantcallers
 
   this match {
-    //case s: SummaryPipeline => s.addExecutable(s.Executable("haplotypecaller", Some(""".+""".r)))
-    case _ =>
+    case s: SummaryPipeline => s.addExecutable(Executable("haplotypecaller", Some(""".+""".r)))
+    case _                  =>
   }
 }
 
@@ -46,8 +47,8 @@ trait HaplotypecallerAllele extends Variantcallers {
   override def variantcallers = "haplotypecaller_allele" :: super.variantcallers
 
   this match {
-    //case s: SummaryPipeline => s.addExecutable(s.Executable("haplotypecaller", Some(""".+""".r)))
-    case _ =>
+    case s: SummaryPipeline => s.addExecutable(Executable("haplotypecaller", Some(""".+""".r)))
+    case _                  =>
   }
 }
 
@@ -55,8 +56,8 @@ trait Unifiedgenotyper extends Variantcallers {
   override def variantcallers = "unifiedgenotyper" :: super.variantcallers
 
   this match {
-    //case s: SummaryPipeline => s.addExecutable(s.Executable("unifiedgenotyper", Some(""".+""".r)))
-    case _ =>
+    case s: SummaryPipeline => s.addExecutable(Executable("unifiedgenotyper", Some(""".+""".r)))
+    case _                  =>
   }
 }
 
@@ -64,8 +65,8 @@ trait UnifiedgenotyperAllele extends Variantcallers {
   override def variantcallers = "unifiedgenotyper_allele" :: super.variantcallers
 
   this match {
-    //case s: SummaryPipeline => s.addExecutable(s.Executable("unifiedgenotyper", Some(""".+""".r)))
-    case _ =>
+    case s: SummaryPipeline => s.addExecutable(Executable("unifiedgenotyper", Some(""".+""".r)))
+    case _                  =>
   }
 }
 
@@ -73,8 +74,8 @@ trait Freebayes extends Variantcallers {
   override def variantcallers = "freebayes" :: super.variantcallers
 
   this match {
-    //case s: SummaryPipeline => s.addExecutable(s.Executable("freebayes", Some(""".+""".r)))
-    case _ =>
+    case s: SummaryPipeline => s.addExecutable(Executable("freebayes", Some(""".+""".r)))
+    case _                  =>
   }
 }
 
@@ -82,9 +83,9 @@ trait Bcftools extends Variantcallers {
   override def variantcallers = "bcftools" :: super.variantcallers
 
   this match {
-    //case s: SummaryPipeline =>
-    //  s.addExecutable(s.Executable("bcftoolscall", Some(""".+""".r)))
-    //  s.addExecutable(s.Executable("samtoolsmpileup", Some(""".+""".r)))
+    case s: SummaryPipeline =>
+      s.addExecutable(Executable("bcftoolscall", Some(""".+""".r)))
+      s.addExecutable(Executable("samtoolsmpileup", Some(""".+""".r)))
     case _ =>
   }
 }
@@ -93,9 +94,9 @@ trait BcftoolsSinglesample extends Variantcallers {
   override def variantcallers = "bcftools_singlesample" :: super.variantcallers
 
   this match {
-    //case s: SummaryPipeline =>
-    //  s.addExecutable(s.Executable("bcftoolscall", Some(""".+""".r)))
-    //  s.addExecutable(s.Executable("samtoolsmpileup", Some(""".+""".r)))
+    case s: SummaryPipeline =>
+      s.addExecutable(Executable("bcftoolscall", Some(""".+""".r)))
+      s.addExecutable(Executable("samtoolsmpileup", Some(""".+""".r)))
     case _ =>
   }
 }
@@ -104,9 +105,9 @@ trait Raw extends Variantcallers {
   override def variantcallers = "raw" :: super.variantcallers
 
   this match {
-    //case s: SummaryPipeline =>
-    //  s.addExecutable(s.Executable("mpileuptovcf", Some(""".+""".r)))
-    //  s.addExecutable(s.Executable("samtoolsmpileup", Some(""".+""".r)))
+    case s: SummaryPipeline =>
+      s.addExecutable(Executable("mpileuptovcf", Some(""".+""".r)))
+      s.addExecutable(Executable("samtoolsmpileup", Some(""".+""".r)))
     case _ =>
   }
 }

@@ -4,6 +4,7 @@ import java.io.File
 
 import htsjdk.samtools.SamReaderFactory
 import nl.lumc.sasc.biopet.test.MultisampleSuccess
+import nl.lumc.sasc.biopet.test.SummaryPipeline.Executable
 import org.json4s._
 import org.testng.annotations.{ DataProvider, Test }
 

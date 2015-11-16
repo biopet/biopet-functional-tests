@@ -91,7 +91,7 @@ trait SummaryPipeline extends Pipeline with JValueMatchers {
   def summaryLibrary(sampleId: String, libId: String) = summary \ "samples" \ sampleId \ "libraries" \ libId
   def summaryRoot = summary
 
-  case class Executable(name: String, version: Option[Regex] = None)
+  type Executable = SummaryPipeline.Executable
   private var executables: Set[Executable] = Set()
 
   /** With this method an executable can be added that must exists in the summary */
@@ -124,6 +124,10 @@ trait SummaryPipeline extends Pipeline with JValueMatchers {
   def testNotExecutables(exe: String): Unit = withClue(s"Executable: $exe") {
     summaryRoot \ pipelineName.toLowerCase \ "executables" \ exe shouldBe JNothing
   }
+}
+
+object SummaryPipeline {
+  case class Executable(name: String, version: Option[Regex] = None)
 }
 
 /** Trait for easier JValue matching. */
