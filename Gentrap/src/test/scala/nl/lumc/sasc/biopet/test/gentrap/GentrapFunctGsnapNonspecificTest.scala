@@ -1,6 +1,8 @@
 package nl.lumc.sasc.biopet.test.gentrap
 
 import java.io.File
+import nl.lumc.sasc.biopet.test.samples.{ Rna1, Rna2 }
+
 import scala.collection.mutable.ArrayBuffer
 
 import org.testng.annotations.{ DataProvider, Test }
@@ -80,6 +82,7 @@ class GentrapFunctGsnapNonspecificTest extends GentrapFunctional
   with GentrapSuccess
   with GentrapRefSeq
   with AllExpressionMeasures
+  with Rna1 with Rna2
   with HsapiensGRCh38 {
 
   override def strandProtocol = Option("non_specific")
