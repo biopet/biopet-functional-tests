@@ -18,6 +18,10 @@ import scala.collection.immutable.Nil
  */
 trait ToucanSuccess extends Toucan {
 
+  def referenceFasta: Option[java.io.File] = None
+  def referenceName: Option[String] = None
+  def referenceSpecies: Option[String] = None
+
   override def inputVcf = Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
 
   def knownNormalized: File = Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vep.standard.vcf.gz")
