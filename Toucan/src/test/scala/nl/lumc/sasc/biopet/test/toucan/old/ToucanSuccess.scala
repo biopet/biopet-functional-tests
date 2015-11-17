@@ -6,6 +6,7 @@ import java.util
 import htsjdk.variant.variantcontext.VariantContext
 import htsjdk.variant.vcf.VCFFileReader
 import nl.lumc.sasc.biopet.test.Biopet
+import nl.lumc.sasc.biopet.test.references.HsapiensHg19
 import nl.lumc.sasc.biopet.test.toucan.Toucan
 import nl.lumc.sasc.biopet.test.utils._
 import org.testng.annotations.{ DataProvider, Test }
@@ -17,10 +18,6 @@ import scala.collection.immutable.Nil
  * Created by ahbbollen on 22-10-15.
  */
 trait ToucanSuccess extends Toucan {
-
-  def referenceFasta: Option[java.io.File] = None
-  def referenceName: Option[String] = None
-  def referenceSpecies: Option[String] = None
 
   override def inputVcf = Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
 
@@ -370,22 +367,22 @@ trait ToucanWithGoNLAndExac extends ToucanSuccess {
   }
 }
 
-class ToucanGoNLPlainTest extends ToucanPlain with ToucanWithGoNL
-class ToucanGoNLIntermediateTest extends ToucanKeepIntermediates with ToucanWithGoNL
-class ToucanGoNLExplodeTest extends ToucanNormalizerExplode with ToucanWithGoNL
-class ToucanGoNLExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithGoNL
+class ToucanGoNLPlainTest extends ToucanPlain with ToucanWithGoNL with HsapiensHg19
+class ToucanGoNLIntermediateTest extends ToucanKeepIntermediates with ToucanWithGoNL with HsapiensHg19
+class ToucanGoNLExplodeTest extends ToucanNormalizerExplode with ToucanWithGoNL with HsapiensHg19
+class ToucanGoNLExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithGoNL with HsapiensHg19
 
-class ToucanExacPlainTest extends ToucanPlain with ToucanWithExac
-class ToucanExacIntermediateTest extends ToucanKeepIntermediates with ToucanWithExac
-class ToucanExacExplodeTest extends ToucanNormalizerExplode with ToucanWithExac
-class ToucanExacExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithExac
+class ToucanExacPlainTest extends ToucanPlain with ToucanWithExac with HsapiensHg19
+class ToucanExacIntermediateTest extends ToucanKeepIntermediates with ToucanWithExac with HsapiensHg19
+class ToucanExacExplodeTest extends ToucanNormalizerExplode with ToucanWithExac with HsapiensHg19
+class ToucanExacExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithExac with HsapiensHg19
 
-class ToucanGoNLExacPlainTest extends ToucanPlain with ToucanWithGoNLAndExac
-class ToucanGoNLExacIntermediateTest extends ToucanKeepIntermediates with ToucanWithGoNLAndExac
-class ToucanGoNLExacExplodeTest extends ToucanNormalizerExplode with ToucanWithGoNLAndExac
-class ToucanGoNLExacExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithGoNLAndExac
+class ToucanGoNLExacPlainTest extends ToucanPlain with ToucanWithGoNLAndExac with HsapiensHg19
+class ToucanGoNLExacIntermediateTest extends ToucanKeepIntermediates with ToucanWithGoNLAndExac with HsapiensHg19
+class ToucanGoNLExacExplodeTest extends ToucanNormalizerExplode with ToucanWithGoNLAndExac with HsapiensHg19
+class ToucanGoNLExacExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with ToucanWithGoNLAndExac with HsapiensHg19
 
-class ToucanPlainTest extends ToucanPlain
-class ToucanPlainIntermediateTest extends ToucanPlain with ToucanKeepIntermediates
-class ToucanPlainExplodeTest extends ToucanNormalizerExplode
-class ToucanPlainExplodeIntermediateTest extends ToucanExplodeKeepIntermediates
+class ToucanPlainTest extends ToucanPlain with HsapiensHg19
+class ToucanPlainIntermediateTest extends ToucanPlain with ToucanKeepIntermediates with HsapiensHg19
+class ToucanPlainExplodeTest extends ToucanNormalizerExplode with HsapiensHg19
+class ToucanPlainExplodeIntermediateTest extends ToucanExplodeKeepIntermediates with HsapiensHg19
