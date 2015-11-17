@@ -8,7 +8,7 @@ import htsjdk.variant.vcf.VCFFileReader
 import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.toucan.Toucan
 import nl.lumc.sasc.biopet.test.utils._
-import org.testng.annotations.{DataProvider, Test}
+import org.testng.annotations.{ DataProvider, Test }
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable.Nil
