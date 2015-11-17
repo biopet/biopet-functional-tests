@@ -47,6 +47,6 @@ object Rna1 {
       )
     )
   )
-  val lib2ConfigFile = createTempConfig(lib2ConfigMap, "rna1-lib2")
+  val lib2ConfigFile = createTempConfig(lib2ConfigMap, s"$sampleName-lib2")
 }
 
