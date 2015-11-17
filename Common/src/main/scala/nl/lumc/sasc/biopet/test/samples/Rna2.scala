@@ -13,7 +13,7 @@ trait Rna2Lib1 extends Samples {
 object Rna2 {
   val sampleName = "rna2"
   val lib1ConfigMap = Map("samples" ->
-    Map("rna1" ->
+    Map(s"$sampleName" ->
       Map("libraries" ->
         Map("lib1" ->
           Map(
