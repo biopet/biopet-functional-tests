@@ -1,0 +1,33 @@
+package nl.lumc.sasc.biopet.test.toucan
+
+import java.io.File
+
+import nl.lumc.sasc.biopet.test.Biopet
+import nl.lumc.sasc.biopet.test.references._
+
+/**
+  * Created by pjvan_thof on 11/17/15.
+  */
+class ToucanHsapiensHg19Test extends ToucanSuccess with HsapiensHg19 {
+  override def inputVcf = Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
+}
+
+class ToucanHsapiensGRCh37Test extends ToucanSuccess with HsapiensGRCh37 {
+  override def inputVcf = Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
+}
+
+class ToucanHsapiensGRCh38Test extends ToucanSuccess with HsapiensGRCh38 {
+  override def inputVcf = Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
+}
+
+class ToucanMmusculusGRCm38Test extends ToucanSuccess with MmusculusGRCm38 {
+  override def inputVcf = Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
+}
+
+class ToucanRnorvegicusRnor_6Test extends ToucanSuccess with RnorvegicusRnor_6 {
+  override def inputVcf = Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
+}
+
+class ToucanCelegansWBcel235Test extends ToucanSuccess with CelegansWBcel235 {
+  override def inputVcf = Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
+}
