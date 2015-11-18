@@ -12,20 +12,20 @@ import nl.lumc.sasc.biopet.test.Pipeline, Pipeline._
 
 trait RefflatAnnotation extends Pipeline {
   def annotationRefflat: Option[File]
-  override def args = super.args ++ cmdArg("annotation_refflat", annotationRefflat)
+  override def args = super.args ++ cmdConfig("annotation_refflat", annotationRefflat)
 }
 
 trait GtfAnnotation extends Pipeline {
   def annotationGtf: Option[File]
-  override def args = super.args ++ cmdArg("annotation_gtf", annotationGtf)
+  override def args = super.args ++ cmdConfig("annotation_gtf", annotationGtf)
 }
 
 trait RibosomalRefflatAnnotation extends Pipeline {
   def ribosomalRefflat: Option[File]
-  override def args = super.args ++ cmdArg("annotation_ribosomal", ribosomalRefflat)
+  override def args = super.args ++ cmdConfig("annotation_ribosomal", ribosomalRefflat)
 }
 
 trait ExonBedAnnotation extends Pipeline {
   def annotationExonBed: Option[File]
-  override def args = super.args ++ cmdArg("annotation_bed", annotationExonBed)
+  override def args = super.args ++ cmdConfig("annotation_bed", annotationExonBed)
 }
