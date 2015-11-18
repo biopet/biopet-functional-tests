@@ -1,5 +1,6 @@
 package nl.lumc.sasc.biopet.test.gentrap
 
+import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.aligners.Gsnap
 import nl.lumc.sasc.biopet.test.references.HsapiensGRCh38
 import nl.lumc.sasc.biopet.test.samples.Rna1
@@ -10,10 +11,15 @@ import nl.lumc.sasc.biopet.test.samples.Rna1
 class GentrapDryRunGsnapTest extends Gentrap
   with Gsnap
   with HsapiensGRCh38
-  with Rna1
-  with AllExpressionMeasures {
+  with AllExpressionMeasures
+  with Rna1 {
 
   override def run = false
 
   def strandProtocol = Option("non_specific")
+
+  def annotationRefflat = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.refFlat"))
+  def annotationGtf = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.gtf"))
+  def annotationExonBed = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.bed"))
+  def ribosomalRefflat = None
 }

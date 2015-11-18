@@ -31,13 +31,5 @@ trait HsapiensGRCh38 extends Reference {
 
   /** This value should be in the global config */
   def starGenomeDir: Option[File] = None
-
-  def annotationRefflat: Option[File] = None
-
-  def annotationGtf: Option[File] = None
-
-  def ribosomalRefflat: Option[File] = None
-
-  def annotationExonBed: Option[File] = None
 }
 
