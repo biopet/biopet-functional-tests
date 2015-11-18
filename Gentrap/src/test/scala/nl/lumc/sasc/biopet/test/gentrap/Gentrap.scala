@@ -2,11 +2,19 @@ package nl.lumc.sasc.biopet.test.gentrap
 
 import java.io.File
 
+import nl.lumc.sasc.biopet.test.aligners._
+import nl.lumc.sasc.biopet.test.annotations._
 import nl.lumc.sasc.biopet.test.references.Reference
-import nl.lumc.sasc.biopet.test.{ Biopet, Pipeline }, Pipeline._
-import nl.lumc.sasc.biopet.test.utils._
+import nl.lumc.sasc.biopet.test.Pipeline, Pipeline._
 
-trait Gentrap extends Pipeline { this: GentrapAnnotations with Reference with ExpressionMeasures =>
+trait Gentrap extends Pipeline
+  with GtfAnnotation
+  with RefflatAnnotation
+  with ExonBedAnnotation
+  with RibosomalRefflatAnnotation
+  with Reference
+  with Aligner
+  with ExpressionMeasures {
 
   def pipelineName = "gentrap"
 
@@ -16,9 +24,7 @@ trait Gentrap extends Pipeline { this: GentrapAnnotations with Reference with Ex
 
   def callVariants: Option[Boolean] = None
 
-  def strandProtocol: Option[String] = None
-
-  def aligner: Option[String]
+  def strandProtocol: Option[String]
 
   override def configs = super.configs ++ expressionMeasuresConfig.toList
 
@@ -26,26 +32,6 @@ trait Gentrap extends Pipeline { this: GentrapAnnotations with Reference with Ex
     cmdConfig("reference_fasta", referenceFasta) ++
     cmdConfig("reference_name", referenceName) ++
     cmdConfig("strand_protocol", strandProtocol) ++
-    cmdConfig("annotation_refflat", annotationRefflat) ++
-    cmdConfig("annotation_gtf", annotationGtf) ++
-    cmdConfig("annotation_bed", annotationBed) ++
     cmdConfig("remove_ribosomal_reads", removeRibosomalReads) ++
-    cmdConfig("ribosomal_refflat", ribosomalRefflat) ++
-    cmdConfig("call_variants", callVariants) ++
-    cmdConfig("aligner", aligner)
+    cmdConfig("call_variants", callVariants)
 }
-
-trait GentrapAnnotations { this: Gentrap =>
-  def annotationRefflat: Option[File]
-  def annotationGtf: Option[File]
-  def annotationBed: Option[File]
-  def ribosomalRefflat: Option[File]
-}
-
-trait GentrapRefSeq extends GentrapAnnotations { this: Gentrap =>
-  def annotationRefflat = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.refFlat"))
-  def annotationGtf = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.gtf"))
-  def annotationBed = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.bed"))
-  def ribosomalRefflat: Option[File] = None
-}
-

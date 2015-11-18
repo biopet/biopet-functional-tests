@@ -1,17 +1,17 @@
 package nl.lumc.sasc.biopet.test.gentrap
 
 import java.io.File
-import nl.lumc.sasc.biopet.test.samples.{ Rna1, Rna2 }
-
 import scala.collection.mutable.ArrayBuffer
 
 import org.testng.annotations.{ DataProvider, Test }
 
 import nl.lumc.sasc.biopet.test.Biopet
-import nl.lumc.sasc.biopet.test.references.{ HsapiensGRCh38, Reference }
+import nl.lumc.sasc.biopet.test.aligners.Gsnap
+import nl.lumc.sasc.biopet.test.samples.{ Rna1, Rna2 }
+import nl.lumc.sasc.biopet.test.references.HsapiensGRCh38
 import nl.lumc.sasc.biopet.test.utils.pearsonScore
 
-trait GentrapFunctional extends Gentrap { this: GentrapAnnotations with ExpressionMeasures with Reference =>
+trait GentrapFunctional extends Gentrap {
 
   override def functionalTest = true
 
@@ -31,29 +31,37 @@ trait GentrapFunctional extends Gentrap { this: GentrapAnnotations with Expressi
   @DataProvider(name = "mergedExpressionMeasurements")
   def mergedExpressionMeasurementsProvider() = {
     val b: ArrayBuffer[Array[Object]] = new ArrayBuffer
-    if (expressionMeasures.contains("fragments_per_gene"))
-      b += Array(Biopet.fixtureFile("gentrap", "count_table", "func1", s"$mergedTablePrefix.fragments_per_gene"))
-    if (expressionMeasures.contains("bases_per_gene"))
-      b += Array(Biopet.fixtureFile("gentrap", "count_table", "func1", s"$mergedTablePrefix.bases_per_gene"))
-    if (expressionMeasures.contains("bases_per_exon"))
-      b += Array(Biopet.fixtureFile("gentrap", "count_table", "func1", s"$mergedTablePrefix.bases_per_exon"))
-    if (expressionMeasures.contains("cufflinks_strict")) {
-      b += Array(Biopet.fixtureFile("gentrap", "count_table", "func1", s"$mergedTablePrefix.genes_fpkm_cufflinks_strict"))
-      b += Array(Biopet.fixtureFile("gentrap", "count_table", "func1", s"$mergedTablePrefix.isoforms_fpkm_cufflinks_strict"))
+
+    if (this.isInstanceOf[FragmentsPerGene])
+      b += Array(s"$mergedTablePrefix.fragments_per_gene")
+
+    if (this.isInstanceOf[BasesPerGene])
+      b += Array(s"$mergedTablePrefix.bases_per_gene")
+
+    if (this.isInstanceOf[BasesPerExon])
+      b += Array(s"$mergedTablePrefix.bases_per_exon")
+
+    if (this.isInstanceOf[CufflinksStrict]) {
+      b += Array(s"$mergedTablePrefix.genes_fpkm_cufflinks_strict")
+      b += Array(s"$mergedTablePrefix.isoforms_fpkm_cufflinks_strict")
     }
-    if (expressionMeasures.contains("cufflinks_guided")) {
-      b += Array(Biopet.fixtureFile("gentrap", "count_table", "func1", s"$mergedTablePrefix.genes_fpkm_cufflinks_guided"))
-      b += Array(Biopet.fixtureFile("gentrap", "count_table", "func1", s"$mergedTablePrefix.isoforms_fpkm_cufflinks_guided"))
+
+    if (this.isInstanceOf[CufflinksGuided]) {
+      b += Array(s"$mergedTablePrefix.genes_fpkm_cufflinks_guided")
+      b += Array(s"$mergedTablePrefix.isoforms_fpkm_cufflinks_guided")
     }
-    if (expressionMeasures.contains("cufflinks_blind")) {
-      b += Array(Biopet.fixtureFile("gentrap", "count_table", "func1", s"$mergedTablePrefix.genes_fpkm_cufflinks_blind"))
-      b += Array(Biopet.fixtureFile("gentrap", "count_table", "func1", s"$mergedTablePrefix.isoforms_fpkm_cufflinks_blind"))
+    if (this.isInstanceOf[CufflinksGuided]) {
+      b += Array(s"$mergedTablePrefix.genes_fpkm_cufflinks_blind")
+      b += Array(s"$mergedTablePrefix.isoforms_fpkm_cufflinks_blind")
     }
+
     b.toArray
   }
 
   @Test(dataProvider = "mergedExpressionMeasurements")
-  def mergedExpressionMeasurementsTest(fixtureFile: File, pipelineFile: File): Unit = {
+  def mergedExpressionMeasurementsTest(fixtureFileName: String): Unit = {
+    val fixtureFile = Biopet.fixtureFile("gentrap", "count_table", "func1", fixtureFileName)
+    val pipelineFile = new File(outputDir, fixtureFile.getName)
     val maybeTableA = loadMergedCountTable(fixtureFile)
     val maybeTableB = loadMergedCountTable(pipelineFile)
 
@@ -80,11 +88,13 @@ trait GentrapFunctional extends Gentrap { this: GentrapAnnotations with Expressi
 /** Functional test for Gentrap with complete options, using gsnap and non_specific strand protocol. */
 class GentrapFunctGsnapNonspecificTest extends GentrapFunctional
   with GentrapSuccess
-  with GentrapRefSeq
+  with Gsnap
   with AllExpressionMeasures
   with Rna1 with Rna2
   with HsapiensGRCh38 {
 
-  override def strandProtocol = Option("non_specific")
-  override def aligner = Option("gsnap")
+  def strandProtocol = Option("non_specific")
+  override def annotationRefflat = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.refFlat"))
+  override def annotationGtf = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.gtf"))
+  override def annotationExonBed = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.bed"))
 }
