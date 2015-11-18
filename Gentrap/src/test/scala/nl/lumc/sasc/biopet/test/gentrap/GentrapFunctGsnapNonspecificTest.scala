@@ -61,7 +61,7 @@ trait GentrapFunctional extends Gentrap {
   @Test(dataProvider = "mergedExpressionMeasurements")
   def mergedExpressionMeasurementsTest(fixtureFileName: String): Unit = {
     val fixtureFile = Biopet.fixtureFile("gentrap", "count_table", "func1", fixtureFileName)
-    val pipelineFile = new File(outputDir, fixtureFile.getName)
+    val pipelineFile = new File(outputDir, "expression_measure" + File.separator + fixtureFile.getName)
     val maybeTableA = loadMergedCountTable(fixtureFile)
     val maybeTableB = loadMergedCountTable(pipelineFile)
 
