@@ -11,6 +11,4 @@ import nl.lumc.sasc.biopet.test.references.Reference
 trait GentrapSuccess extends Gentrap with MultisampleSuccess { this: GentrapAnnotations with Reference with ExpressionMeasures =>
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
-
-  override def sampleDir(sampleId: String) = new File(outputDir, s"samples_$sampleId")
 }
