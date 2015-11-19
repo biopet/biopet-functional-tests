@@ -26,7 +26,7 @@ trait GentrapFunctional extends Gentrap {
     } else None
   }
 
-  protected def mergedTablePrefix = "all_sample"
+  protected def mergedTablePrefix = "all_samples"
 
   @DataProvider(name = "mergedExpressionMeasurements")
   def mergedExpressionMeasurementsProvider() = {
