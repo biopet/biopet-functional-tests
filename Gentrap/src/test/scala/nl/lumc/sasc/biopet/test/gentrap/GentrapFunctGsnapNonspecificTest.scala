@@ -16,13 +16,18 @@ trait GentrapFunctional extends Gentrap {
   override def functionalTest = true
 
   // TODO: Map[String, Map[String, Double]] for the count table instead?
-  def loadMergedCountTable(tableFile: File): Option[Map[String, Seq[Double]]] = {
+  def loadMergedCountTable(tableFile: File): Option[Map[String, List[Double]]] = {
     if (tableFile.exists) {
       val lineIter = scala.io.Source.fromFile(tableFile).getLines()
       val header = lineIter.next()
-      val sampleNames = header.stripLineEnd.split("\t").tail.toSeq
-      val counts = lineIter.map(_.stripLineEnd.split("\t").tail.toSeq.map(_.toDouble))
-      Option(sampleNames.zip(counts.toSeq).toMap)
+      val sampleNames = header.stripLineEnd.split("\t").tail.toVector
+      val counts = lineIter
+        .map(_.stripLineEnd.split("\t").tail.toVector.map(_.toDouble))
+        .toList
+      val res = sampleNames.zipWithIndex
+        .map(_._2)
+        .map(idx => (sampleNames(idx), counts.map(row => row(idx))))
+      Option(res.toMap)
     } else None
   }
 
@@ -77,9 +82,7 @@ trait GentrapFunctional extends Gentrap {
 
         val samples = tableB.keySet
         samples.foreach { sample =>
-          val tableAValues = tableA(sample).toList
-          val tableBValues = tableB(sample).toList
-          pearsonScore(tableAValues, tableBValues).getOrElse(0.0) should be >= 0.999
+          pearsonScore(tableA(sample), tableB(sample)).getOrElse(0.0) should be >= 0.999
         }
     }
   }
