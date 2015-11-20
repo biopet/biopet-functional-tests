@@ -50,16 +50,8 @@ trait GentrapFunctional extends Gentrap {
       b += Array(s"$mergedTablePrefix.genes_fpkm_cufflinks_strict")
       b += Array(s"$mergedTablePrefix.isoforms_fpkm_cufflinks_strict")
     }
-
-    if (this.isInstanceOf[CufflinksGuided]) {
-      b += Array(s"$mergedTablePrefix.genes_fpkm_cufflinks_guided")
-      b += Array(s"$mergedTablePrefix.isoforms_fpkm_cufflinks_guided")
-    }
-    if (this.isInstanceOf[CufflinksGuided]) {
-      b += Array(s"$mergedTablePrefix.genes_fpkm_cufflinks_blind")
-      b += Array(s"$mergedTablePrefix.isoforms_fpkm_cufflinks_blind")
-    }
-
+    // TODO: test also for guided and blind modes. They seem to use some random value that we can't just test for
+    //       their Pearson correlations.
     b.toArray
   }
 
