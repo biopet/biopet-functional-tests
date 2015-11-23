@@ -28,4 +28,7 @@ trait ShivaVariantcallingSuccess extends ShivaVariantcalling with SummaryPipelin
     }
   }
 
+  @Test
+  def testVariantcallerInfoTag = this.testVariantcallerInfoTag(new File(outputDir, s"$namePrefix.final.vcf.gz"))
+
 }

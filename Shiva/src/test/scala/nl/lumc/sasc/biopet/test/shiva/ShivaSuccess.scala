@@ -183,7 +183,12 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
       assert(!file.exists())
       summaryPath shouldBe JNothing
     }
+
+    this.testVariantcallerInfoTag(file)
   }
+
+  @Test
+  def testVariantcallerInfoTag = testVariantcallerInfoTag(new File(outputDir, "variantcalling" + File.separator + "multisample.final.vcf.gz"))
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
   def testSingleSampleVcfFile(sample: String): Unit = withClue(s"Sample: $sample") {
@@ -198,6 +203,11 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
     }
   }
 
+  @Test(dataProvider = "samples")
+  def testSampleVariantcallerInfoTag(sample: String) =
+    testVariantcallerInfoTag(new File(sampleDir(sample), "variantcalling" + File.separator + s"$sample.final.vcf.gz"))
+
+
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
   def testLibraryVcfFile(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     val file = new File(libraryDir(sample, lib), "variantcalling" + File.separator + s"$sample-$lib.final.vcf.gz")
@@ -210,6 +220,10 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
       summaryPath shouldBe JNothing
     }
   }
+
+  @Test(dataProvider = "libraries")
+  def testLibraryVariantcallerInfoTag(sample: String, lib: String) =
+    testVariantcallerInfoTag(new File(sampleDir(sample), "variantcalling" + File.separator + s"$sample-$lib.final.vcf.gz"))
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
   def testMappingBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
