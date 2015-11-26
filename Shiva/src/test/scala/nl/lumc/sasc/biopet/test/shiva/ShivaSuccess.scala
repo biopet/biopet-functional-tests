@@ -183,12 +183,10 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
       assert(!file.exists())
       summaryPath shouldBe JNothing
     }
-
-    this.testVariantcallerInfoTag(file)
   }
 
   @Test
-  def testVariantcallerInfoTag = testVariantcallerInfoTag(new File(outputDir, "variantcalling" + File.separator + "multisample.final.vcf.gz"))
+  def testMultisampleVariantcallerInfoTag = testVariantcallerInfoTag(new File(outputDir, "variantcalling" + File.separator + "multisample.final.vcf.gz"))
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
   def testSingleSampleVcfFile(sample: String): Unit = withClue(s"Sample: $sample") {
@@ -206,7 +204,6 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
   @Test(dataProvider = "samples")
   def testSampleVariantcallerInfoTag(sample: String) =
     testVariantcallerInfoTag(new File(sampleDir(sample), "variantcalling" + File.separator + s"$sample.final.vcf.gz"))
-
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
   def testLibraryVcfFile(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
