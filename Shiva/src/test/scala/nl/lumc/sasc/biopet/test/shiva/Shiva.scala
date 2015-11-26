@@ -74,7 +74,7 @@ object Shiva extends Matchers {
   def testSamplesVcfFile(file: File, samples: List[String]): Unit = {
     val reader = new VCFFileReader(file, false)
     val vcfSamples = reader.getFileHeader.getSampleNamesInOrder.toList
-    samples.foreach { vcfSamples should contain value _ }
+    samples.foreach { sample => assert(vcfSamples.contains(sample), s"sample '$sample' is not found in $file") }
     samples.size shouldBe vcfSamples.size
     reader.close()
   }
