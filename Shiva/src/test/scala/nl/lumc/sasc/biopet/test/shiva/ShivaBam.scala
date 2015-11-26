@@ -24,6 +24,9 @@ class ShivaWgs1BamReplaceReadGroupTest extends ShivaSuccess with BwaMem with Tes
   with Unifiedgenotyper with Wgs1WrongBam {
   override def correctReadgroups = Some(true)
 
+  /** This bam file should only in this conditions not exist, disabled test */
+  override def testMappingBam(sampleid: String, libId: String) = {}
+
   addNotHavingExecutable("bwamem")
   addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
 }

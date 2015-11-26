@@ -1,6 +1,7 @@
 # Project-related
 dependency-reduced-pom.xml
 git.properties
+.surefire*
 
 # gedit
 *~
