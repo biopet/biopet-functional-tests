@@ -166,14 +166,14 @@ class MappingPairedChunkMetricsTest extends MappingPaired with BwaMem {
   override def configNumberChunks = Some(4)
 }
 
-class MappingPairedBwaMem extends MappingPaired with BwaMem
+class MappingPairedBwaMemTest extends MappingPaired with BwaMem
 
-class MappingPairedBowtie extends MappingPaired with Bowtie
+class MappingPairedBowtieTest extends MappingPaired with Bowtie
 
-class MappingPairedBowtie2 extends MappingPaired with Bowtie2
+class MappingPairedBowtie2Test extends MappingPaired with Bowtie2
 
-class MappingPairedGsnap extends MappingPaired with Gsnap
+class MappingPairedGsnapTest extends MappingPaired with Gsnap
 
-class MappingPairedTophat extends MappingPaired with Tophat
+class MappingPairedTophatTest extends MappingPaired with Tophat
 
-class MappingPairedStar extends MappingPaired with Star
+class MappingPairedStarTest extends MappingPaired with Star

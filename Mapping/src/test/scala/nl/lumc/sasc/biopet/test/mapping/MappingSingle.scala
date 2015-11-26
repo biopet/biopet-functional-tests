@@ -76,14 +76,14 @@ class MappingSingleChunkMetricsTest extends MappingPaired with BwaMem {
   override def configNumberChunks = Some(4)
 }
 
-class MappingSingleBwaMem extends MappingSingle with BwaMem
+class MappingSingleBwaMemTest extends MappingSingle with BwaMem
 
-class MappingSingleBowtie extends MappingSingle with Bowtie
+class MappingSingleBowtieTest extends MappingSingle with Bowtie
 
-class MappingSingleBowtie2 extends MappingSingle with Bowtie2
+class MappingSingleBowtie2Test extends MappingSingle with Bowtie2
 
-class MappingSingleGsnap extends MappingSingle with Gsnap
+class MappingSingleGsnapTest extends MappingSingle with Gsnap
 
-class MappingSingleTophat extends MappingSingle with Tophat
+class MappingSingleTophatTest extends MappingSingle with Tophat
 
-class MappingSingleStar extends MappingSingle with Star
+class MappingSingleStarTest extends MappingSingle with Star
