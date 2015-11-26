@@ -3,6 +3,7 @@ package nl.lumc.sasc.biopet.test.mapping
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.Biopet
+import nl.lumc.sasc.biopet.test.aligners._
 import nl.lumc.sasc.biopet.test.utils._
 import org.json4s._
 import org.testng.annotations.Test
@@ -79,9 +80,9 @@ trait MappingPaired extends MappingSingle {
 
 }
 
-class MappingPairedDefaultTest extends MappingPaired
+class MappingPairedDefaultTest extends MappingPaired with BwaMem
 
-class MappingPairedNoSkipTest extends MappingPaired {
+class MappingPairedNoSkipTest extends MappingPaired with BwaMem {
   override def skipFlexiprep = Some(false)
 
   override def skipMetrics = Some(false)
@@ -91,7 +92,7 @@ class MappingPairedNoSkipTest extends MappingPaired {
   override def generateWig = Some(true)
 }
 
-class MappingPairedWigTest extends MappingPaired {
+class MappingPairedWigTest extends MappingPaired with BwaMem {
   override def generateWig = Some(true)
 
   /**
@@ -129,7 +130,7 @@ class MappingPairedWigTest extends MappingPaired {
 
 }
 
-class MappingPairedSkipTest extends MappingPaired {
+class MappingPairedSkipTest extends MappingPaired with BwaMem {
   override def skipFlexiprep = Some(true)
 
   override def skipMetrics = Some(true)
@@ -139,25 +140,25 @@ class MappingPairedSkipTest extends MappingPaired {
   override def generateWig = Some(true)
 }
 
-class MappingPairedAutoChunkTest extends MappingPaired {
+class MappingPairedAutoChunkTest extends MappingPaired with BwaMem {
   override def configChunking = Some(true)
 
   override def configChunksize = Some(110000)
 }
 
-class MappingPairedChunkTest extends MappingPaired {
+class MappingPairedChunkTest extends MappingPaired with BwaMem {
   override def configChunking = Some(true)
 
   override def configNumberChunks = Some(4)
 }
 
-class MappingPairedForceNoChunkTest extends MappingPaired {
+class MappingPairedForceNoChunkTest extends MappingPaired with BwaMem {
   override def configChunking = Some(false)
 
   override def configNumberChunks = Some(4)
 }
 
-class MappingPairedChunkMetricsTest extends MappingPaired {
+class MappingPairedChunkMetricsTest extends MappingPaired with BwaMem {
   override def chunkMetrics = Some(true)
 
   override def configChunking = Some(true)
@@ -165,3 +166,14 @@ class MappingPairedChunkMetricsTest extends MappingPaired {
   override def configNumberChunks = Some(4)
 }
 
+class MappingPairedBwaMem extends MappingPaired with BwaMem
+
+class MappingPairedBowtie extends MappingPaired with Bowtie
+
+class MappingPairedBowtie2 extends MappingPaired with Bowtie2
+
+class MappingPairedGsnap extends MappingPaired with Gsnap
+
+class MappingPairedTophat extends MappingPaired with Tophat
+
+class MappingPairedStar extends MappingPaired with Star

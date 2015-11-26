@@ -2,7 +2,7 @@ package nl.lumc.sasc.biopet.test.mapping
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.aligners.BwaMem
+import nl.lumc.sasc.biopet.test.aligners._
 import nl.lumc.sasc.biopet.test.references.TestReference
 import nl.lumc.sasc.biopet.test.Biopet
 import org.json4s._
@@ -11,7 +11,7 @@ import org.testng.annotations.Test
 /**
  * Created by pjvan_thof on 10/7/15.
  */
-trait MappingSingle extends MappingSuccess with TestReference with BwaMem {
+trait MappingSingle extends MappingSuccess with TestReference {
   override def r1 = Some(Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R1.fq.gz"))
 
   @Test(dependsOnGroups = Array("parseSummary"))
@@ -35,44 +35,55 @@ trait MappingSingle extends MappingSuccess with TestReference with BwaMem {
   }
 }
 
-class MappingSingleDefaultTest extends MappingSingle
+class MappingSingleDefaultTest extends MappingSingle with BwaMem
 
-class MappingSingleNoSkipTest extends MappingSingle {
+class MappingSingleNoSkipTest extends MappingSingle with BwaMem {
   override def skipFlexiprep = Some(false)
   override def skipMetrics = Some(false)
   override def skipMarkDuplicates = Some(false)
   override def generateWig = Some(true)
 }
 
-class MappingSingleWigTest extends MappingSingle {
+class MappingSingleWigTest extends MappingSingle with BwaMem {
   override def generateWig = Some(true)
 }
 
-class MappingSingleSkipTest extends MappingSingle {
+class MappingSingleSkipTest extends MappingSingle with BwaMem {
   override def skipFlexiprep = Some(true)
   override def skipMetrics = Some(true)
   override def skipMarkDuplicates = Some(true)
   override def generateWig = Some(true)
 }
 
-class MappingSingleAutoChunkTest extends MappingPaired {
+class MappingSingleAutoChunkTest extends MappingPaired with BwaMem {
   override def configChunking = Some(true)
   override def configChunksize = Some(110000)
 }
 
-class MappingSingleChunkTest extends MappingPaired {
+class MappingSingleChunkTest extends MappingPaired with BwaMem {
   override def configChunking = Some(true)
   override def configNumberChunks = Some(4)
 }
 
-class MappingSingleForceNoChunkTest extends MappingPaired {
+class MappingSingleForceNoChunkTest extends MappingPaired with BwaMem {
   override def configChunking = Some(false)
   override def configNumberChunks = Some(4)
 }
 
-class MappingSingleChunkMetricsTest extends MappingPaired {
+class MappingSingleChunkMetricsTest extends MappingPaired with BwaMem {
   override def chunkMetrics = Some(true)
   override def configChunking = Some(true)
   override def configNumberChunks = Some(4)
 }
 
+class MappingSingleBwaMem extends MappingSingle with BwaMem
+
+class MappingSingleBowtie extends MappingSingle with Bowtie
+
+class MappingSingleBowtie2 extends MappingSingle with Bowtie2
+
+class MappingSingleGsnap extends MappingSingle with Gsnap
+
+class MappingSingleTophat extends MappingSingle with Tophat
+
+class MappingSingleStar extends MappingSingle with Star
