@@ -13,7 +13,7 @@ import scala.util.matching.Regex
 /**
  * Created by pjvanthof on 19/09/15.
  */
-trait SummaryPipeline extends Pipeline with JValueMatchers {
+trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
 
   implicit val formats = DefaultFormats
 
