@@ -2,12 +2,15 @@ package nl.lumc.sasc.biopet.test.shiva
 
 import java.io.File
 
+import htsjdk.variant.vcf.VCFFileReader
 import nl.lumc.sasc.biopet.test.Pipeline
 import nl.lumc.sasc.biopet.test.Pipeline._
 import nl.lumc.sasc.biopet.test.aligners.Aligner
 import nl.lumc.sasc.biopet.test.references.Reference
 import nl.lumc.sasc.biopet.test.shiva.variantcallers.Variantcallers
 import nl.lumc.sasc.biopet.test.utils._
+import org.scalatest.Matchers
+import scala.collection.JavaConversions._
 
 /**
  * Created by pjvan_thof on 5/26/15.
@@ -63,8 +66,16 @@ trait Shiva extends Pipeline with Reference with Aligner with Variantcallers {
     cmdConfig("amplicon_bed", ampliconBed)
 }
 
-object Shiva {
+object Shiva extends Matchers {
   val validVariantcallers = List("freebayes", "raw", "bcftools", "bcftools_singlesample",
     "haplotypecaller", "unifiedgenotyper", "haplotypecaller_gvcf",
     "haplotypecaller_allele", "unifiedgenotyper_allele")
+
+  def testSamplesVcfFile(file: File, samples: List[String]): Unit = {
+    val reader = new VCFFileReader(file, false)
+    val vcfSamples = reader.getFileHeader.getSampleNamesInOrder.toList
+    samples.foreach { vcfSamples should contain value _ }
+    samples.size shouldBe vcfSamples.size
+    reader.close()
+  }
 }

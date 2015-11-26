@@ -128,11 +128,14 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
   @Test(dataProvider = "variantcallers", dependsOnGroups = Array("parseSummary"))
   def testVariantcaller(variantcaller: String): Unit = withClue(s"Variantcaller: $variantcaller") {
     val dir = new File(outputDir, "variantcalling" + File.separator + variantcaller)
+    val file = new File(dir, s"multisample.$variantcaller.vcf.gz")
     val vcfstats = this.summary \ "shivavariantcalling" \ "stats" \ s"multisample-vcfstats-$variantcaller"
     if (!multisampleVariantcalling.contains(false) && variantcallers.contains(variantcaller)) {
       assert(dir.exists())
       assert(dir.isDirectory)
+      assert(file.exists())
       vcfstats shouldBe a[JObject]
+      Shiva.testSamplesVcfFile(file, samples.keySet.toList)
     } else {
       assert(!dir.exists())
       vcfstats shouldBe JNothing
@@ -143,11 +146,14 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
   def testSampleVariantcaller(sample: String, variantcaller: String): Unit =
     withClue(s"Variantcaller: $variantcaller, Sample: $sample") {
       val dir = new File(sampleDir(sample), "variantcalling" + File.separator + variantcaller)
+      val file = new File(dir, s"$sample.$variantcaller.vcf.gz")
       val vcfstats = this.summary \ "samples" \ sample \ "shivavariantcalling" \ "stats" \ s"$sample-vcfstats-$variantcaller"
       if (singleSampleVariantcalling.contains(true) && variantcallers.contains(variantcaller)) {
         assert(dir.exists())
         assert(dir.isDirectory)
+        assert(file.exists())
         vcfstats shouldBe a[JObject]
+        Shiva.testSamplesVcfFile(file, List(sample))
       } else {
         assert(!dir.exists())
         vcfstats shouldBe JNothing
@@ -158,11 +164,14 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
   def testLibraryVariantcaller(sample: String, lib: String, variantcaller: String): Unit =
     withClue(s"Variantcaller: $variantcaller, Sample: $sample, Lib: $lib") {
       val dir = new File(libraryDir(sample, lib), "variantcalling" + File.separator + variantcaller)
+      val file = new File(dir, s"$sample-$lib.$variantcaller.vcf.gz")
       val vcfstats = this.summary \ "samples" \ sample \ "libraries" \ lib \ "shivavariantcalling" \ "stats" \ s"$sample-$lib-vcfstats-$variantcaller"
       if (singleSampleVariantcalling.contains(true) && variantcallers.contains(variantcaller)) {
         assert(dir.exists())
         assert(dir.isDirectory)
+        assert(file.exists())
         vcfstats shouldBe a[JObject]
+        Shiva.testSamplesVcfFile(file, List(sample))
       } else {
         assert(!dir.exists())
         vcfstats shouldBe JNothing
@@ -176,6 +185,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
     if (!multisampleVariantcalling.contains(false)) {
       summaryPath shouldBe JString(file.getAbsolutePath)
       assert(file.exists())
+      Shiva.testSamplesVcfFile(file, samples.keySet.toList)
     } else {
       assert(!file.exists())
       summaryPath shouldBe JNothing
@@ -183,7 +193,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
   }
 
   @Test
-  def testMultisampleVariantcallerInfoTag = testVariantcallerInfoTag(new File(outputDir, "variantcalling" + File.separator + "multisample.final.vcf.gz"))
+  def testMultisampleVariantcallerInfoTag() = testVariantcallerInfoTag(new File(outputDir, "variantcalling" + File.separator + "multisample.final.vcf.gz"))
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
   def testSingleSampleVcfFile(sample: String): Unit = withClue(s"Sample: $sample") {
