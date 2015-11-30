@@ -31,9 +31,9 @@ trait Variantcallers extends Pipeline {
 
   def testVariantcallerInfoTag(file: File): Unit = {
     val reader = new VCFFileReader(file, false)
-    val lines = reader.getFileHeader.getOtherHeaderLines
+    val lines = reader.getFileHeader.toString.split("\n").toList
     variantcallers foreach { caller =>
-      assert(lines.exists(_.getValue.contains(s"RodBinding name=$caller")), s"Final vcf file is missing '$caller' in header for CombineVariants")
+      assert(lines.exists(_.contains(s"RodBinding name=$caller")), s"Final vcf file is missing '$caller' in header for CombineVariants")
     }
     reader.close()
   }
