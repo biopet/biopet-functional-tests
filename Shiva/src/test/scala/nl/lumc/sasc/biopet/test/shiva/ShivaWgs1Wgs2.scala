@@ -48,3 +48,6 @@ class Wgs1Wgs2NoPreprocessTest extends ShivaWgs1Wgs2 with Unifiedgenotyper {
   override def useBaseRecalibration = Some(false)
 }
 
+class Wgs1Wgs2RegionBed extends ShivaWgs1Wgs2 with Unifiedgenotyper {
+  override def ampliconBed = Some(Biopet.fixtureFile("reference", "target.bed"))
+}

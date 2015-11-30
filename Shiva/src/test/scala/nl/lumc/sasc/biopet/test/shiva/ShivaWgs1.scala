@@ -1,5 +1,6 @@
 package nl.lumc.sasc.biopet.test.shiva
 
+import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references.TestReference
 import nl.lumc.sasc.biopet.test.samples.Wgs1
@@ -43,3 +44,6 @@ class Wgs1NoPreprocessTest extends ShivaWgs1 with Unifiedgenotyper {
   override def useBaseRecalibration = Some(false)
 }
 
+class Wgs1RegionBed extends ShivaWgs1 with Unifiedgenotyper {
+  override def ampliconBed = Some(Biopet.fixtureFile("reference", "target.bed"))
+}
