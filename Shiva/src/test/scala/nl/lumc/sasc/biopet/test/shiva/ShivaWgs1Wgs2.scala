@@ -1,14 +1,10 @@
 package nl.lumc.sasc.biopet.test.shiva
 
-import java.io.File
-
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references.TestReference
 import nl.lumc.sasc.biopet.test.samples.{ Wgs1, Wgs2 }
 import nl.lumc.sasc.biopet.test.shiva.variantcallers._
 import nl.lumc.sasc.biopet.test.Biopet
-import org.json4s._
-import org.testng.annotations.Test
 
 /**
  * Created by pjvan_thof on 10/23/15.
