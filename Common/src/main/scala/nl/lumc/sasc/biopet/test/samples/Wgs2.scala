@@ -1,7 +1,5 @@
 package nl.lumc.sasc.biopet.test.samples
 
-import java.io.File
-
 import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.utils._
 
