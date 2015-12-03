@@ -46,19 +46,19 @@ class Wgs2NoPreprocessTest extends ShivaWgs2 with Unifiedgenotyper {
   override def useBaseRecalibration = Some(false)
 }
 
-class Wgs2RegionBed extends ShivaWgs2 with Unifiedgenotyper {
+class Wgs2RegionBedTest extends ShivaWgs2 with Unifiedgenotyper {
   override def ampliconBed = Some(Biopet.fixtureFile("reference", "target.bed"))
 }
 
-class Wgs2Normalize extends ShivaWgs2 with Unifiedgenotyper {
+class Wgs2NormalizeTest extends ShivaWgs2 with Unifiedgenotyper {
   override def executeVtNormalize = Some(true)
 }
 
-class Wgs2Decompose extends ShivaWgs2 with Unifiedgenotyper {
+class Wgs2DecomposeTest extends ShivaWgs2 with Unifiedgenotyper {
   override def executeVtDecompose = Some(true)
 }
 
-class Wgs2NormalizeDecompose extends ShivaWgs2 with Unifiedgenotyper {
+class Wgs2NormalizeDecomposeTest extends ShivaWgs2 with Unifiedgenotyper {
   override def executeVtNormalize = Some(true)
   override def executeVtDecompose = Some(true)
 }
