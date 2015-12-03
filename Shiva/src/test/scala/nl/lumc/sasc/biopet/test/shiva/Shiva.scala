@@ -49,6 +49,10 @@ trait Shiva extends Pipeline with Reference with Aligner with Variantcallers {
 
   def ampliconBed: Option[File] = None
 
+  def executeVtNormalize: Option[Boolean] = None
+
+  def executeVtDecompose: Option[Boolean] = None
+
   override def args = super.args ++
     cmdConfig("bam_to_fastq", bamToFastq) ++
     cmdConfig("correct_readgroups", correctReadgroups) ++
@@ -63,7 +67,9 @@ trait Shiva extends Pipeline with Reference with Aligner with Variantcallers {
     cmdConfig("dbsnp", dbsnpVcfFile) ++
     cmdConfig("reference_vcf", referenceVcf) ++
     cmdConfig("reference_vcf_regions", referenceVcfRegions) ++
-    cmdConfig("amplicon_bed", ampliconBed)
+    cmdConfig("amplicon_bed", ampliconBed) ++
+    cmdConfig("execute_vt_normalize", executeVtNormalize) ++
+    cmdConfig("execute_vt_decompose", executeVtDecompose)
 }
 
 object Shiva extends Matchers {
