@@ -44,9 +44,6 @@ trait FlexiprepRun extends Pipeline {
 /** Trait representing a successful Flexiprep test group. */
 trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
-  logMustNotHave("""Script failed with \d+ total jobs""".r)
-  logMustHave("""Script completed successfully with \d+ total jobs""".r)
-
   def md5SumInputR1: String
   def md5SumInputR2: Option[String] = None
 

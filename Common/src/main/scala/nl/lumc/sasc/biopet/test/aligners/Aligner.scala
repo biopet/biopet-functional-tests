@@ -36,7 +36,7 @@ trait Gsnap extends Aligner {
   def aligner = Some("gsnap")
   def gsnapDir: Option[File]
   def gsnapDb: Option[String]
-  override def args = super.args ++ cmdConfig("gsnap:dir", gsnapDir) ++ cmdConfig("gesnap:db", gsnapDb)
+  override def args = super.args ++ cmdConfig("gsnap:dir", gsnapDir) ++ cmdConfig("gsnap:db", gsnapDb)
 }
 
 trait Tophat extends Aligner {

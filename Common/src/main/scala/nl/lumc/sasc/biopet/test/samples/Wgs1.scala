@@ -30,9 +30,9 @@ object Wgs1 {
       Map("libraries" ->
         Map("lib1" ->
           Map(
-            "R1" -> Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R1.fq.gz").getAbsolutePath,
+            "R1" -> Biopet.fixtureFile("samples", "wgs1", "R1.fq.gz").getAbsolutePath,
             "R1_md5" -> "b859d6dd76a6861ce7e9a978ae2e530e",
-            "R2" -> Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R2.fq.gz").getAbsolutePath,
+            "R2" -> Biopet.fixtureFile("samples", "wgs1", "R2.fq.gz").getAbsolutePath,
             "R2_md5" -> "986acc7bda0bf2ef55c52431f54fe3a9"
           )
         )
@@ -46,7 +46,7 @@ object Wgs1 {
       Map("libraries" ->
         Map("lib1" ->
           Map(
-            "bam" -> Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "wgs1.bam").getAbsolutePath,
+            "bam" -> Biopet.fixtureFile("samples", "wgs1", "wgs1.bam").getAbsolutePath,
             "bam_md5" -> "688b8d24b388e24b09ad9239dfe387fb"
           )
         )
@@ -60,7 +60,7 @@ object Wgs1 {
       Map("libraries" ->
         Map("wrongBam" ->
           Map(
-            "bam" -> Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "wgs1_wrongheader.bam").getAbsolutePath
+            "bam" -> Biopet.fixtureFile("samples", "wgs1", "wgs1_wrongheader.bam").getAbsolutePath
           )
         )
       )

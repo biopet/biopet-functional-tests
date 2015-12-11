@@ -2,12 +2,15 @@ package nl.lumc.sasc.biopet.test.shiva
 
 import java.io.File
 
+import htsjdk.variant.vcf.VCFFileReader
 import nl.lumc.sasc.biopet.test.Pipeline
 import nl.lumc.sasc.biopet.test.Pipeline._
 import nl.lumc.sasc.biopet.test.aligners.Aligner
 import nl.lumc.sasc.biopet.test.references.Reference
 import nl.lumc.sasc.biopet.test.shiva.variantcallers.Variantcallers
 import nl.lumc.sasc.biopet.test.utils._
+import org.scalatest.Matchers
+import scala.collection.JavaConversions._
 
 /**
  * Created by pjvan_thof on 5/26/15.
@@ -46,6 +49,10 @@ trait Shiva extends Pipeline with Reference with Aligner with Variantcallers {
 
   def ampliconBed: Option[File] = None
 
+  def executeVtNormalize: Option[Boolean] = None
+
+  def executeVtDecompose: Option[Boolean] = None
+
   override def args = super.args ++
     cmdConfig("bam_to_fastq", bamToFastq) ++
     cmdConfig("correct_readgroups", correctReadgroups) ++
@@ -60,11 +67,21 @@ trait Shiva extends Pipeline with Reference with Aligner with Variantcallers {
     cmdConfig("dbsnp", dbsnpVcfFile) ++
     cmdConfig("reference_vcf", referenceVcf) ++
     cmdConfig("reference_vcf_regions", referenceVcfRegions) ++
-    cmdConfig("amplicon_bed", ampliconBed)
+    cmdConfig("amplicon_bed", ampliconBed) ++
+    cmdConfig("execute_vt_normalize", executeVtNormalize) ++
+    cmdConfig("execute_vt_decompose", executeVtDecompose)
 }
 
-object Shiva {
+object Shiva extends Matchers {
   val validVariantcallers = List("freebayes", "raw", "bcftools", "bcftools_singlesample",
     "haplotypecaller", "unifiedgenotyper", "haplotypecaller_gvcf",
     "haplotypecaller_allele", "unifiedgenotyper_allele")
+
+  def testSamplesVcfFile(file: File, samples: List[String]): Unit = {
+    val reader = new VCFFileReader(file, false)
+    val vcfSamples = reader.getFileHeader.getSampleNamesInOrder.toList
+    samples.foreach { sample => assert(vcfSamples.contains(sample), s"sample '$sample' is not found in $file") }
+    samples.size shouldBe vcfSamples.size
+    reader.close()
+  }
 }

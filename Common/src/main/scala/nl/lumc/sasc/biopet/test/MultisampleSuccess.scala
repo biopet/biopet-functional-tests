@@ -9,7 +9,7 @@ import org.testng.annotations.{ DataProvider, Test }
 /**
  * Created by pjvan_thof on 10/19/15.
  */
-trait MultisampleSuccess extends SummaryPipeline with Samples {
+trait MultisampleSuccess extends SummaryPipeline with Samples with PipelineSuccess {
   @DataProvider(name = "samples")
   def sampleNames = samples.keySet.map(Array(_)).toArray
 

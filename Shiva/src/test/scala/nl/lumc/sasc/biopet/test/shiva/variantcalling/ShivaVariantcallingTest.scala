@@ -9,7 +9,7 @@ import nl.lumc.sasc.biopet.test.{ TestReference, Biopet }
  * Created by pjvan_thof on 10/22/15.
  */
 trait ShivaVariantcallingWgs1 extends ShivaVariantcallingSuccess with TestReference {
-  override def bamFiles = List(Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "wgs1.bam"))
+  override def bamFiles = List(Biopet.fixtureFile("samples", "wgs1", "wgs1.bam"))
 }
 
 class HaplotypeCallerTest extends ShivaVariantcallingWgs1 with Haplotypecaller

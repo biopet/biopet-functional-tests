@@ -1,7 +1,5 @@
 package nl.lumc.sasc.biopet.test.samples
 
-import java.io.File
-
 import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.utils._
 
@@ -21,8 +19,8 @@ object NA12878 {
       Map("libraries" ->
         Map("biopetplanet-30x" ->
           Map(
-            "R1" -> Biopet.fixtureFile(List("samples", "NA12878", "biopetplanet-30x", "gcat_set_025_1.fastq.gz").mkString(File.separator)).getAbsolutePath,
-            "R2" -> Biopet.fixtureFile(List("samples", "NA12878", "biopetplanet-30x", "gcat_set_025_2.fastq.gz").mkString(File.separator)).getAbsolutePath
+            "R1" -> Biopet.fixtureFile("samples", "NA12878", "biopetplanet-30x", "gcat_set_025_1.fastq.gz").getAbsolutePath,
+            "R2" -> Biopet.fixtureFile("samples", "NA12878", "biopetplanet-30x", "gcat_set_025_2.fastq.gz").getAbsolutePath
           )
         )
       )

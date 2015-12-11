@@ -1,8 +1,13 @@
 package nl.lumc.sasc.biopet.test.shiva.variantcallers
 
+import java.io.File
+
+import htsjdk.variant.vcf.VCFFileReader
 import nl.lumc.sasc.biopet.test.SummaryPipeline.Executable
 import nl.lumc.sasc.biopet.test.{ Pipeline, SummaryPipeline }
 import nl.lumc.sasc.biopet.test.utils._
+
+import scala.collection.JavaConversions._
 
 /**
  * Created by pjvanthof on 16/11/15.
@@ -22,6 +27,15 @@ trait Variantcallers extends Pipeline {
       if (variantcallers.exists(!_.contains("bcftools"))) s.addNotHavingExecutable("bcftools")
       if (!variantcallers.contains("raw")) s.addNotHavingExecutable("mpileuptovcf")
     case _ =>
+  }
+
+  def testVariantcallerInfoTag(file: File): Unit = {
+    val reader = new VCFFileReader(file, false)
+    val lines = reader.getFileHeader.toString.split("\n").toList
+    variantcallers foreach { caller =>
+      assert(lines.exists(_.contains(s"RodBinding name=$caller")), s"Final vcf file is missing '$caller' in header for CombineVariants")
+    }
+    reader.close()
   }
 }
 

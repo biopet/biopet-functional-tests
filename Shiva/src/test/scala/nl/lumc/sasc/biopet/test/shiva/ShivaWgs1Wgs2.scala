@@ -1,14 +1,10 @@
 package nl.lumc.sasc.biopet.test.shiva
 
-import java.io.File
-
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references.TestReference
 import nl.lumc.sasc.biopet.test.samples.{ Wgs1, Wgs2 }
 import nl.lumc.sasc.biopet.test.shiva.variantcallers._
 import nl.lumc.sasc.biopet.test.Biopet
-import org.json4s._
-import org.testng.annotations.Test
 
 /**
  * Created by pjvan_thof on 10/23/15.
@@ -48,3 +44,19 @@ class Wgs1Wgs2NoPreprocessTest extends ShivaWgs1Wgs2 with Unifiedgenotyper {
   override def useBaseRecalibration = Some(false)
 }
 
+class Wgs1Wgs2RegionBedTest extends ShivaWgs1Wgs2 with Unifiedgenotyper {
+  override def ampliconBed = Some(Biopet.fixtureFile("reference", "target.bed"))
+}
+
+class Wgs1Wgs2NormalizeTest extends ShivaWgs1Wgs2 with Unifiedgenotyper {
+  override def executeVtNormalize = Some(true)
+}
+
+class Wgs1Wgs2DecomposeTest extends ShivaWgs1Wgs2 with Unifiedgenotyper {
+  override def executeVtDecompose = Some(true)
+}
+
+class Wgs1Wgs2NormalizeDecomposeTest extends ShivaWgs1Wgs2 with Unifiedgenotyper {
+  override def executeVtNormalize = Some(true)
+  override def executeVtDecompose = Some(true)
+}
