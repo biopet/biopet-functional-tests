@@ -44,7 +44,9 @@ trait MappingPaired extends MappingSingle {
     case otherwise              => Seq()
   }
   protected val statsPath = bamMetricsPath :+ "stats"
+}
 
+trait MappingStatsBwaMem extends MappingPaired with BwaMem {
   // add metrics test only when this is turned on in the pipeline
   if (!skipMetrics.contains(true)) {
 
@@ -80,9 +82,9 @@ trait MappingPaired extends MappingSingle {
 
 }
 
-class MappingPairedDefaultTest extends MappingPaired with BwaMem
+class MappingPairedDefaultTest extends MappingPaired with MappingStatsBwaMem
 
-class MappingPairedNoSkipTest extends MappingPaired with BwaMem {
+class MappingPairedNoSkipTest extends MappingPaired with MappingStatsBwaMem {
   override def skipFlexiprep = Some(false)
 
   override def skipMetrics = Some(false)
@@ -92,7 +94,7 @@ class MappingPairedNoSkipTest extends MappingPaired with BwaMem {
   override def generateWig = Some(true)
 }
 
-class MappingPairedWigTest extends MappingPaired with BwaMem {
+class MappingPairedWigTest extends MappingPaired with MappingStatsBwaMem {
   override def generateWig = Some(true)
 
   /**
@@ -130,7 +132,7 @@ class MappingPairedWigTest extends MappingPaired with BwaMem {
 
 }
 
-class MappingPairedSkipTest extends MappingPaired with BwaMem {
+class MappingPairedSkipTest extends MappingPaired with MappingStatsBwaMem {
   override def skipFlexiprep = Some(true)
 
   override def skipMetrics = Some(true)
@@ -140,25 +142,25 @@ class MappingPairedSkipTest extends MappingPaired with BwaMem {
   override def generateWig = Some(true)
 }
 
-class MappingPairedAutoChunkTest extends MappingPaired with BwaMem {
+class MappingPairedAutoChunkTest extends MappingPaired with MappingStatsBwaMem {
   override def configChunking = Some(true)
 
   override def configChunksize = Some(110000)
 }
 
-class MappingPairedChunkTest extends MappingPaired with BwaMem {
+class MappingPairedChunkTest extends MappingPaired with MappingStatsBwaMem {
   override def configChunking = Some(true)
 
   override def configNumberChunks = Some(4)
 }
 
-class MappingPairedForceNoChunkTest extends MappingPaired with BwaMem {
+class MappingPairedForceNoChunkTest extends MappingPaired with MappingStatsBwaMem {
   override def configChunking = Some(false)
 
   override def configNumberChunks = Some(4)
 }
 
-class MappingPairedChunkMetricsTest extends MappingPaired with BwaMem {
+class MappingPairedChunkMetricsTest extends MappingPaired with MappingStatsBwaMem {
   override def chunkMetrics = Some(true)
 
   override def configChunking = Some(true)
@@ -166,7 +168,7 @@ class MappingPairedChunkMetricsTest extends MappingPaired with BwaMem {
   override def configNumberChunks = Some(4)
 }
 
-class MappingPairedBwaMemTest extends MappingPaired with BwaMem
+class MappingPairedBwaMemTest extends MappingPaired with MappingStatsBwaMem
 
 class MappingPairedBowtieTest extends MappingPaired with Bowtie
 
