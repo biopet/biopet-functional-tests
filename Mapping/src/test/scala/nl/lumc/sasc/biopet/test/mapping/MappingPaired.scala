@@ -177,5 +177,3 @@ class MappingPairedBowtie2Test extends MappingPaired with Bowtie2
 class MappingPairedGsnapTest extends MappingPaired with Gsnap
 
 class MappingPairedTophatTest extends MappingPaired with Tophat
-
-class MappingPairedStarTest extends MappingPaired with Star
