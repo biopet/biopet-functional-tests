@@ -22,8 +22,14 @@ trait BwaMem extends Aligner {
 
 trait Bowtie extends Aligner {
   def aligner = Some("bowtie")
-  def bowtieFasta: Option[File]
-  override def args = super.args ++ cmdConfig("bowtie:reference_fasta", bowtieFasta)
+  def bowtieIndex: Option[File]
+  override def args = super.args ++ cmdConfig("bowtie:bowtie_index", bowtieIndex)
+}
+
+trait Bowtie2 extends Aligner {
+  def aligner = Some("bowtie2")
+  def bowtie2Index: Option[File]
+  override def args = super.args ++ cmdConfig("bowtie2:bowtie_index", bowtie2Index)
 }
 
 trait Star extends Aligner {

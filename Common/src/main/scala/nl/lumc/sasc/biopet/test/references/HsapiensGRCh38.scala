@@ -18,7 +18,10 @@ trait HsapiensGRCh38 extends Reference {
   def bwaMemFasta = None
 
   /** This value should be in the global config */
-  def bowtieFasta: Option[File] = None
+  def bowtieIndex: Option[File] = None
+
+  /** This value should be in the global config */
+  def bowtie2Index: Option[File] = None
 
   /** This value should be in the global config */
   def tophatIndex: Option[String] = None
