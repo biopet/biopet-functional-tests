@@ -11,6 +11,8 @@ import nl.lumc.sasc.biopet.test.shiva.variantcallers.Unifiedgenotyper
  */
 class ShivaWgs1BamTest extends ShivaSuccess with BwaMem with TestReference with Unifiedgenotyper with Wgs1Bam {
   addNotHavingExecutable("bwamem")
+
+  override def testMappingBam(sampleid: String, libId: String) = {}
 }
 
 class ShivaWgs1BamToFastqTest extends ShivaSuccess with BwaMem with TestReference with Unifiedgenotyper with Wgs1Bam {

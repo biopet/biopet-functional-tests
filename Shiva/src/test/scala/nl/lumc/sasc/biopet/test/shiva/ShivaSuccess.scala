@@ -235,7 +235,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
   def testMappingBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "bamFile" \ "path"
+    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "output_bam" \ "path"
     summaryPath shouldBe a[JString]
     val file = new File(summaryPath.extract[String])
     file.getParentFile shouldBe libraryDir(sample, lib)
@@ -255,7 +255,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
   def testLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "preProcessBam" \ "path"
+    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "output_preProcessBam" \ "path"
     summaryPath shouldBe a[JString]
     val file = new File(summaryPath.extract[String])
     file.getParentFile shouldBe libraryDir(sample, lib)
@@ -272,14 +272,14 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
       else assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
       reader.close()
     } else {
-      val mappingBam = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "bamFile" \ "path"
+      val mappingBam = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "output_bam" \ "path"
       if (mappingBam != summaryPath) assert(!file.exists())
     }
   }
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
   def testSampleBam(sample: String): Unit = withClue(s"Sample: $sample") {
-    val summaryPath = summary \ "samples" \ sample \ "shiva" \ "files" \ "pipeline" \ "preProcessBam" \ "path"
+    val summaryPath = summary \ "samples" \ sample \ "shiva" \ "files" \ "pipeline" \ "output_preProcessBam" \ "path"
     summaryPath shouldBe a[JString]
     val file = new File(summaryPath.extract[String])
     file.getParentFile shouldBe sampleDir(sample)
