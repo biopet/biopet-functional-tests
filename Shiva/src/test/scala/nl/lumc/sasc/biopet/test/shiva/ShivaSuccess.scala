@@ -255,7 +255,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
   def testLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "output_preProcessBam" \ "path"
+    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "output_bam_preprocess" \ "path"
     summaryPath shouldBe a[JString]
     val file = new File(summaryPath.extract[String])
     file.getParentFile shouldBe libraryDir(sample, lib)
@@ -279,7 +279,7 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
   def testSampleBam(sample: String): Unit = withClue(s"Sample: $sample") {
-    val summaryPath = summary \ "samples" \ sample \ "shiva" \ "files" \ "pipeline" \ "output_preProcessBam" \ "path"
+    val summaryPath = summary \ "samples" \ sample \ "shiva" \ "files" \ "pipeline" \ "output_bam_preprocess" \ "path"
     summaryPath shouldBe a[JString]
     val file = new File(summaryPath.extract[String])
     file.getParentFile shouldBe sampleDir(sample)

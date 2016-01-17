@@ -97,7 +97,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("parseSummary"))
   def testFinalBamFile(): Unit = {
-    val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "output_bamfile"
+    val summaryFile = summaryRoot \ "mapping" \ "files" \ "pipeline" \ "output_bam"
     validateSummaryFile(summaryFile, Some(finalBamFile))
 
     assert(finalBamFile.exists())
