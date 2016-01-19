@@ -1,5 +1,7 @@
 package nl.lumc.sasc.biopet.test
 
+import com.github.fge.jsonschema.main._
+
 import java.io.File
 
 import org.json4s._
@@ -18,6 +20,14 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   implicit val formats = DefaultFormats
 
   def summaryFile: File
+
+  /** URL to summary schema resource file, if defined. */
+  def summarySchemaUrl: Option[String] = None
+
+  private lazy val summarySchema = summarySchemaUrl.map { url => parse(getClass.getResourceAsStream(url)) }
+
+  final protected lazy val schema: Option[JsonSchema] = summarySchema
+    .map { jv => SummaryPipeline.schemaFactory.getJsonSchema(asJsonNode(jv)) }
 
   private var _summary: JValue = _
 
@@ -130,7 +140,11 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
 }
 
 object SummaryPipeline {
+
   case class Executable(name: String, version: Option[Regex] = None)
+
+  /** Factory for JSON schemas */
+  protected val schemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
 }
 
 /** Trait for easier JValue matching. */
