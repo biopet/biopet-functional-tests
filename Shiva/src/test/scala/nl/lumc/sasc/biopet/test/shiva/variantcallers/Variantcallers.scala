@@ -131,7 +131,8 @@ trait VarscanCnsSinglesample extends Variantcallers {
 
   this match {
     case s: SummaryPipeline =>
-      s.addExecutable(Executable("mpileuptovcf", Some(""".+""".r)))
+      s.addExecutable(Executable("samtoolsmpileup", Some(""".+""".r)))
+      s.addExecutable(Executable("varscanmpileup2cns", Some(""".+""".r)))
     case _ =>
   }
 }
