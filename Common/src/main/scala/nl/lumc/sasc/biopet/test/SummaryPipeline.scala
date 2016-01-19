@@ -10,6 +10,7 @@ import org.scalatest.matchers._
 import org.testng.annotations.{ DataProvider, Test }
 
 import scala.collection.mutable.{ Map => MutMap }
+import scala.collection.JavaConverters._
 import scala.util.matching.Regex
 
 /**
@@ -43,6 +44,13 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
 
   @Test(groups = Array("parseSummary"))
   def parseSummary(): Unit = _summary = parse(summaryFile)
+
+  @Test(groups = Array("parseSummary"))
+  def testSummarySchema(): Unit =
+    if (summarySchemaUrl.isDefined) {
+      schema shouldBe defined
+      schema.get.validate(asJsonNode(summary)).iterator().asScala.toSeq should have length 0
+    }
 
   @DataProvider(name = "summaryTests")
   def summaryTestsProvider() = {
