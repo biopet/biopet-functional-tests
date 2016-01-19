@@ -125,3 +125,13 @@ trait Raw extends Variantcallers {
     case _ =>
   }
 }
+
+trait VarscanCnsSinglesample extends Variantcallers {
+  override def variantcallers = "varscan_cns_singlesample" :: super.variantcallers
+
+  this match {
+    case s: SummaryPipeline =>
+      s.addExecutable(Executable("mpileuptovcf", Some(""".+""".r)))
+    case _ =>
+  }
+}
