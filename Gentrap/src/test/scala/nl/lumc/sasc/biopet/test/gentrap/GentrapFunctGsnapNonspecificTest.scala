@@ -40,11 +40,8 @@ trait GentrapFunctional extends Gentrap {
     if (this.isInstanceOf[FragmentsPerGene])
       b += Array(s"$mergedTablePrefix.fragments_per_gene")
 
-    if (this.isInstanceOf[BasesPerGene])
+    if (this.isInstanceOf[BaseCounts])
       b += Array(s"$mergedTablePrefix.bases_per_gene")
-
-    if (this.isInstanceOf[BasesPerExon])
-      b += Array(s"$mergedTablePrefix.bases_per_exon")
 
     if (this.isInstanceOf[CufflinksStrict]) {
       b += Array(s"$mergedTablePrefix.genes_fpkm_cufflinks_strict")
