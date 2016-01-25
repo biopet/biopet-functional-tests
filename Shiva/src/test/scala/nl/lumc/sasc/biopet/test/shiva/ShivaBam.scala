@@ -12,7 +12,7 @@ import nl.lumc.sasc.biopet.test.shiva.variantcallers.Unifiedgenotyper
 class ShivaWgs1BamTest extends ShivaSuccess with BwaMem with TestReference with Unifiedgenotyper with Wgs1Bam {
   addNotHavingExecutable("bwamem")
 
-  override def testMappingBam(sampleid: String, libId: String) = {}
+  override def testLibraryBam(sampleid: String, libId: String) = {}
 }
 
 class ShivaWgs1BamToFastqTest extends ShivaSuccess with BwaMem with TestReference with Unifiedgenotyper with Wgs1Bam {
@@ -27,7 +27,7 @@ class ShivaWgs1BamReplaceReadGroupTest extends ShivaSuccess with BwaMem with Tes
   override def correctReadgroups = Some(true)
 
   /** This bam file should only in this conditions not exist, disabled test */
-  override def testMappingBam(sampleid: String, libId: String) = {}
+  override def testLibraryBam(sampleid: String, libId: String) = {}
 
   addNotHavingExecutable("bwamem")
   addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
