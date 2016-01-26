@@ -2,7 +2,6 @@ package nl.lumc.sasc.biopet.test
 
 import java.io.File
 
-import htsjdk.samtools.SamReaderFactory
 import org.json4s._
 import org.testng.annotations.Test
 
@@ -20,7 +19,7 @@ trait MultisampleMappingSuccess extends MultisampleSuccess {
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
   def testLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "output_bam" \ "path"
+    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ pipelineName \ "files" \ "pipeline" \ "output_bam" \ "path"
     summaryPath shouldBe a[JString]
     val file = new File(summaryPath.extract[String])
     file shouldBe libraryBam(sample, lib)
@@ -31,21 +30,21 @@ trait MultisampleMappingSuccess extends MultisampleSuccess {
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
   def testLibraryPreprocessBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "output_bam_preprocess" \ "path"
+    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ pipelineName \ "files" \ "pipeline" \ "output_bam_preprocess" \ "path"
     summaryPath shouldBe a[JString]
     val file = new File(summaryPath.extract[String])
     file shouldBe libraryPreprecoessBam(sample, lib)
     if (samples(sample).size == 1) {
       assert(file.exists())
     } else {
-      val mappingBam = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "output_bam" \ "path"
+      val mappingBam = summary \ "samples" \ sample \ "libraries" \ lib \ pipelineName \ "files" \ "pipeline" \ "output_bam" \ "path"
       if (mappingBam != summaryPath) assert(!file.exists())
     }
   }
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
   def testSampleBam(sample: String): Unit = withClue(s"Sample: $sample") {
-    val summaryPath = summary \ "samples" \ sample \ "shiva" \ "files" \ "pipeline" \ "output_bam_preprocess" \ "path"
+    val summaryPath = summary \ "samples" \ sample \ pipelineName \ "files" \ "pipeline" \ "output_bam" \ "path"
     summaryPath shouldBe a[JString]
     val file = new File(summaryPath.extract[String])
     file shouldBe sampleBam(sample)
@@ -53,7 +52,7 @@ trait MultisampleMappingSuccess extends MultisampleSuccess {
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
   def testSamplePrepreocessBam(sample: String): Unit = withClue(s"Sample: $sample") {
-    val summaryPath = summary \ "samples" \ sample \ "shiva" \ "files" \ "pipeline" \ "output_bam_preprocess" \ "path"
+    val summaryPath = summary \ "samples" \ sample \ pipelineName \ "files" \ "pipeline" \ "output_bam_preprocess" \ "path"
     summaryPath shouldBe a[JString]
     val file = new File(summaryPath.extract[String])
     file shouldBe samplePreprocessBam(sample)
