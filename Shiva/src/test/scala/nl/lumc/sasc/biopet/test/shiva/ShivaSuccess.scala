@@ -60,6 +60,15 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
   def minPrecision = 0.95
   def minRecall = 0.95
 
+  override def samplePreprocessBam(sampleId: String) =
+    new File(super.samplePreprocessBam(sampleId).getAbsolutePath.stripSuffix(".bam") +
+      (if (useIndelRealigner.getOrElse(true)) ".realign.bam" else ".bam"))
+
+  override def libraryPreprecoessBam(sampleId: String, libId: String) =
+    new File(super.libraryPreprecoessBam(sampleId, libId).getAbsolutePath.stripSuffix(".bam") +
+      (if (useIndelRealigner.getOrElse(true)) ".realign" else "") +
+      (if (useBaseRecalibration.getOrElse(true) && dbsnpVcfFile.isDefined) ".baserecal.bam" else ".bam"))
+
   def addConcordanceChecks(path: Seq[String], condition: Boolean): Unit = {
     addSummaryTest(path,
       if (condition && referenceVcf.isDefined)
