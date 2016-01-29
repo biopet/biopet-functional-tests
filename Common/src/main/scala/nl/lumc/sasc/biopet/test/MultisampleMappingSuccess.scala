@@ -56,6 +56,9 @@ trait MultisampleMappingSuccess extends MultisampleSuccess {
     summaryPath shouldBe a[JString]
     val file = new File(summaryPath.extract[String])
     file shouldBe samplePreprocessBam(sample)
+
+    if (samples(sample).size == 1 && sampleBam(sample) == file) assert(java.nio.file.Files.isSymbolicLink(file.toPath))
+
     assert(file.getName.startsWith(s"$sample."))
     assert(file.exists())
   }

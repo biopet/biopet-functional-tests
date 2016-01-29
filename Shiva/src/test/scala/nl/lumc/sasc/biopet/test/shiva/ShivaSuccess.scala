@@ -62,7 +62,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   override def samplePreprocessBam(sampleId: String) =
     new File(super.samplePreprocessBam(sampleId).getAbsolutePath.stripSuffix(".bam") +
-      (if (useIndelRealigner.getOrElse(true)) ".realign.bam" else ".bam"))
+      (if (useIndelRealigner.getOrElse(true) && samples(sampleId).size > 1) ".realign.bam" else ".bam"))
 
   override def libraryPreprecoessBam(sampleId: String, libId: String) =
     new File(super.libraryPreprecoessBam(sampleId, libId).getAbsolutePath.stripSuffix(".bam") +
