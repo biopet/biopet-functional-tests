@@ -21,9 +21,9 @@ object Mgm4457768_3_050 {
         Map("lib1" ->
           Map(
             "R1" -> Biopet.fixtureFile("samples", sampleName, "mgm4457768.3.050.R1.fastq.gz").getAbsolutePath,
-            "R1_md5" -> "7f8707a1a1d61f53aca45e602962da4a",
+            "R1_md5" -> "2de6a83c2d9fd05c40c67ea46cc5a4fd",
             "R2" -> Biopet.fixtureFile("samples", sampleName, "mgm4457768.3.050.R2.fastq.gz").getAbsolutePath,
-            "R2_md5" -> "0693a1a908494bbe32a007c863a64461"
+            "R2_md5" -> "84331c7c1d59ebc30a023645335c847c"
           )
         )
       )
@@ -37,7 +37,7 @@ object Mgm4457768_3_050 {
         Map("lib1" ->
           Map(
             "R1" -> Biopet.fixtureFile("samples", sampleName, "mgm4457768.3.050.R1.fastq.gz").getAbsolutePath,
-            "R1_md5" -> "7f8707a1a1d61f53aca45e602962da4a"
+            "R1_md5" -> "2de6a83c2d9fd05c40c67ea46cc5a4fd"
           )
         )
       )
