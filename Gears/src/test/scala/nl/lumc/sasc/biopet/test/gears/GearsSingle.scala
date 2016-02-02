@@ -8,8 +8,8 @@ import nl.lumc.sasc.biopet.test.Pipeline._
 /**
  * Created by waiyileung on 05-10-15.
  */
-trait Gears extends Pipeline {
-  def pipelineName = "gears"
+trait GearsSingle extends Pipeline {
+  def pipelineName = "gearssingle"
 
   def paired = r2.isDefined
 
