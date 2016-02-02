@@ -1,16 +1,21 @@
 package nl.lumc.sasc.biopet.test.samples
 
 import nl.lumc.sasc.biopet.test.Biopet
+import nl.lumc.sasc.biopet.test.Pipeline._
 import nl.lumc.sasc.biopet.test.utils._
 
 trait Mgm4457768_3_050Lib1 extends Samples {
   override def samples = addSampleLibrary(super.samples, Mgm4457768_3_050.sampleName, "lib1")
   override def configs = super.configs :+ Mgm4457768_3_050.lib1ConfigFile
+
+  override def args = super.args ++ cmdConfig("phred_offset", 33)
 }
 
 trait Mgm4457768_3_050Lib2 extends Samples {
   override def samples = addSampleLibrary(super.samples, Mgm4457768_3_050.sampleName, "lib2")
   override def configs = super.configs :+ Mgm4457768_3_050.lib2ConfigFile
+
+  override def args = super.args ++ cmdConfig("phred_offset", 33)
 }
 
 object Mgm4457768_3_050 {
