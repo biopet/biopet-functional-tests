@@ -1,4 +1,4 @@
-package nl.lumc.sasc.biopet.test.gears
+package nl.lumc.sasc.biopet.test.gears.gearssingle
 
 import java.io.File
 

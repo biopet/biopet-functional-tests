@@ -1,21 +1,21 @@
-package nl.lumc.sasc.biopet.test.gears
+package nl.lumc.sasc.biopet.test.gears.gearssingle
 
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.Biopet
 
 /**
- * Created by wyleung on 22-10-15.
+ * Created by pjvanthof on 27/10/15.
  */
-class GearsSingleFastqDryRunTest extends GearsSingle {
-  override def run = false
+class GearsSingleFastqTest extends GearsSingleSuccessful {
+  override def functionalTest = true
 
   override def r1 = Some(Biopet.fixtureFile("gears" + File.separator + "hpv_simu_R1.fq.gz"))
   override def r2 = Some(Biopet.fixtureFile("gears" + File.separator + "hpv_simu_R2.fq.gz"))
 }
 
-class GearsSingleBamDryRunTest extends GearsSingle {
-  override def run = false
+class GearsSingleBamTest extends GearsSingleSuccessful {
+  override def functionalTest = true
 
   override def bam = Some(new File(Biopet.fixtureFile("gears" + File.separator + "hpv_simu-testlib.dedup.bam").getAbsolutePath))
 }

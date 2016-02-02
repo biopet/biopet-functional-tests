@@ -43,7 +43,7 @@ object Mgm4457768_3_050 {
       )
     )
   )
-  val lib2ConfigFile = createTempConfig(lib2ConfigMap, s"$sampleName-lib1")
+  val lib2ConfigFile = createTempConfig(lib2ConfigMap, s"$sampleName-lib2")
 
 }
 
