@@ -39,7 +39,7 @@ object Mgm4457768_3_050 {
   val lib2ConfigMap = Map("samples" ->
     Map(s"$sampleName" ->
       Map("libraries" ->
-        Map("lib1" ->
+        Map("lib2" ->
           Map(
             "R1" -> Biopet.fixtureFile("samples", sampleName, "mgm4457768.3.050.R1.fastq.gz").getAbsolutePath,
             "R1_md5" -> "2de6a83c2d9fd05c40c67ea46cc5a4fd"
