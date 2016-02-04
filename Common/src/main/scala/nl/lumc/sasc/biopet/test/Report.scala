@@ -2,11 +2,11 @@ package nl.lumc.sasc.biopet.test
 
 import java.io.File
 
-import org.testng.annotations.{DataProvider, Test}
+import org.testng.annotations.{ DataProvider, Test }
 
 /**
-  * Created by pjvanthof on 04/02/16.
-  */
+ * Created by pjvanthof on 04/02/16.
+ */
 trait Report extends Pipeline {
 
   def reportDir = new File(outputDir, "report")

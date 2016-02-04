@@ -40,14 +40,15 @@ trait MultisampleSuccess extends SummaryPipeline with Samples with PipelineSucce
     summary \ "samples" \ sampleId \ "libraries" \ libId shouldBe a[JObject]
   }
 
-  samples.foreach { case (sample, libraries) =>
-    addMustHaveReportFile("Samples", sample)
-    addMustHaveReportFile("Samples", sample, "index.html")
+  samples.foreach {
+    case (sample, libraries) =>
+      addMustHaveReportFile("Samples", sample)
+      addMustHaveReportFile("Samples", sample, "index.html")
 
-    libraries.foreach { library =>
-      addMustHaveReportFile("Samples", sample, "Libraries", library)
-      addMustHaveReportFile("Samples", sample, "Libraries", library, "index.html")
-    }
+      libraries.foreach { library =>
+        addMustHaveReportFile("Samples", sample, "Libraries", library)
+        addMustHaveReportFile("Samples", sample, "Libraries", library, "index.html")
+      }
   }
 
 }
