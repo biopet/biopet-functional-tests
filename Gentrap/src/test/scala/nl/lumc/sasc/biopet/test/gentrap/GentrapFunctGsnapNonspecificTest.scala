@@ -13,8 +13,6 @@ import nl.lumc.sasc.biopet.test.utils.pearsonScore
 
 trait GentrapFunctional extends Gentrap {
 
-  override def functionalTest = true
-
   // TODO: Map[String, Map[String, Double]] for the count table instead?
   def loadMergedCountTable(tableFile: File): Option[Map[String, List[Double]]] = {
     if (tableFile.exists) {
