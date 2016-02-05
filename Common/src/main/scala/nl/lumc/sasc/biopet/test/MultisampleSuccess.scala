@@ -9,7 +9,7 @@ import org.testng.annotations.{ DataProvider, Test }
 /**
  * Created by pjvan_thof on 10/19/15.
  */
-trait MultisampleSuccess extends SummaryPipeline with Samples with PipelineSuccess {
+trait MultisampleSuccess extends SummaryPipeline with Samples with PipelineSuccess with Report {
   @DataProvider(name = "samples")
   def sampleNames = samples.keySet.map(Array(_)).toArray
 
@@ -38,6 +38,17 @@ trait MultisampleSuccess extends SummaryPipeline with Samples with PipelineSucce
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
   def testLibrarySummary(sampleId: String, libId: String): Unit = withClue(s"sample = $sampleId; library = $libId") {
     summary \ "samples" \ sampleId \ "libraries" \ libId shouldBe a[JObject]
+  }
+
+  samples.foreach {
+    case (sample, libraries) =>
+      addMustHaveReportFile("Samples", sample)
+      addMustHaveReportFile("Samples", sample, "index.html")
+
+      libraries.foreach { library =>
+        addMustHaveReportFile("Samples", sample, "Libraries", library)
+        addMustHaveReportFile("Samples", sample, "Libraries", library, "index.html")
+      }
   }
 
 }
