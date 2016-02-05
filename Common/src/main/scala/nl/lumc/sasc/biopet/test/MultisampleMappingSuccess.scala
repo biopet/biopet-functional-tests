@@ -6,8 +6,8 @@ import org.json4s._
 import org.testng.annotations.Test
 
 /**
-  * Created by pjvanthof on 25/01/16.
-  */
+ * Created by pjvanthof on 25/01/16.
+ */
 trait MultisampleMappingSuccess extends MultisampleSuccess {
   def libraryBam(sampleId: String, libId: String) = new File(libraryDir(sampleId, libId), s"$sampleId-$libId.final.bam")
 

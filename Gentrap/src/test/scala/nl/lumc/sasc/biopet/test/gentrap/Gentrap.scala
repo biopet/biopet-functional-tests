@@ -10,7 +10,6 @@ import nl.lumc.sasc.biopet.test.Pipeline, Pipeline._
 trait Gentrap extends Pipeline
   with GtfAnnotation
   with RefflatAnnotation
-  with ExonBedAnnotation
   with RibosomalRefflatAnnotation
   with Reference
   with Aligner
@@ -18,9 +17,9 @@ trait Gentrap extends Pipeline
 
   def pipelineName = "gentrap"
 
-  def summaryFile = new File(outputDir, s"gentrap.summary.json")
+  def summaryFile = new File(outputDir, "gentrap.summary.json")
 
-  def removeRibosomalReads: Option[Boolean] = None
+  def removeRibosomalReads(): Option[Boolean] = None
 
   def callVariants: Option[Boolean] = None
 
