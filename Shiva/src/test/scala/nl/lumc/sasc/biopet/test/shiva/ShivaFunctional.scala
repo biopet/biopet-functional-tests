@@ -16,6 +16,8 @@ class ShivaBiopetplanet30xGRCh37Test extends ShivaSuccess with BwaMem with Hsapi
   override def minPrecision = 0.945
   override def minRecall = 0.945
 
+  def paired = true
+
   override def disablescatter = false
 
   override def ampliconBed =
@@ -34,4 +36,5 @@ class ShivaBiopetplanet30xGRCh37Test extends ShivaSuccess with BwaMem with Hsapi
 class ShivaBiopetplanet30xGRCh38Test extends ShivaSuccess with BwaMem with HsapiensGRCh38 with NA12878Bioplanet30x
   with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
   override def disablescatter = false
+  def paired = true
 }
