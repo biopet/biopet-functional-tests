@@ -22,7 +22,7 @@ trait Gears extends Pipeline {
 
   override def args = super.args ++
     cmdConfig("gears_use_kraken", gearsUseKraken) ++
-    cmdConfig("gear_use_qiime_rtax", gearUseQiimeRtax) ++
-    cmdConfig("gear_use_qiime_closed", gearUseQiimeClosed) ++
-    cmdConfig("gear_use_seq_count", gearUseSeqCount)
+    cmdConfig("gears_use_qiime_rtax", gearUseQiimeRtax) ++
+    cmdConfig("gears_use_qiime_closed", gearUseQiimeClosed) ++
+    cmdConfig("gears_use_seq_count", gearUseSeqCount)
 }
