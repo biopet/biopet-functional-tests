@@ -25,3 +25,5 @@ class BcftoolsSingleSampleTest extends ShivaVariantcallingWgs1 with BcftoolsSing
 class FreebayesTest extends ShivaVariantcallingWgs1 with Freebayes
 
 class RawTest extends ShivaVariantcallingWgs1 with Raw
+
+class VarscanCnsSinglesampleTest extends ShivaVariantcallingWgs1 with VarscanCnsSinglesample

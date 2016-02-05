@@ -25,6 +25,8 @@ class Wgs1FreebayesTest extends ShivaWgs1 with Freebayes
 
 class Wgs1RawTest extends ShivaWgs1 with Raw
 
+class Wgs1VarscanCnsSinglesampleTest extends ShivaWgs1 with VarscanCnsSinglesample
+
 class Wgs1SampleLibraryCallingTest extends ShivaWgs1 with Unifiedgenotyper {
   override def multisampleVariantcalling = Some(false)
   override def libraryVariantcalling = Some(true)
