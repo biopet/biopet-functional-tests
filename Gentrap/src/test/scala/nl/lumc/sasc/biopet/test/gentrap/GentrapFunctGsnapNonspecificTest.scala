@@ -93,6 +93,7 @@ class GentrapFunctGsnapNonspecificTest extends GentrapFunctional
   with Rna1 with Rna2
   with HsapiensGRCh38 {
 
+  def shouldHaveKmerContent = true
   def paired = true
 
   def strandProtocol = Option("non_specific")

@@ -19,6 +19,8 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
 
   def paired: Boolean
 
+  def shouldHaveKmerContent: Boolean
+
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
   def testLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ pipelineName \ "files" \ "pipeline" \ "output_bam" \ "path"
@@ -122,13 +124,13 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
 
         addConditionalReportFile(flexiprepShouldRun, "Samples", sample, "Libraries", library, "QC", "index.html")
         addConditionalReportFile(flexiprepShouldRun, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_duplication_levels.png")
-        addConditionalReportFile(flexiprepShouldRun, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_kmer_profiles.png")
+        addConditionalReportFile(flexiprepShouldRun && shouldHaveKmerContent, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_kmer_profiles.png")
         addConditionalReportFile(flexiprepShouldRun, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_per_base_quality.png")
         addConditionalReportFile(flexiprepShouldRun, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_per_base_sequence_content.png")
         addConditionalReportFile(flexiprepShouldRun, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_per_sequence_gc_content.png")
         addConditionalReportFile(flexiprepShouldRun, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_per_sequence_quality.png")
         addConditionalReportFile(flexiprepShouldRun, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_qc_duplication_levels.png")
-        addConditionalReportFile(flexiprepShouldRun, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_qc_kmer_profiles.png")
+        addConditionalReportFile(flexiprepShouldRun && shouldHaveKmerContent, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_qc_kmer_profiles.png")
         addConditionalReportFile(flexiprepShouldRun, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_qc_per_base_quality.png")
         addConditionalReportFile(flexiprepShouldRun, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_qc_per_base_sequence_content.png")
         addConditionalReportFile(flexiprepShouldRun, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_qc_per_sequence_gc_content.png")
@@ -137,13 +139,13 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
         addConditionalReportFile(flexiprepShouldRun, "Samples", sample, "Libraries", library, "QC", "fastqc_R1_sequence_length_distribution.png")
 
         addConditionalReportFile(flexiprepShouldRun && paired, "Samples", sample, "Libraries", library, "QC", "fastqc_R2_duplication_levels.png")
-        addConditionalReportFile(flexiprepShouldRun && paired, "Samples", sample, "Libraries", library, "QC", "fastqc_R2_kmer_profiles.png")
+        addConditionalReportFile(flexiprepShouldRun && paired && shouldHaveKmerContent, "Samples", sample, "Libraries", library, "QC", "fastqc_R2_kmer_profiles.png")
         addConditionalReportFile(flexiprepShouldRun && paired, "Samples", sample, "Libraries", library, "QC", "fastqc_R2_per_base_quality.png")
         addConditionalReportFile(flexiprepShouldRun && paired, "Samples", sample, "Libraries", library, "QC", "fastqc_R2_per_base_sequence_content.png")
         addConditionalReportFile(flexiprepShouldRun && paired, "Samples", sample, "Libraries", library, "QC", "fastqc_R2_per_sequence_gc_content.png")
         addConditionalReportFile(flexiprepShouldRun && paired, "Samples", sample, "Libraries", library, "QC", "fastqc_R2_per_sequence_quality.png")
         addConditionalReportFile(flexiprepShouldRun && paired, "Samples", sample, "Libraries", library, "QC", "fastqc_R2_qc_duplication_levels.png")
-        addConditionalReportFile(flexiprepShouldRun && paired, "Samples", sample, "Libraries", library, "QC", "fastqc_R2_qc_kmer_profiles.png")
+        addConditionalReportFile(flexiprepShouldRun && paired && shouldHaveKmerContent, "Samples", sample, "Libraries", library, "QC", "fastqc_R2_qc_kmer_profiles.png")
         addConditionalReportFile(flexiprepShouldRun && paired, "Samples", sample, "Libraries", library, "QC", "fastqc_R2_qc_per_base_quality.png")
         addConditionalReportFile(flexiprepShouldRun && paired, "Samples", sample, "Libraries", library, "QC", "fastqc_R2_qc_per_base_sequence_content.png")
         addConditionalReportFile(flexiprepShouldRun && paired, "Samples", sample, "Libraries", library, "QC", "fastqc_R2_qc_per_sequence_gc_content.png")
