@@ -42,7 +42,6 @@ trait Report extends Pipeline {
   addMustHaveReportFile("index.html")
   addMustHaveReportFile("ext")
   addMustHaveReportFile("ext", "js")
-  addMustHaveReportFile("ext", "js", "gears.js")
   addMustHaveReportFile("ext", "js", "sortable.min.js")
   addMustHaveReportFile("ext", "js", "jquery.min.js")
   addMustHaveReportFile("ext", "js", "d3.v3.5.5.min.js")
