@@ -37,6 +37,7 @@ class ShivaWgs1BamReplaceReadGroupTest extends ShivaSuccess with BwaMem with Tes
   override def flexiprepShouldRun = false
   /** This bam file should only in this conditions not exist, disabled test */
   override def testLibraryBam(sampleid: String, libId: String) = {}
+  override def testShivaLibraryBam(sampleid: String, libId: String) = {}
 
   addNotHavingExecutable("bwamem")
   addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
