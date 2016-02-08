@@ -96,6 +96,8 @@ class GentrapFunctGsnapNonspecificTest extends GentrapFunctional
   def shouldHaveKmerContent = true
   def paired = true
 
+  override def callVariants = Some(true)
+
   def strandProtocol = Option("non_specific")
   def annotationRefflat = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.refFlat"))
   def annotationGtf = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.gtf"))
