@@ -29,12 +29,8 @@ trait FragmentsPerGene extends ExpressionMeasures {
   }
 }
 
-trait BasesPerGene extends ExpressionMeasures {
-  override def expressionMeasures = "bases_per_gene" :: super.expressionMeasures
-}
-
-trait BasesPerExon extends ExpressionMeasures {
-  override def expressionMeasures = "bases_per_exon" :: super.expressionMeasures
+trait BaseCounts extends ExpressionMeasures {
+  override def expressionMeasures = "base_counts" :: super.expressionMeasures
 }
 
 trait CufflinksStrict extends ExpressionMeasures {
@@ -61,6 +57,5 @@ trait CufflinksBlind extends ExpressionMeasures {
   }
 }
 
-trait AllExpressionMeasures extends FragmentsPerGene
-  with BasesPerGene with BasesPerExon
+trait AllExpressionMeasures extends FragmentsPerGene with BaseCounts
   with CufflinksStrict with CufflinksGuided with CufflinksBlind

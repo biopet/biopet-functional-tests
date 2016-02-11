@@ -14,6 +14,11 @@ trait Wgs1 extends Samples {
   override def configs = super.configs :+ Wgs1.lib1ConfigFile
 }
 
+trait Wgs1SingleEnd extends Samples {
+  override def samples = addSampleLibrary(super.samples, "wgs1", "lib1")
+  override def configs = super.configs :+ Wgs1.lib2ConfigFile
+}
+
 trait Wgs1Bam extends Samples {
   override def samples = addSampleLibrary(super.samples, "wgs1", "lib1")
   override def configs = super.configs :+ Wgs1.bamConfigFile
@@ -25,6 +30,7 @@ trait Wgs1WrongBam extends Samples {
 }
 
 object Wgs1 {
+  // Paired-End
   val lib1ConfigMap = Map("samples" ->
     Map("wgs1" ->
       Map("libraries" ->
@@ -40,6 +46,21 @@ object Wgs1 {
     )
   )
   val lib1ConfigFile = createTempConfig(lib1ConfigMap, "wgs1")
+
+  // Single-End
+  val lib2ConfigMap = Map("samples" ->
+    Map("wgs1" ->
+      Map("libraries" ->
+        Map("lib1" ->
+          Map(
+            "R1" -> Biopet.fixtureFile("samples", "wgs1", "R1.fq.gz").getAbsolutePath,
+            "R1_md5" -> "b859d6dd76a6861ce7e9a978ae2e530e"
+          )
+        )
+      )
+    )
+  )
+  val lib2ConfigFile = createTempConfig(lib2ConfigMap, "wgs1")
 
   val bamConfigMap = Map("samples" ->
     Map("wgs1" ->
