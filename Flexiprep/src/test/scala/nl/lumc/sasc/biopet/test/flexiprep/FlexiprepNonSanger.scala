@@ -20,7 +20,7 @@ class FlexiprepSingleNonSangerTest extends FlexiprepSingleDefaultTest with Flexi
 
 }
 
-class FlexiprepPairedNonSangerTest extends FlexiprepPairedDefaultTest with FlexiprepPairedClipTrimSummaryValues {
+class FlexiprepPairedNonSangerTest extends FlexiprepSuccessful {
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "cti_r1.fq"))
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "cti_r2.fq"))
 
