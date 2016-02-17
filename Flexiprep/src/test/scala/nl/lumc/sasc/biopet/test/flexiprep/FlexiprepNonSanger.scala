@@ -32,5 +32,5 @@ class FlexiprepPairedNonSangerTest extends FlexiprepPairedDefaultTest with Flexi
   override def md5SumInputR2 = Some("6519425e6191e136a4e29f4642ac0b84")
 
   override def md5SumOutputR1 = Some("1d7f59553ea9fcd073acb5cbfc22156f")
-  override def md5SumOutputR2 = Some("8ea8ceef563c63b122be8ef9a8d10d2")
+  override def md5SumOutputR2 = Some("28ea8ceef563c63b122be8ef9a8d10d2")
 }
