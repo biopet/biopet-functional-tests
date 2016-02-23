@@ -23,11 +23,11 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   def summaryFile: File
 
   /** URL to summary schema resource file, if defined. */
-  def summarySchemaUrl: Option[String] = None
+  def summarySchemaUrls: Seq[String] = Seq.empty[String]
 
-  private lazy val summarySchema = summarySchemaUrl.map { url => parse(getClass.getResourceAsStream(url)) }
+  private lazy val summarySchemas = summarySchemaUrls.map { url => parse(getClass.getResourceAsStream(url)) }
 
-  final protected lazy val schema: Option[JsonSchema] = summarySchema
+  final protected lazy val schemas: Seq[JsonSchema] = summarySchemas
     .map { jv => SummaryPipeline.schemaFactory.getJsonSchema(asJsonNode(jv)) }
 
   private var _summary: JValue = _
@@ -47,9 +47,9 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
 
   @Test(groups = Array("parseSummary"))
   def testSummarySchema(): Unit =
-    if (summarySchemaUrl.isDefined) {
-      schema shouldBe defined
-      schema.get.validate(asJsonNode(summary)).iterator().asScala.toSeq should have length 0
+    if (summarySchemaUrls.nonEmpty) {
+      schemas should not be empty
+      schemas.map { s => s.validate(asJsonNode(summary)).iterator().asScala.toSeq shouldBe empty }
     }
 
   @DataProvider(name = "summaryTests")
