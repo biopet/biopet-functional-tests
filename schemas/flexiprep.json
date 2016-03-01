@@ -331,7 +331,7 @@
         "reads": {
           "description": "Read-level statistics",
           "type": "object",
-          "required": [ "len_max", "len_min", "num_with_n", "num_total", "num_avg_qual_gte", "qual_encoding", "len_histogram" ],
+          "required": [ "len_max", "len_min", "num_with_n", "num_total", "num_avg_qual_gte", "qual_encoding" ],
 
           "properties": {
 
@@ -373,12 +373,8 @@
 
             "len_histogram": {
               "description": "Holds the histogram of all read lengths found in the fastq file",
-              "type": "object",
-              "additionalProperties": false,
-
-              "patternProperties": {
-                "^[0-9]+$": { "type": "integer" }
-              }
+              "type": "array",
+              "items": { "type": "integer" }
             }
           }
         }
