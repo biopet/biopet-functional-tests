@@ -21,8 +21,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   override def summarySchemaUrls = Seq(
     "/schemas/flexiprep.json",
-    "/schemas/bammetrics.json",
-    "/schemas/mapping.json")
+    "/schemas/bammetrics.json")
 
   override def summaryRoot = summaryLibrary(sampleId.get, libId.get)
 
