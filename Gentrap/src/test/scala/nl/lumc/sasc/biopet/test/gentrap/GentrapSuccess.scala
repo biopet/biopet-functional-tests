@@ -9,6 +9,12 @@ import org.testng.annotations.Test
  * Created by pjvanthof on 05/11/15.
  */
 trait GentrapSuccess extends Gentrap with MultisampleMappingSuccess {
+
+  override def summarySchemaUrls = Seq(
+    "/schemas/flexiprep.json",
+    "/schemas/bammetrics.json",
+    "/schemas/gentrap.json")
+
   @Test
   def testVariantcalling: Unit = {
     val variantcallingDir = new File(outputDir, "variantcalling")
