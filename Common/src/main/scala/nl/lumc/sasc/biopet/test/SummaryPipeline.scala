@@ -244,6 +244,23 @@ trait JValueMatchers {
     }
   }
 
+  class JValueDoubleRangeMatcher(expectedValue: Double, errorMargin: Double) extends Matcher[JValue] {
+    val lowerBound = (expectedValue * (1 - errorMargin))
+    val higherBound = (expectedValue * (1 + errorMargin))
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JInt(i)     => lowerBound < i.doubleValue() && i.doubleValue() < higherBound
+        case JDouble(d)  => lowerBound < d && d < higherBound
+        case JDecimal(d) => lowerBound.<(scala.math.BigDecimal(expectedValue)) && scala.math.BigDecimal(expectedValue).<(higherBound)
+        case otherwise   => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  def inInterval(expectedValue: Int, errorMargin: Double) = new JValueDoubleRangeMatcher(expectedValue, errorMargin)
+  def inInterval(expectedValue: Double, errorMargin: Double) = new JValueDoubleRangeMatcher(expectedValue, errorMargin)
+
   def haveValue(expectedValue: List[_]) = new JValueArrayMatcher(expectedValue)
   def haveValue(expectedValue: Boolean) = new JValueBoolMatcher(expectedValue)
   def haveValue(expectedValue: Int) = new JValueIntMatcher(expectedValue)
