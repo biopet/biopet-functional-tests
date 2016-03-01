@@ -8,7 +8,6 @@ import nl.lumc.sasc.biopet.test.aligners.Aligner
 import nl.lumc.sasc.biopet.test.annotations.{GffAnnotation, RefflatAnnotation, GtfAnnotation}
 import nl.lumc.sasc.biopet.test.references.Reference
 
-
 trait TinyCap extends MultisampleMapping
   with GtfAnnotation
   with GffAnnotation
