@@ -48,12 +48,12 @@ trait FlexiprepSingleClipTrimSummaryValues extends FlexiprepSingle {
 
   addSummaryTest(statsSeqstatR1QcPath :+ "bases",
     Seq(
-      _ \ "num_total" shouldBe inInterval(82407, 0.1),
-      _ \ "nucleotides" \ "A" shouldBe inInterval(17626, 0.1),
-      _ \ "nucleotides" \ "T" shouldBe inInterval(20235, 0.1),
-      _ \ "nucleotides" \ "G" shouldBe inInterval(22040, 0.1),
-      _ \ "nucleotides" \ "C" shouldBe inInterval(22502, 0.1),
-      _ \ "nucleotides" \ "N" shouldBe inInterval(4, 0.1),
+      _ \ "num_total" should inInterval(82407, 0.1),
+      _ \ "nucleotides" \ "A" should inInterval(17626, 0.1),
+      _ \ "nucleotides" \ "T" should inInterval(20235, 0.1),
+      _ \ "nucleotides" \ "G" should inInterval(22040, 0.1),
+      _ \ "nucleotides" \ "C" should inInterval(22502, 0.1),
+      _ \ "nucleotides" \ "N" should inInterval(4, 0.1),
       _ \ "num_qual" shouldBe a[JArray],
       jv => (jv \ "num_qual").extract[List[Int]].apply(41) shouldBe inInterval(15850, 0.1),
       jv => (jv \ "num_qual").extract[List[Int]].apply(2) shouldBe inInterval(43, 0.1)))
