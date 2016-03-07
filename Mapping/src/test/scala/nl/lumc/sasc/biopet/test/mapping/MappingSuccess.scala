@@ -22,6 +22,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   override def summarySchemaUrls = {
     if (skipMetrics.contains(false)) Seq("/schemas/bammetrics.json") else Seq()
   } ++ {
+    // TODO: update condition when we test for BAM-only input
     if (skipFlexiprep.contains(false)) Seq("/schemas/flexiprep.json") else Seq()
   }
 
