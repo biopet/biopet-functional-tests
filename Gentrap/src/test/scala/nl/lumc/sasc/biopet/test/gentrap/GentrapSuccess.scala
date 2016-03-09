@@ -10,10 +10,7 @@ import org.testng.annotations.Test
  */
 trait GentrapSuccess extends Gentrap with MultisampleMappingSuccess {
 
-  override def summarySchemaUrls = Seq(
-    "/schemas/flexiprep.json",
-    "/schemas/bammetrics.json",
-    "/schemas/gentrap.json")
+  override def summarySchemaUrls = super[MultisampleMappingSuccess].summarySchemaUrls ++ Seq("/schemas/gentrap.json")
 
   @Test
   def testVariantcalling: Unit = {
