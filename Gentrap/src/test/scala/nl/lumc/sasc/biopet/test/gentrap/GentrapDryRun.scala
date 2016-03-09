@@ -16,6 +16,8 @@ class GentrapDryRunGsnapTest extends Gentrap
 
   override def run = false
 
+  def paired = true
+
   def strandProtocol = Option("non_specific")
 
   def annotationRefflat = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.refFlat"))

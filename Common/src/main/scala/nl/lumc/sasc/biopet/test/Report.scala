@@ -33,11 +33,15 @@ trait Report extends Pipeline {
     assert(!file.exists())
   }
 
+  def addConditionalReportFile(condition: Boolean, path: String*): Unit = {
+    if (condition) mustHaveReportFiles ::= new File(reportDir, path.mkString(File.separator))
+    else mustNotHaveReportFiles ::= new File(reportDir, path.mkString(File.separator))
+  }
+
   addMustHaveReportFile()
   addMustHaveReportFile("index.html")
   addMustHaveReportFile("ext")
   addMustHaveReportFile("ext", "js")
-  addMustHaveReportFile("ext", "js", "gears.js")
   addMustHaveReportFile("ext", "js", "sortable.min.js")
   addMustHaveReportFile("ext", "js", "jquery.min.js")
   addMustHaveReportFile("ext", "js", "d3.v3.5.5.min.js")
@@ -51,5 +55,7 @@ trait Report extends Pipeline {
   addMustHaveReportFile("ext", "fonts", "glyphicons-halflings-regular.ttf")
   addMustHaveReportFile("ext", "fonts", "glyphicons-halflings-regular.woff2")
   addMustHaveReportFile("ext", "fonts", "glyphicons-halflings-regular.woff")
+  addMustHaveReportFile("Versions")
+  addMustHaveReportFile("Versions", "index.html")
 
 }

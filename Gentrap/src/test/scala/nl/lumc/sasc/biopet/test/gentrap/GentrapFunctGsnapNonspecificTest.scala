@@ -1,9 +1,8 @@
 package nl.lumc.sasc.biopet.test.gentrap
 
 import java.io.File
-import scala.collection.mutable.ArrayBuffer
 
-import org.testng.annotations.{ DataProvider, Test }
+import org.testng.annotations.Test
 
 import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.aligners.Gsnap
@@ -11,11 +10,47 @@ import nl.lumc.sasc.biopet.test.samples.{ Rna1, Rna2 }
 import nl.lumc.sasc.biopet.test.references.HsapiensGRCh38
 import nl.lumc.sasc.biopet.test.utils.pearsonScore
 
-trait GentrapFunctional extends Gentrap {
+trait GentrapFunctional extends Gentrap with Rna1 with Rna2 {
 
-  override def functionalTest = true
+  require(samples.keys.toList.sorted == List("rna1", "rna2"),
+    "This trait can only be used together with sample rna1 and rna2")
 
-  // TODO: Map[String, Map[String, Double]] for the count table instead?
+  @Test
+  def testFragmentsPerGene(): Unit = {
+    if (this.isInstanceOf[FragmentsPerGene]) {
+      val fixtureFile = Biopet.fixtureFile("gentrap", "count_table", "func1", "all_samples.fragments_per_gene")
+      val pipelineFile = new File(outputDir, "expresion_measures/fragmentspergene/fragmentspergene.fragments_per_gene.tsv")
+      pearsonScoreTest(fixtureFile, pipelineFile)
+    }
+  }
+
+  @Test
+  def testBaseCounts(): Unit = {
+    if (this.isInstanceOf[BaseCounts]) {
+      val fixtureFile = Biopet.fixtureFile("gentrap", "count_table", "func1", "all_samples.bases_per_gene")
+      val pipelineFile = new File(outputDir, "expresion_measures/basecounts/basecounts.nonStrandedMetaExonCounts.tsv")
+      pearsonScoreTest(fixtureFile, pipelineFile)
+    }
+  }
+
+  @Test
+  def testCufflinksStrictGenes(): Unit = {
+    if (this.isInstanceOf[CufflinksStrict]) {
+      val fixtureFile = Biopet.fixtureFile("gentrap", "count_table", "func1", "all_samples.genes_fpkm_cufflinks_strict")
+      val pipelineFile = new File(outputDir, "expresion_measures/cufflinksstrict/cufflinksstrict.genes.fpkm.tsv")
+      pearsonScoreTest(fixtureFile, pipelineFile)
+    }
+  }
+
+  @Test
+  def testCufflinksStrictIsoform(): Unit = {
+    if (this.isInstanceOf[CufflinksStrict]) {
+      val fixtureFile = Biopet.fixtureFile("gentrap", "count_table", "func1", "all_samples.isoforms_fpkm_cufflinks_strict")
+      val pipelineFile = new File(outputDir, "expresion_measures/cufflinksstrict/cufflinksstrict.iso_form.fpkm.tsv")
+      pearsonScoreTest(fixtureFile, pipelineFile)
+    }
+  }
+
   def loadMergedCountTable(tableFile: File): Option[Map[String, List[Double]]] = {
     if (tableFile.exists) {
       val lineIter = scala.io.Source.fromFile(tableFile).getLines()
@@ -31,50 +66,20 @@ trait GentrapFunctional extends Gentrap {
     } else None
   }
 
-  protected def mergedTablePrefix = "all_samples"
-
-  @DataProvider(name = "mergedExpressionMeasurements")
-  def mergedExpressionMeasurementsProvider() = {
-    val b: ArrayBuffer[Array[Object]] = new ArrayBuffer
-
-    if (this.isInstanceOf[FragmentsPerGene])
-      b += Array(s"$mergedTablePrefix.fragments_per_gene")
-
-    if (this.isInstanceOf[BasesPerGene])
-      b += Array(s"$mergedTablePrefix.bases_per_gene")
-
-    if (this.isInstanceOf[BasesPerExon])
-      b += Array(s"$mergedTablePrefix.bases_per_exon")
-
-    if (this.isInstanceOf[CufflinksStrict]) {
-      b += Array(s"$mergedTablePrefix.genes_fpkm_cufflinks_strict")
-      b += Array(s"$mergedTablePrefix.isoforms_fpkm_cufflinks_strict")
-    }
-    // TODO: test also for guided and blind modes. They seem to use some random value that we can't just test for
-    //       their Pearson correlations.
-    b.toArray
-  }
-
-  @Test(dataProvider = "mergedExpressionMeasurements")
-  def mergedExpressionMeasurementsTest(fixtureFileName: String): Unit = {
-    val fixtureFile = Biopet.fixtureFile("gentrap", "count_table", "func1", fixtureFileName)
-    val pipelineFile = new File(outputDir, "expression_estimates" + File.separator + fixtureFile.getName)
-    val maybeTableA = loadMergedCountTable(fixtureFile)
-    val maybeTableB = loadMergedCountTable(pipelineFile)
-
-    (maybeTableA, maybeTableB) match {
-      case (None, Some(_)) => fail(s"Can not extract values from required fixture '$fixtureFile'.")
-      case (Some(_), None) => fail(s"Can not extract values from required output '$pipelineFile'.")
+  def pearsonScoreTest(tableA: File, tableB: File, minScore: Double = 0.999): Unit = {
+    (loadMergedCountTable(tableA), loadMergedCountTable(tableB)) match {
+      case (None, Some(_)) => fail(s"Can not extract values from required fixture '$tableA'.")
+      case (Some(_), None) => fail(s"Can not extract values from required output '$tableB'.")
       case (None, None) =>
-        fail(s"Can not extract values from required files '$fixtureFile' and '$pipelineFile'.")
-      case (Some(tableA), Some(tableB)) =>
+        fail(s"Can not extract values from required files '$tableA' and '$tableB'.")
+      case (Some(a), Some(b)) =>
 
-        tableB.size shouldBe tableA.size
-        tableB.keySet shouldEqual tableA.keySet
+        b.size shouldBe a.size
+        b.keySet shouldEqual a.keySet
 
-        val samples = tableB.keySet
+        val samples = b.keySet
         samples.foreach { sample =>
-          pearsonScore(tableA(sample), tableB(sample)).getOrElse(0.0) should be >= 0.999
+          pearsonScore(a(sample), b(sample)).getOrElse(0.0) should be >= minScore
         }
     }
   }
@@ -88,9 +93,13 @@ class GentrapFunctGsnapNonspecificTest extends GentrapFunctional
   with Rna1 with Rna2
   with HsapiensGRCh38 {
 
+  def shouldHaveKmerContent = true
+  def paired = true
+
+  override def callVariants = Some(true)
+
   def strandProtocol = Option("non_specific")
   def annotationRefflat = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.refFlat"))
   def annotationGtf = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.gtf"))
-  def annotationExonBed = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.bed"))
   def ribosomalRefflat = None
 }

@@ -24,8 +24,3 @@ trait RibosomalRefflatAnnotation extends Pipeline {
   def ribosomalRefflat: Option[File]
   override def args = super.args ++ cmdConfig("annotation_ribosomal", ribosomalRefflat)
 }
-
-trait ExonBedAnnotation extends Pipeline {
-  def annotationExonBed: Option[File]
-  override def args = super.args ++ cmdConfig("annotation_bed", annotationExonBed)
-}

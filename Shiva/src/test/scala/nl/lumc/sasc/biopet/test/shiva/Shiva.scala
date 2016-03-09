@@ -3,27 +3,22 @@ package nl.lumc.sasc.biopet.test.shiva
 import java.io.File
 
 import htsjdk.variant.vcf.VCFFileReader
-import nl.lumc.sasc.biopet.test.Pipeline
 import nl.lumc.sasc.biopet.test.Pipeline._
+import nl.lumc.sasc.biopet.test.MultisampleMapping
 import nl.lumc.sasc.biopet.test.aligners.Aligner
 import nl.lumc.sasc.biopet.test.references.Reference
 import nl.lumc.sasc.biopet.test.shiva.variantcallers.Variantcallers
-import nl.lumc.sasc.biopet.test.utils._
 import org.scalatest.Matchers
 import scala.collection.JavaConversions._
 
 /**
  * Created by pjvan_thof on 5/26/15.
  */
-trait Shiva extends Pipeline with Reference with Aligner with Variantcallers {
+trait Shiva extends MultisampleMapping with Reference with Aligner with Variantcallers {
 
   def pipelineName = "shiva"
 
   def summaryFile = new File(outputDir, s"Shiva.summary.json")
-
-  def bamToFastq: Option[Boolean] = None
-
-  def correctReadgroups: Option[Boolean] = None
 
   def libraryVariantcalling: Option[Boolean] = None
 
@@ -54,8 +49,6 @@ trait Shiva extends Pipeline with Reference with Aligner with Variantcallers {
   def executeVtDecompose: Option[Boolean] = None
 
   override def args = super.args ++
-    cmdConfig("bam_to_fastq", bamToFastq) ++
-    cmdConfig("correct_readgroups", correctReadgroups) ++
     cmdConfig("library_variantcalling", libraryVariantcalling) ++
     cmdConfig("single_sample_variantcalling", singleSampleVariantcalling) ++
     cmdConfig("multisample_variantcalling", multisampleVariantcalling) ++

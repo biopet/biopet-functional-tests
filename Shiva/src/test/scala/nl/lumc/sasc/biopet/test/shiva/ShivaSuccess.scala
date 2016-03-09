@@ -3,7 +3,7 @@ package nl.lumc.sasc.biopet.test.shiva
 import java.io.File
 
 import htsjdk.samtools.SamReaderFactory
-import nl.lumc.sasc.biopet.test.MultisampleSuccess
+import nl.lumc.sasc.biopet.test.MultisampleMappingSuccess
 import nl.lumc.sasc.biopet.test.SummaryPipeline.Executable
 import org.json4s._
 import org.testng.annotations.{ DataProvider, Test }
@@ -13,7 +13,7 @@ import scala.collection.JavaConversions._
 /**
  * Created by pjvan_thof on 9/17/15.
  */
-trait ShivaSuccess extends Shiva with MultisampleSuccess {
+trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   if (dbsnpVcfFile.isEmpty && !useBaseRecalibration.contains(false))
     logMustHave("""No Known site found, skipping base recalibration""".r)
@@ -59,6 +59,15 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
 
   def minPrecision = 0.95
   def minRecall = 0.95
+
+  override def samplePreprocessBam(sampleId: String) =
+    new File(super.samplePreprocessBam(sampleId).getAbsolutePath.stripSuffix(".bam") +
+      (if (useIndelRealigner.getOrElse(true) && samples(sampleId).size > 1) ".realign.bam" else ".bam"))
+
+  override def libraryPreprecoessBam(sampleId: String, libId: String) =
+    new File(super.libraryPreprecoessBam(sampleId, libId).getAbsolutePath.stripSuffix(".bam") +
+      (if (useIndelRealigner.getOrElse(true)) ".realign" else "") +
+      (if (useBaseRecalibration.getOrElse(true) && dbsnpVcfFile.isDefined) ".baserecal.bam" else ".bam"))
 
   def addConcordanceChecks(path: Seq[String], condition: Boolean): Unit = {
     addSummaryTest(path,
@@ -234,18 +243,13 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
       testVariantcallerInfoTag(new File(libraryDir(sample, lib), "variantcalling" + File.separator + s"$sample-$lib.final.vcf.gz"))
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
-  def testMappingBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "output_bam" \ "path"
-    summaryPath shouldBe a[JString]
-    val file = new File(summaryPath.extract[String])
-    file.getParentFile shouldBe libraryDir(sample, lib)
-    file.getName shouldBe s"$sample-$lib.final.bam"
+  def testShivaLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     val replacejob = new File(libraryDir(sample, lib), s".$sample-$lib.final.bam.addorreplacereadgroups.out")
-    if (replacejob.exists()) assert(!file.exists())
+    if (replacejob.exists()) assert(!libraryBam(sample, lib).exists())
     else {
-      assert(file.exists())
+      assert(libraryBam(sample, lib).exists())
 
-      val reader = SamReaderFactory.makeDefault.open(file)
+      val reader = SamReaderFactory.makeDefault.open(libraryBam(sample, lib))
       val header = reader.getFileHeader
       assert(!header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
       assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
@@ -254,14 +258,10 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
   }
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
-  def testLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "output_bam_preprocess" \ "path"
-    summaryPath shouldBe a[JString]
-    val file = new File(summaryPath.extract[String])
-    file.getParentFile shouldBe libraryDir(sample, lib)
+  def testShivaLibraryPreprocessBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     if (samples(sample).size == 1) {
-      assert(file.exists())
-      val reader = SamReaderFactory.makeDefault.open(file)
+      assert(libraryPreprecoessBam(sample, lib).exists())
+      val reader = SamReaderFactory.makeDefault.open(libraryPreprecoessBam(sample, lib))
       val header = reader.getFileHeader
       if (!useIndelRealigner.contains(false))
         assert(header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
@@ -271,23 +271,14 @@ trait ShivaSuccess extends Shiva with MultisampleSuccess {
         assert(header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
       else assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
       reader.close()
-    } else {
-      val mappingBam = summary \ "samples" \ sample \ "libraries" \ lib \ "shiva" \ "files" \ "pipeline" \ "output_bam" \ "path"
-      if (mappingBam != summaryPath) assert(!file.exists())
     }
   }
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
-  def testSampleBam(sample: String): Unit = withClue(s"Sample: $sample") {
-    val summaryPath = summary \ "samples" \ sample \ "shiva" \ "files" \ "pipeline" \ "output_bam_preprocess" \ "path"
-    summaryPath shouldBe a[JString]
-    val file = new File(summaryPath.extract[String])
-    file.getParentFile shouldBe sampleDir(sample)
-    assert(file.getName.startsWith(s"$sample."))
-    assert(file.exists())
-    if (samples(sample).size == 1) assert(java.nio.file.Files.isSymbolicLink(file.toPath))
+  def testShivaSamplePrepreocessBam(sample: String): Unit = withClue(s"Sample: $sample") {
+    if (samples(sample).size == 1) assert(java.nio.file.Files.isSymbolicLink(samplePreprocessBam(sample).toPath))
 
-    val reader = SamReaderFactory.makeDefault.open(file)
+    val reader = SamReaderFactory.makeDefault.open(samplePreprocessBam(sample))
     val header = reader.getFileHeader
 
     if (!useIndelRealigner.contains(false))

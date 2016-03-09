@@ -62,3 +62,16 @@ class FlexiprepDryRunNoOutputDirTest extends FlexiprepRun with PipelineFail {
   logMustNotHave("""FunctionEdge - Starting""".r)
   logMustHave("""Value does not exist but is required, key: output_dir""".r)
 }
+
+class FlexiprepOutOffSyncTest extends FlexiprepRun with PipelineFail {
+  override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.not_sync.fq"))
+  override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.not_sync.fq"))
+  logMustHave("""FunctionEdge - Starting""".r)
+  logMustHave("""CheckValidateFastq - Corrupt fastq file found, aborting pipeline""".r)
+}
+
+class FlexiprepNoEncodingTest extends FlexiprepRun with PipelineFail {
+  override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.no_encoding.fq"))
+  logMustHave("""FunctionEdge - Starting""".r)
+  logMustHave("""CheckValidateFastq - Corrupt fastq file found, aborting pipeline""".r)
+}
