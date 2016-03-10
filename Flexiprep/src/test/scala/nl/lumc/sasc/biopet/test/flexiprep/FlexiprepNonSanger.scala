@@ -16,8 +16,6 @@ class FlexiprepSingleNonSangerTest extends FlexiprepSuccessful {
   /** MD5 checksum of the input file. */
   override def md5SumInputR1 = "332762ce0ea39a4bcb03de719d2229f2"
 
-  override def md5SumOutputR1 = Some("d082ebf2ded2fdae481b951f4f6e32ab")
-
 }
 
 class FlexiprepPairedNonSangerTest extends FlexiprepSuccessful {
@@ -31,6 +29,4 @@ class FlexiprepPairedNonSangerTest extends FlexiprepSuccessful {
   override def md5SumInputR1 = "332762ce0ea39a4bcb03de719d2229f2"
   override def md5SumInputR2 = Some("6519425e6191e136a4e29f4642ac0b84")
 
-  override def md5SumOutputR1 = Some("1d7f59553ea9fcd073acb5cbfc22156f")
-  override def md5SumOutputR2 = Some("28ea8ceef563c63b122be8ef9a8d10d2")
 }

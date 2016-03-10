@@ -1,12 +1,11 @@
 package nl.lumc.sasc.biopet.test.flexiprep
 
-import org.json4s._
+import org.json4s.JsonAST.JArray
 
 class FlexiprepSingleClipTest extends FlexiprepSingle with FlexiprepSingleClipSummaryValues {
 
   override def skipClip = Some(false)
   override def skipTrim = Some(true)
-  override def md5SumOutputR1 = Some("037aa58f60372c11037bef9ac157777e")
 
 }
 
@@ -15,13 +14,13 @@ trait FlexiprepSingleClipSummaryValues extends FlexiprepSingle {
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_quality",
     Seq(
       _.children.size should be <= 100,
-      _ \ "1" \ "mean" should haveValue(32.23529411764706),
+      _ \ "1" \ "mean" should inInterval(32.23529411764706, 0.01),
       _ \ "1" \ "median" should haveValue(33),
       _ \ "1" \ "lower_quartile" should haveValue(31),
       _ \ "1" \ "upper_quartile" should haveValue(34),
       _ \ "1" \ "percentile_10th" should haveValue(30),
       _ \ "1" \ "percentile_90th" should haveValue(34),
-      _ \ "100" \ "mean" should haveValue(21.59223300970874),
+      _ \ "100" \ "mean" should inInterval(21.538028169014083, 0.01),
       _ \ "100" \ "median" should haveValue(29),
       _ \ "100" \ "lower_quartile" should haveValue(2),
       _ \ "100" \ "upper_quartile" should haveValue(34),
@@ -31,31 +30,33 @@ trait FlexiprepSingleClipSummaryValues extends FlexiprepSingle {
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_content",
     Seq(
       _.children.size should be <= 100,
-      _ \ "1" \ "A" should haveValue(17.497456765005087),
-      _ \ "1" \ "T" should haveValue(11.90233977619532),
-      _ \ "1" \ "G" should haveValue(51.88199389623601),
-      _ \ "1" \ "C" should haveValue(18.71820956256358),
-      _ \ "100" \ "A" should haveValue(24.549237170596395),
-      _ \ "100" \ "T" should haveValue(20.804438280166433),
-      _ \ "100" \ "G" should haveValue(25.381414701803052),
-      _ \ "100" \ "C" should haveValue(29.26490984743412)))
+      _ \ "1" \ "A" should inInterval(17.497456765005087, 0.01),
+      _ \ "1" \ "T" should inInterval(11.90233977619532, 0.01),
+      _ \ "1" \ "G" should inInterval(51.88199389623601, 0.01),
+      _ \ "1" \ "C" should inInterval(18.71820956256358, 0.01),
+      _ \ "100" \ "A" should inInterval(23.943661971830984, 0.01),
+      _ \ "100" \ "T" should inInterval(21.12676056338028, 0.01),
+      _ \ "100" \ "G" should inInterval(25.211267605633804, 0.01),
+      _ \ "100" \ "C" should inInterval(29.718309859154928, 0.01)))
 
   addSummaryTest(statsFastqcR1QcPath :+ "adapters",
     Seq(
       _ \ "Illumina PCR Primer Index 8" should haveValue("CAAGCAGAAGACGGCATACGAGATTCAAGTGTGACTGGAGTTC"),
-      _ \ "Illumina Single End Adapter 1" should haveValue("GATCGGAAGAGCTCGTATGCCGTCTTCTGCTTG")))
+      _ \ "Illumina Single End Adapter 1" should haveValue("GATCGGAAGAGCTCGTATGCCGTCTTCTGCTTG"),
+      _ \ "Illumina PCR Primer Index 8_RC" should haveValue("GAACTCCAGTCACACTTGAATCTCGTATGCCGTCTTCTGCTTG"),
+      _ \ "Illumina Single End Adapter 1_RC" should haveValue("CAAGCAGAAGACGGCATACGAGCTCTTCCGATC")))
 
   addSummaryTest(statsSeqstatR1QcPath :+ "bases",
     Seq(
-      _ \ "num_total" should haveValue(90331),
-      _ \ "nucleotides" \ "A" should haveValue(18710),
-      _ \ "nucleotides" \ "T" should haveValue(21177),
-      _ \ "nucleotides" \ "G" should haveValue(23565),
-      _ \ "nucleotides" \ "C" should haveValue(23970),
-      _ \ "nucleotides" \ "N" should haveValue(2909),
+      _ \ "num_total" should inInterval(90291, 0.01),
+      _ \ "nucleotides" \ "A" should inInterval(18687, 0.01),
+      _ \ "nucleotides" \ "T" should inInterval(21177, 0.01),
+      _ \ "nucleotides" \ "G" should inInterval(23560, 0.01),
+      _ \ "nucleotides" \ "C" should inInterval(23958, 0.01),
+      _ \ "nucleotides" \ "N" should inInterval(2909, 0.01),
       _ \ "num_qual" shouldBe a[JArray],
       jv => (jv \ "num_qual").extract[List[Int]].apply(41) shouldBe 15850,
-      jv => (jv \ "num_qual").extract[List[Int]].apply(2) shouldBe 6007))
+      jv => (jv \ "num_qual").extract[List[Int]].apply(2) shouldBe 6000))
 
   addSummaryTest(statsSeqstatR1QcPath :+ "reads",
     Seq(

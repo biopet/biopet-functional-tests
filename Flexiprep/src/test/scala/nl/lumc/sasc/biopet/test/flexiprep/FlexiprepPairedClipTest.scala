@@ -5,8 +5,6 @@ import org.json4s.JArray
 class FlexiprepPairedClipTest extends FlexiprepPaired with FlexiprepSingleClipSummaryValues {
   override def skipClip = Some(false)
   override def skipTrim = Some(true)
-  override def md5SumOutputR1 = Some("037aa58f60372c11037bef9ac157777e")
-  override def md5SumOutputR2 = Some("706f9a97239d1e2110d7b48605559d22")
 
   addSummaryTest(statsFastqcR2QcPath :+ "per_base_sequence_quality",
     Seq(
@@ -39,7 +37,9 @@ class FlexiprepPairedClipTest extends FlexiprepPaired with FlexiprepSingleClipSu
   addSummaryTest(statsFastqcR2QcPath :+ "adapters",
     Seq(
       _ \ "Illumina RNA PCR Primer" should haveValue("AATGATACGGCGACCACCGAGATCTACACGTTCAGAGTTCTACAGTCCGA"),
-      _ \ "Illumina Single End PCR Primer 1" should haveValue("AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT")))
+      _ \ "Illumina Single End PCR Primer 1" should haveValue("AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT"),
+      _ \ "Illumina RNA PCR Primer_RC" should haveValue("TCGGACTGTAGAACTCTGAACGTGTAGATCTCGGTGGTCGCCGTATCATT"),
+      _ \ "Illumina Single End PCR Primer 1_RC" should haveValue("AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT")))
 
   addSummaryTest(statsSeqstatR2QcPath :+ "bases",
     Seq(

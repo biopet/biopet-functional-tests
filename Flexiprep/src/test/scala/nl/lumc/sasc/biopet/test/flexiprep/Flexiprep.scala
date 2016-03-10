@@ -49,12 +49,6 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   def md5SumInputR1: String
   def md5SumInputR2: Option[String] = None
 
-  /** This is the uncompressed md5sum of the output R1 */
-  def md5SumOutputR1: Option[String] = None
-
-  /** This is the uncompressed md5sum of the output R2 */
-  def md5SumOutputR2: Option[String] = None
-
   addExecutable(Executable("fastqc", Some(""".+""".r)))
   addExecutable(Executable("seqstat", Some(""".+""".r)))
   addExecutable(Executable("seqtkseq", Some(""".+""".r)))
@@ -92,7 +86,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
     if (!keepQcFastqFiles.contains(false)) {
       assert(outputFile.exists(), "Output file R1 should exist while keepQcFastqFiles=true")
-      md5SumOutputR1.foreach(calcMd5Unzipped(outputFile) shouldBe _)
+
       calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
     } else assert(!outputFile.exists(), "Output file R1 should not exist while keepQcFastqFiles=false")
   }
@@ -107,7 +101,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
       if (!keepQcFastqFiles.contains(false)) {
         assert(outputFile.exists(), "Output file R2 should exist while keepQcFastqFiles=true")
-        md5SumOutputR2.foreach(calcMd5Unzipped(outputFile) shouldBe _)
+
         calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
       } else assert(!outputFile.exists(), "Output file R2 should not exist while keepQcFastqFiles=false")
     } else {
@@ -296,7 +290,9 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
   addSummaryTest(statsFastqcR1Path :+ "adapters",
     Seq(
       _ \ "TruSeq Adapter, Index 1" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG"),
-      _ \ "TruSeq Adapter, Index 18" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG")))
+      _ \ "TruSeq Adapter, Index 18" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG"),
+      _ \ "TruSeq Adapter, Index 1_RC" should haveValue("CAAGCAGAAGACGGCATACGAGATCGTGATGTGACTGGAGTTCAGACGTGTGCTCTTCCGATC"),
+      _ \ "TruSeq Adapter, Index 18_RC" should haveValue("CAAGCAGAAGACGGCATACGAGATGCGGACGTGACTGGAGTTCAGACGTGTGCTCTTCCGATC")))
 
   addSummaryTest(statsSeqstatR1Path :+ "bases",
     Seq(
