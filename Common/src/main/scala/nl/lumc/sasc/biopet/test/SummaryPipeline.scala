@@ -1,16 +1,15 @@
 package nl.lumc.sasc.biopet.test
 
-import com.github.fge.jsonschema.main._
-
 import java.io.File
 
+import com.github.fge.jsonschema.main._
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatest.matchers._
 import org.testng.annotations.{ DataProvider, Test }
 
-import scala.collection.mutable.{ Map => MutMap }
 import scala.collection.JavaConverters._
+import scala.collection.mutable.{ Map => MutMap }
 import scala.util.matching.Regex
 
 /**
@@ -243,6 +242,39 @@ trait JValueMatchers {
       makeMatchResult(testFunc, left, expectedValue)
     }
   }
+
+  class JValueDoubleRangeMatcher(expectedValue: Double, errorMargin: Double) extends Matcher[JValue] {
+    val lowerBound = (expectedValue * (1 - errorMargin))
+    val higherBound = (expectedValue * (1 + errorMargin))
+    val outer = this
+    def apply(left: JValue) = {
+      def testFunc: Boolean = left match {
+        case JInt(i) => {
+          (lowerBound <= i.doubleValue()) && (i.doubleValue() <= higherBound)
+        }
+        case JDouble(d) => {
+          (lowerBound <= d) && (d <= higherBound)
+        }
+        case JDecimal(d) => {
+          (lowerBound.<=(scala.math.BigDecimal(expectedValue))) && (scala.math.BigDecimal(expectedValue).<=(higherBound))
+        }
+        case otherwise => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+    def apply(left: Int) = {
+      def testFunc: Boolean = left match {
+        case i: Int => {
+          (lowerBound <= i.doubleValue()) && (i.doubleValue() <= higherBound)
+        }
+        case otherwise => false
+      }
+      makeMatchResult(testFunc, left, expectedValue)
+    }
+  }
+
+  def inInterval(expectedValue: Int, errorMargin: Double) = new JValueDoubleRangeMatcher(expectedValue, errorMargin)
+  def inInterval(expectedValue: Double, errorMargin: Double) = new JValueDoubleRangeMatcher(expectedValue, errorMargin)
 
   def haveValue(expectedValue: List[_]) = new JValueArrayMatcher(expectedValue)
   def haveValue(expectedValue: Boolean) = new JValueBoolMatcher(expectedValue)

@@ -5,7 +5,6 @@ import org.json4s.JArray
 class FlexiprepSingleTrimTest extends FlexiprepSingle {
   override def skipClip = Some(true)
   override def skipTrim = Some(false)
-  override def md5SumOutputR1 = Some("5001a539ca3cc3312835466bdb37b3d8")
 
   addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_quality",
     Seq(
@@ -38,7 +37,9 @@ class FlexiprepSingleTrimTest extends FlexiprepSingle {
   addSummaryTest(statsFastqcR1QcPath :+ "adapters",
     Seq(
       _ \ "TruSeq Adapter, Index 18" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG"),
-      _ \ "TruSeq Adapter, Index 1" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG")))
+      _ \ "TruSeq Adapter, Index 1" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG"),
+      _ \ "TruSeq Adapter, Index 18_RC" should haveValue("CAAGCAGAAGACGGCATACGAGATGCGGACGTGACTGGAGTTCAGACGTGTGCTCTTCCGATC"),
+      _ \ "TruSeq Adapter, Index 1_RC" should haveValue("CAAGCAGAAGACGGCATACGAGATCGTGATGTGACTGGAGTTCAGACGTGTGCTCTTCCGATC")))
 
   addSummaryTest(statsSeqstatR1QcPath :+ "bases",
     Seq(

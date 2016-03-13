@@ -19,7 +19,7 @@ trait GentrapFunctional extends Gentrap with Rna1 with Rna2 {
   def testFragmentsPerGene(): Unit = {
     if (this.isInstanceOf[FragmentsPerGene]) {
       val fixtureFile = Biopet.fixtureFile("gentrap", "count_table", "func1", "all_samples.fragments_per_gene")
-      val pipelineFile = new File(outputDir, "expresion_measures/fragmentspergene/fragmentspergene.fragments_per_gene.tsv")
+      val pipelineFile = new File(outputDir, "expression_measures/fragmentspergene/fragmentspergene.fragments_per_gene.tsv")
       pearsonScoreTest(fixtureFile, pipelineFile)
     }
   }
@@ -28,7 +28,7 @@ trait GentrapFunctional extends Gentrap with Rna1 with Rna2 {
   def testBaseCounts(): Unit = {
     if (this.isInstanceOf[BaseCounts]) {
       val fixtureFile = Biopet.fixtureFile("gentrap", "count_table", "func1", "all_samples.bases_per_gene")
-      val pipelineFile = new File(outputDir, "expresion_measures/basecounts/basecounts.nonStrandedMetaExonCounts.tsv")
+      val pipelineFile = new File(outputDir, "expression_measures/basecounts/basecounts.nonStrandedMetaExonCounts.tsv")
       pearsonScoreTest(fixtureFile, pipelineFile)
     }
   }
@@ -37,7 +37,7 @@ trait GentrapFunctional extends Gentrap with Rna1 with Rna2 {
   def testCufflinksStrictGenes(): Unit = {
     if (this.isInstanceOf[CufflinksStrict]) {
       val fixtureFile = Biopet.fixtureFile("gentrap", "count_table", "func1", "all_samples.genes_fpkm_cufflinks_strict")
-      val pipelineFile = new File(outputDir, "expresion_measures/cufflinksstrict/cufflinksstrict.genes.fpkm.tsv")
+      val pipelineFile = new File(outputDir, "expression_measures/cufflinksstrict/cufflinksstrict.genes.fpkm.tsv")
       pearsonScoreTest(fixtureFile, pipelineFile)
     }
   }
@@ -46,7 +46,7 @@ trait GentrapFunctional extends Gentrap with Rna1 with Rna2 {
   def testCufflinksStrictIsoform(): Unit = {
     if (this.isInstanceOf[CufflinksStrict]) {
       val fixtureFile = Biopet.fixtureFile("gentrap", "count_table", "func1", "all_samples.isoforms_fpkm_cufflinks_strict")
-      val pipelineFile = new File(outputDir, "expresion_measures/cufflinksstrict/cufflinksstrict.iso_form.fpkm.tsv")
+      val pipelineFile = new File(outputDir, "expression_measures/cufflinksstrict/cufflinksstrict.iso_form.fpkm.tsv")
       pearsonScoreTest(fixtureFile, pipelineFile)
     }
   }
