@@ -15,6 +15,10 @@ import scala.collection.JavaConversions._
  */
 trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
+  override def summarySchemaUrls = Seq("/schemas/bammetrics.json") ++ {
+    if (flexiprepShouldRun) Seq("/schemas/flexiprep.json") else Seq()
+  }
+
   if (dbsnpVcfFile.isEmpty && !useBaseRecalibration.contains(false))
     logMustHave("""No Known site found, skipping base recalibration""".r)
   else logMustNotHave("""No Known site found, skipping base recalibration""".r)

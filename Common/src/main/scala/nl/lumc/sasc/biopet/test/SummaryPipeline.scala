@@ -1,5 +1,7 @@
 package nl.lumc.sasc.biopet.test
 
+import com.github.fge.jsonschema.main._
+
 import java.io.File
 
 import org.json4s._
@@ -8,6 +10,7 @@ import org.scalatest.matchers._
 import org.testng.annotations.{ DataProvider, Test }
 
 import scala.collection.mutable.{ Map => MutMap }
+import scala.collection.JavaConverters._
 import scala.util.matching.Regex
 
 /**
@@ -18,6 +21,14 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   implicit val formats = DefaultFormats
 
   def summaryFile: File
+
+  /** URL to summary schema resource file, if defined. */
+  def summarySchemaUrls: Seq[String] = Seq.empty[String]
+
+  private lazy val summarySchemas = summarySchemaUrls.map { url => parse(getClass.getResourceAsStream(url)) }
+
+  final protected lazy val schemas: Seq[JsonSchema] = summarySchemas
+    .map { jv => SummaryPipeline.schemaFactory.getJsonSchema(asJsonNode(jv)) }
 
   private var _summary: JValue = _
 
@@ -33,6 +44,13 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
 
   @Test(groups = Array("parseSummary"))
   def parseSummary(): Unit = _summary = parse(summaryFile)
+
+  @Test(groups = Array("parseSummary"))
+  def testSummarySchema(): Unit =
+    if (summarySchemaUrls.nonEmpty) {
+      schemas should not be empty
+      schemas.foreach { s => s.validate(asJsonNode(summary)).iterator().asScala.toSeq shouldBe empty }
+    }
 
   @DataProvider(name = "summaryTests")
   def summaryTestsProvider() = {
@@ -130,7 +148,11 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
 }
 
 object SummaryPipeline {
+
   case class Executable(name: String, version: Option[Regex] = None)
+
+  /** Factory for JSON schemas */
+  protected val schemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
 }
 
 /** Trait for easier JValue matching. */

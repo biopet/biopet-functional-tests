@@ -19,6 +19,13 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   def summaryFile = new File(outputDir, s"${sampleId.get}-${libId.get}.summary.json")
 
+  override def summarySchemaUrls = {
+    if (skipMetrics.contains(false)) Seq("/schemas/bammetrics.json") else Seq()
+  } ++ {
+    // TODO: update condition when we test for BAM-only input
+    if (skipFlexiprep.contains(false)) Seq("/schemas/flexiprep.json") else Seq()
+  }
+
   override def summaryRoot = summaryLibrary(sampleId.get, libId.get)
 
   def finalBamFile: File = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
