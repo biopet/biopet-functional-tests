@@ -37,7 +37,6 @@ trait FragmentsPerSmallRna extends ExpressionMeasures {
   }
 }
 
-
 trait BaseCounts extends ExpressionMeasures {
   override def expressionMeasures = "base_counts" :: super.expressionMeasures
 }
