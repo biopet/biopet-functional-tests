@@ -5,7 +5,7 @@ import java.io.File
 import nl.lumc.sasc.biopet.test.MultisampleMapping
 import nl.lumc.sasc.biopet.test.Pipeline._
 import nl.lumc.sasc.biopet.test.aligners.Aligner
-import nl.lumc.sasc.biopet.test.annotations.{GffAnnotation, RefflatAnnotation, GtfAnnotation}
+import nl.lumc.sasc.biopet.test.annotations.{ GffAnnotation, RefflatAnnotation, GtfAnnotation }
 import nl.lumc.sasc.biopet.test.references.Reference
 
 trait TinyCap extends MultisampleMapping
@@ -29,4 +29,4 @@ trait TinyCap extends MultisampleMapping
   override def args = super.args ++ cmdConfig("species", referenceSpecies) ++
     cmdConfig("reference_fasta", referenceFasta) ++
     cmdConfig("reference_name", referenceName)
-  }
+}
