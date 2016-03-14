@@ -5,6 +5,8 @@ import java.io.File
 import nl.lumc.sasc.biopet.test.{ Biopet, PipelineFail }
 import org.testng.annotations.Test
 
+import scala.io.Source
+
 class FlexiprepNoR1ArgTest extends FlexiprepRun with PipelineFail {
   logMustHave("""Argument with name '--input_r1' \(-R1\) is missing""".r)
 }
@@ -70,8 +72,14 @@ class FlexiprepOutOffSyncTest extends FlexiprepRun with PipelineFail {
   logMustHave("""CheckValidateFastq - Corrupt fastq file found, aborting pipeline""".r)
 }
 
-class FlexiprepNoEncodingTest extends FlexiprepRun with PipelineFail {
+class FlexiprepNoEncodingTest extends FlexiprepSuccessful {
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.no_encoding.fq"))
-  logMustHave("""FunctionEdge - Starting""".r)
-  logMustHave("""CheckValidateFastq - Corrupt fastq file found, aborting pipeline""".r)
+  def md5SumInputR1: String = "1d160913e2d0402fc9ef352dd1d4d309"
+
+  @Test
+  def testValidateWarning: Unit = {
+    val validateLog = new File(outputDir, ".validate_fastq.log.out")
+    validateLog should exist
+    Source.fromFile(validateLog).getLines().exists(_.contains("- No possible quality encodings found")) shouldBe true
+  }
 }
