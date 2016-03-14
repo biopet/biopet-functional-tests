@@ -246,13 +246,12 @@
           "properties": {
 
             "files": {
-              "description": "File groups tracked by Mapping",
-              "type": "object",
-              "required": [ "pipeline" ],
-
-              "properties": {
-                "oneOf": [
-                  {
+              "oneOf": [
+                {
+                  "description": "File groups tracked by Mapping",
+                  "type": "object",
+                  "required": [ "pipeline" ],
+                  "properties": {
                     "pipeline": {
                       "description": "Initial input files and final output files in Mapping",
                       "type": "object",
@@ -260,17 +259,23 @@
                       "additionalProperties": { "$ref": "#/definitions/file" }
                     }
                   },
-                  {
+                  "additionalProperties": { "$ref": "#/definitions/fileGroup" }
+                },
+                {
+                  "description": "File groups tracked by Mapping",
+                  "type": "object",
+                  "required": [ "pipeline" ],
+                  "properties": {
                     "pipeline": {
                       "description": "Initial input files and final output files in Mapping",
                       "type": "object",
                       "required": [ "input_R1", "output_bam" ],
                       "additionalProperties": { "$ref": "#/definitions/file" }
                     }
-                  }
-                ]
-              },
-              "additionalProperties": { "$ref": "#/definitions/fileGroup" }
+                  },
+                  "additionalProperties": { "$ref": "#/definitions/fileGroup" }
+                }
+              ]
             },
 
             "executables": {
