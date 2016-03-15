@@ -77,7 +77,7 @@ class FlexiprepNoEncodingTest extends FlexiprepSuccessful {
   def md5SumInputR1: String = "1d160913e2d0402fc9ef352dd1d4d309"
 
   @Test
-  def testValidateWarning: Unit = {
+  def testValidateWarning(): Unit = {
     val validateLog = new File(outputDir, ".validate_fastq.log.out")
     validateLog should exist
     Source.fromFile(validateLog).getLines().exists(_.contains("- No possible quality encodings found")) shouldBe true
