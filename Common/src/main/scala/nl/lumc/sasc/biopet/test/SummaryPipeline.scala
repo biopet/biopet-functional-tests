@@ -244,31 +244,21 @@ trait JValueMatchers {
   }
 
   class JValueDoubleRangeMatcher(expectedValue: Double, errorMargin: Double) extends Matcher[JValue] {
-    val lowerBound = (expectedValue * (1 - errorMargin))
-    val higherBound = (expectedValue * (1 + errorMargin))
+    val lowerBound = expectedValue * (1 - errorMargin)
+    val higherBound = expectedValue * (1 + errorMargin)
     val outer = this
     def apply(left: JValue) = {
       def testFunc: Boolean = left match {
-        case JInt(i) => {
-          (lowerBound <= i.doubleValue()) && (i.doubleValue() <= higherBound)
-        }
-        case JDouble(d) => {
-          (lowerBound <= d) && (d <= higherBound)
-        }
-        case JDecimal(d) => {
-          (lowerBound.<=(scala.math.BigDecimal(expectedValue))) && (scala.math.BigDecimal(expectedValue).<=(higherBound))
-        }
+        case JInt(i)    => (lowerBound <= i.doubleValue()) && (i.doubleValue() <= higherBound)
+        case JDouble(d) => (lowerBound <= d) && (d <= higherBound)
+        case JDecimal(d) => lowerBound.<=(scala.math.BigDecimal(expectedValue)) &&
+          scala.math.BigDecimal(expectedValue).<=(higherBound)
         case otherwise => false
       }
       makeMatchResult(testFunc, left, expectedValue)
     }
     def apply(left: Int) = {
-      def testFunc: Boolean = left match {
-        case i: Int => {
-          (lowerBound <= i.doubleValue()) && (i.doubleValue() <= higherBound)
-        }
-        case otherwise => false
-      }
+      def testFunc: Boolean = (lowerBound <= left.doubleValue()) && (left.doubleValue() <= higherBound)
       makeMatchResult(testFunc, left, expectedValue)
     }
   }
