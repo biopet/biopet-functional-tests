@@ -2,7 +2,7 @@ package nl.lumc.sasc.biopet.test.gentrap
 
 import java.io.File
 
-import org.testng.annotations.Test
+import org.testng.annotations.{ DataProvider, Test }
 
 import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.aligners.Gsnap
@@ -24,11 +24,49 @@ trait GentrapFunctional extends Gentrap with Rna1 with Rna2 {
     }
   }
 
-  @Test
-  def testBaseCounts(): Unit = {
+  @DataProvider(name = "basecounts")
+  def baseCountsProvider = {
+    Array("basecounts.exonAntiSenseCounts.tsv",
+      "basecounts.exonCounts.tsv",
+      "basecounts.exonSenseCounts.tsv",
+      "basecounts.geneExonicAntiSenseCounts.tsv",
+      "basecounts.geneExonicCounts.tsv",
+      "basecounts.geneExonicSenseCounts.tsv",
+      "basecounts.geneIntronicAntiSenseCounts.tsv",
+      "basecounts.geneIntronicCounts.tsv",
+      "basecounts.geneIntronicSenseCounts.tsv",
+      "basecounts.geneTotalAntiSenseCounts.tsv",
+      "basecounts.geneTotalCounts.tsv",
+      "basecounts.geneTotalSenseCounts.tsv",
+      "basecounts.intronAntiSenseCounts.tsv",
+      "basecounts.intronCounts.tsv",
+      "basecounts.intronSenseCounts.tsv",
+      "basecounts.mergeExonAntiSenseCounts.tsv",
+      "basecounts.mergeExonCounts.tsv",
+      "basecounts.mergeExonSenseCounts.tsv",
+      "basecounts.mergeIntronAntiSenseCounts.tsv",
+      "basecounts.mergeIntronCounts.tsv",
+      "basecounts.mergeIntronSenseCounts.tsv",
+      "basecounts.nonStrandedMetaExonCounts.tsv",
+      "basecounts.strandedAntiSenseMetaExonCounts.tsv",
+      "basecounts.strandedMetaExonCounts.tsv",
+      "basecounts.strandedSenseMetaExonCounts.tsv",
+      "basecounts.transcriptExonicAntiSenseCounts.tsv",
+      "basecounts.transcriptExonicCounts.tsv",
+      "basecounts.transcriptExonicSenseCounts.tsv",
+      "basecounts.transcriptIntronicAntiSenseCounts.tsv",
+      "basecounts.transcriptIntronicCounts.tsv",
+      "basecounts.transcriptIntronicSenseCounts.tsv",
+      "basecounts.transcriptTotalAntiSenseCounts.tsv",
+      "basecounts.transcriptTotalCounts.tsv",
+      "basecounts.transcriptTotalSenseCounts.tsv"
+    ).map(x => Array(Biopet.fixtureFile("gentrap", "count_table", "func1", "basecounts", x),
+        new File(outputDir, "expression_measures/basecounts/" + x)))
+  }
+
+  @Test(dataProvider = "basecounts")
+  def testBaseCounts(fixtureFile: File, pipelineFile: File): Unit = {
     if (this.isInstanceOf[BaseCounts]) {
-      val fixtureFile = Biopet.fixtureFile("gentrap", "count_table", "func1", "all_samples.bases_per_gene")
-      val pipelineFile = new File(outputDir, "expression_measures/basecounts/basecounts.nonStrandedMetaExonCounts.tsv")
       pearsonScoreTest(fixtureFile, pipelineFile)
     }
   }
