@@ -263,12 +263,7 @@ trait JValueMatchers {
       makeMatchResult(testFunc, left, expectedValue)
     }
     def apply(left: Int) = {
-      def testFunc: Boolean = left match {
-        case i: Int => {
-          (lowerBound <= i.doubleValue()) && (i.doubleValue() <= higherBound)
-        }
-        case otherwise => false
-      }
+      def testFunc: Boolean = (lowerBound <= left.doubleValue()) && (left.doubleValue() <= higherBound)
       makeMatchResult(testFunc, left, expectedValue)
     }
   }
