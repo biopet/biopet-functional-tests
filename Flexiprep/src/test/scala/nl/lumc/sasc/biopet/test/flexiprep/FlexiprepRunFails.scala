@@ -8,12 +8,12 @@ import org.testng.annotations.Test
 import scala.io.Source
 
 class FlexiprepNoR1ArgTest extends FlexiprepRun with PipelineFail {
-  logMustHave("""Argument with name '--input_r1' \(-R1\) is missing""".r)
+  logMustHave("""Argument with name '--inputR1' \(-R1\) is missing""".r)
 }
 
 class FlexiprepDryRunNoR1ArgTest extends FlexiprepRun with PipelineFail {
   override def run = false
-  logMustHave("""Argument with name '--input_r1' \(-R1\) is missing""".r)
+  logMustHave("""Argument with name '--inputR1' \(-R1\) is missing""".r)
 }
 
 class FlexiprepR1NotExistTest extends FlexiprepRun with PipelineFail {
