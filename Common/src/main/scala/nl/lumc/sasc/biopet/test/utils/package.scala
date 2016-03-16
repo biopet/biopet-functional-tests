@@ -89,7 +89,7 @@ package object utils {
     //  // calculate the pearson score
     val numerator = pSum - (aSum * bSum / n)
     val denominator = Math.sqrt((aSumSq - (aSum * aSum) / n) * (bSumSq - (bSum * bSum) / n))
-    if (denominator == 0) None else Some(numerator / denominator)
+    if (denominator == 0 || denominator.isInfinity || denominator.isNaN) None else Some(numerator / denominator)
   }
 
 }
