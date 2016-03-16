@@ -116,13 +116,8 @@ class MappingPairedWigTest extends MappingPaired with MappingStatsBwaMem {
     // Loading the reference wiggle (A)
     val referenceWiggle = Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "wgs1-testlib.final.bam.wig")
 
-    referenceWiggle.length() should be > 0L
-    finalWigFile.length() should be > 0L
-
     val tableA = loadWiggleFile(referenceWiggle)
     val tableB = loadWiggleFile(finalWigFile)
-
-    tableB.size shouldBe tableA.size
 
     val correlationScore: Double = pearsonScore(tableA, tableB).getOrElse(0.0)
 
