@@ -89,36 +89,25 @@ trait GentrapFunctional extends Gentrap with Rna1 with Rna2 {
     }
   }
 
-  def loadMergedCountTable(tableFile: File): Option[Map[String, List[Double]]] = {
-    if (tableFile.exists) {
-      val lineIter = scala.io.Source.fromFile(tableFile).getLines()
-      val header = lineIter.next()
-      val sampleNames = header.stripLineEnd.split("\t").tail.toVector
-      val counts = lineIter
-        .map(_.stripLineEnd.split("\t").tail.toVector.map(_.toDouble))
-        .toList
-      val res = sampleNames.zipWithIndex
-        .map(_._2)
-        .map(idx => (sampleNames(idx), counts.map(row => row(idx))))
-      Option(res.toMap)
-    } else None
+  def pearsonScoreTest(tableA: File, tableB: File, minScore: Double = 0.999): Unit = {
+    GentrapFunctional.pearsonScoreTest(tableA, tableB, minScore, samples.keySet)
+  }
+}
+
+object GentrapFunctional {
+  def loadMergedCountTable(tableFile: File, sampleName: String): Iterator[Double] = {
+    assert(tableFile.exists())
+    val lineIter = scala.io.Source.fromFile(tableFile).getLines()
+    val header = lineIter.next()
+    val sampleIndex = header.stripLineEnd.split("\t").indexOf(sampleName)
+    assert(sampleIndex > 0)
+    lineIter.map(_.stripLineEnd.split("\t")(sampleIndex).toDouble)
   }
 
-  def pearsonScoreTest(tableA: File, tableB: File, minScore: Double = 0.999): Unit = {
-    (loadMergedCountTable(tableA), loadMergedCountTable(tableB)) match {
-      case (None, Some(_)) => fail(s"Can not extract values from required fixture '$tableA'.")
-      case (Some(_), None) => fail(s"Can not extract values from required output '$tableB'.")
-      case (None, None) =>
-        fail(s"Can not extract values from required files '$tableA' and '$tableB'.")
-      case (Some(a), Some(b)) =>
-
-        b.size shouldBe a.size
-        b.keySet shouldEqual a.keySet
-
-        val samples = b.keySet
-        samples.foreach { sample =>
-          pearsonScore(a(sample), b(sample)).getOrElse(0.0) should be >= minScore
-        }
+  def pearsonScoreTest(tableA: File, tableB: File, minScore: Double, samples: Set[String]): Unit = {
+    samples.foreach { sample =>
+      val pValue = pearsonScore(loadMergedCountTable(tableA, sample), loadMergedCountTable(tableB, sample)).getOrElse(0.0)
+      assert(pValue >= minScore)
     }
   }
 }
