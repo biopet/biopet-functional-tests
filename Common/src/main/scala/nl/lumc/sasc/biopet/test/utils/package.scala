@@ -79,8 +79,8 @@ package object utils {
       n += 1
       aSum += aValue
       bSum += bValue
-      aSumSq += Math.pow(aValue, 2)
-      bSumSq += Math.pow(bValue, 2)
+      aSumSq += (aValue * aValue)
+      bSumSq += (bValue * bValue)
       pSum += (aValue * bValue)
     }
 
@@ -88,7 +88,7 @@ package object utils {
 
     //  // calculate the pearson score
     val numerator = pSum - (aSum * bSum / n)
-    val denominator = Math.sqrt((aSumSq - Math.pow(aSum, 2) / n) * (bSumSq - Math.pow(bSum, 2) / n))
+    val denominator = Math.sqrt((aSumSq - (aSum * aSum) / n) * (bSumSq - (bSum * bSum) / n))
     if (denominator == 0) None else Some(numerator / denominator)
   }
 
