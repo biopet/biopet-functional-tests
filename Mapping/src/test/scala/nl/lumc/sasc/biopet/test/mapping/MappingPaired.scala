@@ -102,16 +102,13 @@ class MappingPairedWigTest extends MappingPaired with MappingStatsBwaMem {
    *
    * @param wiggleFile Path to wiggleFile (as File-object)
    */
-  def loadWiggleFile(wiggleFile: File): List[Double] = {
-    val reader = Source.fromFile(wiggleFile)
-    val wiggleValue = reader.getLines()
+  def loadWiggleFile(wiggleFile: File): Iterator[Double] = {
+    Source.fromFile(wiggleFile)
+      .getLines()
       .filterNot(_.startsWith("track"))
       .filterNot(_.startsWith("variableStep"))
       .filterNot(_.startsWith("fixedStep"))
       .map(_.stripLineEnd.split("\t").last.toDouble)
-      .toList
-    reader.close()
-    wiggleValue
   }
 
   @Test()
@@ -121,8 +118,6 @@ class MappingPairedWigTest extends MappingPaired with MappingStatsBwaMem {
 
     val tableA = loadWiggleFile(referenceWiggle)
     val tableB = loadWiggleFile(finalWigFile)
-
-    tableB.size shouldBe tableA.size
 
     val correlationScore: Double = pearsonScore(tableA, tableB).getOrElse(0.0)
 

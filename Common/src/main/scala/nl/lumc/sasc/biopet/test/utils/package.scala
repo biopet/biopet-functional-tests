@@ -66,27 +66,30 @@ package object utils {
    * @param b List containing Doubles
    * @return
    */
-  def pearsonScore(a: List[Double], b: List[Double]): Option[Double] = {
+  def pearsonScore(a: Iterator[Double], b: Iterator[Double]): Option[Double] = {
 
-    assert(a.size == b.size, "Sizes of both Lists are not equal")
-    val n = a.size
-    // add up all the preferences
-    val sum1 = a.sum
-    val sum2 = b.sum
+    var n = 0
+    var aSum = 0.0
+    var bSum = 0.0
+    var aSumSq = 0.0
+    var bSumSq = 0.0
+    var pSum = 0.0
 
-    // sum up the squares
-    val sum1Sq = a.foldLeft(0.0)(_ + Math.pow(_, 2))
-    val sum2Sq = b.foldLeft(0.0)(_ + Math.pow(_, 2))
-
-    // sum up the products
-    val pSum = (a.view.zipWithIndex foldLeft 0.0) {
-      case (acc, (value, index)) => acc + (value * b(index))
+    for ((aValue, bValue) <- a.zip(b)) {
+      n += 1
+      aSum += aValue
+      bSum += bValue
+      aSumSq += (aValue * aValue)
+      bSumSq += (bValue * bValue)
+      pSum += (aValue * bValue)
     }
 
+    assert(!a.hasNext && !b.hasNext, "Sizes of both Lists are not equal")
+
     //  // calculate the pearson score
-    val numerator = pSum - (sum1 * sum2 / n)
-    val denominator = Math.sqrt((sum1Sq - Math.pow(sum1, 2) / n) * (sum2Sq - Math.pow(sum2, 2) / n))
-    if (denominator == 0) None else Some(numerator / denominator)
+    val numerator = pSum - (aSum * bSum / n)
+    val denominator = Math.sqrt((aSumSq - (aSum * aSum) / n) * (bSumSq - (bSum * bSum) / n))
+    if (denominator == 0 || denominator.isInfinity || denominator.isNaN) None else Some(numerator / denominator)
   }
 
 }
