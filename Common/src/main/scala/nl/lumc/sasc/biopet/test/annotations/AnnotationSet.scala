@@ -22,7 +22,7 @@ trait GtfAnnotation extends Pipeline {
 
 trait BedAnnotation extends Pipeline {
   def annotationBed: Option[File]
-  override def args = super.args ++ cmdConfig("annotation_Bed", annotationBed)
+  override def args = super.args ++ cmdConfig("annotation_bed", annotationBed)
 }
 
 trait GffAnnotation extends Pipeline {
