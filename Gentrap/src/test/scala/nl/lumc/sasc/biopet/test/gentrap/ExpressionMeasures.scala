@@ -33,6 +33,11 @@ trait BaseCounts extends ExpressionMeasures {
   override def expressionMeasures = "base_counts" :: super.expressionMeasures
 }
 
+trait BiosBaseCounts extends ExpressionMeasures {
+  override def expressionMeasures = "bios_base_counts" :: super.expressionMeasures
+}
+
+
 trait CufflinksStrict extends ExpressionMeasures {
   override def expressionMeasures = "cufflinks_strict" :: super.expressionMeasures
   this match {
@@ -57,5 +62,5 @@ trait CufflinksBlind extends ExpressionMeasures {
   }
 }
 
-trait AllExpressionMeasures extends FragmentsPerGene with BaseCounts
+trait AllExpressionMeasures extends FragmentsPerGene with BaseCounts with BiosBaseCounts
   with CufflinksStrict with CufflinksGuided with CufflinksBlind
