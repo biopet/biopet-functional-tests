@@ -20,6 +20,11 @@ trait GtfAnnotation extends Pipeline {
   override def args = super.args ++ cmdConfig("annotation_gtf", annotationGtf)
 }
 
+trait BedAnnotation extends Pipeline {
+  def annotationBed: Option[File]
+  override def args = super.args ++ cmdConfig("annotation_Bed", annotationBed)
+}
+
 trait GffAnnotation extends Pipeline {
   def annotationGff: Option[File]
   override def args = super.args ++ cmdConfig("annotation_gff", annotationGff)

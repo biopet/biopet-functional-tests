@@ -12,6 +12,7 @@ trait Gentrap extends MultisampleMapping
   with GtfAnnotation
   with RefflatAnnotation
   with RibosomalRefflatAnnotation
+  with BedAnnotation
   with Reference
   with Aligner
   with ExpressionMeasures {

@@ -128,5 +128,6 @@ class GentrapFunctGsnapNonspecificTest extends GentrapFunctional
   def strandProtocol = Option("non_specific")
   def annotationRefflat = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.refFlat"))
   def annotationGtf = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.gtf"))
+  def annotationBed = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.bed"))
   def ribosomalRefflat = None
 }

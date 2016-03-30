@@ -22,6 +22,6 @@ class GentrapDryRunGsnapTest extends Gentrap
 
   def annotationRefflat = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.refFlat"))
   def annotationGtf = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.gtf"))
-  def annotationExonBed = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.bed"))
+  def annotationBed = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.bed"))
   def ribosomalRefflat = None
 }
