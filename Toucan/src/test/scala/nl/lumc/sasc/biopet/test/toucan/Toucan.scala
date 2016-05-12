@@ -23,8 +23,11 @@ trait Toucan extends Pipeline with Reference {
 
   def normalizerMode: String = "standard"
 
+  def enableScatter: Boolean = false
+
   override def args = super.args ++
     cmdArg("-Input", inputVcf) ++
+    cmdConfig("enable_scatter", enableScatter) ++
     cmdConfig("gonl_vcf", goNLFile) ++
     cmdConfig("exac_vcf", exacFile) ++
     cmdConfig("mode", normalizerMode)
