@@ -21,6 +21,7 @@
         <module>Shiva</module>
         <module>TinyCap</module>
         <module>Toucan</module>
+        <module>GenerateIndexes</module>
     </modules>
 
     <dependencies>
