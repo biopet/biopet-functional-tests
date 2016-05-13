@@ -14,5 +14,5 @@ trait GenerateIndexes extends Pipeline {
   def referenceConfigs: List[File] = Nil
 
   override def args = super.args ++
-    cmdArg("--referenceConfigFiles", referenceConfigs)
+    cmdArg("--referenceconfigfiles", referenceConfigs)
 }
