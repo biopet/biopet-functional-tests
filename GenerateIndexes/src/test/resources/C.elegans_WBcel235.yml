@@ -1,0 +1,19 @@
+C.elegans:
+  WBcel235:
+    fasta_uri:
+    - ftp://ftp.ensembl.org/pub/release-84/fasta/caenorhabditis_elegans/dna/Caenorhabditis_elegans.WBcel235.dna.chromosome.I.fa.gz
+    - ftp://ftp.ensembl.org/pub/release-84/fasta/caenorhabditis_elegans/dna/Caenorhabditis_elegans.WBcel235.dna.chromosome.II.fa.gz
+    - ftp://ftp.ensembl.org/pub/release-84/fasta/caenorhabditis_elegans/dna/Caenorhabditis_elegans.WBcel235.dna.chromosome.III.fa.gz
+    - ftp://ftp.ensembl.org/pub/release-84/fasta/caenorhabditis_elegans/dna/Caenorhabditis_elegans.WBcel235.dna.chromosome.IV.fa.gz
+    - ftp://ftp.ensembl.org/pub/release-84/fasta/caenorhabditis_elegans/dna/Caenorhabditis_elegans.WBcel235.dna.chromosome.V.fa.gz
+    - ftp://ftp.ensembl.org/pub/release-84/fasta/caenorhabditis_elegans/dna/Caenorhabditis_elegans.WBcel235.dna.chromosome.X.fa.gz
+    - ftp://ftp.ensembl.org/pub/release-84/fasta/caenorhabditis_elegans/dna/Caenorhabditis_elegans.WBcel235.dna.chromosome.MTDNA.fa.gz
+    vep_cache_uri: ftp://ftp.ensembl.org/pub/release-84/variation/VEP/caenorhabditis_elegans_vep_84_WBcel235.tar.gz
+    dbsnp_vcf_uri:
+    - ftp://ftp.ncbi.nih.gov/snp/organisms/nematode_6239/VCF/vcf_chr_I.vcf.gz
+    - ftp://ftp.ncbi.nih.gov/snp/organisms/nematode_6239/VCF/vcf_chr_II.vcf.gz
+    - ftp://ftp.ncbi.nih.gov/snp/organisms/nematode_6239/VCF/vcf_chr_III.vcf.gz
+    - ftp://ftp.ncbi.nih.gov/snp/organisms/nematode_6239/VCF/vcf_chr_IV.vcf.gz
+    - ftp://ftp.ncbi.nih.gov/snp/organisms/nematode_6239/VCF/vcf_chr_V.vcf.gz
+    - ftp://ftp.ncbi.nih.gov/snp/organisms/nematode_6239/VCF/vcf_chr_X.vcf.gz
+    - ftp://ftp.ncbi.nih.gov/snp/organisms/nematode_6239/VCF/vcf_chr_MT.vcf.gz
