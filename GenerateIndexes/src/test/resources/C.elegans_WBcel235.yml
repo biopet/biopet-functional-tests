@@ -17,3 +17,4 @@ C.elegans:
     - ftp://ftp.ncbi.nih.gov/snp/organisms/nematode_6239/VCF/vcf_chr_V.vcf.gz
     - ftp://ftp.ncbi.nih.gov/snp/organisms/nematode_6239/VCF/vcf_chr_X.vcf.gz
     - ftp://ftp.ncbi.nih.gov/snp/organisms/nematode_6239/VCF/vcf_chr_MT.vcf.gz
+    gtf_uri: ftp://ftp.ensembl.org/pub/release-84/gtf/caenorhabditis_elegans/Caenorhabditis_elegans.WBcel235.84.gtf.gz
