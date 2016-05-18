@@ -95,8 +95,7 @@ trait FlexiprepPairedClipTrimSummaryValues extends FlexiprepPaired {
 
   addSummaryTest(statsFastqcR2QcPath :+ "adapters",
     Seq(
-      _ \ "Illumina Single End PCR Primer 1" should haveValue("AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT"),
-      _ \ "Illumina Single End PCR Primer 1_RC" should haveValue("AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT")))
+      _ \ "Illumina Single End PCR Primer 1" should haveValue("AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT")))
 
   addSummaryTest(statsSeqstatR2QcPath :+ "bases",
     Seq(

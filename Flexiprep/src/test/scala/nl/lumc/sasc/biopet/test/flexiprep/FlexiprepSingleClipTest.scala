@@ -42,9 +42,7 @@ trait FlexiprepSingleClipSummaryValues extends FlexiprepSingle {
   addSummaryTest(statsFastqcR1QcPath :+ "adapters",
     Seq(
       _ \ "Illumina PCR Primer Index 8" should haveValue("CAAGCAGAAGACGGCATACGAGATTCAAGTGTGACTGGAGTTC"),
-      _ \ "Illumina Single End Adapter 1" should haveValue("GATCGGAAGAGCTCGTATGCCGTCTTCTGCTTG"),
-      _ \ "Illumina PCR Primer Index 8_RC" should haveValue("GAACTCCAGTCACACTTGAATCTCGTATGCCGTCTTCTGCTTG"),
-      _ \ "Illumina Single End Adapter 1_RC" should haveValue("CAAGCAGAAGACGGCATACGAGCTCTTCCGATC")))
+      _ \ "Illumina Single End Adapter 1" should haveValue("GATCGGAAGAGCTCGTATGCCGTCTTCTGCTTG")))
 
   addSummaryTest(statsSeqstatR1QcPath :+ "bases",
     Seq(

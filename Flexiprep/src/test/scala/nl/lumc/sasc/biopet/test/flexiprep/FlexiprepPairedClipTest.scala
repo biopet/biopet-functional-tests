@@ -37,9 +37,7 @@ class FlexiprepPairedClipTest extends FlexiprepPaired with FlexiprepSingleClipSu
   addSummaryTest(statsFastqcR2QcPath :+ "adapters",
     Seq(
       _ \ "Illumina RNA PCR Primer" should haveValue("AATGATACGGCGACCACCGAGATCTACACGTTCAGAGTTCTACAGTCCGA"),
-      _ \ "Illumina Single End PCR Primer 1" should haveValue("AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT"),
-      _ \ "Illumina RNA PCR Primer_RC" should haveValue("TCGGACTGTAGAACTCTGAACGTGTAGATCTCGGTGGTCGCCGTATCATT"),
-      _ \ "Illumina Single End PCR Primer 1_RC" should haveValue("AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT")))
+      _ \ "Illumina Single End PCR Primer 1" should haveValue("AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT")))
 
   addSummaryTest(statsSeqstatR2QcPath :+ "bases",
     Seq(
