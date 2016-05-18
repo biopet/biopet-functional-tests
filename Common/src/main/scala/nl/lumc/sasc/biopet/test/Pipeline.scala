@@ -1,6 +1,7 @@
 package nl.lumc.sasc.biopet.test
 
 import java.io.{ File, PrintWriter }
+import java.nio.file.Paths
 
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
@@ -128,6 +129,10 @@ trait Pipeline extends TestNGSuite with Matchers {
     val i = logLines.indexWhere(r.findFirstMatchIn(_).isDefined)
     assert(i == -1, s"at line number ${i + 1} in logfile does contains: $r")
   }
+
+  protected def resourcePath(p: String): String = {
+    Paths.get(getClass.getResource(p).toURI).toString
+  }
 }
 
 object Pipeline {
@@ -175,5 +180,4 @@ object Pipeline {
       case _       => Seq("-cv", s"$configKey=$value")
     }
   }
-
 }
