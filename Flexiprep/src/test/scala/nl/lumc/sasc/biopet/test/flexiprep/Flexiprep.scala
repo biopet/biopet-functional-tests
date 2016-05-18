@@ -290,9 +290,7 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
   addSummaryTest(statsFastqcR1Path :+ "adapters",
     Seq(
       _ \ "TruSeq Adapter, Index 1" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG"),
-      _ \ "TruSeq Adapter, Index 18" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG"),
-      _ \ "TruSeq Adapter, Index 1_RC" should haveValue("CAAGCAGAAGACGGCATACGAGATCGTGATGTGACTGGAGTTCAGACGTGTGCTCTTCCGATC"),
-      _ \ "TruSeq Adapter, Index 18_RC" should haveValue("CAAGCAGAAGACGGCATACGAGATGCGGACGTGACTGGAGTTCAGACGTGTGCTCTTCCGATC")))
+      _ \ "TruSeq Adapter, Index 18" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG")))
 
   addSummaryTest(statsSeqstatR1Path :+ "bases",
     Seq(
