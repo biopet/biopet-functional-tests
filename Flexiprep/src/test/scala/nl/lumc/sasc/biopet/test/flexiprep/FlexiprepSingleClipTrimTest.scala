@@ -43,12 +43,7 @@ trait FlexiprepSingleClipTrimSummaryValues extends FlexiprepSingle {
       _ \ "Illumina Multiplexing PCR Primer 2.01" should haveValue("GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT"),
       _ \ "Illumina Single End Adapter 1" should haveValue("GATCGGAAGAGCTCGTATGCCGTCTTCTGCTTG"),
       _ \ "Illumina PCR Primer Index 8" should haveValue("CAAGCAGAAGACGGCATACGAGATTCAAGTGTGACTGGAGTTC"),
-      _ \ "TruSeq Adapter, Index 1" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG"),
-      _ \ "TruSeq Adapter, Index 18_RC" should haveValue("CAAGCAGAAGACGGCATACGAGATGCGGACGTGACTGGAGTTCAGACGTGTGCTCTTCCGATC"),
-      _ \ "Illumina Multiplexing PCR Primer 2.01_RC" should haveValue("AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC"),
-      _ \ "Illumina Single End Adapter 1_RC" should haveValue("CAAGCAGAAGACGGCATACGAGCTCTTCCGATC"),
-      _ \ "Illumina PCR Primer Index 8_RC" should haveValue("GAACTCCAGTCACACTTGAATCTCGTATGCCGTCTTCTGCTTG"),
-      _ \ "TruSeq Adapter, Index 1_RC" should haveValue("CAAGCAGAAGACGGCATACGAGATCGTGATGTGACTGGAGTTCAGACGTGTGCTCTTCCGATC")))
+      _ \ "TruSeq Adapter, Index 1" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG")))
 
   addSummaryTest(statsSeqstatR1QcPath :+ "bases",
     Seq(
