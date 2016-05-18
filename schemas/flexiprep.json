@@ -463,7 +463,7 @@
                   "format": "int32"
                 },
                 {
-                  "description": "Adapter sequence name, the sequence itself, and how many times it is clipped. In version 0.6.0 or higher.",
+                  "description": "Adapter sequence name, the sequence itself, and how many times it is clipped. In version 0.6.0.",
                   "type": "object",
                   "additionalProperties": false,
                   "properties": {
@@ -475,6 +475,37 @@
                       "description": "How many times the adapter is clipped.",
                       "type": "integer",
                       "format": "int32"
+                    }
+                  }
+                },
+                {
+                  "description": "Adapter sequence name, the sequence itself. Map with counts and histogram. In version 0.7.0 or higher.",
+                  "type": "object",
+                  "additionalProperties": true,
+                  "properties": {
+                    "sequence": {
+                      "description": "Adapter sequence.",
+                      "type": "string"
+                    },
+                    "stats": {
+                      "description": "Statistics for this adapter, with count and histogram",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "properties": {
+                        "count": {
+                          "description": "How many times the adapter is clipped.",
+                          "type": "integer",
+                          "format": "int32"
+                        },
+                        "histogram": {
+                          "description": "Histogram of clipped bases from either 3p or 5p end",
+                          "type": "object"
+
+                          "patternProperties": {
+                            "^[3p|5p]$": { "type": "object" }
+                          }
+                        }
+                      }
                     }
                   }
                 }
