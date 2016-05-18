@@ -499,7 +499,7 @@
                         },
                         "histogram": {
                           "description": "Histogram of clipped bases from either 3p or 5p end",
-                          "type": "object"
+                          "type": "object",
 
                           "patternProperties": {
                             "^[3p|5p]$": { "type": "object" }
