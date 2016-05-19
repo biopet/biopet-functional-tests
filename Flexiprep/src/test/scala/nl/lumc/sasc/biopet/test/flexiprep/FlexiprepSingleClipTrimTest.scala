@@ -33,9 +33,9 @@ trait FlexiprepSingleClipTrimSummaryValues extends FlexiprepSingle {
       _ \ "1" \ "G" should inInterval(52.832131822863026, 0.01),
       _ \ "1" \ "C" should inInterval(18.949536560247168, 0.01),
       _ \ "100" \ "A" should inInterval(25, 0.01),
-      _ \ "100" \ "T" should inInterval(22.435897435897438, 0.01),
+      _ \ "100" \ "T" should inInterval(22.058823529411764, 0.01),
       _ \ "100" \ "G" should inInterval(25, 0.01),
-      _ \ "100" \ "C" should inInterval(27.564102564102566, 0.01)))
+      _ \ "100" \ "C" should inInterval(27.100840336134453, 0.01)))
 
   addSummaryTest(statsFastqcR1QcPath :+ "adapters",
     Seq(
