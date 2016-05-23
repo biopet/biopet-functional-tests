@@ -32,10 +32,10 @@ trait FlexiprepSingleClipTrimSummaryValues extends FlexiprepSingle {
       _ \ "1" \ "T" should inInterval(12.1524201853759, 0.01),
       _ \ "1" \ "G" should inInterval(52.832131822863026, 0.01),
       _ \ "1" \ "C" should inInterval(18.949536560247168, 0.01),
-      _ \ "100" \ "A" should inInterval(25, 0.01),
-      _ \ "100" \ "T" should inInterval(22.435897435897438, 0.01),
-      _ \ "100" \ "G" should inInterval(25, 0.01),
-      _ \ "100" \ "C" should inInterval(27.564102564102566, 0.01)))
+      _ \ "100" \ "A" should inInterval(25.630252100840334, 0.01),
+      _ \ "100" \ "T" should inInterval(22.058823529411764, 0.01),
+      _ \ "100" \ "G" should inInterval(25.210084033613445, 0.01),
+      _ \ "100" \ "C" should inInterval(27.100840336134453, 0.01)))
 
   addSummaryTest(statsFastqcR1QcPath :+ "adapters",
     Seq(
@@ -43,12 +43,7 @@ trait FlexiprepSingleClipTrimSummaryValues extends FlexiprepSingle {
       _ \ "Illumina Multiplexing PCR Primer 2.01" should haveValue("GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT"),
       _ \ "Illumina Single End Adapter 1" should haveValue("GATCGGAAGAGCTCGTATGCCGTCTTCTGCTTG"),
       _ \ "Illumina PCR Primer Index 8" should haveValue("CAAGCAGAAGACGGCATACGAGATTCAAGTGTGACTGGAGTTC"),
-      _ \ "TruSeq Adapter, Index 1" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG"),
-      _ \ "TruSeq Adapter, Index 18_RC" should haveValue("CAAGCAGAAGACGGCATACGAGATGCGGACGTGACTGGAGTTCAGACGTGTGCTCTTCCGATC"),
-      _ \ "Illumina Multiplexing PCR Primer 2.01_RC" should haveValue("AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC"),
-      _ \ "Illumina Single End Adapter 1_RC" should haveValue("CAAGCAGAAGACGGCATACGAGCTCTTCCGATC"),
-      _ \ "Illumina PCR Primer Index 8_RC" should haveValue("GAACTCCAGTCACACTTGAATCTCGTATGCCGTCTTCTGCTTG"),
-      _ \ "TruSeq Adapter, Index 1_RC" should haveValue("CAAGCAGAAGACGGCATACGAGATCGTGATGTGACTGGAGTTCAGACGTGTGCTCTTCCGATC")))
+      _ \ "TruSeq Adapter, Index 1" should haveValue("GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG")))
 
   addSummaryTest(statsSeqstatR1QcPath :+ "bases",
     Seq(

@@ -32,10 +32,10 @@ trait FlexiprepPairedClipTrimSummaryValues extends FlexiprepPaired {
       _ \ "1" \ "T" should haveValue(11.312217194570136),
       _ \ "1" \ "G" should haveValue(51.80995475113123),
       _ \ "1" \ "C" should haveValue(21.266968325791854),
-      _ \ "100" \ "A" should inInterval(28.076923076923077, 0.01),
-      _ \ "100" \ "T" should inInterval(20.384615384615383, 0.01),
-      _ \ "100" \ "G" should inInterval(27.692307692307693, 0.01),
-      _ \ "100" \ "C" should inInterval(23.846153846153847, 0.01)))
+      _ \ "100" \ "A" should inInterval(28.40909090909091, 0.01),
+      _ \ "100" \ "T" should inInterval(20.075757575757574, 0.01),
+      _ \ "100" \ "G" should inInterval(28.030303030303028, 0.01),
+      _ \ "100" \ "C" should inInterval(23.484848484848484, 0.01)))
 
   addSummaryTest(statsFastqcR1QcPath :+ "adapters", Seq(_.children.size shouldBe 0))
 
@@ -95,8 +95,7 @@ trait FlexiprepPairedClipTrimSummaryValues extends FlexiprepPaired {
 
   addSummaryTest(statsFastqcR2QcPath :+ "adapters",
     Seq(
-      _ \ "Illumina Single End PCR Primer 1" should haveValue("AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT"),
-      _ \ "Illumina Single End PCR Primer 1_RC" should haveValue("AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT")))
+      _ \ "Illumina Single End PCR Primer 1" should haveValue("AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT")))
 
   addSummaryTest(statsSeqstatR2QcPath :+ "bases",
     Seq(

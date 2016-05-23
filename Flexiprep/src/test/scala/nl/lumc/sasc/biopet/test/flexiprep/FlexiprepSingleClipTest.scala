@@ -34,17 +34,15 @@ trait FlexiprepSingleClipSummaryValues extends FlexiprepSingle {
       _ \ "1" \ "T" should inInterval(11.90233977619532, 0.01),
       _ \ "1" \ "G" should inInterval(51.88199389623601, 0.01),
       _ \ "1" \ "C" should inInterval(18.71820956256358, 0.01),
-      _ \ "100" \ "A" should inInterval(23.943661971830984, 0.01),
-      _ \ "100" \ "T" should inInterval(21.12676056338028, 0.01),
+      _ \ "100" \ "A" should inInterval(24.549237170596395, 0.01),
+      _ \ "100" \ "T" should inInterval(20.804438280166433, 0.01),
       _ \ "100" \ "G" should inInterval(25.211267605633804, 0.01),
-      _ \ "100" \ "C" should inInterval(29.718309859154928, 0.01)))
+      _ \ "100" \ "C" should inInterval(29.26490984743412, 0.01)))
 
   addSummaryTest(statsFastqcR1QcPath :+ "adapters",
     Seq(
       _ \ "Illumina PCR Primer Index 8" should haveValue("CAAGCAGAAGACGGCATACGAGATTCAAGTGTGACTGGAGTTC"),
-      _ \ "Illumina Single End Adapter 1" should haveValue("GATCGGAAGAGCTCGTATGCCGTCTTCTGCTTG"),
-      _ \ "Illumina PCR Primer Index 8_RC" should haveValue("GAACTCCAGTCACACTTGAATCTCGTATGCCGTCTTCTGCTTG"),
-      _ \ "Illumina Single End Adapter 1_RC" should haveValue("CAAGCAGAAGACGGCATACGAGCTCTTCCGATC")))
+      _ \ "Illumina Single End Adapter 1" should haveValue("GATCGGAAGAGCTCGTATGCCGTCTTCTGCTTG")))
 
   addSummaryTest(statsSeqstatR1QcPath :+ "bases",
     Seq(
@@ -56,7 +54,7 @@ trait FlexiprepSingleClipSummaryValues extends FlexiprepSingle {
       _ \ "nucleotides" \ "N" should inInterval(2909, 0.01),
       _ \ "num_qual" shouldBe a[JArray],
       jv => (jv \ "num_qual").extract[List[Int]].apply(41) shouldBe 15850,
-      jv => (jv \ "num_qual").extract[List[Int]].apply(2) shouldBe 6000))
+      jv => (jv \ "num_qual").extract[List[Int]].apply(2) shouldBe 6007))
 
   addSummaryTest(statsSeqstatR1QcPath :+ "reads",
     Seq(

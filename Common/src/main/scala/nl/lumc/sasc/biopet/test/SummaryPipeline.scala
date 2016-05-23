@@ -44,7 +44,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   @Test(groups = Array("parseSummary"))
   def parseSummary(): Unit = _summary = parse(summaryFile)
 
-  @Test(groups = Array("parseSummary"))
+  @Test(dependsOnGroups = Array("parseSummary"))
   def testSummarySchema(): Unit =
     if (summarySchemaUrls.nonEmpty) {
       schemas should not be empty
