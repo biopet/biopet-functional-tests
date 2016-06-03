@@ -38,6 +38,12 @@ trait Star extends Aligner {
   override def args = super.args ++ cmdConfig("star:genomeDir", starGenomeDir)
 }
 
+trait Hisat2 extends Aligner {
+  def aligner = Some("hisat2")
+  def hisat2Index: Option[String]
+  override def args = super.args ++ cmdConfig("hisat2:hisat2_index", hisat2Index)
+}
+
 trait Gsnap extends Aligner {
   def aligner = Some("gsnap")
   def gsnapDir: Option[File]
