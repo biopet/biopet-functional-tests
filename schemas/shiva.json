@@ -373,13 +373,16 @@
           }
         },
         "bammetrics": {
+
           "type": "object",
+
           "required": [
             "files",
             "executables",
             "stats",
             "settings"
           ],
+
           "properties": {
             "files": {
               "type": "object",
@@ -414,6 +417,16 @@
             },
             "stats": {
               "type": "object",
+
+              "patternProperties": {
+                "^.+-flagstat.*$": {
+                  "$ref": "#/definitions/flagstat"
+                },
+                "^.+-covstat$": {
+                  "$ref": "#/definitions/covstat"
+                }
+              },
+
               "properties": {
                 "MeanQualityByCycle": {
                   "$ref": "#/definitions/MeanQualityByCycle"
@@ -444,14 +457,6 @@
                 },
                 "CollectInsertSizeMetrics": {
                   "$ref": "#/definitions/CollectInsertSizeMetrics"
-                }
-              },
-              "additionalProperties": {
-                "^.+-flagstat.*$": {
-                  "$ref": "#/definitions/flagstat"
-                },
-                "^.+-covstat$": {
-                  "$ref": "#/definitions/covstat"
                 }
               }
             },
@@ -1079,6 +1084,45 @@
             }
           }
         },
+        "shiva": {
+          "type": "object",
+          "required": [
+            "files",
+            "tags",
+            "stats",
+            "settings"
+          ],
+          "properties": {
+            "files": {
+              "type": "object"
+            },
+            "tags": {
+              "type": "object"
+            },
+            "stats": {
+              "type": "object"
+            },
+            "settings": {
+              "type": "object",
+              "required": [
+                "library_variantcalling",
+                "use_indel_realigner",
+                "use_base_recalibration"
+              ],
+              "properties": {
+                "library_variantcalling": {
+                  "type": "boolean"
+                },
+                "use_indel_realigner": {
+                  "type": "boolean"
+                },
+                "use_base_recalibration": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
         "bammetrics": {
           "type": "object",
           "required": [
@@ -1087,6 +1131,11 @@
             "stats",
             "settings"
           ],
+          "patternProperties": {
+            "^.+-flagstat.*$": {
+              "$ref": "#/definitions/flagstat"
+            }
+          },
           "properties": {
             "files": {
               "type": "object",
@@ -1117,6 +1166,20 @@
                     "$ref": "#/definitions/java_executable"
                   }
                 ]
+              }
+            },
+            "settings": {
+              "type": "object",
+              "properties": {
+                "amplicon_name": {
+                  "type": ["string", "null"]
+                },
+                "roi_name": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
               }
             },
             "stats": {
@@ -1160,64 +1223,6 @@
                 },
                 "targeted_pcr_metrics": {
                   "$ref": "#/definitions/targeted_pcr_metrics"
-                },
-                "patternProperties": {
-                  "^.+-flagstat.*$": {
-                    "$ref": "#/definitions/flagstat"
-                  }
-                }
-              },
-              "settings": {
-                "type": "object",
-                "properties": {
-                  "amplicon_name": {
-                    "type": "string"
-                  },
-                  "roi_name": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "shiva": {
-            "type": "object",
-            "required": [
-              "files",
-              "tags",
-              "stats",
-              "settings"
-            ],
-            "properties": {
-              "files": {
-                "type": "object"
-              },
-              "tags": {
-                "type": "object"
-              },
-              "stats": {
-                "type": "object"
-              },
-              "settings": {
-                "type": "object",
-                "required": [
-                  "library_variantcalling",
-                  "use_indel_realigner",
-                  "use_base_recalibration"
-                ],
-                "properties": {
-                  "library_variantcalling": {
-                    "type": "boolean"
-                  },
-                  "use_indel_realigner": {
-                    "type": "boolean"
-                  },
-                  "use_base_recalibration": {
-                    "type": "boolean"
-                  }
                 }
               }
             }
