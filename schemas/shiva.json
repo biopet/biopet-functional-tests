@@ -193,7 +193,7 @@
               }
             },
             "amplicon_bed": {
-              "type": "string"
+              "type": ["string", "null"]
             }
           }
         }
