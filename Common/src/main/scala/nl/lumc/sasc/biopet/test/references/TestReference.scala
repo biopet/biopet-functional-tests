@@ -25,5 +25,5 @@ trait TestReference extends Reference {
 
   def starGenomeDir: Option[File] = Some(Biopet.fixtureFile("reference/star"))
 
-  def hisat2Index: Option[String] = Some(Biopet.fixtureFile("reference/hisat2/reference").getAbsolutePath)
+  def hisat2Index: Option[String] = Some(Biopet.fixtureDir + File.separator + "reference/hisat2/reference")
 }
