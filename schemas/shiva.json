@@ -293,7 +293,7 @@
             },
             "amplicon_bed": {
               "description": "Path to capture kit bed file",
-              "type": "string"
+              "type": ["string", "null"]
             }
           }
         }
