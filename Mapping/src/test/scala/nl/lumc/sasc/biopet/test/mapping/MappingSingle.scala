@@ -85,3 +85,5 @@ class MappingSingleBowtie2Test extends MappingSingle with Bowtie2
 class MappingSingleGsnapTest extends MappingSingle with Gsnap
 
 class MappingSingleTophatTest extends MappingSingle with Tophat
+
+class MappingSingleHisat2Test extends MappingSingle with Hisat2
