@@ -6,7 +6,6 @@
   "required": [
     "samples",
     "shiva",
-    "shivavariantcalling",
     "meta"
   ],
   "properties": {
@@ -940,8 +939,6 @@
       "description": "A sequence read group",
       "type": "object",
       "required": [
-        "flexiprep",
-        "mapping",
         "bammetrics",
         "shiva"
       ],
