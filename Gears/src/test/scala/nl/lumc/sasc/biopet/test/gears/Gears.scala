@@ -18,11 +18,13 @@ trait Gears extends Pipeline {
   def gearsUseKraken: Option[Boolean] = None
   def gearUseQiimeRtax: Option[Boolean] = None
   def gearUseQiimeClosed: Option[Boolean] = None
+  def gearUseQiimeOpen: Option[Boolean] = None
   def gearUseSeqCount: Option[Boolean] = None
 
   override def args = super.args ++
     cmdConfig("gears_use_kraken", gearsUseKraken) ++
     cmdConfig("gears_use_qiime_rtax", gearUseQiimeRtax) ++
     cmdConfig("gears_use_qiime_closed", gearUseQiimeClosed) ++
+    cmdConfig("gears_use_qiime_open", gearUseQiimeOpen) ++
     cmdConfig("gears_use_seq_count", gearUseSeqCount)
 }

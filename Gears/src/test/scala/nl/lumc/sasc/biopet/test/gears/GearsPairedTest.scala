@@ -10,6 +10,11 @@ class GearsPairedQiimeClosedTest extends GearsSuccess with Mgm4457768_3_050Lib1 
   override def gearUseQiimeClosed = Some(true)
 }
 
+class GearsPairedQiimeOpenTest extends GearsSuccess with Mgm4457768_3_050Lib1 with Mgm4459735_3_050Lib1 {
+  override def gearsUseKraken = Some(false)
+  override def gearUseQiimeOpen = Some(true)
+}
+
 class GearsPairedKrakenTest extends GearsSuccess with Mgm4457768_3_050Lib1 with Mgm4459735_3_050Lib1 {
   override def gearsUseKraken = Some(true)
 }
@@ -17,4 +22,5 @@ class GearsPairedKrakenTest extends GearsSuccess with Mgm4457768_3_050Lib1 with 
 class GearsPairedKrakenQiimeTest extends GearsSuccess with Mgm4457768_3_050Lib1 with Mgm4459735_3_050Lib1 {
   override def gearsUseKraken = Some(true)
   override def gearUseQiimeClosed = Some(true)
+  override def gearUseQiimeOpen = Some(true)
 }
