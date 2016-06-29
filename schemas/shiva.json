@@ -491,7 +491,7 @@
               "additionalProperties": false,
               "patternProperties": {
                 "-vcfstats-": {
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "$ref": "#/definitions/vcfstats-genotype"
                     },
@@ -1400,7 +1400,13 @@
       "type": "object",
       "properties": {
         "HS_LIBRARY_SIZE": {
-          "type": "number"
+          "anyOf": [
+            {"type": "number"},
+            {
+              "type": "string",
+              "maxLength": 0
+            }
+          ]
         },
         "HS_PENALTY_50X": {
           "type": "number"
@@ -1532,11 +1538,7 @@
     },
     "CollectAlignmentSummaryMetrics": {
       "type": "object",
-      "required": [
-        "PAIR",
-        "FIRST_OF_PAIR",
-        "SECOND_OF_PAIR"
-      ],
+
       "properties": {
         "PAIR": {
           "$ref": "#/definitions/collect_alignment_summary_metrics"
