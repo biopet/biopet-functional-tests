@@ -17,7 +17,7 @@ class ShivaBiopetplanet30xGRCh37Test extends ShivaSuccess with BwaMem with Hsapi
   override def minRecall = 0.945
 
   def paired = true
-  def shouldHaveKmerContent = false
+  def shouldHaveKmerContent = Some(false)
   override def annotation = Some(true)
 
   override def disablescatter = false
@@ -39,6 +39,6 @@ class ShivaBiopetplanet30xGRCh38Test extends ShivaSuccess with BwaMem with Hsapi
   with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
   override def disablescatter = false
   def paired = true
-  def shouldHaveKmerContent = false
+  def shouldHaveKmerContent = Some(false)
   override def annotation = Some(true)
 }
