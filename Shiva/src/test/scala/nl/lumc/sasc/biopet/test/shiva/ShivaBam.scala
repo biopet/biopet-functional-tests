@@ -15,7 +15,7 @@ class ShivaWgs1BamTest extends ShivaSuccess with BwaMem with TestReference with 
   addNotHavingExecutable("bwamem")
   override def libraryBam(sampleId: String, libId: String) = new File(libraryDir(sampleId, libId), s"$sampleId-$libId.bam")
   def paired = true
-  def shouldHaveKmerContent = false
+  def shouldHaveKmerContent = Some(false)
   override def flexiprepShouldRun = false
   override def testLibraryBam(sampleid: String, libId: String) = {}
 }
@@ -23,7 +23,7 @@ class ShivaWgs1BamTest extends ShivaSuccess with BwaMem with TestReference with 
 class ShivaWgs1BamToFastqTest extends ShivaSuccess with BwaMem with TestReference with Unifiedgenotyper with Wgs1Bam {
   override def bamToFastq = Some(true)
   def paired = true
-  def shouldHaveKmerContent = false
+  def shouldHaveKmerContent = Some(false)
   addExecutable(Executable("bwamem", Some(""".+""".r)))
   addExecutable(Executable("samtofastq", Some(""".+""".r)))
 }
@@ -33,7 +33,7 @@ class ShivaWgs1BamReplaceReadGroupTest extends ShivaSuccess with BwaMem with Tes
   override def correctReadgroups = Some(true)
   override def libraryBam(sampleId: String, libId: String) = new File(libraryDir(sampleId, libId), s"$sampleId-$libId.bam")
   def paired = true
-  def shouldHaveKmerContent = false
+  def shouldHaveKmerContent = Some(false)
   override def flexiprepShouldRun = false
   /** This bam file should only in this conditions not exist, disabled test */
   override def testLibraryBam(sampleid: String, libId: String) = {}

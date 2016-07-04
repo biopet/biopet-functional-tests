@@ -10,7 +10,7 @@ import nl.lumc.sasc.biopet.test.shiva.variantcallers.Unifiedgenotyper
  */
 trait ShivaWgs1SingleEnd extends ShivaSuccess with BwaMem with TestReference with Wgs1SingleEnd {
   def paired = false
-  def shouldHaveKmerContent = false
+  def shouldHaveKmerContent = Some(false)
 }
 
 class Wgs1SingleEndUnifiedGenotyperTest extends ShivaWgs1SingleEnd with Unifiedgenotyper

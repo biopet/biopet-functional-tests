@@ -11,7 +11,7 @@ import nl.lumc.sasc.biopet.test.Biopet
  */
 trait ShivaWgs1Wgs2 extends ShivaSuccess with BwaMem with TestReference with Wgs1 with Wgs2 {
   def paired = true
-  def shouldHaveKmerContent = false
+  def shouldHaveKmerContent = Some(false)
 }
 
 class Wgs1Wgs2HaplotypeCallerTest extends ShivaWgs1Wgs2 with Haplotypecaller

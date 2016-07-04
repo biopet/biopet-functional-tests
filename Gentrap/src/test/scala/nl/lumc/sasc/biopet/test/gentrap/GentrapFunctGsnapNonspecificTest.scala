@@ -120,7 +120,7 @@ class GentrapFunctGsnapNonspecificTest extends GentrapFunctional
   with Rna1 with Rna2
   with HsapiensGRCh38 {
 
-  def shouldHaveKmerContent = true
+  def shouldHaveKmerContent = Some(true)
   def paired = true
 
   override def callVariants = Some(true)
