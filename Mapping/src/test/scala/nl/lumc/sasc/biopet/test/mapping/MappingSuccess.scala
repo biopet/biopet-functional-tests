@@ -167,8 +167,8 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   def testChunkNumber(): Unit = {
     val settings = summaryRoot \ "mapping" \ "settings"
     settings \ "chunking" shouldBe JBool(chunking)
-    if (chunking) settings \ "numberChunks" shouldBe JInt(BigInt(numberChunks.getOrElse(1)))
-    else settings \ "numberChunks" shouldBe JNull
+    if (chunking) settings \ "number_of_chunks" shouldBe JInt(BigInt(numberChunks.getOrElse(1)))
+    else settings \ "number_of_chunks" shouldBe JNull
   }
 
   @Test
