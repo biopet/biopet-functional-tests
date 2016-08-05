@@ -107,7 +107,7 @@ object GentrapFunctional {
   def pearsonScoreTest(tableA: File, tableB: File, minScore: Double, samples: Set[String]): Unit = {
     samples.foreach { sample =>
       val pValue = pearsonScore(loadMergedCountTable(tableA, sample), loadMergedCountTable(tableB, sample)).getOrElse(0.0)
-      assert(pValue >= minScore)
+      assert(pValue >= minScore, s"$pValue should be >= $minScore")
     }
   }
 }
