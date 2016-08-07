@@ -70,6 +70,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   @BeforeClass
   def runPipeline(): Unit = {
     if (run && functionalTest && !Biopet.functionalTests) throw new SkipException("Functional tests are disabled")
+    if (!Biopet.integrationTests && !functionalTest) throw new SkipException("Integration tests are disabled")
     // Running pipeline
     _exitValue = Pipeline.runPipeline(this)
   }

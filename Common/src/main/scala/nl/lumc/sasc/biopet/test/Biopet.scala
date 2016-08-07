@@ -39,6 +39,14 @@ object Biopet {
     }
   }
 
+  lazy val integrationTests: Boolean = {
+    System.getProperties.getProperty("biopet.integrationTests") match {
+      case "false" => false
+      case null    => true
+      case _       => true
+    }
+  }
+
   lazy val fixtureDir: File = {
     System.getProperties.getProperty("biopet.fixture_dir") match {
       case s: String => {
