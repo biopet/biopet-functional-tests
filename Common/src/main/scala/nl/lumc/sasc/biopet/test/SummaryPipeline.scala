@@ -48,7 +48,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   def testSummarySchema(): Unit =
     if (summarySchemaUrls.nonEmpty) {
       schemas should not be empty
-      schemas.foreach { s => s.validate(asJsonNode(summary)).iterator().asScala.toSeq shouldBe empty }
+      schemas.foreach { s => s.validate(asJsonNode(summary), true).iterator().asScala.toSeq shouldBe empty }
     }
 
   @DataProvider(name = "summaryTests")
