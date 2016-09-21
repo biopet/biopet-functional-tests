@@ -13,9 +13,10 @@ trait Gears extends Pipeline {
 
   def summaryFile = new File(outputDir, s"gears.summary.json")
 
-  override def functionalTest = gearsUseKraken.getOrElse(true)
+  override def functionalTest = gearsUseKraken.getOrElse(true) || gearsUseCentrifuge.getOrElse(false)
 
   def gearsUseKraken: Option[Boolean] = None
+  def gearsUseCentrifuge: Option[Boolean] = None
   def gearUseQiimeRtax: Option[Boolean] = None
   def gearUseQiimeClosed: Option[Boolean] = None
   def gearUseQiimeOpen: Option[Boolean] = None
@@ -23,6 +24,7 @@ trait Gears extends Pipeline {
 
   override def args = super.args ++
     cmdConfig("gears_use_kraken", gearsUseKraken) ++
+    cmdConfig("gears_use_centrifuge", gearsUseCentrifuge) ++
     cmdConfig("gears_use_qiime_rtax", gearUseQiimeRtax) ++
     cmdConfig("gears_use_qiime_closed", gearUseQiimeClosed) ++
     cmdConfig("gears_use_qiime_open", gearUseQiimeOpen) ++
