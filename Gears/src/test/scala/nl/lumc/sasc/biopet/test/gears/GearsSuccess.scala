@@ -18,6 +18,6 @@ trait GearsSuccess extends Gears with MultisampleSuccess {
   addConditionalReportFile(gearsUseCentrifuge.getOrElse(false), "Centriguge analysis", "Non-unique", "index.html")
   addConditionalReportFile(gearsUseCentrifuge.getOrElse(false), "Centriguge analysis", "Non-unique", "gearscentrifuge-centrifuge_report.html")
 
-  addConditionalReportFile(gearsUseKraken.getOrElse(true), "Centriguge analysis", "index.html")
+  addConditionalReportFile(gearsUseKraken.getOrElse(true), "Kraken analysis", "index.html")
 
 }
