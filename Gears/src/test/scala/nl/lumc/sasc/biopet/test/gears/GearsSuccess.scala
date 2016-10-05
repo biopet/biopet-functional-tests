@@ -12,4 +12,12 @@ trait GearsSuccess extends Gears with MultisampleSuccess {
   addMustHaveReportFile("ext", "img", "krona", "favicon.ico")
   addMustHaveReportFile("ext", "img", "krona", "loading.gif")
   addMustHaveReportFile("ext", "img", "krona", "hidden.png")
+
+  addConditionalReportFile(gearsUseCentrifuge.getOrElse(false), "Centriguge analysis", "index.html")
+  addConditionalReportFile(gearsUseCentrifuge.getOrElse(false), "Centriguge analysis", "gearscentrifuge-centrifuge_unique_report.html")
+  addConditionalReportFile(gearsUseCentrifuge.getOrElse(false), "Centriguge analysis", "Non-unique", "index.html")
+  addConditionalReportFile(gearsUseCentrifuge.getOrElse(false), "Centriguge analysis", "Non-unique", "gearscentrifuge-centrifuge_report.html")
+
+  addConditionalReportFile(gearsUseKraken.getOrElse(true), "Kraken analysis", "index.html")
+
 }
