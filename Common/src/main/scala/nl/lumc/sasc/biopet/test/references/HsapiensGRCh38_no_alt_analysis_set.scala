@@ -5,9 +5,9 @@ import java.io.File
 /**
  * Created by pjvanthof on 14/11/15.
  */
-trait HsapiensHg19 extends Reference {
+trait HsapiensGRCh38_no_alt_analysis_set extends Reference {
   def referenceSpecies = Some("H.sapiens")
-  def referenceName = Some("hg19")
+  def referenceName = Some("GRCh38_no_alt_analysis_set")
 
   override def functionalTest = true
 
@@ -38,3 +38,4 @@ trait HsapiensHg19 extends Reference {
   /** This value should be in the global config */
   def hisat2Index: Option[File] = None
 }
+

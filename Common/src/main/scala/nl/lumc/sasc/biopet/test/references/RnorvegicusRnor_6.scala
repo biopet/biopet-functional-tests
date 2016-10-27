@@ -35,4 +35,6 @@ trait RnorvegicusRnor_6 extends Reference {
   /** This value should be in the global config */
   def starGenomeDir: Option[File] = None
 
+  /** This value should be in the global config */
+  def hisat2Index: Option[File] = None
 }
