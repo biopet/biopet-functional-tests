@@ -118,7 +118,7 @@ class PairedTophatCelegansWBcel235Test extends ReferencePairedTemplate with Toph
 
 class PairedGsnapHsapiensGRCh38Test extends ReferencePairedTemplate with Gsnap with HsapiensGRCh38
 class PairedGsnapHsapiensGRCh37Test extends ReferencePairedTemplate with Gsnap with HsapiensGRCh37
-class PairedGsnapMmusculusGRCm38Test extends ReferencePairedTemplate  with Gsnap with MmusculusGRCm38
+class PairedGsnapMmusculusGRCm38Test extends ReferencePairedTemplate with Gsnap with MmusculusGRCm38
 class PairedGsnapRnorvegicusRnor_6Test extends ReferencePairedTemplate with Gsnap with RnorvegicusRnor_6
 class PairedGsnapCelegansWBcel235Test extends ReferencePairedTemplate with Gsnap with CelegansWBcel235
 

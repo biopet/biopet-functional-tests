@@ -36,6 +36,6 @@ trait HsapiensGRCh37_p13_no_alt_analysis_set extends Reference {
   def starGenomeDir: Option[File] = None
 
   /** This value should be in the global config */
-  def hisat2Index: Option[File] = None
+  def hisat2Index: Option[String] = None
 }
 

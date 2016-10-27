@@ -36,5 +36,5 @@ trait MmusculusGRCm38 extends Reference {
   def starGenomeDir: Option[File] = None
 
   /** This value should be in the global config */
-  def hisat2Index: Option[File] = None
+  def hisat2Index: Option[String] = None
 }
