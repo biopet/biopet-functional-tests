@@ -1,9 +1,5 @@
 package nl.lumc.sasc.biopet.test.references
 
-import java.io.File
-
-import scala.reflect.io
-
 /**
  * Created by pjvanthof on 14/11/15.
  */
