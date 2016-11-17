@@ -6,7 +6,6 @@ import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.aligners._
 import nl.lumc.sasc.biopet.test.references
 import nl.lumc.sasc.biopet.test.mapping.{Mapping, MappingSuccess}
-import nl.lumc.sasc.biopet.test.references.HsapiensHg19
 
 /**
  * Created by pjvanthof on 06/08/15.
@@ -29,6 +28,11 @@ trait HsapiensGRCh38 extends Mapping with references.HsapiensGRCh38 {
 }
 
 trait HsapiensGRCh37 extends Mapping with references.HsapiensGRCh37 {
+  override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
+  override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
+}
+
+trait HsapiensHg19 extends Mapping with references.HsapiensHg19 {
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
 }
