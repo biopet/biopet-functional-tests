@@ -57,7 +57,7 @@ trait MappingStatsBwaMem extends MappingPaired with BwaMem {
         x => (x \ "SD_COVERAGE").extract[Double] shouldEqual 11.0 +- 2.0
       ))
 
-    addSummaryTest(statsPath :+ "biopet_flagstat",
+    addSummaryTest(statsPath :+ "bamstats" :+ "flagstat",
       Seq(
         _ \ "All" should haveValue(20000),
         x => (x \ "Mapped").extract[Int] shouldEqual 19800 +- 200,
