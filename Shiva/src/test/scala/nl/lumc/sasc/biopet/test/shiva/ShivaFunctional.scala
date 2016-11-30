@@ -3,7 +3,7 @@ package nl.lumc.sasc.biopet.test.shiva
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
-import nl.lumc.sasc.biopet.test.references.{HsapiensGRCh37, HsapiensGRCh38, HsapiensHg19}
+import nl.lumc.sasc.biopet.test.references.{ HsapiensGRCh37, HsapiensGRCh38, HsapiensHg19 }
 import nl.lumc.sasc.biopet.test.samples.NA12878Bioplanet30x
 import nl.lumc.sasc.biopet.test.shiva.variantcallers._
 import nl.lumc.sasc.biopet.test.Biopet
