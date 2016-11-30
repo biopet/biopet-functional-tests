@@ -3,7 +3,7 @@ package nl.lumc.sasc.biopet.test.shiva
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
-import nl.lumc.sasc.biopet.test.references.{ HsapiensGRCh38, HsapiensGRCh37 }
+import nl.lumc.sasc.biopet.test.references.{HsapiensGRCh37, HsapiensGRCh38, HsapiensHg19}
 import nl.lumc.sasc.biopet.test.samples.NA12878Bioplanet30x
 import nl.lumc.sasc.biopet.test.shiva.variantcallers._
 import nl.lumc.sasc.biopet.test.Biopet
@@ -36,6 +36,14 @@ class ShivaBiopetplanet30xGRCh37Test extends ShivaSuccess with BwaMem with Hsapi
 }
 
 class ShivaBiopetplanet30xGRCh38Test extends ShivaSuccess with BwaMem with HsapiensGRCh38 with NA12878Bioplanet30x
+  with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
+  override def disablescatter = false
+  def paired = true
+  def shouldHaveKmerContent = Some(false)
+  override def annotation = Some(true)
+}
+
+class ShivaBiopetplanet30xHg19Test extends ShivaSuccess with BwaMem with HsapiensHg19 with NA12878Bioplanet30x
   with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
   override def disablescatter = false
   def paired = true
