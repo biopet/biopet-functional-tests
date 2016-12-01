@@ -5,7 +5,7 @@ package nl.lumc.sasc.biopet.test.references
  */
 trait HsapiensGRCh37_p13_no_alt_analysis_set extends GlobalReference {
   def referenceSpecies = Some("H.sapiens")
-  def referenceName = Some("GRCh37_p13_no_alt_analysis_set")
+  def referenceName = Some("GRCh37.p13_no_alt_analysis_set")
 
 }
 
