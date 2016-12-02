@@ -22,4 +22,17 @@ trait GearsSuccess extends Gears with MultisampleSuccess {
 
   addConditionalFile(gearUseQiimeOpen.getOrElse(false), "report", "Qiime open reference analysis", "index.html")
   addConditionalFile(gearUseQiimeClosed.getOrElse(false), "report", "Qiime closed reference analysis", "index.html")
+
+  samples.foreach {
+    case (sample, libraries) =>
+      addConditionalFile(gearsUseCentrifuge.getOrElse(true), "report", "Samples", sample, "Centriguge analysis", "index.html")
+      addConditionalFile(gearsUseKraken.getOrElse(false), "report", "Samples", sample, "Kraken analysis", "index.html")
+      addConditionalFile(gearUseQiimeOpen.getOrElse(false),  "report", "Samples", sample, "Qiime open reference analysis", "index.html")
+      addConditionalFile(gearUseQiimeClosed.getOrElse(false),  "report", "Samples", sample, "Qiime closed reference analysis", "index.html")
+
+      libraries.foreach { library =>
+        //TODO: library tests
+      }
+  }
+
 }
