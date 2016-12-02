@@ -6,6 +6,8 @@ import nl.lumc.sasc.biopet.test.MultisampleSuccess
  * Created by pjvan_thof on 2/2/16.
  */
 trait GearsSuccess extends Gears with MultisampleSuccess {
+  def paired: Boolean
+
   addMustHaveFile("report", "ext", "js", "krona-2.0.js")
   addMustHaveFile("report", "ext", "img")
   addMustHaveFile("report", "ext", "img", "krona")
@@ -34,6 +36,16 @@ trait GearsSuccess extends Gears with MultisampleSuccess {
       addConditionalFile(gearsUseKraken.getOrElse(false), "samples", sample, "kraken")
       addConditionalFile(gearUseQiimeOpen.getOrElse(false),  "samples", sample, "qiime_open")
       addConditionalFile(gearUseQiimeClosed.getOrElse(false),  "samples", sample, "qiime_closed")
+
+      addConditionalFile((gearUseQiimeOpen.getOrElse(false) || gearUseQiimeClosed.getOrElse(false)) && paired,  "samples", sample, "combine_reads", "flash")
+      addMustNotHaveFile("samples", sample, "combine_reads", "flash", "out.extendedFrags.fastq.gz")
+      addMustNotHaveFile("samples", sample, "combine_reads", "flash", "out.notCombined_1.fastq.gz")
+      addMustNotHaveFile("samples", sample, "combine_reads", "flash", "out.notCombined_2.fastq.gz")
+      addConditionalFile((gearUseQiimeOpen.getOrElse(false) || gearUseQiimeClosed.getOrElse(false)), "samples", sample, "combine_reads", "flash", ".out.extendedFrags.fastq.gz.Flash.out")
+      addConditionalFile((gearUseQiimeOpen.getOrElse(false) || gearUseQiimeClosed.getOrElse(false)), "samples", sample, "combine_reads", "combine_reads.summary.json")
+
+      addMustNotHaveFile("samples", sample, "qiime_open", "split_libraries_fastq", "seqs.fna")
+      addMustNotHaveFile("samples", sample, "qiime_closed", "split_libraries_fastq", "seqs.fna")
 
       libraries.foreach { library =>
         //TODO: library tests
