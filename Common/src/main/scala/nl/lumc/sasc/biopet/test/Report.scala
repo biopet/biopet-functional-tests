@@ -9,53 +9,24 @@ import org.testng.annotations.{ DataProvider, Test }
  */
 trait Report extends Pipeline {
 
-  def reportDir = new File(outputDir, "report")
-
-  private var mustHaveReportFiles: List[File] = Nil
-  def addMustHaveReportFile(path: String*) = mustHaveReportFiles ::= new File(reportDir, path.mkString(File.separator))
-
-  @DataProvider(name = "report_must_have_files")
-  def reportMustHaveFiles = mustHaveReportFiles.map(Array(_)).toArray
-
-  @Test(dataProvider = "report_must_have_files", dependsOnGroups = Array("parseLog"))
-  def testReportMustHaveFile(file: File): Unit = withClue(s"file: $file") {
-    file should exist
-  }
-
-  private var mustNotHaveReportFiles: List[File] = Nil
-  def addMustNotHaveReportFile(path: String*) = mustNotHaveReportFiles ::= new File(reportDir, path.mkString(File.separator))
-
-  @DataProvider(name = "report_must_not_have_files")
-  def reportMustNotHaveFiles = mustNotHaveReportFiles.map(Array(_)).toArray
-
-  @Test(dataProvider = "report_must_not_have_files", dependsOnGroups = Array("parseLog"))
-  def testReportMustNotHaveFile(file: File): Unit = withClue(s"file: $file") {
-    assert(!file.exists())
-  }
-
-  def addConditionalReportFile(condition: Boolean, path: String*): Unit = {
-    if (condition) mustHaveReportFiles ::= new File(reportDir, path.mkString(File.separator))
-    else mustNotHaveReportFiles ::= new File(reportDir, path.mkString(File.separator))
-  }
-
-  addMustHaveReportFile()
-  addMustHaveReportFile("index.html")
-  addMustHaveReportFile("ext")
-  addMustHaveReportFile("ext", "js")
-  addMustHaveReportFile("ext", "js", "sortable.min.js")
-  addMustHaveReportFile("ext", "js", "jquery.min.js")
-  addMustHaveReportFile("ext", "js", "d3.v3.5.5.min.js")
-  addMustHaveReportFile("ext", "js", "bootstrap.min.js")
-  addMustHaveReportFile("ext", "css")
-  addMustHaveReportFile("ext", "css", "bootstrap.min.css")
-  addMustHaveReportFile("ext", "css", "sortable-theme-bootstrap.css")
-  addMustHaveReportFile("ext", "css", "bootstrap-theme.min.css")
-  addMustHaveReportFile("ext", "css", "bootstrap_dashboard.css")
-  addMustHaveReportFile("ext", "fonts")
-  addMustHaveReportFile("ext", "fonts", "glyphicons-halflings-regular.ttf")
-  addMustHaveReportFile("ext", "fonts", "glyphicons-halflings-regular.woff2")
-  addMustHaveReportFile("ext", "fonts", "glyphicons-halflings-regular.woff")
-  addMustHaveReportFile("Versions")
-  addMustHaveReportFile("Versions", "index.html")
+  addMustHaveFile("report")
+  addMustHaveFile("report", "index.html")
+  addMustHaveFile("report", "ext")
+  addMustHaveFile("report", "ext", "js")
+  addMustHaveFile("report", "ext", "js", "sortable.min.js")
+  addMustHaveFile("report", "ext", "js", "jquery.min.js")
+  addMustHaveFile("report", "ext", "js", "d3.v3.5.5.min.js")
+  addMustHaveFile("report", "ext", "js", "bootstrap.min.js")
+  addMustHaveFile("report", "ext", "css")
+  addMustHaveFile("report", "ext", "css", "bootstrap.min.css")
+  addMustHaveFile("report", "ext", "css", "sortable-theme-bootstrap.css")
+  addMustHaveFile("report", "ext", "css", "bootstrap-theme.min.css")
+  addMustHaveFile("report", "ext", "css", "bootstrap_dashboard.css")
+  addMustHaveFile("report", "ext", "fonts")
+  addMustHaveFile("report", "ext", "fonts", "glyphicons-halflings-regular.ttf")
+  addMustHaveFile("report", "ext", "fonts", "glyphicons-halflings-regular.woff2")
+  addMustHaveFile("report", "ext", "fonts", "glyphicons-halflings-regular.woff")
+  addMustHaveFile("report", "Versions")
+  addMustHaveFile("report", "Versions", "index.html")
 
 }

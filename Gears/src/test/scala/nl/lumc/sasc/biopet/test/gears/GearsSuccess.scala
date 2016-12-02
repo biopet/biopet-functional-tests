@@ -6,20 +6,20 @@ import nl.lumc.sasc.biopet.test.MultisampleSuccess
  * Created by pjvan_thof on 2/2/16.
  */
 trait GearsSuccess extends Gears with MultisampleSuccess {
-  addMustHaveReportFile("ext", "js", "krona-2.0.js")
-  addMustHaveReportFile("ext", "img")
-  addMustHaveReportFile("ext", "img", "krona")
-  addMustHaveReportFile("ext", "img", "krona", "favicon.ico")
-  addMustHaveReportFile("ext", "img", "krona", "loading.gif")
-  addMustHaveReportFile("ext", "img", "krona", "hidden.png")
+  addMustHaveFile("report", "ext", "js", "krona-2.0.js")
+  addMustHaveFile("report", "ext", "img")
+  addMustHaveFile("report", "ext", "img", "krona")
+  addMustHaveFile("report", "ext", "img", "krona", "favicon.ico")
+  addMustHaveFile("report", "ext", "img", "krona", "loading.gif")
+  addMustHaveFile("report", "ext", "img", "krona", "hidden.png")
 
-  addConditionalReportFile(gearsUseCentrifuge.getOrElse(true), "Centriguge analysis", "index.html")
-  addConditionalReportFile(gearsUseCentrifuge.getOrElse(true), "Centriguge analysis", "gearscentrifuge-centrifuge_unique_report.html")
-  addConditionalReportFile(gearsUseCentrifuge.getOrElse(true), "Centriguge analysis", "Non-unique", "index.html")
-  addConditionalReportFile(gearsUseCentrifuge.getOrElse(true), "Centriguge analysis", "Non-unique", "gearscentrifuge-centrifuge_report.html")
+  addConditionalFile(gearsUseCentrifuge.getOrElse(true), "report", "Centriguge analysis", "index.html")
+  addConditionalFile(gearsUseCentrifuge.getOrElse(true), "report", "Centriguge analysis", "gearscentrifuge-centrifuge_unique_report.html")
+  addConditionalFile(gearsUseCentrifuge.getOrElse(true), "report", "Centriguge analysis", "Non-unique", "index.html")
+  addConditionalFile(gearsUseCentrifuge.getOrElse(true), "report", "Centriguge analysis", "Non-unique", "gearscentrifuge-centrifuge_report.html")
 
-  addConditionalReportFile(gearsUseKraken.getOrElse(false), "Kraken analysis", "index.html")
+  addConditionalFile(gearsUseKraken.getOrElse(false), "report", "Kraken analysis", "index.html")
 
-  addConditionalReportFile(gearUseQiimeOpen.getOrElse(false), "Qiime open reference analysis", "index.html")
-  addConditionalReportFile(gearUseQiimeClosed.getOrElse(false), "Qiime closed reference analysis", "index.html")
+  addConditionalFile(gearUseQiimeOpen.getOrElse(false), "report", "Qiime open reference analysis", "index.html")
+  addConditionalFile(gearUseQiimeClosed.getOrElse(false), "report", "Qiime closed reference analysis", "index.html")
 }
