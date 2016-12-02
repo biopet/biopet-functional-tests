@@ -20,4 +20,6 @@ trait GearsSuccess extends Gears with MultisampleSuccess {
 
   addConditionalReportFile(gearsUseKraken.getOrElse(false), "Kraken analysis", "index.html")
 
+  addConditionalReportFile(gearUseQiimeOpen.getOrElse(false), "Qiime open reference analysis", "index.html")
+  addConditionalReportFile(gearUseQiimeClosed.getOrElse(false), "Qiime closed reference analysis", "index.html")
 }
