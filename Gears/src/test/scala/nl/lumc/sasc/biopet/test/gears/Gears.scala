@@ -13,7 +13,7 @@ trait Gears extends Pipeline {
 
   def summaryFile = new File(outputDir, s"gears.summary.json")
 
-  override def functionalTest = gearsUseKraken.getOrElse(true) || gearsUseCentrifuge.getOrElse(false)
+  override def functionalTest = gearsUseKraken.getOrElse(false) || gearsUseCentrifuge.getOrElse(true)
 
   def gearsUseKraken: Option[Boolean] = None
   def gearsUseCentrifuge: Option[Boolean] = None

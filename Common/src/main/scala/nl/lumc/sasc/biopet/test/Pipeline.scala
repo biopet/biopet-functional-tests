@@ -134,6 +134,34 @@ trait Pipeline extends TestNGSuite with Matchers {
   protected def resourcePath(p: String): String = {
     Paths.get(getClass.getResource(p).toURI).toString
   }
+
+  private var mustHaveFiles: List[File] = Nil
+  def addMustHaveFile(path: String*) = mustHaveFiles ::= new File(outputDir, path.mkString(File.separator))
+
+  @DataProvider(name = "_must_have_files")
+  def MustHaveFiles = mustHaveFiles.map(Array(_)).toArray
+
+  @Test(dataProvider = "_must_have_files", dependsOnGroups = Array("parseLog"))
+  def testMustHaveFile(file: File): Unit = withClue(s"file: $file") {
+    file should exist
+  }
+
+  private var mustNotHaveFiles: List[File] = Nil
+  def addMustNotHaveFile(path: String*) = mustNotHaveFiles ::= new File(outputDir, path.mkString(File.separator))
+
+  @DataProvider(name = "_must_not_have_files")
+  def MustNotHaveFiles = mustNotHaveFiles.map(Array(_)).toArray
+
+  @Test(dataProvider = "_must_not_have_files", dependsOnGroups = Array("parseLog"))
+  def testMustNotHaveFile(file: File): Unit = withClue(s"file: $file") {
+    assert(!file.exists())
+  }
+
+  def addConditionalFile(condition: Boolean, path: String*): Unit = {
+    if (condition) mustHaveFiles ::= new File(outputDir, path.mkString(File.separator))
+    else mustNotHaveFiles ::= new File(outputDir, path.mkString(File.separator))
+  }
+
 }
 
 object Pipeline {
