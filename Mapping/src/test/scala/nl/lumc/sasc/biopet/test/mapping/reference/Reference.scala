@@ -5,7 +5,7 @@ import java.io.File
 import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.aligners._
 import nl.lumc.sasc.biopet.test.references
-import nl.lumc.sasc.biopet.test.mapping.{Mapping, MappingSuccess}
+import nl.lumc.sasc.biopet.test.mapping.{ Mapping, MappingSuccess }
 
 /**
  * Created by pjvanthof on 06/08/15.
