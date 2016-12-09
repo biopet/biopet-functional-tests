@@ -26,6 +26,8 @@ trait ToucanSuccess extends Toucan {
   logMustNotHave("""Script failed with \d+ total jobs""".r)
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
 
+  override def vepConfig = Some("75")
+
   def outputPath: String = outputDir.getAbsolutePath +
     File.separator +
     (this.inputVcf map

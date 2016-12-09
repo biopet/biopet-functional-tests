@@ -25,10 +25,13 @@ trait Toucan extends Pipeline with Reference {
 
   def enableScatter: Boolean = false
 
+  def vepConfig: Option[String] = None
+
   override def args = super.args ++
     cmdArg("-Input", inputVcf) ++
     cmdConfig("enable_scatter", enableScatter) ++
     cmdConfig("gonl_vcf", goNLFile) ++
     cmdConfig("exac_vcf", exacFile) ++
-    cmdConfig("mode", normalizerMode)
+    cmdConfig("mode", normalizerMode) ++
+    cmdConfig("vep_config", vepConfig)
 }
