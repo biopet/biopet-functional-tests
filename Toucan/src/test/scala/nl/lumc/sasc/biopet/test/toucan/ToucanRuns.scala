@@ -50,3 +50,15 @@ class ToucanCelegansWBcel235Test extends ToucanSuccess with CelegansWBcel235 {
   override def inputVcf = Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
   override def functionalTest = false
 }
+
+class ToucanDrerioGRCz10Test extends ToucanSuccess with DrerioGRCz10 {
+  override def vepVersion = Some("86")
+  override def inputVcf = Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
+  override def functionalTest = false
+}
+
+class ToucanDmelanogasterBDGP6Test extends ToucanSuccess with DmelanogasterBDGP6 {
+  override def vepVersion = Some("86")
+  override def inputVcf = Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
+  override def functionalTest = false
+}
