@@ -110,8 +110,8 @@ class SingleTophatMmusculusGRCm38Test extends ReferenceSingleTemplate with Topha
 class SingleTophatRnorvegicusRnor_6Test extends ReferenceSingleTemplate with Tophat with RnorvegicusRnor_6
 //class SingleTophatCelegansWBcel235Test extends ReferenceSingleTemplate with Tophat with CelegansWBcel235
 class SingleTophatClfamiliarisCanFam3_1Test extends ReferenceSingleTemplate with Tophat with ClfamiliarisCanFam3_1
-class SingleTophatDrerioGRCz10Test extends ReferenceSingleTemplate with Tophat with DrerioGRCz10
-class SingleTophatDmelanogasterBDGP6Test extends ReferenceSingleTemplate with Tophat with DmelanogasterBDGP6
+//class SingleTophatDrerioGRCz10Test extends ReferenceSingleTemplate with Tophat with DrerioGRCz10
+//class SingleTophatDmelanogasterBDGP6Test extends ReferenceSingleTemplate with Tophat with DmelanogasterBDGP6
 
 class SingleGsnapHsapiensGRCh38Test extends ReferenceSingleTemplate with Gsnap with HsapiensGRCh38
 class SingleGsnapHsapiensGRCh37Test extends ReferenceSingleTemplate with Gsnap with HsapiensGRCh37
@@ -176,8 +176,8 @@ class PairedTophatHsapiensHg19Test extends ReferencePairedTemplate with Tophat w
 //class PairedTophatRnorvegicusRnor_6Test extends ReferencePairedTemplate with Tophat with RnorvegicusRnor_6
 //class PairedTophatCelegansWBcel235Test extends ReferencePairedTemplate with Tophat with CelegansWBcel235
 class PairedTophatClfamiliarisCanFam3_1Test extends ReferencePairedTemplate with Tophat with ClfamiliarisCanFam3_1
-class PairedTophatDrerioGRCz10Test extends ReferencePairedTemplate with Tophat with DrerioGRCz10
-class PairedTophatDmelanogasterBDGP6Test extends ReferencePairedTemplate with Tophat with DmelanogasterBDGP6
+//class PairedTophatDrerioGRCz10Test extends ReferencePairedTemplate with Tophat with DrerioGRCz10
+//class PairedTophatDmelanogasterBDGP6Test extends ReferencePairedTemplate with Tophat with DmelanogasterBDGP6
 
 class PairedGsnapHsapiensGRCh38Test extends ReferencePairedTemplate with Gsnap with HsapiensGRCh38
 class PairedGsnapHsapiensGRCh37Test extends ReferencePairedTemplate with Gsnap with HsapiensGRCh37
