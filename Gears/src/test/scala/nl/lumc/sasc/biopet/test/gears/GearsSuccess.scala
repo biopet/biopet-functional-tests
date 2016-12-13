@@ -29,15 +29,15 @@ trait GearsSuccess extends Gears with MultisampleSuccess {
     case (sample, libraries) =>
       addConditionalFile(gearsUseCentrifuge.getOrElse(true), "report", "Samples", sample, "Centriguge analysis", "index.html")
       addConditionalFile(gearsUseKraken.getOrElse(false), "report", "Samples", sample, "Kraken analysis", "index.html")
-      addConditionalFile(gearUseQiimeOpen.getOrElse(false),  "report", "Samples", sample, "Qiime open reference analysis", "index.html")
-      addConditionalFile(gearUseQiimeClosed.getOrElse(false),  "report", "Samples", sample, "Qiime closed reference analysis", "index.html")
+      addConditionalFile(gearUseQiimeOpen.getOrElse(false), "report", "Samples", sample, "Qiime open reference analysis", "index.html")
+      addConditionalFile(gearUseQiimeClosed.getOrElse(false), "report", "Samples", sample, "Qiime closed reference analysis", "index.html")
 
       addConditionalFile(gearsUseCentrifuge.getOrElse(true), "samples", sample, "centrifuge")
       addConditionalFile(gearsUseKraken.getOrElse(false), "samples", sample, "kraken")
-      addConditionalFile(gearUseQiimeOpen.getOrElse(false),  "samples", sample, "qiime_open")
-      addConditionalFile(gearUseQiimeClosed.getOrElse(false),  "samples", sample, "qiime_closed")
+      addConditionalFile(gearUseQiimeOpen.getOrElse(false), "samples", sample, "qiime_open")
+      addConditionalFile(gearUseQiimeClosed.getOrElse(false), "samples", sample, "qiime_closed")
 
-      addConditionalFile((gearUseQiimeOpen.getOrElse(false) || gearUseQiimeClosed.getOrElse(false)) && paired,  "samples", sample, "combine_reads", "flash")
+      addConditionalFile((gearUseQiimeOpen.getOrElse(false) || gearUseQiimeClosed.getOrElse(false)) && paired, "samples", sample, "combine_reads", "flash")
       addMustNotHaveFile("samples", sample, "combine_reads", "flash", "out.extendedFrags.fastq.gz")
       addMustNotHaveFile("samples", sample, "combine_reads", "flash", "out.notCombined_1.fastq.gz")
       addMustNotHaveFile("samples", sample, "combine_reads", "flash", "out.notCombined_2.fastq.gz")
