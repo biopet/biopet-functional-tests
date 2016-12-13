@@ -1,4 +1,4 @@
-package nl.lumc.sasc.biopet.test.generateindexes
+package nl.lumc.sasc.biopet.test.downloadgenomes
 
 import java.io.File
 
@@ -8,8 +8,8 @@ import nl.lumc.sasc.biopet.test.Pipeline._
 /**
  * Created by pjvan_thof on 13-5-16.
  */
-trait GenerateIndexes extends Pipeline {
-  def pipelineName = "generateindexes"
+trait DownloadGenomes extends Pipeline {
+  def pipelineName = "downloadgenomes"
 
   def referenceConfigs: List[File] = Nil
 
