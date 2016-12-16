@@ -32,7 +32,9 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
     val file = new File(summaryPath.extract[String])
     file shouldBe libraryBam(sample, lib)
     val replacejob = new File(libraryDir(sample, lib), s".$sample-$lib.final.bam.addorreplacereadgroups.out")
-    file should not be exist
+    if (samples(sample).size > 1 || libraryBam(sample, lib) != libraryPreprecoessBam(sample, lib))
+      file should not be exist
+    else file should exist
   }
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
