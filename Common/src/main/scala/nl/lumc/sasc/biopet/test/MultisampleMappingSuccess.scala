@@ -123,7 +123,7 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
         addConditionalFile(rnaMetricsShouldRun, "report", "Samples", sample, "Libraries", library, "Alignment", "rna.tsv")
 
         addConditionalFile(wgsMetricsShouldRun, "report", "Samples", sample, "Libraries", library, "Alignment", "wgs.png")
-        addConditionalFile(wgsMetricsShouldRun, "Samples", sample, "Libraries", library, "Alignment", "wgs.tsv")
+        addConditionalFile(wgsMetricsShouldRun, "report", "Samples", sample, "Libraries", library, "Alignment", "wgs.tsv")
 
         shouldHaveKmerContent match {
           case Some(shouldHaveKmerContent) =>
