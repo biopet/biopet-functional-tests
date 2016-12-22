@@ -248,15 +248,16 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
   def testShivaLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     val replacejob = new File(libraryDir(sample, lib), s".$sample-$lib.final.bam.addorreplacereadgroups.out")
     if (replacejob.exists()) assert(!libraryBam(sample, lib).exists())
-    else {
-      assert(libraryBam(sample, lib).exists())
+    else if (samples(sample).size == 1 && (!useIndelRealigner.getOrElse(true) && !useBaseRecalibration.getOrElse(true))) {
+      libraryBam(sample, lib) should exist
 
       val reader = SamReaderFactory.makeDefault.open(libraryBam(sample, lib))
       val header = reader.getFileHeader
       assert(!header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
       assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
       reader.close()
-    }
+    } else libraryBam(sample, lib) should not be exist
+
   }
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))

@@ -9,7 +9,7 @@ import org.testng.annotations.Test
  * Created by pjvanthof on 25/01/16.
  */
 trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSuccess {
-  def libraryBam(sampleId: String, libId: String) = new File(libraryDir(sampleId, libId), s"$sampleId-$libId.final.bam")
+  def libraryBam(sampleId: String, libId: String) = new File(libraryDir(sampleId, libId), s"$sampleId-$libId.dedup.bam")
 
   def libraryPreprecoessBam(sampleId: String, libId: String) = libraryBam(sampleId, libId)
 
@@ -32,8 +32,9 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
     val file = new File(summaryPath.extract[String])
     file shouldBe libraryBam(sample, lib)
     val replacejob = new File(libraryDir(sample, lib), s".$sample-$lib.final.bam.addorreplacereadgroups.out")
-    if (replacejob.exists()) assert(!file.exists())
-    else assert(file.exists())
+    if (samples(sample).size > 1 || libraryBam(sample, lib) != libraryPreprecoessBam(sample, lib))
+      file should not be exist
+    else file should exist
   }
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
@@ -124,7 +125,7 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
         addConditionalFile(rnaMetricsShouldRun, "report", "Samples", sample, "Libraries", library, "Alignment", "rna.tsv")
 
         addConditionalFile(wgsMetricsShouldRun, "report", "Samples", sample, "Libraries", library, "Alignment", "wgs.png")
-        addConditionalFile(wgsMetricsShouldRun, "Samples", sample, "Libraries", library, "Alignment", "wgs.tsv")
+        addConditionalFile(wgsMetricsShouldRun, "report", "Samples", sample, "Libraries", library, "Alignment", "wgs.tsv")
 
         shouldHaveKmerContent match {
           case Some(shouldHaveKmerContent) =>
