@@ -8,10 +8,10 @@ import nl.lumc.sasc.biopet.test.references.HsapiensGRCh38
 
 // TODO: set up fixtures and work out
 class FreecHSapiensTest extends KopisuSuccess with FreecMethod
-class FreecHSapiensFail extends KopisuFail with FreecMethod
+class FreecHSapiensFailTest extends KopisuFail with FreecMethod
 
 class XhmmHSapiensTest extends KopisuSuccess with XhmmMethod
-class XhmmHSapeinsFail extends KopisuFail with XhmmMethod
+class XhmmHSapeinsFailTest extends KopisuFail with XhmmMethod
 
 class CnmopsHSapiensTest extends KopisuSuccess with CnMopsMethod
-class CnmopsHSapiensFail extends KopisuFail with CnMopsMethod
+class CnmopsHSapiensFailTest extends KopisuFail with CnMopsMethod
