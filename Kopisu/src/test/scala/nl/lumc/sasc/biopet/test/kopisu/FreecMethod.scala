@@ -11,6 +11,6 @@ trait FreecMethod extends Pipeline {
   override def args = super.args ++
     cmdConfig("use_freec_method", "true") ++
     cmdConfig("chrFiles", Biopet.fixtureFile("./reference/freec/contigs")) ++
-    cmdConfig("chrLenFile", Biopet.fixtureFile("/exports/sasc/testing/fixtures/reference/freec/chrLen"))
+    cmdConfig("chrLenFile", Biopet.fixtureFile("./reference/freec/chrLen"))
 
 }
