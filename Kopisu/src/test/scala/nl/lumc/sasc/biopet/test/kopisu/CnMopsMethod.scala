@@ -8,6 +8,6 @@ import nl.lumc.sasc.biopet.test.Pipeline._
  */
 trait CnMopsMethod extends Pipeline {
 
-  override def args = super.args ++ cmdConfig("use_cnmops_method", "true")
+  override def args = super.args ++ cmdConfig("use_cnmops_method", "true") ++ cmdConfig("use_freec_method", "false")
 
 }
