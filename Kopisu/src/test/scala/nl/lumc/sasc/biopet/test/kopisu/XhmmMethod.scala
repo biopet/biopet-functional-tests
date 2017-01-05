@@ -10,6 +10,6 @@ trait XhmmMethod extends Pipeline {
 
   override def args = super.args ++ cmdConfig("use_xhmm_method", "true") ++
     cmdConfig("use_freec_method", "false") ++
-    cmdConfig("targets_bed", Biopet.fixtureFile("./kopisu/targets.bed")) ++
+    cmdConfig("amplicon_bed", Biopet.fixtureFile("./kopisu/targets.bed")) ++
     cmdConfig("discover_params", Biopet.fixtureFile("./kopisu/discover.params"))
 }
