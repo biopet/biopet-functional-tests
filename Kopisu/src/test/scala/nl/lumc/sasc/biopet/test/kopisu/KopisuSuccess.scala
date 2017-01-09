@@ -17,3 +17,14 @@ trait KopisuSuccess extends Kopisu with PipelineSuccess {
   def ref = Biopet.fixtureFile("reference" + File.separator + "reference.fasta")
 
 }
+
+trait XhmmSuccess extends KopisuSuccess {
+  inputBams.foreach { b =>
+    val sample = b.getName.split(".").head
+    val bedPath = "xhmm" + File.separator + "beds" + File.separator + s"sample${sample}.bed"
+    addMustHaveFile(bedPath)
+  }
+
+  addMustHaveFile("xhmm" + File.separator + "xhmm.xcnv")
+  addMustHaveFile("xhmm" + File.separator + "xhmm.vcf")
+}
