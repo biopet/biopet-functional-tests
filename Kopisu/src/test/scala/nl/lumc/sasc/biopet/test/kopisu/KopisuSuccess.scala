@@ -19,8 +19,7 @@ trait KopisuSuccess extends Kopisu with PipelineSuccess {
 }
 
 trait XhmmSuccess extends KopisuSuccess {
-  inputBams.foreach { b =>
-    val sample = b.getName.split(".").head
+  (1 to 20).foreach { sample =>
     val bedPath = "xhmm" + File.separator + "beds" + File.separator + s"sample${sample}.bed"
     addMustHaveFile(bedPath)
   }
