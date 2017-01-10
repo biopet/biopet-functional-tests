@@ -26,4 +26,5 @@ trait XhmmSuccess extends KopisuSuccess {
 
   addMustHaveFile("xhmm" + File.separator + "xhmm.xcnv")
   addMustHaveFile("xhmm" + File.separator + "xhmm.vcf")
+  addMustHaveFile("xhmm" + File.separator + "xhmm.depths.data")
 }
