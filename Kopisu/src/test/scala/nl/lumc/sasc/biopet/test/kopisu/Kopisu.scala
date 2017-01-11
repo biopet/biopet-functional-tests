@@ -16,7 +16,6 @@ trait Kopisu extends Pipeline {
   def ref: File
 
   override def args = super.args ++ inputBams.foldLeft[Seq[String]](Seq()) { (acc, v) =>
-    acc ++ cmdArg("-BAM", v) ++ cmdConfig("reference_fasta", ref)
-  }
+    acc ++ cmdArg("-BAM", v) } ++ cmdConfig("reference_fasta", ref)
 
 }

@@ -10,7 +10,6 @@ import nl.lumc.sasc.biopet.test.{ Biopet, PipelineSuccess }
 trait KopisuSuccess extends Kopisu with PipelineSuccess {
 
   override def inputBams = (1 to 20).
-    map(_.toString).
     map(x => "kopisu" + File.separator + s"$x.sorted.bam").
     map(Biopet.fixtureFile(_)).toList
 
