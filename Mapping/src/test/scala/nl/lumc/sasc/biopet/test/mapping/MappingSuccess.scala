@@ -28,8 +28,10 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   override def summaryRoot = summaryLibrary(sampleId.get, libId.get)
 
-  def finalBamFile: File = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
-  def finalWigFile: File = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam.wig")
+  def finalBamFile: File = if (skipMarkDuplicates.getOrElse(false)) new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bam")
+  else new File(outputDir, s"${sampleId.get}-${libId.get}.bam")
+  def finalWigFile: File = if (skipMarkDuplicates.getOrElse(false)) new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bam.wig")
+  else new File(outputDir, s"${sampleId.get}-${libId.get}.bam.wig")
 
   if (!skipFlexiprep.contains(true)) {
     addExecutable(Executable("fastqc", Some(""".+""".r)))
