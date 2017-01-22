@@ -48,6 +48,8 @@ trait Shiva extends MultisampleMapping with Reference with Aligner with Variantc
 
   def executeVtDecompose: Option[Boolean] = None
 
+  def vepVersion: Option[String] = None
+
   override def args = super.args ++
     cmdConfig("library_variantcalling", libraryVariantcalling) ++
     cmdConfig("single_sample_variantcalling", singleSampleVariantcalling) ++
@@ -62,7 +64,8 @@ trait Shiva extends MultisampleMapping with Reference with Aligner with Variantc
     cmdConfig("reference_vcf_regions", referenceVcfRegions) ++
     cmdConfig("amplicon_bed", ampliconBed) ++
     cmdConfig("execute_vt_normalize", executeVtNormalize) ++
-    cmdConfig("execute_vt_decompose", executeVtDecompose)
+    cmdConfig("execute_vt_decompose", executeVtDecompose) ++
+    cmdConfig("vep_version", vepVersion)
 }
 
 object Shiva extends Matchers {

@@ -16,6 +16,10 @@ class ShivaBiopetplanet30xGRCh37AnalysisTest extends ShivaSuccess with BwaMem wi
   override def minPrecision = 0.945
   override def minRecall = 0.945
 
+  override def memoryArg = "-Xmx512m"
+
+  override def vepVersion = Some("86")
+
   def paired = true
   def shouldHaveKmerContent = Some(false)
   override def annotation = Some(true)
@@ -41,6 +45,8 @@ class ShivaBiopetplanet30xGRCh38AnalysisTest extends ShivaSuccess with BwaMem wi
   def paired = true
   def shouldHaveKmerContent = Some(false)
   override def annotation = Some(true)
+  override def vepVersion = Some("86")
+  override def memoryArg = "-Xmx512m"
 }
 
 class ShivaBiopetplanet30xGRCh38Test extends ShivaSuccess with BwaMem with HsapiensGRCh38 with NA12878Bioplanet30x
@@ -49,6 +55,8 @@ class ShivaBiopetplanet30xGRCh38Test extends ShivaSuccess with BwaMem with Hsapi
   def paired = true
   def shouldHaveKmerContent = Some(false)
   override def annotation = Some(true)
+  override def vepVersion = Some("86")
+  override def memoryArg = "-Xmx512m"
 }
 
 class ShivaBiopetplanet30xGRCh37Test extends ShivaSuccess with BwaMem with HsapiensGRCh37 with NA12878Bioplanet30x
@@ -57,6 +65,7 @@ class ShivaBiopetplanet30xGRCh37Test extends ShivaSuccess with BwaMem with Hsapi
   def paired = true
   def shouldHaveKmerContent = Some(false)
   override def annotation = Some(true)
+  override def vepVersion = Some("86")
 }
 
 class ShivaBiopetplanet30xHg19Test extends ShivaSuccess with BwaMem with HsapiensHg19 with NA12878Bioplanet30x
@@ -65,4 +74,6 @@ class ShivaBiopetplanet30xHg19Test extends ShivaSuccess with BwaMem with Hsapien
   def paired = true
   def shouldHaveKmerContent = Some(false)
   override def annotation = Some(true)
+  override def vepVersion = Some("86")
+  override def memoryArg = "-Xmx512m"
 }
