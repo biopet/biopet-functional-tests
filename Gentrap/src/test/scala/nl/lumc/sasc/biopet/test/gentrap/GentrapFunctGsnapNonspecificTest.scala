@@ -125,6 +125,8 @@ class GentrapFunctGsnapNonspecificTest extends GentrapFunctional
 
   override def callVariants = Some(true)
 
+  override def memoryArg = "-Xmx1G"
+
   def strandProtocol = Option("non_specific")
   def annotationRefflat = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.refFlat"))
   def annotationGtf = Option(Biopet.fixtureFile("gentrap", "annotations", "ucsc_refseq.gtf"))

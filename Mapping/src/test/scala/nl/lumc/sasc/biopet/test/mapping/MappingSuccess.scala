@@ -28,8 +28,10 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   override def summaryRoot = summaryLibrary(sampleId.get, libId.get)
 
-  def finalBamFile: File = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam")
-  def finalWigFile: File = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bam.wig")
+  def finalBamFile: File = if (skipMarkDuplicates.getOrElse(false))
+    new File(outputDir, s"${sampleId.get}-${libId.get}.bam")
+  else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bam")
+  def finalWigFile: File = new File(finalBamFile.getAbsolutePath + ".wig")
 
   if (!skipFlexiprep.contains(true)) {
     addExecutable(Executable("fastqc", Some(""".+""".r)))
@@ -113,7 +115,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test
   def testFinalBaiFile(): Unit = {
-    val baiFile = new File(outputDir, s"${sampleId.get}-${libId.get}.final.bai")
+    val baiFile = new File(finalBamFile.getAbsolutePath.stripSuffix(".bam") + ".bai")
 
     assert(baiFile.exists())
     assert(baiFile.length() > 0, s"$baiFile has size of 0 bytes")
