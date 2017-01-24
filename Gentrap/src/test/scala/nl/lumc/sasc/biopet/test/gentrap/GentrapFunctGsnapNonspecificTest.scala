@@ -7,7 +7,7 @@ import org.testng.annotations.{ DataProvider, Test }
 import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.aligners.Gsnap
 import nl.lumc.sasc.biopet.test.samples.{ Rna1, Rna2 }
-import nl.lumc.sasc.biopet.test.references.HsapiensGRCh38
+import nl.lumc.sasc.biopet.test.references.HsapiensGRCh38_no_alt_analysis_set
 import nl.lumc.sasc.biopet.test.utils.pearsonScore
 
 trait GentrapFunctional extends Gentrap with Rna1 with Rna2 {
@@ -118,7 +118,7 @@ class GentrapFunctGsnapNonspecificTest extends GentrapFunctional
   with Gsnap
   with AllExpressionMeasures
   with Rna1 with Rna2
-  with HsapiensGRCh38 {
+  with HsapiensGRCh38_no_alt_analysis_set {
 
   def shouldHaveKmerContent = Some(true)
   def paired = true
