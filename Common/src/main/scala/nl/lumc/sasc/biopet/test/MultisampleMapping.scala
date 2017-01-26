@@ -35,11 +35,14 @@ trait MultisampleMapping extends Pipeline {
 
   def flexiprepShouldRun = !skipFlexiprep.getOrElse(defaultSkipFlexiprep)
 
+  def mappingToGears: Option[Boolean] = Some(false)
+
   override def args = super.args ++
     cmdConfig("bam_to_fastq", bamToFastq) ++
     cmdConfig("correct_readgroups", correctReadgroups) ++
     cmdConfig("execute_bam2wig", executeBam2wig) ++
     cmdConfig("wgs_metrics", wgsMetrics) ++
-    cmdConfig("rna_metrics", rnaMetrics)
+    cmdConfig("rna_metrics", rnaMetrics) ++
+    cmdConfig("mapping_to_gears", mappingToGears)
 
 }
