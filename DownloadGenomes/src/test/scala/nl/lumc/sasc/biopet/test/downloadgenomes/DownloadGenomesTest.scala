@@ -14,7 +14,7 @@ class EcoliTest extends DownloadGenomes {
     s"""
       |E.coli:
       |  K-12_MG1655:
-      |    ncbi_assembly_id:: ${assemblyReport.getAbsolutePath}
+      |    ncbi_assembly_id: ${assemblyReport.getAbsolutePath}
     """.stripMargin)
   writer.close()
 
