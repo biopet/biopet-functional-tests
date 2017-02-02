@@ -35,7 +35,7 @@ trait MultisampleMapping extends Pipeline {
 
   def flexiprepShouldRun = !skipFlexiprep.getOrElse(defaultSkipFlexiprep)
 
-  def mappingToGears: Option[Boolean] = Some(false)
+  def mappingToGears: Option[String] = Some("none")
 
   override def args = super.args ++
     cmdConfig("bam_to_fastq", bamToFastq) ++
