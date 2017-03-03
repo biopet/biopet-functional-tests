@@ -23,7 +23,7 @@ trait ShivaSvCallingTest extends Pipeline {
     cmdConfig("sv_callers", svCallerName) ++
     cmdConfig("reference_fasta", Biopet.fixtureFile("reference/reference.fasta")) ++
     cmdConfig("maxthreads", 1) ++
-    cmdConfig("core_memory", 0.5)
+    cmdConfig("core_memory", 1)
 
   @Test
   def testSvCaller(): Unit = {
