@@ -11,15 +11,19 @@ import org.testng.annotations.Test
 
 trait ShivaSvCallingTest extends Pipeline {
 
-  def pipelineName = "shivasvcalling"
+  override def pipelineName = "shivasvcalling"
 
   def svCallerName: String
 
   def supportedTypes: List[String]
 
+  override def retries = Option(1)
+
   override def args = Seq("-BAM", Biopet.fixtureFile("samples/sv/ref_sv-ref_sv.dedup.bam").getAbsolutePath) ++
     cmdConfig("sv_callers", svCallerName) ++
-    cmdConfig("reference_fasta", Biopet.fixtureFile("reference/reference.fasta"))
+    cmdConfig("reference_fasta", Biopet.fixtureFile("reference/reference.fasta")) ++
+    cmdConfig("maxthreads", 1) ++
+    cmdConfig("core_memory", 0.5)
 
   @Test
   def testSvCaller(): Unit = {
