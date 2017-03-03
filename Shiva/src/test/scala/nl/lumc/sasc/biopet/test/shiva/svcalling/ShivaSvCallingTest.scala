@@ -5,7 +5,8 @@ import java.io.File
 import htsjdk.samtools.util.CloseableIterator
 import htsjdk.variant.vcf.VCFFileReader
 import htsjdk.variant.variantcontext.VariantContext
-import nl.lumc.sasc.biopet.test.Pipeline
+import nl.lumc.sasc.biopet.test.Pipeline.cmdConfig
+import nl.lumc.sasc.biopet.test.{ Biopet, Pipeline }
 import org.testng.annotations.Test
 
 trait ShivaSvCallingTest extends Pipeline {
@@ -16,9 +17,13 @@ trait ShivaSvCallingTest extends Pipeline {
 
   def supportedTypes: List[String]
 
+  override def args = Seq("-BAM", Biopet.fixtureFile("samples/sv/ref_sv-ref_sv.dedup.bam").getAbsolutePath) ++
+    cmdConfig("sv_callers", svCallerName) ++
+    cmdConfig("reference_fasta", Biopet.fixtureFile("reference/reference.fasta"))
+
   @Test
   def testSvCaller(): Unit = {
-    val resultVcfFileName = s"../shiva_res/$svCallerName/ref_sv/ref_sv.$svCallerName.vcf.gz" // TODO replace with the correct path to the file
+    val resultVcfFileName = s"$svCallerName/ref_sv/ref_sv.$svCallerName.vcf.gz"
     val reader = new VCFFileReader(new File(outputDir, resultVcfFileName), true)
 
     assertContainsVariant(reader.query("chr1", 2040, 2041), "ITX")
@@ -44,7 +49,7 @@ trait ShivaSvCallingTest extends Pipeline {
     }
     assert(variantFound, s"$svCallerName did not detect the existing variant (type of the variant: $variantType)")
 
-    predictedVariants.close
+    predictedVariants.close()
   }
 
   def devPrint(predictedVariants: CloseableIterator[VariantContext], variantType: String): Unit = {
@@ -67,13 +72,13 @@ class BreakdancerTest extends ShivaSvCallingTest {
 
 }
 
-class CleverTest extends ShivaSvCallingTest {
+/*class CleverTest extends ShivaSvCallingTest {
 
   def svCallerName = "clever"
   // clever detects only insertions and deletions
   def supportedTypes = List("INS", "DEL")
 
-}
+}*/
 
 class DellyTest extends ShivaSvCallingTest {
 
