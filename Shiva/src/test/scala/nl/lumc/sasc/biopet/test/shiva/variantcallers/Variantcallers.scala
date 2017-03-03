@@ -3,7 +3,7 @@ package nl.lumc.sasc.biopet.test.shiva.variantcallers
 import java.io.File
 
 import htsjdk.variant.vcf.VCFFileReader
-import nl.lumc.sasc.biopet.test.SummaryPipeline.Executable
+import nl.lumc.sasc.biopet.test.Executable
 import nl.lumc.sasc.biopet.test.{ Pipeline, SummaryPipeline }
 import nl.lumc.sasc.biopet.test.utils._
 

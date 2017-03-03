@@ -6,11 +6,11 @@ import com.github.fge.jsonschema.main._
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatest.matchers._
-import org.testng.annotations.{DataProvider, Test}
+import org.testng.annotations.{ DataProvider, Test }
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb
 
 import scala.collection.JavaConverters._
-import scala.collection.mutable.{Map => MutMap}
+import scala.collection.mutable.{ Map => MutMap }
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.io.Source
@@ -41,7 +41,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
     reader.close()
   }
 
-  @Test(groups = Array("openSummary"), dependsOnGroups = Array("runId"))
+  @Test(groups = Array("summary"), dependsOnGroups = Array("runId"))
   def testOpenSummaryDb: Unit = {
     _summaryDb = SummaryDb.openSqliteSummary(summaryDbFile)
   }
@@ -90,8 +90,8 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   def testSummaryValue(pathTokens: Seq[String], json: JValue, testFunc: SummaryTestFunc) =
     withClue(s"Summary test on path '${pathTokens.mkString(" -> ")}'") { testFunc(json) }
 
-  @Test(groups = Array("parseSummary"))
-  def testSummaryFileExist(): Unit = assert(summaryFile.exists, "Summary file does not exist")
+  @Test(groups = Array("summary"))
+  def testSummaryFileExist(): Unit = assert(summaryDbFile.exists, "Summary file does not exist")
 
   // Testing meta field of summary
 
@@ -135,7 +135,6 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   def summaryLibrary(sampleId: String, libId: String) = summary \ "samples" \ sampleId \ "libraries" \ libId
   def summaryRoot = summary
 
-  type Executable = SummaryPipeline.Executable
   private var executables: Set[Executable] = Set()
 
   /** With this method an executable can be added that must exists in the summary */
@@ -144,7 +143,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   @DataProvider(name = "executables")
   def executablesProvider = executables.map(Array(_)).toArray
 
-  @Test(dataProvider = "executables", dependsOnGroups = Array("openSummary"))
+  @Test(dataProvider = "executables", dependsOnGroups = Array("summary"))
   def testExecutables(exe: Executable): Unit = withClue(s"Executable: $exe") {
     val exesDb = Await.result(summaryDb.getExecutables(runId = Some(runId), toolName = Some(exe.name)), Duration.Inf)
     exesDb.size shouldBe 1
@@ -170,15 +169,19 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   @DataProvider(name = "notExecutables")
   def notExecutablesProvider = notExecutables.map(Array(_)).toArray
 
-  @Test(dataProvider = "notExecutables", dependsOnGroups = Array("parseSummary"))
+  @Test(dataProvider = "notExecutables", dependsOnGroups = Array("summary"))
   def testNotExecutables(exe: String): Unit = withClue(s"Executable: $exe") {
-    summaryRoot \ pipelineName.toLowerCase \ "executables" \ exe shouldBe JNothing
+    val exesDb = Await.result(summaryDb.getExecutables(runId = Some(runId), toolName = Some(exe)), Duration.Inf)
+    exesDb shouldBe empty
   }
 }
 
-object SummaryPipeline {
+case class SummaryGroup(pipeline: String, module: Option[String] = None,
+                        sample: Option[String] = None, library: Option[String] = None)
 
-  case class Executable(name: String, version: Option[Regex] = None)
+case class Executable(name: String, version: Option[Regex] = None)
+
+object SummaryPipeline {
 
   /** Factory for JSON schemas */
   protected val schemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()

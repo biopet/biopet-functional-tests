@@ -1,6 +1,6 @@
 package nl.lumc.sasc.biopet.test.gentrap
 
-import nl.lumc.sasc.biopet.test.SummaryPipeline.Executable
+import nl.lumc.sasc.biopet.test.Executable
 import nl.lumc.sasc.biopet.test.{ Pipeline, SummaryPipeline }
 import nl.lumc.sasc.biopet.test.utils._
 

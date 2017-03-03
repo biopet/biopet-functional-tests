@@ -4,7 +4,7 @@ import java.io.File
 
 import htsjdk.samtools.SamReaderFactory
 import nl.lumc.sasc.biopet.test.SummaryPipeline
-import nl.lumc.sasc.biopet.test.SummaryPipeline.Executable
+import nl.lumc.sasc.biopet.test.Executable
 import org.json4s._
 import org.testng.annotations.Test
 
