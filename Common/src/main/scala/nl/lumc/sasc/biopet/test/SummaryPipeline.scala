@@ -6,12 +6,14 @@ import com.github.fge.jsonschema.main._
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatest.matchers._
-import org.testng.annotations.{ DataProvider, Test }
-
+import org.testng.annotations.{DataProvider, Test}
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb
 
 import scala.collection.JavaConverters._
-import scala.collection.mutable.{ Map => MutMap }
+import scala.collection.mutable.{Map => MutMap}
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+import scala.io.Source
 import scala.util.matching.Regex
 
 /**
@@ -20,6 +22,29 @@ import scala.util.matching.Regex
 trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
 
   implicit val formats = DefaultFormats
+
+  def summaryDbFile = new File(outputDir, pipelineName + ".summary.db")
+
+  private var _summaryDb: SummaryDb = _
+
+  def summaryDb = _summaryDb
+
+  var _runId: Int = _
+  def runId = _runId
+
+  @Test(groups = Array("runId"))
+  def testRunId: Unit = {
+    val runIdFile = new File(outputDir, ".log" + File.separator + "summary.runid")
+    runIdFile should exist
+    val reader = Source.fromFile(runIdFile)
+    _runId = reader.getLines().next().toInt
+    reader.close()
+  }
+
+  @Test(groups = Array("openSummary"), dependsOnGroups = Array("runId"))
+  def testOpenSummaryDb: Unit = {
+    _summaryDb = SummaryDb.openSqliteSummary(summaryDbFile)
+  }
 
   def summaryFile: File
 
@@ -119,15 +144,18 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   @DataProvider(name = "executables")
   def executablesProvider = executables.map(Array(_)).toArray
 
-  @Test(dataProvider = "executables", dependsOnGroups = Array("parseSummary"))
+  @Test(dataProvider = "executables", dependsOnGroups = Array("openSummary"))
   def testExecutables(exe: Executable): Unit = withClue(s"Executable: $exe") {
-    val summaryExe = summaryRoot \ pipelineName.toLowerCase \ "executables" \ exe.name
-    summaryExe shouldBe a[JObject]
+    val exesDb = Await.result(summaryDb.getExecutables(runId = Some(runId), toolName = Some(exe.name)), Duration.Inf)
+    exesDb.size shouldBe 1
+    val exeDb = exesDb.head
+    exeDb.toolName shouldBe exe.name
+
     exe.version match {
       case Some(r) =>
-        (summaryExe \ "version") shouldBe a[JString]
-        (summaryExe \ "version").extract[String] should fullyMatch regex r
-      case _ => summaryExe \ "version" shouldBe JNothing
+        require(exeDb.version.isDefined)
+        exeDb.version.get should fullyMatch regex r
+      case _ => exeDb.version shouldBe empty
     }
   }
 
