@@ -15,7 +15,7 @@ trait ShivaSvCallingTest extends ShivaSvCalling {
   override def args = super.args ++ Seq("-BAM", Biopet.fixtureFile("samples/sv/ref_sv-ref_sv.dedup.bam").getAbsolutePath) ++
     cmdConfig("reference_fasta", Biopet.fixtureFile("reference/reference.fasta")) ++
     cmdConfig("maxthreads", 1) ++
-    cmdConfig(s"${svCaller.svCallerName}caller:core_memory", 1)
+    cmdConfig("core_memory", 2)
 
   @Test
   def testSvCaller(): Unit = {
