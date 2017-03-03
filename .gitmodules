@@ -3,4 +3,4 @@
 	url = https://github.com/biopet/biopet-schemas.git
 [submodule "biopet"]
 	path = biopet
-	url = git@github.com:biopet/biopet.git
+	url = https://github.com/biopet/biopet.git
