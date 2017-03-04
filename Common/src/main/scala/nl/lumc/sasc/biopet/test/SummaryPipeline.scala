@@ -15,6 +15,8 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.io.Source
 import scala.util.matching.Regex
+import scalaz._
+import Scalaz._
 
 /**
  * Created by pjvanthof on 19/09/15.
@@ -41,11 +43,64 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
     reader.close()
   }
 
+  @Test(groups = Array("summary"))
+  def testSummaryFileExist(): Unit = assert(summaryDbFile.exists, "Summary file does not exist")
+
   @Test(groups = Array("summary"), dependsOnGroups = Array("runId"))
   def testOpenSummaryDb: Unit = {
     _summaryDb = SummaryDb.openSqliteSummary(summaryDbFile)
   }
 
+  private var statsTests: MutMap[SummaryGroup, MutMap[List[String], List[Option[Any] => Unit]]] = MutMap()
+
+  def addStatsTest(summaryGroup: SummaryGroup, path: List[String], function: Option[Any] => Unit): Unit = {
+    if (!statsTests.contains(summaryGroup)) statsTests += (summaryGroup) -> MutMap()
+    statsTests(summaryGroup) += path -> (function :: statsTests(summaryGroup).getOrElse(path, Nil))
+  }
+
+  @DataProvider(name = "statsTests")
+  def summaryStatsProvider() = {
+    (for ((group, functions) <- statsTests) yield Array(group, functions)).toArray
+  }
+
+  @Test(dataProvider = "statsTests", dependsOnGroups = Array("summary"))
+  def testSummaryStats(summaryGroup: SummaryGroup, functions:  MutMap[List[String], List[Option[Any] => Unit]]): Unit = {
+    val statsPaths = functions.keys.map(l => l.mkString("->") -> l).toMap
+    val results = summaryDb.getStatKeys(runId, summaryGroup.pipeline.right, summaryGroup.module.map(_.right),
+      summaryGroup.sample.map(_.right), summaryGroup.library.map(_.right), statsPaths)
+    functions.foreach { x =>
+      withClue(s"group: $summaryGroup, path: ${x._1}") {
+        x._2.foreach(f => f(results(x._1.mkString("->"))))
+      }
+    }
+  }
+
+  private var settingsTests: MutMap[SummaryGroup, MutMap[List[String], List[Option[Any] => Unit]]] = MutMap()
+
+  def addSettingsTest(summaryGroup: SummaryGroup, path: List[String], function: Option[Any] => Unit): Unit = {
+    if (!settingsTests.contains(summaryGroup)) settingsTests += (summaryGroup) -> MutMap()
+    settingsTests(summaryGroup) += path -> (function :: settingsTests(summaryGroup).getOrElse(path, Nil))
+  }
+
+  @DataProvider(name = "settingsTests")
+  def summarySettingsProvider() = {
+    (for ((group, functions) <- settingsTests) yield Array(group, functions)).toArray
+  }
+
+  @Test(dataProvider = "settingsTests", dependsOnGroups = Array("summary"))
+  def testSummarySettings(summaryGroup: SummaryGroup, functions:  MutMap[List[String], List[Option[Any] => Unit]]): Unit = {
+    val settingsPaths = functions.keys.map(l => l.mkString("->") -> l).toMap
+    val results = summaryDb.getSettingKeys(runId, summaryGroup.pipeline.right, summaryGroup.module.map(_.right),
+      summaryGroup.sample.map(_.right), summaryGroup.library.map(_.right), settingsPaths)
+    functions.foreach { x =>
+      withClue(s"group: $summaryGroup, path: ${x._1}") {
+        x._2.foreach(f => f(results(x._1.mkString("->"))))
+      }
+    }
+  }
+
+
+  ///////// OLD /////////
   def summaryFile: File
 
   /** URL to summary schema resource file, if defined. */
@@ -90,9 +145,6 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   def testSummaryValue(pathTokens: Seq[String], json: JValue, testFunc: SummaryTestFunc) =
     withClue(s"Summary test on path '${pathTokens.mkString(" -> ")}'") { testFunc(json) }
 
-  @Test(groups = Array("summary"))
-  def testSummaryFileExist(): Unit = assert(summaryDbFile.exists, "Summary file does not exist")
-
   // Testing meta field of summary
 
   @Test(dependsOnGroups = Array("parseSummary"))
@@ -134,6 +186,8 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   def summarySample(sampleId: String) = summary \ "samples" \ sampleId
   def summaryLibrary(sampleId: String, libId: String) = summary \ "samples" \ sampleId \ "libraries" \ libId
   def summaryRoot = summary
+  ///////// OLD /////////
+
 
   private var executables: Set[Executable] = Set()
 
