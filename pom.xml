@@ -22,7 +22,6 @@
         <module>TinyCap</module>
         <module>Toucan</module>
         <module>DownloadGenomes</module>
-        <module>biopet/biopet-utils</module>
     </modules>
 
     <dependencies>
