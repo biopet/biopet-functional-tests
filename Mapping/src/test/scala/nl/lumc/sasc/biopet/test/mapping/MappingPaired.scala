@@ -21,7 +21,7 @@ trait MappingPaired extends MappingSingle {
   @Test(dependsOnGroups = Array("parseSummary"))
   def seqstatR2: Unit = {
     val seqstat = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep" \ "stats" \ "seqstat_R2"
-    if (skipFlexiprep.contains(true)) seqstat shouldBe JNothing
+    if (skipFlexiprep == Some(true)) seqstat shouldBe JNothing
     else {
       seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
       seqstat \ "bases" \ "num_total" shouldBe JInt(BigInt(1000000))
@@ -31,7 +31,7 @@ trait MappingPaired extends MappingSingle {
   @Test(dependsOnGroups = Array("parseSummary"))
   def seqstatR2Qc: Unit = {
     val seqstat = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep" \ "stats" \ "seqstat_R2_qc"
-    if (skipFlexiprep.contains(true)) seqstat shouldBe JNothing
+    if (skipFlexiprep == Some(true)) seqstat shouldBe JNothing
     else {
       seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
       seqstat \ "bases" \ "num_total" shouldBe JInt(BigInt(1000000))
@@ -48,7 +48,7 @@ trait MappingPaired extends MappingSingle {
 
 trait MappingStatsBwaMem extends MappingPaired with BwaMem {
   // add metrics test only when this is turned on in the pipeline
-  if (!skipMetrics.contains(true)) {
+  if (skipMetrics != Some(true)) {
 
     addSummaryTest(statsPath :+ "wgs" :+ "metrics",
       Seq(

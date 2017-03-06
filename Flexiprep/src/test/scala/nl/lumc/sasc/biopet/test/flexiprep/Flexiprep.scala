@@ -52,9 +52,9 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   addExecutable(Executable("seqstat", Some(""".+""".r)))
   addExecutable(Executable("seqtkseq", Some(""".+""".r)))
   if (r2.isDefined) addExecutable(Executable("fastqsync", Some(""".+""".r)))
-  if (!skipTrim.contains(true)) addExecutable(Executable("sickle", Some(""".+""".r)))
+  if (skipTrim != Some(true)) addExecutable(Executable("sickle", Some(""".+""".r)))
   else addNotHavingExecutable("sickle")
-  if (skipClip.contains(true)) addNotHavingExecutable("cutadapt")
+  if (skipClip != Some(true)) addNotHavingExecutable("cutadapt")
 
   override def summaryRoot = summaryLibrary(sampleId, libId)
 
@@ -83,7 +83,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
     validateSummaryFile(summaryFile)
     (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
 
-    if (!keepQcFastqFiles.contains(false)) {
+    if (keepQcFastqFiles != Some(false)) {
       assert(outputFile.exists(), "Output file R1 should exist while keepQcFastqFiles=true")
 
       calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
@@ -98,7 +98,7 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
       validateSummaryFile(summaryFile)
       (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
 
-      if (!keepQcFastqFiles.contains(false)) {
+      if (keepQcFastqFiles == Some(false)) {
         assert(outputFile.exists(), "Output file R2 should exist while keepQcFastqFiles=true")
 
         calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]

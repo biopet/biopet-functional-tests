@@ -64,7 +64,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   }
 
   @Test(dataProvider = "statsTests", dependsOnGroups = Array("summary"))
-  def testSummaryStats(summaryGroup: SummaryGroup, functions:  MutMap[List[String], List[Option[Any] => Unit]]): Unit = {
+  def testSummaryStats(summaryGroup: SummaryGroup, functions: MutMap[List[String], List[Option[Any] => Unit]]): Unit = {
     val statsPaths = functions.keys.map(l => l.mkString("->") -> l).toMap
     val results = summaryDb.getStatKeys(runId, summaryGroup.pipeline.right, summaryGroup.module.map(_.right),
       summaryGroup.sample.map(_.right), summaryGroup.library.map(_.right), statsPaths)
@@ -88,7 +88,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   }
 
   @Test(dataProvider = "settingsTests", dependsOnGroups = Array("summary"))
-  def testSummarySettings(summaryGroup: SummaryGroup, functions:  MutMap[List[String], List[Option[Any] => Unit]]): Unit = {
+  def testSummarySettings(summaryGroup: SummaryGroup, functions: MutMap[List[String], List[Option[Any] => Unit]]): Unit = {
     val settingsPaths = functions.keys.map(l => l.mkString("->") -> l).toMap
     val results = summaryDb.getSettingKeys(runId, summaryGroup.pipeline.right, summaryGroup.module.map(_.right),
       summaryGroup.sample.map(_.right), summaryGroup.library.map(_.right), settingsPaths)
@@ -98,7 +98,6 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
       }
     }
   }
-
 
   ///////// OLD /////////
   def summaryFile: File
@@ -187,7 +186,6 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   def summaryLibrary(sampleId: String, libId: String) = summary \ "samples" \ sampleId \ "libraries" \ libId
   def summaryRoot = summary
   ///////// OLD /////////
-
 
   private var executables: Set[Executable] = Set()
 
@@ -338,9 +336,9 @@ trait JValueMatchers {
       def testFunc: Boolean = left match {
         case JInt(i)    => (lowerBound <= i.doubleValue()) && (i.doubleValue() <= higherBound)
         case JDouble(d) => (lowerBound <= d) && (d <= higherBound)
-        case JDecimal(d) => lowerBound.<=(scala.math.BigDecimal(expectedValue)) &&
-          scala.math.BigDecimal(expectedValue).<=(higherBound)
-        case otherwise => false
+        //        case JDecimal(d) => lowerBound.<=(scala.math.BigDecimal(expectedValue)) &&
+        //          scala.math.BigDecimal(expectedValue).<=(higherBound)
+        case otherwise  => false
       }
       makeMatchResult(testFunc, left, expectedValue)
     }

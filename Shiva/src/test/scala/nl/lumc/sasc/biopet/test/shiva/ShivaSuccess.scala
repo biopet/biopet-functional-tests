@@ -17,11 +17,11 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   override def summarySchemaUrls = Seq("/schemas/shiva.json")
 
-  if (dbsnpVcfFile.isEmpty && !useBaseRecalibration.contains(false))
+  if (dbsnpVcfFile.isEmpty && useBaseRecalibration != Some(false))
     logMustHave("""No Known site found, skipping base recalibration""".r)
   else logMustNotHave("""No Known site found, skipping base recalibration""".r)
 
-  if (!useIndelRealigner.contains(false)) {
+  if (useIndelRealigner != Some(false)) {
     addExecutable(Executable("realignertargetcreator", Some(""".+""".r)))
     addExecutable(Executable("indelrealigner", Some(""".+""".r)))
   } else {
@@ -29,7 +29,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
     addNotHavingExecutable("indelrealigner")
   }
 
-  if (!useBaseRecalibration.contains(false) && dbsnpVcfFile.isDefined) {
+  if (useBaseRecalibration != Some(false) && dbsnpVcfFile.isDefined) {
     addExecutable(Executable("baserecalibrator", Some(""".+""".r)))
     addExecutable(Executable("printreads", Some(""".+""".r)))
   } else {
@@ -92,7 +92,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
         case sample =>
           addConcordanceChecks(
             Seq("shivavariantcalling", "stats", s"multisample-genotype_concordance-$variantcaller", "genotypeSummary", sample),
-            !multisampleVariantcalling.contains(false) && (variantcallers.contains(variantcaller) || variantcaller == "final")
+            multisampleVariantcalling != Some(false) && (variantcallers.contains(variantcaller) || variantcaller == "final")
           )
       }
 
@@ -100,11 +100,11 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
         case sample =>
           addConcordanceChecks(
             Seq("samples", sample, "shivavariantcalling", "stats", s"$sample-genotype_concordance-$variantcaller", "genotypeSummary", sample),
-            singleSampleVariantcalling.contains(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
+            singleSampleVariantcalling == Some(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
           )
           addConcordanceChecks(
             Seq("samples", sample, "shivavariantcalling", "stats", s"$sample-genotype_concordance-$variantcaller", "genotypeSummary", "ALL"),
-            singleSampleVariantcalling.contains(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
+            singleSampleVariantcalling == Some(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
           )
       }
 
@@ -113,11 +113,11 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
           case lib =>
             addConcordanceChecks(
               Seq("samples", sample, "libraries", lib, "shivavariantcalling", "stats", s"$sample-$lib-genotype_concordance-$variantcaller", "genotypeSummary", sample),
-              libraryVariantcalling.contains(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
+              libraryVariantcalling == Some(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
             )
             addConcordanceChecks(
               Seq("samples", sample, "libraries", lib, "shivavariantcalling", "stats", s"$sample-$lib-genotype_concordance-$variantcaller", "genotypeSummary", "ALL"),
-              libraryVariantcalling.contains(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
+              libraryVariantcalling == Some(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
             )
         }
       }
@@ -141,7 +141,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
     val dir = new File(outputDir, "variantcalling" + File.separator + variantcaller)
     val file = new File(dir, s"multisample.$variantcaller.vcf.gz")
     val vcfstats = this.summary \ "shivavariantcalling" \ "stats" \ s"multisample-vcfstats-$variantcaller"
-    if (!multisampleVariantcalling.contains(false) && variantcallers.contains(variantcaller)) {
+    if (multisampleVariantcalling != Some(false) && variantcallers.contains(variantcaller)) {
       assert(dir.exists())
       assert(dir.isDirectory)
       assert(file.exists())
@@ -159,7 +159,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
       val dir = new File(sampleDir(sample), "variantcalling" + File.separator + variantcaller)
       val file = new File(dir, s"$sample.$variantcaller.vcf.gz")
       val vcfstats = this.summary \ "samples" \ sample \ "shivavariantcalling" \ "stats" \ s"$sample-vcfstats-$variantcaller"
-      if (singleSampleVariantcalling.contains(true) && variantcallers.contains(variantcaller)) {
+      if (singleSampleVariantcalling == Some(true) && variantcallers.contains(variantcaller)) {
         assert(dir.exists())
         assert(dir.isDirectory)
         assert(file.exists())
@@ -177,7 +177,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
       val dir = new File(libraryDir(sample, lib), "variantcalling" + File.separator + variantcaller)
       val file = new File(dir, s"$sample-$lib.$variantcaller.vcf.gz")
       val vcfstats = this.summary \ "samples" \ sample \ "libraries" \ lib \ "shivavariantcalling" \ "stats" \ s"$sample-$lib-vcfstats-$variantcaller"
-      if (singleSampleVariantcalling.contains(true) && variantcallers.contains(variantcaller)) {
+      if (singleSampleVariantcalling == Some(true) && variantcallers.contains(variantcaller)) {
         assert(dir.exists())
         assert(dir.isDirectory)
         assert(file.exists())
@@ -193,7 +193,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
   def testMultisampleVcfFile(): Unit = {
     val file = new File(outputDir, "variantcalling" + File.separator + "multisample.final.vcf.gz")
     val summaryPath = summary \ "shivavariantcalling" \ "files" \ "pipeline" \ "final" \ "path"
-    if (!multisampleVariantcalling.contains(false)) {
+    if (multisampleVariantcalling != Some(false)) {
       summaryPath shouldBe JString(file.getAbsolutePath)
       assert(file.exists())
       Shiva.testSamplesVcfFile(file, samples.keySet.toList)
@@ -205,14 +205,14 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   @Test
   def testMultisampleVariantcallerInfoTag() =
-    if (!multisampleVariantcalling.contains(false))
+    if (multisampleVariantcalling != Some(false))
       testVariantcallerInfoTag(new File(outputDir, "variantcalling" + File.separator + "multisample.final.vcf.gz"))
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
   def testSingleSampleVcfFile(sample: String): Unit = withClue(s"Sample: $sample") {
     val file = new File(sampleDir(sample), "variantcalling" + File.separator + s"$sample.final.vcf.gz")
     val summaryPath = summary \ "samples" \ sample \ "shivavariantcalling" \ "files" \ "pipeline" \ "final" \ "path"
-    if (singleSampleVariantcalling.contains(true)) {
+    if (singleSampleVariantcalling == Some(true)) {
       summaryPath shouldBe JString(file.getAbsolutePath)
       assert(file.exists())
     } else {
@@ -223,14 +223,14 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   @Test(dataProvider = "samples")
   def testSampleVariantcallerInfoTag(sample: String) =
-    if (singleSampleVariantcalling.contains(true))
+    if (singleSampleVariantcalling == Some(true))
       testVariantcallerInfoTag(new File(sampleDir(sample), "variantcalling" + File.separator + s"$sample.final.vcf.gz"))
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
   def testLibraryVcfFile(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     val file = new File(libraryDir(sample, lib), "variantcalling" + File.separator + s"$sample-$lib.final.vcf.gz")
     val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ "shivavariantcalling" \ "files" \ "pipeline" \ "final" \ "path"
-    if (libraryVariantcalling.contains(true)) {
+    if (libraryVariantcalling == Some(true)) {
       summaryPath shouldBe JString(file.getAbsolutePath)
       assert(file.exists())
     } else {
@@ -241,7 +241,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   @Test(dataProvider = "libraries")
   def testLibraryVariantcallerInfoTag(sample: String, lib: String) =
-    if (libraryVariantcalling.contains(true))
+    if (libraryVariantcalling == Some(true))
       testVariantcallerInfoTag(new File(libraryDir(sample, lib), "variantcalling" + File.separator + s"$sample-$lib.final.vcf.gz"))
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
@@ -266,11 +266,11 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
       assert(libraryPreprecoessBam(sample, lib).exists())
       val reader = SamReaderFactory.makeDefault.open(libraryPreprecoessBam(sample, lib))
       val header = reader.getFileHeader
-      if (!useIndelRealigner.contains(false))
+      if (useIndelRealigner != Some(false))
         assert(header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
       else assert(!header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
 
-      if (!useBaseRecalibration.contains(false) && dbsnpVcfFile.isDefined)
+      if (useBaseRecalibration != Some(false) && dbsnpVcfFile.isDefined)
         assert(header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
       else assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
       reader.close()
@@ -284,11 +284,11 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
     val reader = SamReaderFactory.makeDefault.open(samplePreprocessBam(sample))
     val header = reader.getFileHeader
 
-    if (!useIndelRealigner.contains(false))
+    if (useIndelRealigner != Some(false))
       assert(header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
     else assert(!header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
 
-    if (!useBaseRecalibration.contains(false) && dbsnpVcfFile.isDefined)
+    if (useBaseRecalibration != Some(false) && dbsnpVcfFile.isDefined)
       assert(header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
     else assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
 
