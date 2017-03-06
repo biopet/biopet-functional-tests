@@ -251,23 +251,29 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
   def md5SumInputR1 = "8245507d70154d7921cd1bcce1ea344b"
 
   val flexiprepGroup = SummaryGroup("flexiprep", None, Some(sampleId), Some(libId))
-  val fastqcR1Group = flexiprepGroup.copy(module = Some("fastqc_R1"))
-  val seqstatRGroup = flexiprepGroup.copy(module = Some("seqstat_R1"))
-  val fastqcR1QcGroup = flexiprepGroup.copy(module = Some("fastqc_R1_qc"))
-  val seqstatRQcGroup = flexiprepGroup.copy(module = Some("seqstat_R1_qc"))
 
-  addStatsTest(fastqcR1Group, "1" :: "mean" :: Nil, _ shouldBe Some(32.244))
-  addStatsTest(fastqcR1Group, "1" :: "median" :: Nil, _ shouldBe Some(33))
-  addStatsTest(fastqcR1Group, "1" :: "lower_quartile" :: Nil, _ shouldBe Some(31))
-  addStatsTest(fastqcR1Group, "1" :: "upper_quartile" :: Nil, _ shouldBe Some(34))
-  addStatsTest(fastqcR1Group, "1" :: "percentile_10th" :: Nil, _ shouldBe Some(30))
-  addStatsTest(fastqcR1Group, "1" :: "percentile_90th" :: Nil, _ shouldBe Some(34))
-  addStatsTest(fastqcR1Group, "100" :: "mean" :: Nil, _ shouldBe Some(21.984))
-  addStatsTest(fastqcR1Group, "100" :: "median" :: Nil, _ shouldBe Some(30))
-  addStatsTest(fastqcR1Group, "100" :: "lower_quartile" :: Nil, _ shouldBe Some(2))
-  addStatsTest(fastqcR1Group, "100" :: "upper_quartile" :: Nil, _ shouldBe Some(34))
-  addStatsTest(fastqcR1Group, "100" :: "percentile_10th" :: Nil, _ shouldBe Some(2))
-  addStatsTest(fastqcR1Group, "100" :: "percentile_90th" :: Nil, _ shouldBe Some(35))
+  val fastqcR1Group = flexiprepGroup.copy(module = Some("fastqc_R1"))
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "mean" :: Nil, _ shouldBe Some(32.244))
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "median" :: Nil, _ shouldBe Some(33))
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "lower_quartile" :: Nil, _ shouldBe Some(31))
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "upper_quartile" :: Nil, _ shouldBe Some(34))
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "percentile_10th" :: Nil, _ shouldBe Some(30))
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "percentile_90th" :: Nil, _ shouldBe Some(34))
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "mean" :: Nil, _ shouldBe Some(21.984))
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "median" :: Nil, _ shouldBe Some(30))
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "lower_quartile" :: Nil, _ shouldBe Some(2))
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "upper_quartile" :: Nil, _ shouldBe Some(34))
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "percentile_10th" :: Nil, _ shouldBe Some(2))
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "percentile_90th" :: Nil, _ shouldBe Some(35))
+
+  val seqstatRGroup = flexiprepGroup.copy(module = Some("seqstat_R1"))
+  //TODO
+
+  val fastqcR1QcGroup = flexiprepGroup.copy(module = Some("fastqc_R1_qc"))
+  //TODO
+
+  val seqstatRQcGroup = flexiprepGroup.copy(module = Some("seqstat_R1_qc"))
+  //TODO
 
   /** JSON paths for summary. */
   protected val flexiprepPath = Seq("samples", sampleId, "libraries", libId, "flexiprep")
