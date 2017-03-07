@@ -6,13 +6,13 @@ import com.github.fge.jsonschema.main._
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatest.matchers._
-import org.testng.annotations.{DataProvider, Test}
+import org.testng.annotations.{ DataProvider, Test }
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb.Implicts._
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb._
 
 import scala.collection.JavaConverters._
-import scala.collection.mutable.{ListBuffer, Map => MutMap}
+import scala.collection.mutable.{ ListBuffer, Map => MutMap }
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.io.Source
@@ -58,7 +58,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
     val run = runs.head
     run.outputDir shouldBe outputDir.getAbsolutePath
     run.name shouldBe pipelineName
-    run.commitHash shouldBe regex "[a-z0-9]{8}".r
+    run.commitHash shouldBe regex("[a-z0-9]{8}".r)
   }
 
   private var statsTests: MutMap[SummaryGroup, MutMap[List[String], List[Option[Any] => Unit]]] = MutMap()
@@ -89,7 +89,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
       }
     }
     if (errors.nonEmpty) {
-      errors.foreach{ e =>
+      errors.foreach { e =>
         println(e.getMessage)
         e.printStackTrace()
         println()
@@ -126,7 +126,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
       }
     }
     if (errors.nonEmpty) {
-      errors.foreach{ e =>
+      errors.foreach { e =>
         println(e.getMessage)
         e.printStackTrace()
         println()
