@@ -6,13 +6,13 @@ import com.github.fge.jsonschema.main._
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatest.matchers._
-import org.testng.annotations.{ DataProvider, Test }
+import org.testng.annotations.{DataProvider, Test}
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb.Implicts._
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb._
 
 import scala.collection.JavaConverters._
-import scala.collection.mutable.{ Map => MutMap }
+import scala.collection.mutable.{ListBuffer, Map => MutMap}
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.io.Source
@@ -78,10 +78,23 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
     val statsPaths = functions.keys.map(l => l.mkString("->") -> l).toMap
     val results = summaryDb.getStatKeys(runId, summaryGroup.pipeline, summaryGroup.module.map(ModuleName).getOrElse(NoModule),
       summaryGroup.sample.map(SampleName).getOrElse(NoSample), summaryGroup.library.map(LibraryName).getOrElse(NoLibrary), statsPaths)
+    val errors = new ListBuffer[Throwable]
     functions.foreach { x =>
       withClue(s"group: $summaryGroup, path: ${x._1}") {
-        x._2.foreach(f => f(results(x._1.mkString("->"))))
+        try {
+          x._2.foreach(f => f(results(x._1.mkString("->"))))
+        } catch {
+          case s => errors += s
+        }
       }
+    }
+    if (errors.nonEmpty) {
+      errors.foreach{ e =>
+        println(e.getMessage)
+        e.printStackTrace()
+        println()
+      }
+      throw new Exception()
     }
   }
 
@@ -102,10 +115,23 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
     val settingsPaths = functions.keys.map(l => l.mkString("->") -> l).toMap
     val results = summaryDb.getSettingKeys(runId, summaryGroup.pipeline, summaryGroup.module.map(ModuleName).getOrElse(NoModule),
       summaryGroup.sample.map(SampleName).getOrElse(NoSample), summaryGroup.library.map(LibraryName).getOrElse(NoLibrary), settingsPaths)
+    val errors = new ListBuffer[Throwable]
     functions.foreach { x =>
       withClue(s"group: $summaryGroup, path: ${x._1}") {
-        x._2.foreach(f => f(results(x._1.mkString("->"))))
+        try {
+          x._2.foreach(f => f(results(x._1.mkString("->"))))
+        } catch {
+          case s => errors += s
+        }
       }
+    }
+    if (errors.nonEmpty) {
+      errors.foreach{ e =>
+        println(e.getMessage)
+        e.printStackTrace()
+        println()
+      }
+      throw new Exception()
     }
   }
 
