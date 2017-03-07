@@ -14,7 +14,7 @@ trait ShivaSvCalling extends Pipeline {
 
   def bamFile: File
 
-  override def configs = super.configs.::(createTempConfig(Map("variantcallers" -> svCallers)))
+  override def configs = super.configs.::(createTempConfig(Map("sv_callers" -> svCallers)))
 
   override def args = super.args ++ Seq("-BAM", bamFile.getAbsolutePath)
 
