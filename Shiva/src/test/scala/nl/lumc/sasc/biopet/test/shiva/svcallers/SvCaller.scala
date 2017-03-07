@@ -6,6 +6,8 @@ trait SvCaller {
   /** Types of structural variants the method is designed to detect. */
   def supportedTypes: List[String]
 
+  override def toString: String = svCallerName
+
 }
 
 class Breakdancer extends SvCaller {
