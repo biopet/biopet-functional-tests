@@ -8,6 +8,8 @@ import org.json4s.jackson.JsonMethods._
 import org.scalatest.matchers._
 import org.testng.annotations.{ DataProvider, Test }
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb
+import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb.Implicts._
+import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb._
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable.{ Map => MutMap }
@@ -15,8 +17,6 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.io.Source
 import scala.util.matching.Regex
-import scalaz._
-import Scalaz._
 
 /**
  * Created by pjvanthof on 19/09/15.
@@ -51,6 +51,16 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
     _summaryDb = SummaryDb.openSqliteSummary(summaryDbFile)
   }
 
+  @Test(dependsOnGroups = Array("summary"))
+  def testSummaryRun(): Unit = {
+    val runs = Await.result(summaryDb.getRuns(runId = Some(runId)), Duration.Inf)
+    runs should not be empty
+    val run = runs.head
+    run.outputDir shouldBe outputDir.getAbsolutePath
+    run.name shouldBe pipelineName
+    run.commitHash shouldBe regex "[a-z0-9]{8}".r
+  }
+
   private var statsTests: MutMap[SummaryGroup, MutMap[List[String], List[Option[Any] => Unit]]] = MutMap()
 
   def addStatsTest(summaryGroup: SummaryGroup, path: List[String], function: Option[Any] => Unit): Unit = {
@@ -66,8 +76,8 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   @Test(dataProvider = "statsTests", dependsOnGroups = Array("summary"))
   def testSummaryStats(summaryGroup: SummaryGroup, functions: MutMap[List[String], List[Option[Any] => Unit]]): Unit = {
     val statsPaths = functions.keys.map(l => l.mkString("->") -> l).toMap
-    val results = summaryDb.getStatKeys(runId, summaryGroup.pipeline.right, summaryGroup.module.map(_.right),
-      summaryGroup.sample.map(_.right), summaryGroup.library.map(_.right), statsPaths)
+    val results = summaryDb.getStatKeys(runId, summaryGroup.pipeline, summaryGroup.module.map(ModuleName).getOrElse(NoModule),
+      summaryGroup.sample.map(SampleName).getOrElse(NoSample), summaryGroup.library.map(LibraryName).getOrElse(NoLibrary), statsPaths)
     functions.foreach { x =>
       withClue(s"group: $summaryGroup, path: ${x._1}") {
         x._2.foreach(f => f(results(x._1.mkString("->"))))
@@ -90,8 +100,8 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   @Test(dataProvider = "settingsTests", dependsOnGroups = Array("summary"))
   def testSummarySettings(summaryGroup: SummaryGroup, functions: MutMap[List[String], List[Option[Any] => Unit]]): Unit = {
     val settingsPaths = functions.keys.map(l => l.mkString("->") -> l).toMap
-    val results = summaryDb.getSettingKeys(runId, summaryGroup.pipeline.right, summaryGroup.module.map(_.right),
-      summaryGroup.sample.map(_.right), summaryGroup.library.map(_.right), settingsPaths)
+    val results = summaryDb.getSettingKeys(runId, summaryGroup.pipeline, summaryGroup.module.map(ModuleName).getOrElse(NoModule),
+      summaryGroup.sample.map(SampleName).getOrElse(NoSample), summaryGroup.library.map(LibraryName).getOrElse(NoLibrary), settingsPaths)
     functions.foreach { x =>
       withClue(s"group: $summaryGroup, path: ${x._1}") {
         x._2.foreach(f => f(results(x._1.mkString("->"))))
@@ -143,34 +153,6 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   @Test(dataProvider = "summaryTests", dependsOnGroups = Array("parseSummary"))
   def testSummaryValue(pathTokens: Seq[String], json: JValue, testFunc: SummaryTestFunc) =
     withClue(s"Summary test on path '${pathTokens.mkString(" -> ")}'") { testFunc(json) }
-
-  // Testing meta field of summary
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def summaryPipelineName(): Unit =
-    (summary \ "meta" \ "pipeline_name") shouldBe JString(pipelineName.toLowerCase)
-
-  //TODO: Add regex testing
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def summaryPipelineVersion(): Unit =
-    (summary \ "meta" \ "pipeline_version") shouldBe a[JString]
-
-  //TODO: Add regex testing
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def summaryCommitHash(): Unit =
-    (summary \ "meta" \ "last_commit_hash") shouldBe a[JString]
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def summaryOutputDir(): Unit =
-    (summary \ "meta" \ "output_dir").extract[String] shouldBe outputDir.getAbsolutePath
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def summaryCreation(): Unit =
-    (summary \ "meta" \ "summary_creation") shouldBe a[JInt]
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def summaryRunName(): Unit =
-    (summary \ "meta" \ "run_name") shouldBe a[JString]
 
   def validateSummaryFile(summaryFile: JValue,
                           file: Option[File] = None,
