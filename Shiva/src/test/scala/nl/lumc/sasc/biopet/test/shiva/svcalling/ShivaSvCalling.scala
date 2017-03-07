@@ -2,9 +2,9 @@ package nl.lumc.sasc.biopet.test.shiva.svcalling
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.Pipeline.cmdConfig
-import nl.lumc.sasc.biopet.test.{ Biopet, Pipeline }
+import nl.lumc.sasc.biopet.test.Pipeline
 import nl.lumc.sasc.biopet.test.shiva.svcallers.SvCaller
+import nl.lumc.sasc.biopet.test.utils.createTempConfig
 
 trait ShivaSvCalling extends Pipeline {
 
@@ -14,7 +14,8 @@ trait ShivaSvCalling extends Pipeline {
 
   def bamFile: File
 
-  override def args = super.args ++ Seq("-BAM", bamFile.getAbsolutePath) ++
-    cmdConfig("sv_callers", svCallers.mkString("[", ",", "]"))
+  override def configs = super.configs.::(createTempConfig(Map("variantcallers" -> svCallers)))
+
+  override def args = super.args ++ Seq("-BAM", bamFile.getAbsolutePath)
 
 }
