@@ -90,9 +90,9 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   addSummaryFileTest(FileTest(flexiprepGroup, "output_R1", true, keepQcFastqFiles != Some(false), outputFileR1))
   addSummaryFileTest(FileTest(flexiprepGroup, "output_R2", r2.isDefined, keepQcFastqFiles != Some(false), outputFileR2))
 
-  addSettingsTest(flexiprepGroup, "skip_trim" :: Nil, _ shouldBe Some(skipTrim.getOrElse(false)))
-  addSettingsTest(flexiprepGroup, "skip_clip" :: Nil, _ shouldBe Some(skipClip.getOrElse(false)))
-  addSettingsTest(flexiprepGroup, "paired" :: Nil, _ shouldBe Some(r2.isDefined))
+  addSettingsTest(flexiprepGroup, "skip_trim" :: Nil, _ shouldBe skipTrim.getOrElse(false))
+  addSettingsTest(flexiprepGroup, "skip_clip" :: Nil, _ shouldBe skipClip.getOrElse(false))
+  addSettingsTest(flexiprepGroup, "paired" :: Nil, _ shouldBe r2.isDefined)
 
   addStatsTest(fastqcR1Group, shouldExist = true)
   addStatsTest(fastqcR2Group, shouldExist = r2.isDefined)
@@ -200,36 +200,36 @@ trait FlexiprepPaired extends FlexiprepSingle {
   /** MD5 checksum of input read pair 2. */
   override def md5SumInputR2 = Some("1560a4cdc87cc8c4b6701e1253d41f93")
 
-  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "mean" :: Nil, _ shouldBe Some(11.351))
-  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "median" :: Nil, _ shouldBe Some(2))
-  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "lower_quartile" :: Nil, _ shouldBe Some(2))
-  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "upper_quartile" :: Nil, _ shouldBe Some(31))
-  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "percentile_10th" :: Nil, _ shouldBe Some(2))
-  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "percentile_90th" :: Nil, _ shouldBe Some(33))
-  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "100" :: "mean" :: Nil, _ shouldBe Some(5.79))
-  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "100" :: "median" :: Nil, _ shouldBe Some(2))
-  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "100" :: "lower_quartile" :: Nil, _ shouldBe Some(2))
-  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "100" :: "upper_quartile" :: Nil, _ shouldBe Some(2))
-  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "100" :: "percentile_10th" :: Nil, _ shouldBe Some(2))
-  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "100" :: "percentile_90th" :: Nil, _ shouldBe Some(26))
+  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "mean" :: Nil, _ shouldBe 11.351)
+  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "median" :: Nil, _ shouldBe 2)
+  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "lower_quartile" :: Nil, _ shouldBe 2)
+  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "upper_quartile" :: Nil, _ shouldBe 31)
+  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "percentile_10th" :: Nil, _ shouldBe 2)
+  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "percentile_90th" :: Nil, _ shouldBe 33)
+  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "100" :: "mean" :: Nil, _ shouldBe 5.79)
+  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "100" :: "median" :: Nil, _ shouldBe 2)
+  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "100" :: "lower_quartile" :: Nil, _ shouldBe 2)
+  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "100" :: "upper_quartile" :: Nil, _ shouldBe 2)
+  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "100" :: "percentile_10th" :: Nil, _ shouldBe 2)
+  addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "100" :: "percentile_90th" :: Nil, _ shouldBe 26)
 
-  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "1" :: "A" :: Nil, _ shouldBe Some(24.198250728862973))
-  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "1" :: "T" :: Nil, _ shouldBe Some(5.247813411078718))
-  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "1" :: "G" :: Nil, _ shouldBe Some(48.68804664723032))
-  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "1" :: "C" :: Nil, _ shouldBe Some(21.865889212827987))
-  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "100" :: "A" :: Nil, _ shouldBe Some(27.769784172661872))
-  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "100" :: "T" :: Nil, _ shouldBe Some(19.568345323741006))
-  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "100" :: "G" :: Nil, _ shouldBe Some(30.79136690647482))
-  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "100" :: "C" :: Nil, _ shouldBe Some(21.8705035971223))
+  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "1" :: "A" :: Nil, _ shouldBe 24.198250728862973)
+  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "1" :: "T" :: Nil, _ shouldBe 5.247813411078718)
+  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "1" :: "G" :: Nil, _ shouldBe 48.68804664723032)
+  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "1" :: "C" :: Nil, _ shouldBe 21.865889212827987)
+  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "100" :: "A" :: Nil, _ shouldBe 27.769784172661872)
+  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "100" :: "T" :: Nil, _ shouldBe 19.568345323741006)
+  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "100" :: "G" :: Nil, _ shouldBe 30.79136690647482)
+  addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "100" :: "C" :: Nil, _ shouldBe 21.8705035971223)
 
-  addStatsTest(fastqcR2Group, "adapters" :: Nil, _ shouldBe Some(Map()))
+  addStatsTest(fastqcR2Group, "adapters" :: Nil, _ shouldBe Map())
 
-  addStatsTest(seqstatR2Group, "bases" :: "num_total" :: Nil, _ shouldBe Some(100000))
-  addStatsTest(seqstatR2Group, "bases" :: "nucleotides" :: "A" :: Nil, _ shouldBe Some(13981))
-  addStatsTest(seqstatR2Group, "bases" :: "nucleotides" :: "T" :: Nil, _ shouldBe Some(11508))
-  addStatsTest(seqstatR2Group, "bases" :: "nucleotides" :: "G" :: Nil, _ shouldBe Some(16442))
-  addStatsTest(seqstatR2Group, "bases" :: "nucleotides" :: "C" :: Nil, _ shouldBe Some(14089))
-  addStatsTest(seqstatR2Group, "bases" :: "nucleotides" :: "N" :: Nil, _ shouldBe Some(43980))
+  addStatsTest(seqstatR2Group, "bases" :: "num_total" :: Nil, _ shouldBe 100000)
+  addStatsTest(seqstatR2Group, "bases" :: "nucleotides" :: "A" :: Nil, _ shouldBe 13981)
+  addStatsTest(seqstatR2Group, "bases" :: "nucleotides" :: "T" :: Nil, _ shouldBe 11508)
+  addStatsTest(seqstatR2Group, "bases" :: "nucleotides" :: "G" :: Nil, _ shouldBe 16442)
+  addStatsTest(seqstatR2Group, "bases" :: "nucleotides" :: "C" :: Nil, _ shouldBe 14089)
+  addStatsTest(seqstatR2Group, "bases" :: "nucleotides" :: "N" :: Nil, _ shouldBe 43980)
   addStatsTest(seqstatR2Group, "bases" :: "num_qual" :: Nil, x => {
     x.isDefined shouldBe true
     val array = ConfigUtils.any2list(x.get).toArray
@@ -237,11 +237,11 @@ trait FlexiprepPaired extends FlexiprepSingle {
     array(2) shouldBe 60383
   })
 
-  addStatsTest(seqstatR2Group, "reads" :: "num_total" :: Nil, _ shouldBe Some(1000))
-  addStatsTest(seqstatR2Group, "reads" :: "num_with_n" :: Nil, _ shouldBe Some(769))
-  addStatsTest(seqstatR2Group, "reads" :: "len_min" :: Nil, _ shouldBe Some(100))
-  addStatsTest(seqstatR2Group, "reads" :: "len_max" :: Nil, _ shouldBe Some(100))
-  addStatsTest(seqstatR2Group, "reads" :: "qual_encoding" :: Nil, _ shouldBe Some(inputEncodingR2))
+  addStatsTest(seqstatR2Group, "reads" :: "num_total" :: Nil, _ shouldBe 1000)
+  addStatsTest(seqstatR2Group, "reads" :: "num_with_n" :: Nil, _ shouldBe 769)
+  addStatsTest(seqstatR2Group, "reads" :: "len_min" :: Nil, _ shouldBe 100)
+  addStatsTest(seqstatR2Group, "reads" :: "len_max" :: Nil, _ shouldBe 100)
+  addStatsTest(seqstatR2Group, "reads" :: "qual_encoding" :: Nil, _ shouldBe inputEncodingR2)
   addStatsTest(seqstatR2Group, "reads" :: "num_avg_qual_gte" :: Nil, x => {
     x.isDefined shouldBe true
     val map = ConfigUtils.any2map(x.get)
@@ -249,7 +249,7 @@ trait FlexiprepPaired extends FlexiprepSingle {
     map("0") shouldBe 1000
     map("60") shouldBe 0
   })
-  addStatsTest(seqstatR2Group, "reads" :: "qual_encoding" :: Nil, _ shouldBe Some(inputEncodingR2))
+  addStatsTest(seqstatR2Group, "reads" :: "qual_encoding" :: Nil, _ shouldBe inputEncodingR2)
 
   /** JSON paths for summary. */
   protected val statsFastqcR2QcPath = statsPath :+ "fastqc_R2_qc"
