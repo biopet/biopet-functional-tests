@@ -119,7 +119,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
         e.printStackTrace()
         println()
       }
-      throw new Exception()
+      throw new Exception(s"Error found in summary group: $summaryGroup")
     }
   }
 
@@ -158,7 +158,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
         e.printStackTrace()
         println()
       }
-      throw new Exception()
+      throw new Exception(s"Error found in summary group: $summaryGroup")
     }
   }
 
