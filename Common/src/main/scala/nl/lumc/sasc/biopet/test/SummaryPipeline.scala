@@ -100,16 +100,16 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
       summaryGroup.sample.map(SampleName).getOrElse(NoSample), summaryGroup.library.map(LibraryName).getOrElse(NoLibrary), statsPaths)
     val errors = new ListBuffer[Throwable]
     functions.foreach { x =>
-      withClue(s"group: $summaryGroup, path: ${x._1}") {
-        x._2.foreach { test =>
-          try {
+      x._2.foreach { test =>
+        try {
+          withClue(s"group: $summaryGroup, path: ${x._1}") {
             val value = results(x._1.mkString("->"))
             if (test.shouldExist == Some(true)) value should not be empty
             else if (test.shouldExist == Some(false)) value shouldBe empty
             if (test.shouldExist != Some(false)) test.test(value)
-          } catch {
-            case s: Throwable => errors += s
           }
+        } catch {
+          case s: Throwable => errors += s
         }
       }
     }
@@ -142,13 +142,13 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
       summaryGroup.sample.map(SampleName).getOrElse(NoSample), summaryGroup.library.map(LibraryName).getOrElse(NoLibrary), settingsPaths)
     val errors = new ListBuffer[Throwable]
     functions.foreach { x =>
-      withClue(s"group: $summaryGroup, path: ${x._1}") {
-        x._2.foreach { f =>
-          try {
+      x._2.foreach { f =>
+        try {
+          withClue(s"group: $summaryGroup, path: ${x._1}") {
             f(results(x._1.mkString("->")))
-          } catch {
-            case s: Throwable => errors += s
           }
+        } catch {
+          case s: Throwable => errors += s
         }
       }
     }
