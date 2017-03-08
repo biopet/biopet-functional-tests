@@ -113,188 +113,6 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   addSummaryFileTest(FileTest(fastqcR2Group, "fastqc_data", r2.isDefined, true))
   addSummaryFileTest(FileTest(fastqcR1QcGroup, "fastqc_data", true, true))
   addSummaryFileTest(FileTest(fastqcR2QcGroup, "fastqc_data", r2.isDefined, true))
-
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testInputR1File() = {
-  //    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "input_R1"
-  //    validateSummaryFile(summaryFile, file = r1, md5 = Some(md5SumInputR1))
-  //    assert(r1.get.exists(), "Input file R1 does not exits anymore")
-  //    assert(calcMd5(r1.get) == md5SumInputR1)
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testInputR2File() = {
-  //    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "input_R2"
-  //    if (r2.isDefined) {
-  //      validateSummaryFile(summaryFile, file = r2, md5 = md5SumInputR2)
-  //      assert(r2.get.exists(), "Input file R2 does not exits anymore")
-  //      md5SumInputR2.foreach(md5 => assert(calcMd5(r2.get) == md5))
-  //    } else summaryFile shouldBe JNothing
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testOutputR1File() = {
-  //    val outputFile = new File(outputDir, s"$sampleId-$libId.R1.qc${if (r2.isDefined) ".sync" else ""}.fq.gz")
-  //    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "output_R1"
-  //    validateSummaryFile(summaryFile)
-  //    (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
-  //
-  //    if (keepQcFastqFiles != Some(false)) {
-  //      assert(outputFile.exists(), "Output file R1 should exist while keepQcFastqFiles=true")
-  //
-  //      calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
-  //    } else assert(!outputFile.exists(), "Output file R1 should not exist while keepQcFastqFiles=false")
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testOutputR2File() = {
-  //    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "output_R2"
-  //    if (r2.isDefined) {
-  //      val outputFile = new File(outputDir, s"$sampleId-$libId.R2.qc.sync.fq.gz")
-  //      validateSummaryFile(summaryFile)
-  //      (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
-  //
-  //      if (keepQcFastqFiles == Some(false)) {
-  //        assert(outputFile.exists(), "Output file R2 should exist while keepQcFastqFiles=true")
-  //
-  //        calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
-  //      } else assert(!outputFile.exists(), "Output file R2 should not exist while keepQcFastqFiles=false")
-  //    } else {
-  //      summaryFile shouldBe JNothing
-  //      assert(!outputDir.list().exists(x => x.contains(".R2.") || x.contains(".r2.")))
-  //    }
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testSettings(): Unit = {
-  //    val settings = summaryRoot \ "flexiprep" \ "settings"
-  //    settings shouldBe a[JObject]
-  //
-  //    settings \ "skip_trim" shouldBe JBool(skipTrim.getOrElse(false))
-  //    settings \ "skip_clip" shouldBe JBool(skipClip.getOrElse(false))
-  //    settings \ "paired" shouldBe JBool(r2.isDefined)
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"), groups = Array("summaryFastqcR1"))
-  //  def testFastqcR1(): Unit = {
-  //    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1"
-  //    fastqc shouldBe a[JObject]
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testFastqcR2(): Unit = {
-  //    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2"
-  //    if (r2.isDefined) {
-  //      fastqc shouldBe a[JObject]
-  //      //TODO: check stats
-  //    } else fastqc shouldBe JNothing
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testFastqcR1Qc(): Unit = {
-  //    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1_qc"
-  //    fastqc shouldBe a[JObject]
-  //    //TODO: check stats
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testFastqcR2Qc(): Unit = {
-  //    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2_qc"
-  //    if (r2.isDefined) {
-  //      fastqc shouldBe a[JObject]
-  //      //TODO: check stats
-  //    } else fastqc shouldBe JNothing
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testSeqstatR1(): Unit = {
-  //    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R1"
-  //    seqstat shouldBe a[JObject]
-  //    //TODO: check stats
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testSeqstatR2(): Unit = {
-  //    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R2"
-  //    if (r2.isDefined) {
-  //      seqstat shouldBe a[JObject]
-  //      //TODO: check stats
-  //    } else seqstat shouldBe JNothing
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testSeqstatR1Qc(): Unit = {
-  //    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R1_qc"
-  //    seqstat shouldBe a[JObject]
-  //    //TODO: check stats
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testSeqstatR2Qc(): Unit = {
-  //    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R2_qc"
-  //    if (r2.isDefined) {
-  //      seqstat shouldBe a[JObject]
-  //      //TODO: check stats
-  //    } else seqstat shouldBe JNothing
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testClippingR1(): Unit = {
-  //    val clipping = summaryRoot \ "flexiprep" \ "stats" \ "clipping_R1"
-  //    val adapters = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1" \ "adapters"
-  //    skipClip match {
-  //      case Some(false) | None =>
-  //        if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
-  //        else clipping shouldBe JNothing
-  //      //TODO: check stats
-  //      case _ => clipping shouldBe JNothing
-  //    }
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testClippingR2(): Unit = {
-  //    val clipping = summaryRoot \ "flexiprep" \ "stats" \ "clipping_R2"
-  //    val adapters = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2" \ "adapters"
-  //    skipClip match {
-  //      case Some(false) | None if r2.isDefined =>
-  //        if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
-  //        else clipping shouldBe JNothing
-  //      //TODO: check stats
-  //      case _ => clipping shouldBe JNothing
-  //    }
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testTrimmingR1(): Unit = {
-  //    val trimming = summaryRoot \ "flexiprep" \ "stats" \ "trimming_R1"
-  //    skipTrim match {
-  //      case Some(false) | None =>
-  //        trimming shouldBe a[JObject]
-  //      //TODO: check stats
-  //      case _ => trimming shouldBe JNothing
-  //    }
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testTrimmingR2(): Unit = {
-  //    val trimming = summaryRoot \ "flexiprep" \ "stats" \ "trimming_R2"
-  //    skipTrim match {
-  //      case Some(false) | None if r2.isDefined =>
-  //        trimming shouldBe a[JObject]
-  //      //TODO: check stats
-  //      case _ => trimming shouldBe JNothing
-  //    }
-  //  }
-  //
-  //  @Test(dependsOnGroups = Array("parseSummary"))
-  //  def testFastqSync(): Unit = {
-  //    val syncing = summaryRoot \ "flexiprep" \ "stats" \ "fastq_sync"
-  //    if (r2.isDefined) {
-  //      syncing shouldBe a[JObject]
-  //      //TODO: check stats
-  //    } else syncing shouldBe JNothing
-  //  }
-  //
 }
 
 /** Trait for Flexiprep runs with single-end inputs. */
@@ -308,41 +126,41 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
   /** MD5 checksum of the input file. */
   def md5SumInputR1 = "8245507d70154d7921cd1bcce1ea344b"
 
-  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "mean" :: Nil, _ shouldBe Some(32.244))
-  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "median" :: Nil, _ shouldBe Some(33))
-  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "lower_quartile" :: Nil, _ shouldBe Some(31))
-  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "upper_quartile" :: Nil, _ shouldBe Some(34))
-  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "percentile_10th" :: Nil, _ shouldBe Some(30))
-  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "percentile_90th" :: Nil, _ shouldBe Some(34))
-  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "mean" :: Nil, _ shouldBe Some(21.984))
-  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "median" :: Nil, _ shouldBe Some(30))
-  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "lower_quartile" :: Nil, _ shouldBe Some(2))
-  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "upper_quartile" :: Nil, _ shouldBe Some(34))
-  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "percentile_10th" :: Nil, _ shouldBe Some(2))
-  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "percentile_90th" :: Nil, _ shouldBe Some(35))
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "mean" :: Nil, _ shouldBe 32.244 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "median" :: Nil, _ shouldBe 33 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "lower_quartile" :: Nil, _ shouldBe 31 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "upper_quartile" :: Nil, _ shouldBe 34 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "percentile_10th" :: Nil, _ shouldBe 30 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "percentile_90th" :: Nil, _ shouldBe 34 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "mean" :: Nil, _ shouldBe 21.984 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "median" :: Nil, _ shouldBe 30 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "lower_quartile" :: Nil, _ shouldBe 2 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "upper_quartile" :: Nil, _ shouldBe 34 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "percentile_10th" :: Nil, _ shouldBe 2 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "100" :: "percentile_90th" :: Nil, _ shouldBe 35 )
 
-  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "1" :: "A" :: Nil, _ shouldBe Some(17.251755265797392))
-  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "1" :: "T" :: Nil, _ shouldBe Some(11.735205616850552))
-  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "1" :: "G" :: Nil, _ shouldBe Some(52.35707121364093))
-  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "1" :: "C" :: Nil, _ shouldBe Some(18.655967903711137))
-  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "100" :: "A" :: Nil, _ shouldBe Some(26))
-  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "100" :: "T" :: Nil, _ shouldBe Some(21.9))
-  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "100" :: "G" :: Nil, _ shouldBe Some(24))
-  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "100" :: "C" :: Nil, _ shouldBe Some(28.1))
+  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "1" :: "A" :: Nil, _ shouldBe 17.251755265797392 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "1" :: "T" :: Nil, _ shouldBe 11.735205616850552 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "1" :: "G" :: Nil, _ shouldBe 52.35707121364093 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "1" :: "C" :: Nil, _ shouldBe 18.655967903711137 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "100" :: "A" :: Nil, _ shouldBe 26 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "100" :: "T" :: Nil, _ shouldBe 21.9 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "100" :: "G" :: Nil, _ shouldBe 24 )
+  addStatsTest(fastqcR1Group, "per_base_sequence_content" :: "100" :: "C" :: Nil, _ shouldBe 28.1 )
 
-  addStatsTest(fastqcR1Group, "adapters" :: "TruSeq Adapter, Index 1" :: Nil, _ shouldBe Some("GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG"))
-  addStatsTest(fastqcR1Group, "adapters" :: "TruSeq Adapter, Index 18" :: Nil, _ shouldBe Some("GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG"))
-  addStatsTest(fastqcR1Group, "adapters" :: Nil, _ shouldBe Some(Map(
+  addStatsTest(fastqcR1Group, "adapters" :: "TruSeq Adapter, Index 1" :: Nil, _ shouldBe "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG" )
+  addStatsTest(fastqcR1Group, "adapters" :: "TruSeq Adapter, Index 18" :: Nil, _ shouldBe "GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG" )
+  addStatsTest(fastqcR1Group, "adapters" :: Nil, _ shouldBe Map(
     "TruSeq Adapter, Index 1" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG",
     "TruSeq Adapter, Index 18" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG"
-  )))
+   ))
 
-  addStatsTest(seqstatR1Group, "bases" :: "num_total" :: Nil, _ shouldBe Some(100000))
-  addStatsTest(seqstatR1Group, "bases" :: "nucleotides" :: "A" :: Nil, _ shouldBe Some(21644))
-  addStatsTest(seqstatR1Group, "bases" :: "nucleotides" :: "T" :: Nil, _ shouldBe Some(23049))
-  addStatsTest(seqstatR1Group, "bases" :: "nucleotides" :: "G" :: Nil, _ shouldBe Some(25816))
-  addStatsTest(seqstatR1Group, "bases" :: "nucleotides" :: "C" :: Nil, _ shouldBe Some(26555))
-  addStatsTest(seqstatR1Group, "bases" :: "nucleotides" :: "N" :: Nil, _ shouldBe Some(2936))
+  addStatsTest(seqstatR1Group, "bases" :: "num_total" :: Nil, _ shouldBe 100000 )
+  addStatsTest(seqstatR1Group, "bases" :: "nucleotides" :: "A" :: Nil, _ shouldBe 21644 )
+  addStatsTest(seqstatR1Group, "bases" :: "nucleotides" :: "T" :: Nil, _ shouldBe 23049 )
+  addStatsTest(seqstatR1Group, "bases" :: "nucleotides" :: "G" :: Nil, _ shouldBe 25816 )
+  addStatsTest(seqstatR1Group, "bases" :: "nucleotides" :: "C" :: Nil, _ shouldBe 26555 )
+  addStatsTest(seqstatR1Group, "bases" :: "nucleotides" :: "N" :: Nil, _ shouldBe 2936 )
   addStatsTest(seqstatR1Group, "bases" :: "num_qual" :: Nil, x => {
     x should not be empty
     val array = ConfigUtils.any2list(x.get).toArray
@@ -350,11 +168,11 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
     array(2) shouldBe 7264
   })
 
-  addStatsTest(seqstatR1Group, "reads" :: "num_total" :: Nil, _ shouldBe Some(1000))
-  addStatsTest(seqstatR1Group, "reads" :: "num_with_n" :: Nil, _ shouldBe Some(175))
-  addStatsTest(seqstatR1Group, "reads" :: "len_min" :: Nil, _ shouldBe Some(100))
-  addStatsTest(seqstatR1Group, "reads" :: "len_max" :: Nil, _ shouldBe Some(100))
-  addStatsTest(seqstatR1Group, "reads" :: "qual_encoding" :: Nil, _ shouldBe Some(inputEncodingR1))
+  addStatsTest(seqstatR1Group, "reads" :: "num_total" :: Nil, _ shouldBe 1000 )
+  addStatsTest(seqstatR1Group, "reads" :: "num_with_n" :: Nil, _ shouldBe 175 )
+  addStatsTest(seqstatR1Group, "reads" :: "len_min" :: Nil, _ shouldBe 100 )
+  addStatsTest(seqstatR1Group, "reads" :: "len_max" :: Nil, _ shouldBe 100 )
+  addStatsTest(seqstatR1Group, "reads" :: "qual_encoding" :: Nil, _ shouldBe inputEncodingR1 )
   addStatsTest(seqstatR1Group, "reads" :: "num_avg_qual_gte" :: Nil, x => {
     x should not be empty
     val map = ConfigUtils.any2map(x.get)
@@ -362,7 +180,6 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
     map("0") shouldBe 1000
     map("60") shouldBe 0
   })
-  addStatsTest(seqstatR1Group, "reads" :: "qual_encoding" :: Nil, _ shouldBe Some(inputEncodingR1))
 
   /** JSON paths for summary. */
   protected val flexiprepPath = Seq("samples", sampleId, "libraries", libId, "flexiprep")

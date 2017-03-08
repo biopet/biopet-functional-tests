@@ -76,14 +76,14 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
     run.commitHash should not endWith "-dirty"
   }
 
-  case class SummaryTest(test: Option[Any] => Unit, shouldExist: Option[Boolean] = None)
+  case class SummaryTest(test: Any => Unit, shouldExist: Boolean = true)
 
   private var statsTests: MutMap[SummaryGroup, MutMap[List[String], List[SummaryTest]]] = MutMap()
 
   def addStatsTest(summaryGroup: SummaryGroup,
                    path: List[String] = Nil,
-                   test: Option[Any] => Unit = _ => {},
-                   shouldExist: Option[Boolean] = None): Unit = {
+                   test: Any => Unit = _ => {},
+                   shouldExist: Boolean = true): Unit = {
     if (!statsTests.contains(summaryGroup)) statsTests += (summaryGroup) -> MutMap()
     statsTests(summaryGroup) += path -> (SummaryTest(test, shouldExist) :: statsTests(summaryGroup).getOrElse(path, Nil))
   }
@@ -104,9 +104,10 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
         try {
           withClue(s"group: $summaryGroup, path: ${x._1}") {
             val value = results(x._1.mkString("->"))
-            if (test.shouldExist == Some(true)) value should not be empty
-            else if (test.shouldExist == Some(false)) value shouldBe empty
-            if (test.shouldExist != Some(false)) test.test(value)
+            if (test.shouldExist) {
+              value should not be empty
+              test.test(value.get)
+            } else value shouldBe empty
           }
         } catch {
           case s: Throwable => errors += s
@@ -123,9 +124,9 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
     }
   }
 
-  private var settingsTests: MutMap[SummaryGroup, MutMap[List[String], List[Option[Any] => Unit]]] = MutMap()
+  private var settingsTests: MutMap[SummaryGroup, MutMap[List[String], List[Any => Unit]]] = MutMap()
 
-  def addSettingsTest(summaryGroup: SummaryGroup, path: List[String], function: Option[Any] => Unit): Unit = {
+  def addSettingsTest(summaryGroup: SummaryGroup, path: List[String], function: Any => Unit): Unit = {
     if (!settingsTests.contains(summaryGroup)) settingsTests += (summaryGroup) -> MutMap()
     settingsTests(summaryGroup) += path -> (function :: settingsTests(summaryGroup).getOrElse(path, Nil))
   }
@@ -136,7 +137,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   }
 
   @Test(dataProvider = "settingsTests", dependsOnGroups = Array("summary"))
-  def testSummarySettings(summaryGroup: SummaryGroup, functions: MutMap[List[String], List[Option[Any] => Unit]]): Unit = {
+  def testSummarySettings(summaryGroup: SummaryGroup, functions: MutMap[List[String], List[Any => Unit]]): Unit = {
     val settingsPaths = functions.keys.map(l => l.mkString("->") -> l).toMap
     val results = summaryDb.getSettingKeys(runId, summaryGroup.pipeline, summaryGroup.module.map(ModuleName).getOrElse(NoModule),
       summaryGroup.sample.map(SampleName).getOrElse(NoSample), summaryGroup.library.map(LibraryName).getOrElse(NoLibrary), settingsPaths)
@@ -145,7 +146,9 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
       x._2.foreach { f =>
         try {
           withClue(s"group: $summaryGroup, path: ${x._1}") {
-            f(results(x._1.mkString("->")))
+            val value = results(x._1.mkString("->"))
+            value should not be empty
+            f(value.get)
           }
         } catch {
           case s: Throwable => errors += s
