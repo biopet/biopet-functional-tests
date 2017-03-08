@@ -102,7 +102,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
     functions.foreach { x =>
       x._2.foreach { test =>
         try {
-          withClue(s"group: $summaryGroup, path: ${x._1}") {
+          withClue(s"path: ${x._1}, error: ") {
             val value = results(x._1.mkString("->"))
             if (test.shouldExist) {
               value should not be empty
@@ -115,12 +115,12 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
       }
     }
     if (errors.nonEmpty) {
-      errors.foreach { e =>
-        println(e.getMessage)
+      val messages = errors.map { e =>
         e.printStackTrace()
         println()
+        e.getMessage
       }
-      throw new Exception(s"Error found in summary group: $summaryGroup")
+      throw new Exception(s"Error found in summary group: $summaryGroup\n${messages.mkString("\n")}")
     }
   }
 
@@ -156,12 +156,12 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
       }
     }
     if (errors.nonEmpty) {
-      errors.foreach { e =>
-        println(e.getMessage)
+      val messages = errors.map { e =>
         e.printStackTrace()
         println()
+        e.getMessage
       }
-      throw new Exception(s"Error found in summary group: $summaryGroup")
+      throw new Exception(s"Error found in summary group: $summaryGroup\n${messages.mkString("\n")}")
     }
   }
 
@@ -266,7 +266,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   @Test(dataProvider = "executables", dependsOnGroups = Array("summary"))
   def testExecutables(exe: Executable): Unit = withClue(s"Executable: $exe") {
     val exesDb = Await.result(summaryDb.getExecutables(runId = Some(runId), toolName = Some(exe.name)), Duration.Inf)
-    exesDb.size shouldBe 1
+    require(exesDb.size == 1, "Executable not found in summary")
     val exeDb = exesDb.head
     exeDb.toolName shouldBe exe.name
 
