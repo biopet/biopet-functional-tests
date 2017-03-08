@@ -187,6 +187,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
       file should not be empty
       val f = new File(file.get.path)
       fileTest.path.foreach(file.get.path shouldBe _.getAbsolutePath)
+      fileTest.md5.foreach(file.get.md5 shouldBe _)
       fileTest.fileShouldExist.foreach(if (_) f should exist else f should not be exist)
     } else file shouldBe empty
   }

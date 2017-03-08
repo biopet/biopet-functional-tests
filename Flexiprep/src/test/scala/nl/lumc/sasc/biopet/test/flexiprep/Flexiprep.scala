@@ -53,6 +53,24 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   def md5SumInputR1: String
   def md5SumInputR2: Option[String] = None
 
+  val flexiprepGroup = SummaryGroup("flexiprep", None, Some(sampleId), Some(libId))
+
+  val fastqcR1Group = flexiprepGroup.copy(module = Some("fastqc_R1"))
+  val seqstatR1Group = flexiprepGroup.copy(module = Some("seqstat_R1"))
+  val fastqcR1QcGroup = flexiprepGroup.copy(module = Some("fastqc_R1_qc"))
+  val seqstatR1QcGroup = flexiprepGroup.copy(module = Some("seqstat_R1_qc"))
+  
+  val fastqcR2Group = flexiprepGroup.copy(module = Some("fastqc_R2"))
+  val seqstatR2Group = flexiprepGroup.copy(module = Some("seqstat_R2"))
+  val fastqcR2QcGroup = flexiprepGroup.copy(module = Some("fastqc_R1_qc"))
+  val seqstatR2QcGroup = flexiprepGroup.copy(module = Some("seqstat_R1_qc"))
+
+  val clippingR1Group = flexiprepGroup.copy(module = Some("clipping_R1"))
+  val clippingR2Group = flexiprepGroup.copy(module = Some("clipping_R2"))
+  val trimmingR1Group = flexiprepGroup.copy(module = Some("trimming_R1"))
+  val trimmingR2Group = flexiprepGroup.copy(module = Some("trimming_R2"))
+  val syncGroup = flexiprepGroup.copy(module = Some("fastq_sync"))
+  
   addExecutable(Executable("fastqc", Some(""".+""".r)))
   addExecutable(Executable("seqstat", Some(""".+""".r)))
   addExecutable(Executable("seqtkseq", Some(""".+""".r)))
@@ -66,30 +84,35 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   def outputFileR1 = new File(outputDir, s"$sampleId-$libId.R1.qc${if (r2.isDefined) ".sync" else ""}.fq.gz")
   def outputFileR2 = r2.map(_ => new File(outputDir, s"$sampleId-$libId.R2.qc.sync.fq.gz"))
 
-  addSummaryFileTest(FileTest(SummaryGroup("flexiprep"), "input_R1", true, true, r1, md5SumInputR1))
-  addSummaryFileTest(FileTest(SummaryGroup("flexiprep"), "input_R2", r2.isDefined, true, r2, md5SumInputR2))
+  addSummaryFileTest(FileTest(flexiprepGroup, "input_R1", true, true, r1, md5SumInputR1))
+  addSummaryFileTest(FileTest(flexiprepGroup, "input_R2", r2.isDefined, true, r2, md5SumInputR2))
 
-  addSummaryFileTest(FileTest(SummaryGroup("flexiprep"), "output_R1", true, keepQcFastqFiles != Some(false), outputFileR1))
-  addSummaryFileTest(FileTest(SummaryGroup("flexiprep"), "output_R2", r2.isDefined, keepQcFastqFiles != Some(false), outputFileR2))
+  addSummaryFileTest(FileTest(flexiprepGroup, "output_R1", true, keepQcFastqFiles != Some(false), outputFileR1))
+  addSummaryFileTest(FileTest(flexiprepGroup, "output_R2", r2.isDefined, keepQcFastqFiles != Some(false), outputFileR2))
 
-  addSettingsTest(SummaryGroup("flexiprep"), "skip_trim" :: Nil, _ shouldBe Some(skipTrim.getOrElse(false)))
-  addSettingsTest(SummaryGroup("flexiprep"), "skip_clip" :: Nil, _ shouldBe Some(skipClip.getOrElse(false)))
-  addSettingsTest(SummaryGroup("flexiprep"), "paired" :: Nil, _ shouldBe Some(r2.isDefined))
+  addSettingsTest(flexiprepGroup, "skip_trim" :: Nil, _ shouldBe Some(skipTrim.getOrElse(false)))
+  addSettingsTest(flexiprepGroup, "skip_clip" :: Nil, _ shouldBe Some(skipClip.getOrElse(false)))
+  addSettingsTest(flexiprepGroup, "paired" :: Nil, _ shouldBe Some(r2.isDefined))
 
-  addStatsTest(SummaryGroup("flexiprep", "fastqc_R1"), shouldExist = true)
-  addStatsTest(SummaryGroup("flexiprep", "fastqc_R2"), shouldExist = r2.isDefined)
-  addStatsTest(SummaryGroup("flexiprep", "fastqc_R1_qc"), shouldExist = true)
-  addStatsTest(SummaryGroup("flexiprep", "fastqc_R2_qc"), shouldExist = r2.isDefined)
-  addStatsTest(SummaryGroup("flexiprep", "seqstat_R1"), shouldExist = true)
-  addStatsTest(SummaryGroup("flexiprep", "seqstat_R2"), shouldExist = r2.isDefined)
-  addStatsTest(SummaryGroup("flexiprep", "seqstat_R1_qc"), shouldExist = true)
-  addStatsTest(SummaryGroup("flexiprep", "seqstat_R2_qc"), shouldExist = r2.isDefined)
+  addStatsTest(fastqcR1Group, shouldExist = true)
+  addStatsTest(fastqcR2Group, shouldExist = r2.isDefined)
+  addStatsTest(fastqcR1QcGroup, shouldExist = true)
+  addStatsTest(fastqcR2QcGroup, shouldExist = r2.isDefined)
+  addStatsTest(seqstatR1Group, shouldExist = true)
+  addStatsTest(seqstatR2Group, shouldExist = r2.isDefined)
+  addStatsTest(seqstatR1QcGroup, shouldExist = true)
+  addStatsTest(seqstatR2QcGroup, shouldExist = r2.isDefined)
 
-  addStatsTest(SummaryGroup("flexiprep", "clipping_R1"), shouldExist = r1ContainAdapters && (skipClip != Some(true)))
-  addStatsTest(SummaryGroup("flexiprep", "clipping_R2"), shouldExist = r2.isDefined && r2ContainAdapters && (skipClip != Some(true)))
-  addStatsTest(SummaryGroup("flexiprep", "trimming_R1"), shouldExist = skipTrim != Some(true))
-  addStatsTest(SummaryGroup("flexiprep", "trimming_R2"), shouldExist = r2.isDefined && (skipTrim != Some(true)))
-  addStatsTest(SummaryGroup("flexiprep", "fastq_sync"), shouldExist = r2.isDefined)
+  addStatsTest(clippingR1Group, shouldExist = r1ContainAdapters && (skipClip != Some(true)))
+  addStatsTest(clippingR2Group, shouldExist = r2.isDefined && r2ContainAdapters && (skipClip != Some(true)))
+  addStatsTest(trimmingR1Group, shouldExist = skipTrim != Some(true))
+  addStatsTest(trimmingR2Group, shouldExist = r2.isDefined && (skipTrim != Some(true)))
+  addStatsTest(syncGroup, shouldExist = r2.isDefined)
+
+  addSummaryFileTest(FileTest(fastqcR1Group, "fastqc_data", true, true))
+  addSummaryFileTest(FileTest(fastqcR2Group, "fastqc_data", r2.isDefined, true))
+  addSummaryFileTest(FileTest(fastqcR1QcGroup, "fastqc_data", true, true))
+  addSummaryFileTest(FileTest(fastqcR2QcGroup, "fastqc_data", r2.isDefined, true))
 
   //  @Test(dependsOnGroups = Array("parseSummary"))
   //  def testInputR1File() = {
@@ -285,9 +308,6 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
   /** MD5 checksum of the input file. */
   def md5SumInputR1 = "8245507d70154d7921cd1bcce1ea344b"
 
-  val flexiprepGroup = SummaryGroup("flexiprep", None, Some(sampleId), Some(libId))
-
-  val fastqcR1Group = flexiprepGroup.copy(module = Some("fastqc_R1"))
   addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "mean" :: Nil, _ shouldBe Some(32.244))
   addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "median" :: Nil, _ shouldBe Some(33))
   addStatsTest(fastqcR1Group, "per_base_sequence_quality" :: "1" :: "lower_quartile" :: Nil, _ shouldBe Some(31))
@@ -317,7 +337,6 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
     "TruSeq Adapter, Index 18" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG"
   )))
 
-  val seqstatR1Group = flexiprepGroup.copy(module = Some("seqstat_R1"))
   addStatsTest(seqstatR1Group, "bases" :: "num_total" :: Nil, _ shouldBe Some(100000))
   addStatsTest(seqstatR1Group, "bases" :: "nucleotides" :: "A" :: Nil, _ shouldBe Some(21644))
   addStatsTest(seqstatR1Group, "bases" :: "nucleotides" :: "T" :: Nil, _ shouldBe Some(23049))
@@ -345,23 +364,12 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
   })
   addStatsTest(seqstatR1Group, "reads" :: "qual_encoding" :: Nil, _ shouldBe Some(inputEncodingR1))
 
-  val fastqcR1QcGroup = flexiprepGroup.copy(module = Some("fastqc_R1_qc"))
-  // This is filled at the results classes
-
-  val seqstatRQcGroup = flexiprepGroup.copy(module = Some("seqstat_R1_qc"))
-  // This is filled at the results classes
-
   /** JSON paths for summary. */
   protected val flexiprepPath = Seq("samples", sampleId, "libraries", libId, "flexiprep")
   protected val statsPath = flexiprepPath :+ "stats"
-  protected val statsFastqcR1Path = statsPath :+ "fastqc_R1"
-  protected val statsSeqstatR1Path = statsPath :+ "seqstat_R1"
   protected val statsFastqcR1QcPath = statsPath :+ "fastqc_R1_qc"
   protected val statsSeqstatR1QcPath = statsPath :+ "seqstat_R1_qc"
 
-  addSummaryTest(flexiprepPath :+ "files",
-    Seq(
-      _ \ "fastqc_R1" \ "fastqc_data" \ "path" should existAsFile))
 }
 
 /** Trait for Flexiprep runs with paired-end inputs. */
@@ -375,7 +383,6 @@ trait FlexiprepPaired extends FlexiprepSingle {
   /** MD5 checksum of input read pair 2. */
   override def md5SumInputR2 = Some("1560a4cdc87cc8c4b6701e1253d41f93")
 
-  val fastqcR2Group = flexiprepGroup.copy(module = Some("fastqc_R2"))
   addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "mean" :: Nil, _ shouldBe Some(11.351))
   addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "median" :: Nil, _ shouldBe Some(2))
   addStatsTest(fastqcR2Group, "per_base_sequence_quality" :: "1" :: "lower_quartile" :: Nil, _ shouldBe Some(2))
@@ -400,7 +407,6 @@ trait FlexiprepPaired extends FlexiprepSingle {
 
   addStatsTest(fastqcR2Group, "adapters" :: Nil, _ shouldBe Some(Map()))
 
-  val seqstatR2Group = flexiprepGroup.copy(module = Some("seqstat_R2"))
   addStatsTest(seqstatR2Group, "bases" :: "num_total" :: Nil, _ shouldBe Some(100000))
   addStatsTest(seqstatR2Group, "bases" :: "nucleotides" :: "A" :: Nil, _ shouldBe Some(13981))
   addStatsTest(seqstatR2Group, "bases" :: "nucleotides" :: "T" :: Nil, _ shouldBe Some(11508))
@@ -429,13 +435,8 @@ trait FlexiprepPaired extends FlexiprepSingle {
   addStatsTest(seqstatR2Group, "reads" :: "qual_encoding" :: Nil, _ shouldBe Some(inputEncodingR2))
 
   /** JSON paths for summary. */
-  protected val statsFastqcR2Path = statsPath :+ "fastqc_R2"
-  protected val statsSeqstatR2Path = statsPath :+ "seqstat_R2"
   protected val statsFastqcR2QcPath = statsPath :+ "fastqc_R2_qc"
   protected val statsSeqstatR2QcPath = statsPath :+ "seqstat_R2_qc"
 
-  addSummaryTest(flexiprepPath :+ "files",
-    Seq(
-      _ \ "fastqc_R2" \ "fastqc_data" \ "path" should existAsFile))
 }
 
