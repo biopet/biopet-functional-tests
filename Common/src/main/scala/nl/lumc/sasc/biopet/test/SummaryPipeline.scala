@@ -82,7 +82,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
 
   def addStatsTest(summaryGroup: SummaryGroup,
                    path: List[String] = Nil,
-                   test: Option[Any] => Unit = _ = {},
+                   test: Option[Any] => Unit = _ => {},
                    shouldExist: Option[Boolean] = None): Unit = {
     if (!statsTests.contains(summaryGroup)) statsTests += (summaryGroup) -> MutMap()
     statsTests(summaryGroup) += path -> (SummaryTest(test, shouldExist) :: statsTests(summaryGroup).getOrElse(path, Nil))
@@ -108,7 +108,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
             else if (test.shouldExist == Some(false)) value shouldBe empty
             if (test.shouldExist != Some(false)) test.test(value)
           } catch {
-            case s => errors += s
+            case s: Throwable => errors += s
           }
         }
       }
@@ -143,10 +143,12 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
     val errors = new ListBuffer[Throwable]
     functions.foreach { x =>
       withClue(s"group: $summaryGroup, path: ${x._1}") {
-        try {
-          x._2.foreach(f => f(results(x._1.mkString("->"))))
-        } catch {
-          case s => errors += s
+        x._2.foreach { f =>
+          try {
+            f(results(x._1.mkString("->")))
+          } catch {
+            case s: Throwable => errors += s
+          }
         }
       }
     }

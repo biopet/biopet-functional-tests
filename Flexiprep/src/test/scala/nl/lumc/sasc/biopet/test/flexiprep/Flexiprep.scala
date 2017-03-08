@@ -151,127 +151,127 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   //    settings \ "skip_clip" shouldBe JBool(skipClip.getOrElse(false))
   //    settings \ "paired" shouldBe JBool(r2.isDefined)
   //  }
-//
-//  @Test(dependsOnGroups = Array("parseSummary"), groups = Array("summaryFastqcR1"))
-//  def testFastqcR1(): Unit = {
-//    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1"
-//    fastqc shouldBe a[JObject]
-//  }
-//
-//  @Test(dependsOnGroups = Array("parseSummary"))
-//  def testFastqcR2(): Unit = {
-//    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2"
-//    if (r2.isDefined) {
-//      fastqc shouldBe a[JObject]
-//      //TODO: check stats
-//    } else fastqc shouldBe JNothing
-//  }
-//
-//  @Test(dependsOnGroups = Array("parseSummary"))
-//  def testFastqcR1Qc(): Unit = {
-//    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1_qc"
-//    fastqc shouldBe a[JObject]
-//    //TODO: check stats
-//  }
-//
-//  @Test(dependsOnGroups = Array("parseSummary"))
-//  def testFastqcR2Qc(): Unit = {
-//    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2_qc"
-//    if (r2.isDefined) {
-//      fastqc shouldBe a[JObject]
-//      //TODO: check stats
-//    } else fastqc shouldBe JNothing
-//  }
-//
-//  @Test(dependsOnGroups = Array("parseSummary"))
-//  def testSeqstatR1(): Unit = {
-//    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R1"
-//    seqstat shouldBe a[JObject]
-//    //TODO: check stats
-//  }
-//
-//  @Test(dependsOnGroups = Array("parseSummary"))
-//  def testSeqstatR2(): Unit = {
-//    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R2"
-//    if (r2.isDefined) {
-//      seqstat shouldBe a[JObject]
-//      //TODO: check stats
-//    } else seqstat shouldBe JNothing
-//  }
-//
-//  @Test(dependsOnGroups = Array("parseSummary"))
-//  def testSeqstatR1Qc(): Unit = {
-//    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R1_qc"
-//    seqstat shouldBe a[JObject]
-//    //TODO: check stats
-//  }
-//
-//  @Test(dependsOnGroups = Array("parseSummary"))
-//  def testSeqstatR2Qc(): Unit = {
-//    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R2_qc"
-//    if (r2.isDefined) {
-//      seqstat shouldBe a[JObject]
-//      //TODO: check stats
-//    } else seqstat shouldBe JNothing
-//  }
-//
-//  @Test(dependsOnGroups = Array("parseSummary"))
-//  def testClippingR1(): Unit = {
-//    val clipping = summaryRoot \ "flexiprep" \ "stats" \ "clipping_R1"
-//    val adapters = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1" \ "adapters"
-//    skipClip match {
-//      case Some(false) | None =>
-//        if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
-//        else clipping shouldBe JNothing
-//      //TODO: check stats
-//      case _ => clipping shouldBe JNothing
-//    }
-//  }
-//
-//  @Test(dependsOnGroups = Array("parseSummary"))
-//  def testClippingR2(): Unit = {
-//    val clipping = summaryRoot \ "flexiprep" \ "stats" \ "clipping_R2"
-//    val adapters = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2" \ "adapters"
-//    skipClip match {
-//      case Some(false) | None if r2.isDefined =>
-//        if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
-//        else clipping shouldBe JNothing
-//      //TODO: check stats
-//      case _ => clipping shouldBe JNothing
-//    }
-//  }
-//
-//  @Test(dependsOnGroups = Array("parseSummary"))
-//  def testTrimmingR1(): Unit = {
-//    val trimming = summaryRoot \ "flexiprep" \ "stats" \ "trimming_R1"
-//    skipTrim match {
-//      case Some(false) | None =>
-//        trimming shouldBe a[JObject]
-//      //TODO: check stats
-//      case _ => trimming shouldBe JNothing
-//    }
-//  }
-//
-//  @Test(dependsOnGroups = Array("parseSummary"))
-//  def testTrimmingR2(): Unit = {
-//    val trimming = summaryRoot \ "flexiprep" \ "stats" \ "trimming_R2"
-//    skipTrim match {
-//      case Some(false) | None if r2.isDefined =>
-//        trimming shouldBe a[JObject]
-//      //TODO: check stats
-//      case _ => trimming shouldBe JNothing
-//    }
-//  }
-//
-//  @Test(dependsOnGroups = Array("parseSummary"))
-//  def testFastqSync(): Unit = {
-//    val syncing = summaryRoot \ "flexiprep" \ "stats" \ "fastq_sync"
-//    if (r2.isDefined) {
-//      syncing shouldBe a[JObject]
-//      //TODO: check stats
-//    } else syncing shouldBe JNothing
-//  }
-//
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"), groups = Array("summaryFastqcR1"))
+  //  def testFastqcR1(): Unit = {
+  //    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1"
+  //    fastqc shouldBe a[JObject]
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testFastqcR2(): Unit = {
+  //    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2"
+  //    if (r2.isDefined) {
+  //      fastqc shouldBe a[JObject]
+  //      //TODO: check stats
+  //    } else fastqc shouldBe JNothing
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testFastqcR1Qc(): Unit = {
+  //    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1_qc"
+  //    fastqc shouldBe a[JObject]
+  //    //TODO: check stats
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testFastqcR2Qc(): Unit = {
+  //    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2_qc"
+  //    if (r2.isDefined) {
+  //      fastqc shouldBe a[JObject]
+  //      //TODO: check stats
+  //    } else fastqc shouldBe JNothing
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testSeqstatR1(): Unit = {
+  //    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R1"
+  //    seqstat shouldBe a[JObject]
+  //    //TODO: check stats
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testSeqstatR2(): Unit = {
+  //    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R2"
+  //    if (r2.isDefined) {
+  //      seqstat shouldBe a[JObject]
+  //      //TODO: check stats
+  //    } else seqstat shouldBe JNothing
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testSeqstatR1Qc(): Unit = {
+  //    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R1_qc"
+  //    seqstat shouldBe a[JObject]
+  //    //TODO: check stats
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testSeqstatR2Qc(): Unit = {
+  //    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R2_qc"
+  //    if (r2.isDefined) {
+  //      seqstat shouldBe a[JObject]
+  //      //TODO: check stats
+  //    } else seqstat shouldBe JNothing
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testClippingR1(): Unit = {
+  //    val clipping = summaryRoot \ "flexiprep" \ "stats" \ "clipping_R1"
+  //    val adapters = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1" \ "adapters"
+  //    skipClip match {
+  //      case Some(false) | None =>
+  //        if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
+  //        else clipping shouldBe JNothing
+  //      //TODO: check stats
+  //      case _ => clipping shouldBe JNothing
+  //    }
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testClippingR2(): Unit = {
+  //    val clipping = summaryRoot \ "flexiprep" \ "stats" \ "clipping_R2"
+  //    val adapters = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2" \ "adapters"
+  //    skipClip match {
+  //      case Some(false) | None if r2.isDefined =>
+  //        if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
+  //        else clipping shouldBe JNothing
+  //      //TODO: check stats
+  //      case _ => clipping shouldBe JNothing
+  //    }
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testTrimmingR1(): Unit = {
+  //    val trimming = summaryRoot \ "flexiprep" \ "stats" \ "trimming_R1"
+  //    skipTrim match {
+  //      case Some(false) | None =>
+  //        trimming shouldBe a[JObject]
+  //      //TODO: check stats
+  //      case _ => trimming shouldBe JNothing
+  //    }
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testTrimmingR2(): Unit = {
+  //    val trimming = summaryRoot \ "flexiprep" \ "stats" \ "trimming_R2"
+  //    skipTrim match {
+  //      case Some(false) | None if r2.isDefined =>
+  //        trimming shouldBe a[JObject]
+  //      //TODO: check stats
+  //      case _ => trimming shouldBe JNothing
+  //    }
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testFastqSync(): Unit = {
+  //    val syncing = summaryRoot \ "flexiprep" \ "stats" \ "fastq_sync"
+  //    if (r2.isDefined) {
+  //      syncing shouldBe a[JObject]
+  //      //TODO: check stats
+  //    } else syncing shouldBe JNothing
+  //  }
+  //
 }
 
 /** Trait for Flexiprep runs with single-end inputs. */
