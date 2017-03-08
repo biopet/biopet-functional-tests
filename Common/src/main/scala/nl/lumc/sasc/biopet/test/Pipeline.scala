@@ -11,6 +11,7 @@ import org.testng.annotations.{ BeforeClass, DataProvider, Test }
 import scala.io.Source
 import scala.sys.process._
 import scala.util.matching.Regex
+import scala.language.implicitConversions
 
 /**
  * Created by pjvan_thof on 6/30/15.
