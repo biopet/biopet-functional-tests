@@ -52,20 +52,40 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   }
 
   @Test(dependsOnGroups = Array("summary"))
-  def testSummaryRun(): Unit = {
+  def testSummaryRunOutputDir(): Unit = {
     val runs = Await.result(summaryDb.getRuns(runId = Some(runId)), Duration.Inf)
     runs should not be empty
     val run = runs.head
     run.outputDir shouldBe outputDir.getAbsolutePath
-    run.name shouldBe pipelineName
-    run.commitHash shouldBe regex("[a-z0-9]{8}".r)
   }
 
-  private var statsTests: MutMap[SummaryGroup, MutMap[List[String], List[Option[Any] => Unit]]] = MutMap()
+  @Test(dependsOnGroups = Array("summary"))
+  def testSummaryRunPipelineName(): Unit = {
+    val runs = Await.result(summaryDb.getRuns(runId = Some(runId)), Duration.Inf)
+    runs should not be empty
+    val run = runs.head
+    run.name shouldBe pipelineName
+  }
 
-  def addStatsTest(summaryGroup: SummaryGroup, path: List[String], function: Option[Any] => Unit): Unit = {
+  @Test(dependsOnGroups = Array("summary"))
+  def testSummaryRunGitHash(): Unit = {
+    val runs = Await.result(summaryDb.getRuns(runId = Some(runId)), Duration.Inf)
+    runs should not be empty
+    val run = runs.head
+    run.commitHash should startWith regex """[a-z0-9]{8}"""
+    run.commitHash should not endWith "-dirty"
+  }
+
+  case class SummaryTest(test: Option[Any] => Unit, shouldExist: Option[Boolean] = None)
+
+  private var statsTests: MutMap[SummaryGroup, MutMap[List[String], List[SummaryTest]]] = MutMap()
+
+  def addStatsTest(summaryGroup: SummaryGroup,
+                   path: List[String] = Nil,
+                   test: Option[Any] => Unit = _ = {},
+                   shouldExist: Option[Boolean] = None): Unit = {
     if (!statsTests.contains(summaryGroup)) statsTests += (summaryGroup) -> MutMap()
-    statsTests(summaryGroup) += path -> (function :: statsTests(summaryGroup).getOrElse(path, Nil))
+    statsTests(summaryGroup) += path -> (SummaryTest(test, shouldExist) :: statsTests(summaryGroup).getOrElse(path, Nil))
   }
 
   @DataProvider(name = "statsTests")
@@ -74,17 +94,22 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   }
 
   @Test(dataProvider = "statsTests", dependsOnGroups = Array("summary"))
-  def testSummaryStats(summaryGroup: SummaryGroup, functions: MutMap[List[String], List[Option[Any] => Unit]]): Unit = {
+  def testSummaryStats(summaryGroup: SummaryGroup, functions: MutMap[List[String], List[SummaryTest]]): Unit = {
     val statsPaths = functions.keys.map(l => l.mkString("->") -> l).toMap
     val results = summaryDb.getStatKeys(runId, summaryGroup.pipeline, summaryGroup.module.map(ModuleName).getOrElse(NoModule),
       summaryGroup.sample.map(SampleName).getOrElse(NoSample), summaryGroup.library.map(LibraryName).getOrElse(NoLibrary), statsPaths)
     val errors = new ListBuffer[Throwable]
     functions.foreach { x =>
       withClue(s"group: $summaryGroup, path: ${x._1}") {
-        try {
-          x._2.foreach(f => f(results(x._1.mkString("->"))))
-        } catch {
-          case s => errors += s
+        x._2.foreach { test =>
+          try {
+            val value = results(x._1.mkString("->"))
+            if (test.shouldExist == Some(true)) value should not be empty
+            else if (test.shouldExist == Some(false)) value shouldBe empty
+            if (test.shouldExist != Some(false)) test.test(value)
+          } catch {
+            case s => errors += s
+          }
         }
       }
     }
@@ -133,6 +158,35 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
       }
       throw new Exception()
     }
+  }
+
+  case class FileTest(group: SummaryGroup, key: String,
+                      summaryShouldContain: Boolean = true,
+                      fileShouldExist: Option[Boolean] = None,
+                      path: Option[File] = None,
+                      md5: Option[String] = None)
+
+  private var filesTests: List[FileTest] = Nil
+
+  def addSummaryFileTest(fileTest: FileTest) = filesTests :+= fileTest
+
+  @DataProvider(name = "SummaryFiles")
+  def summaryFilesProvider = {
+    filesTests.map(Array(_)).toArray
+  }
+
+  @Test(dataProvider = "SummaryFiles", dependsOnGroups = Array("summary"))
+  def testSummaryFiles(fileTest: FileTest): Unit = withClue(fileTest) {
+    val file = Await.result(summaryDb.getFile(runId, fileTest.group.pipeline,
+      fileTest.group.module.map(ModuleName).getOrElse(NoModule),
+      fileTest.group.sample.map(SampleName).getOrElse(NoSample),
+      fileTest.group.library.map(LibraryName).getOrElse(NoLibrary), fileTest.key), Duration.Inf)
+    if (fileTest.summaryShouldContain) {
+      file should not be empty
+      val f = new File(file.get.path)
+      fileTest.path.foreach(file.get.path shouldBe _.getAbsolutePath)
+      fileTest.fileShouldExist.foreach(if (_) f should exist else f should not be exist)
+    } else file shouldBe empty
   }
 
   ///////// OLD /////////

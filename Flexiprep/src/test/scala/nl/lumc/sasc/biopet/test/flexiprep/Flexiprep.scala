@@ -28,6 +28,10 @@ trait FlexiprepRun extends Pipeline {
 
   def skipTrim = Option(false)
 
+  def r1ContainAdapters = true
+
+  def r2ContainAdapters = true
+
   def inputEncodingR1 = "sanger"
 
   def inputEncodingR2 = "sanger"
@@ -59,187 +63,215 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   override def summaryRoot = summaryLibrary(sampleId, libId)
 
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testInputR1File() = {
-    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "input_R1"
-    validateSummaryFile(summaryFile, file = r1, md5 = Some(md5SumInputR1))
-    assert(r1.get.exists(), "Input file R1 does not exits anymore")
-    assert(calcMd5(r1.get) == md5SumInputR1)
-  }
+  def outputFileR1 = new File(outputDir, s"$sampleId-$libId.R1.qc${if (r2.isDefined) ".sync" else ""}.fq.gz")
+  def outputFileR2 = r2.map(_ => new File(outputDir, s"$sampleId-$libId.R2.qc.sync.fq.gz"))
 
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testInputR2File() = {
-    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "input_R2"
-    if (r2.isDefined) {
-      validateSummaryFile(summaryFile, file = r2, md5 = md5SumInputR2)
-      assert(r2.get.exists(), "Input file R2 does not exits anymore")
-      md5SumInputR2.foreach(md5 => assert(calcMd5(r2.get) == md5))
-    } else summaryFile shouldBe JNothing
-  }
+  addSummaryFileTest(FileTest(SummaryGroup("flexiprep"), "input_R1", true, true, r1, md5SumInputR1))
+  addSummaryFileTest(FileTest(SummaryGroup("flexiprep"), "input_R2", r2.isDefined, true, r2, md5SumInputR2))
 
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testOutputR1File() = {
-    val outputFile = new File(outputDir, s"$sampleId-$libId.R1.qc${if (r2.isDefined) ".sync" else ""}.fq.gz")
-    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "output_R1"
-    validateSummaryFile(summaryFile)
-    (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
+  addSummaryFileTest(FileTest(SummaryGroup("flexiprep"), "output_R1", true, keepQcFastqFiles != Some(false), outputFileR1))
+  addSummaryFileTest(FileTest(SummaryGroup("flexiprep"), "output_R2", r2.isDefined, keepQcFastqFiles != Some(false), outputFileR2))
 
-    if (keepQcFastqFiles != Some(false)) {
-      assert(outputFile.exists(), "Output file R1 should exist while keepQcFastqFiles=true")
+  addSettingsTest(SummaryGroup("flexiprep"), "skip_trim" :: Nil, _ shouldBe Some(skipTrim.getOrElse(false)))
+  addSettingsTest(SummaryGroup("flexiprep"), "skip_clip" :: Nil, _ shouldBe Some(skipClip.getOrElse(false)))
+  addSettingsTest(SummaryGroup("flexiprep"), "paired" :: Nil, _ shouldBe Some(r2.isDefined))
 
-      calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
-    } else assert(!outputFile.exists(), "Output file R1 should not exist while keepQcFastqFiles=false")
-  }
+  addStatsTest(SummaryGroup("flexiprep", "fastqc_R1"), shouldExist = true)
+  addStatsTest(SummaryGroup("flexiprep", "fastqc_R2"), shouldExist = r2.isDefined)
+  addStatsTest(SummaryGroup("flexiprep", "fastqc_R1_qc"), shouldExist = true)
+  addStatsTest(SummaryGroup("flexiprep", "fastqc_R2_qc"), shouldExist = r2.isDefined)
+  addStatsTest(SummaryGroup("flexiprep", "seqstat_R1"), shouldExist = true)
+  addStatsTest(SummaryGroup("flexiprep", "seqstat_R2"), shouldExist = r2.isDefined)
+  addStatsTest(SummaryGroup("flexiprep", "seqstat_R1_qc"), shouldExist = true)
+  addStatsTest(SummaryGroup("flexiprep", "seqstat_R2_qc"), shouldExist = r2.isDefined)
 
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testOutputR2File() = {
-    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "output_R2"
-    if (r2.isDefined) {
-      val outputFile = new File(outputDir, s"$sampleId-$libId.R2.qc.sync.fq.gz")
-      validateSummaryFile(summaryFile)
-      (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
+  addStatsTest(SummaryGroup("flexiprep", "clipping_R1"), shouldExist = r1ContainAdapters && (skipClip != Some(true)))
+  addStatsTest(SummaryGroup("flexiprep", "clipping_R2"), shouldExist = r2.isDefined && r2ContainAdapters && (skipClip != Some(true)))
+  addStatsTest(SummaryGroup("flexiprep", "trimming_R1"), shouldExist = skipTrim != Some(true))
+  addStatsTest(SummaryGroup("flexiprep", "trimming_R2"), shouldExist = r2.isDefined && (skipTrim != Some(true)))
+  addStatsTest(SummaryGroup("flexiprep", "fastq_sync"), shouldExist = r2.isDefined)
 
-      if (keepQcFastqFiles == Some(false)) {
-        assert(outputFile.exists(), "Output file R2 should exist while keepQcFastqFiles=true")
-
-        calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
-      } else assert(!outputFile.exists(), "Output file R2 should not exist while keepQcFastqFiles=false")
-    } else {
-      summaryFile shouldBe JNothing
-      assert(!outputDir.list().exists(x => x.contains(".R2.") || x.contains(".r2.")))
-    }
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testSettings(): Unit = {
-    val settings = summaryRoot \ "flexiprep" \ "settings"
-    settings shouldBe a[JObject]
-
-    settings \ "skip_trim" shouldBe JBool(skipTrim.getOrElse(false))
-    settings \ "skip_clip" shouldBe JBool(skipClip.getOrElse(false))
-    settings \ "paired" shouldBe JBool(r2.isDefined)
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"), groups = Array("summaryFastqcR1"))
-  def testFastqcR1(): Unit = {
-    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1"
-    fastqc shouldBe a[JObject]
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testFastqcR2(): Unit = {
-    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2"
-    if (r2.isDefined) {
-      fastqc shouldBe a[JObject]
-      //TODO: check stats
-    } else fastqc shouldBe JNothing
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testFastqcR1Qc(): Unit = {
-    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1_qc"
-    fastqc shouldBe a[JObject]
-    //TODO: check stats
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testFastqcR2Qc(): Unit = {
-    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2_qc"
-    if (r2.isDefined) {
-      fastqc shouldBe a[JObject]
-      //TODO: check stats
-    } else fastqc shouldBe JNothing
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testSeqstatR1(): Unit = {
-    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R1"
-    seqstat shouldBe a[JObject]
-    //TODO: check stats
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testSeqstatR2(): Unit = {
-    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R2"
-    if (r2.isDefined) {
-      seqstat shouldBe a[JObject]
-      //TODO: check stats
-    } else seqstat shouldBe JNothing
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testSeqstatR1Qc(): Unit = {
-    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R1_qc"
-    seqstat shouldBe a[JObject]
-    //TODO: check stats
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testSeqstatR2Qc(): Unit = {
-    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R2_qc"
-    if (r2.isDefined) {
-      seqstat shouldBe a[JObject]
-      //TODO: check stats
-    } else seqstat shouldBe JNothing
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testClippingR1(): Unit = {
-    val clipping = summaryRoot \ "flexiprep" \ "stats" \ "clipping_R1"
-    val adapters = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1" \ "adapters"
-    skipClip match {
-      case Some(false) | None =>
-        if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
-        else clipping shouldBe JNothing
-      //TODO: check stats
-      case _ => clipping shouldBe JNothing
-    }
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testClippingR2(): Unit = {
-    val clipping = summaryRoot \ "flexiprep" \ "stats" \ "clipping_R2"
-    val adapters = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2" \ "adapters"
-    skipClip match {
-      case Some(false) | None if r2.isDefined =>
-        if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
-        else clipping shouldBe JNothing
-      //TODO: check stats
-      case _ => clipping shouldBe JNothing
-    }
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testTrimmingR1(): Unit = {
-    val trimming = summaryRoot \ "flexiprep" \ "stats" \ "trimming_R1"
-    skipTrim match {
-      case Some(false) | None =>
-        trimming shouldBe a[JObject]
-      //TODO: check stats
-      case _ => trimming shouldBe JNothing
-    }
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testTrimmingR2(): Unit = {
-    val trimming = summaryRoot \ "flexiprep" \ "stats" \ "trimming_R2"
-    skipTrim match {
-      case Some(false) | None if r2.isDefined =>
-        trimming shouldBe a[JObject]
-      //TODO: check stats
-      case _ => trimming shouldBe JNothing
-    }
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testFastqSync(): Unit = {
-    val syncing = summaryRoot \ "flexiprep" \ "stats" \ "fastq_sync"
-    if (r2.isDefined) {
-      syncing shouldBe a[JObject]
-      //TODO: check stats
-    } else syncing shouldBe JNothing
-  }
-
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testInputR1File() = {
+  //    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "input_R1"
+  //    validateSummaryFile(summaryFile, file = r1, md5 = Some(md5SumInputR1))
+  //    assert(r1.get.exists(), "Input file R1 does not exits anymore")
+  //    assert(calcMd5(r1.get) == md5SumInputR1)
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testInputR2File() = {
+  //    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "input_R2"
+  //    if (r2.isDefined) {
+  //      validateSummaryFile(summaryFile, file = r2, md5 = md5SumInputR2)
+  //      assert(r2.get.exists(), "Input file R2 does not exits anymore")
+  //      md5SumInputR2.foreach(md5 => assert(calcMd5(r2.get) == md5))
+  //    } else summaryFile shouldBe JNothing
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testOutputR1File() = {
+  //    val outputFile = new File(outputDir, s"$sampleId-$libId.R1.qc${if (r2.isDefined) ".sync" else ""}.fq.gz")
+  //    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "output_R1"
+  //    validateSummaryFile(summaryFile)
+  //    (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
+  //
+  //    if (keepQcFastqFiles != Some(false)) {
+  //      assert(outputFile.exists(), "Output file R1 should exist while keepQcFastqFiles=true")
+  //
+  //      calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
+  //    } else assert(!outputFile.exists(), "Output file R1 should not exist while keepQcFastqFiles=false")
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testOutputR2File() = {
+  //    val summaryFile = summaryRoot \ "flexiprep" \ "files" \ "pipeline" \ "output_R2"
+  //    if (r2.isDefined) {
+  //      val outputFile = new File(outputDir, s"$sampleId-$libId.R2.qc.sync.fq.gz")
+  //      validateSummaryFile(summaryFile)
+  //      (summaryFile \ "path").extract[String] shouldBe outputFile.getAbsolutePath
+  //
+  //      if (keepQcFastqFiles == Some(false)) {
+  //        assert(outputFile.exists(), "Output file R2 should exist while keepQcFastqFiles=true")
+  //
+  //        calcMd5(outputFile) shouldBe (summaryFile \ "md5").extract[String]
+  //      } else assert(!outputFile.exists(), "Output file R2 should not exist while keepQcFastqFiles=false")
+  //    } else {
+  //      summaryFile shouldBe JNothing
+  //      assert(!outputDir.list().exists(x => x.contains(".R2.") || x.contains(".r2.")))
+  //    }
+  //  }
+  //
+  //  @Test(dependsOnGroups = Array("parseSummary"))
+  //  def testSettings(): Unit = {
+  //    val settings = summaryRoot \ "flexiprep" \ "settings"
+  //    settings shouldBe a[JObject]
+  //
+  //    settings \ "skip_trim" shouldBe JBool(skipTrim.getOrElse(false))
+  //    settings \ "skip_clip" shouldBe JBool(skipClip.getOrElse(false))
+  //    settings \ "paired" shouldBe JBool(r2.isDefined)
+  //  }
+//
+//  @Test(dependsOnGroups = Array("parseSummary"), groups = Array("summaryFastqcR1"))
+//  def testFastqcR1(): Unit = {
+//    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1"
+//    fastqc shouldBe a[JObject]
+//  }
+//
+//  @Test(dependsOnGroups = Array("parseSummary"))
+//  def testFastqcR2(): Unit = {
+//    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2"
+//    if (r2.isDefined) {
+//      fastqc shouldBe a[JObject]
+//      //TODO: check stats
+//    } else fastqc shouldBe JNothing
+//  }
+//
+//  @Test(dependsOnGroups = Array("parseSummary"))
+//  def testFastqcR1Qc(): Unit = {
+//    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1_qc"
+//    fastqc shouldBe a[JObject]
+//    //TODO: check stats
+//  }
+//
+//  @Test(dependsOnGroups = Array("parseSummary"))
+//  def testFastqcR2Qc(): Unit = {
+//    val fastqc = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2_qc"
+//    if (r2.isDefined) {
+//      fastqc shouldBe a[JObject]
+//      //TODO: check stats
+//    } else fastqc shouldBe JNothing
+//  }
+//
+//  @Test(dependsOnGroups = Array("parseSummary"))
+//  def testSeqstatR1(): Unit = {
+//    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R1"
+//    seqstat shouldBe a[JObject]
+//    //TODO: check stats
+//  }
+//
+//  @Test(dependsOnGroups = Array("parseSummary"))
+//  def testSeqstatR2(): Unit = {
+//    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R2"
+//    if (r2.isDefined) {
+//      seqstat shouldBe a[JObject]
+//      //TODO: check stats
+//    } else seqstat shouldBe JNothing
+//  }
+//
+//  @Test(dependsOnGroups = Array("parseSummary"))
+//  def testSeqstatR1Qc(): Unit = {
+//    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R1_qc"
+//    seqstat shouldBe a[JObject]
+//    //TODO: check stats
+//  }
+//
+//  @Test(dependsOnGroups = Array("parseSummary"))
+//  def testSeqstatR2Qc(): Unit = {
+//    val seqstat = summaryRoot \ "flexiprep" \ "stats" \ "seqstat_R2_qc"
+//    if (r2.isDefined) {
+//      seqstat shouldBe a[JObject]
+//      //TODO: check stats
+//    } else seqstat shouldBe JNothing
+//  }
+//
+//  @Test(dependsOnGroups = Array("parseSummary"))
+//  def testClippingR1(): Unit = {
+//    val clipping = summaryRoot \ "flexiprep" \ "stats" \ "clipping_R1"
+//    val adapters = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R1" \ "adapters"
+//    skipClip match {
+//      case Some(false) | None =>
+//        if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
+//        else clipping shouldBe JNothing
+//      //TODO: check stats
+//      case _ => clipping shouldBe JNothing
+//    }
+//  }
+//
+//  @Test(dependsOnGroups = Array("parseSummary"))
+//  def testClippingR2(): Unit = {
+//    val clipping = summaryRoot \ "flexiprep" \ "stats" \ "clipping_R2"
+//    val adapters = summaryRoot \ "flexiprep" \ "stats" \ "fastqc_R2" \ "adapters"
+//    skipClip match {
+//      case Some(false) | None if r2.isDefined =>
+//        if (adapters.asInstanceOf[JObject].values.nonEmpty) clipping shouldBe a[JObject]
+//        else clipping shouldBe JNothing
+//      //TODO: check stats
+//      case _ => clipping shouldBe JNothing
+//    }
+//  }
+//
+//  @Test(dependsOnGroups = Array("parseSummary"))
+//  def testTrimmingR1(): Unit = {
+//    val trimming = summaryRoot \ "flexiprep" \ "stats" \ "trimming_R1"
+//    skipTrim match {
+//      case Some(false) | None =>
+//        trimming shouldBe a[JObject]
+//      //TODO: check stats
+//      case _ => trimming shouldBe JNothing
+//    }
+//  }
+//
+//  @Test(dependsOnGroups = Array("parseSummary"))
+//  def testTrimmingR2(): Unit = {
+//    val trimming = summaryRoot \ "flexiprep" \ "stats" \ "trimming_R2"
+//    skipTrim match {
+//      case Some(false) | None if r2.isDefined =>
+//        trimming shouldBe a[JObject]
+//      //TODO: check stats
+//      case _ => trimming shouldBe JNothing
+//    }
+//  }
+//
+//  @Test(dependsOnGroups = Array("parseSummary"))
+//  def testFastqSync(): Unit = {
+//    val syncing = summaryRoot \ "flexiprep" \ "stats" \ "fastq_sync"
+//    if (r2.isDefined) {
+//      syncing shouldBe a[JObject]
+//      //TODO: check stats
+//    } else syncing shouldBe JNothing
+//  }
+//
 }
 
 /** Trait for Flexiprep runs with single-end inputs. */
@@ -247,6 +279,8 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
 
   /** Input file of this run. */
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
+
+  override def r1ContainAdapters = true
 
   /** MD5 checksum of the input file. */
   def md5SumInputR1 = "8245507d70154d7921cd1bcce1ea344b"
@@ -278,6 +312,10 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
 
   addStatsTest(fastqcR1Group, "adapters" :: "TruSeq Adapter, Index 1" :: Nil, _ shouldBe Some("GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG"))
   addStatsTest(fastqcR1Group, "adapters" :: "TruSeq Adapter, Index 18" :: Nil, _ shouldBe Some("GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG"))
+  addStatsTest(fastqcR1Group, "adapters" :: Nil, _ shouldBe Some(Map(
+    "TruSeq Adapter, Index 1" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG",
+    "TruSeq Adapter, Index 18" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG"
+  )))
 
   val seqstatR1Group = flexiprepGroup.copy(module = Some("seqstat_R1"))
   addStatsTest(seqstatR1Group, "bases" :: "num_total" :: Nil, _ shouldBe Some(100000))
@@ -331,6 +369,8 @@ trait FlexiprepPaired extends FlexiprepSingle {
 
   /** Input read pair 2 for this run. */
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
+
+  override def r2ContainAdapters = false
 
   /** MD5 checksum of input read pair 2. */
   override def md5SumInputR2 = Some("1560a4cdc87cc8c4b6701e1253d41f93")

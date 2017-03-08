@@ -18,6 +18,8 @@ import scala.util.matching.Regex
 
 trait Pipeline extends TestNGSuite with Matchers {
 
+  implicit def autoToOption[T](x: T): Option[T] = Option(x)
+
   /** Output dir of pipeline */
   def outputDir = new File(Biopet.getOutputDir, this.getClass.getName.stripPrefix("nl.lumc.sasc.biopet.test."))
 
