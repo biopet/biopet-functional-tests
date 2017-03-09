@@ -3,8 +3,10 @@ package nl.lumc.sasc.biopet.test
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.samples.Samples
-import org.json4s._
 import org.testng.annotations.{ DataProvider, Test }
+
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 /**
  * Created by pjvan_thof on 10/19/15.
@@ -30,14 +32,16 @@ trait MultisampleSuccess extends SummaryPipeline with Samples with PipelineSucce
     assert(libraryDir(sampleId, libId).exists())
   }
 
-  @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
+  @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
   def testSampleSummary(sampleId: String): Unit = withClue(s"sample = $sampleId") {
-    summary \ "samples" \ sampleId shouldBe a[JObject]
+    val sample = Await.result(summaryDb.getSamples(name = sampleId), Duration.Inf).headOption
+    assert(sample.isDefined, s"Sample $sampleId does not exist in summary")
   }
 
-  @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
+  @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
   def testLibrarySummary(sampleId: String, libId: String): Unit = withClue(s"sample = $sampleId; library = $libId") {
-    summary \ "samples" \ sampleId \ "libraries" \ libId shouldBe a[JObject]
+    val lib = Await.result(summaryDb.getLibraries(name = libId), Duration.Inf).headOption
+    assert(lib.isDefined, s"Library $sampleId -> $libId does not exist in summary")
   }
 
   samples.foreach {

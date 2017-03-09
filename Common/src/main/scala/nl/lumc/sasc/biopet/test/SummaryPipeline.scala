@@ -203,10 +203,6 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
     } else file shouldBe empty
   }
 
-  ///////// OLD /////////
-  def summary: JValue = null // This is only there to not break the compiling for some pipelines still
-  ///////// OLD /////////
-
   private var executables: Set[Executable] = Set()
 
   /** With this method an executable can be added that must exists in the summary */
