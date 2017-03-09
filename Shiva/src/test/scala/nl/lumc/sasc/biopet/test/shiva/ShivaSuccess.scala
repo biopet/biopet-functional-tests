@@ -3,9 +3,9 @@ package nl.lumc.sasc.biopet.test.shiva
 import java.io.File
 
 import htsjdk.samtools.SamReaderFactory
-import nl.lumc.sasc.biopet.test.{Executable, MultisampleMappingSuccess, SummaryGroup}
+import nl.lumc.sasc.biopet.test.{ Executable, MultisampleMappingSuccess, SummaryGroup }
 import org.json4s._
-import org.testng.annotations.{DataProvider, Test}
+import org.testng.annotations.{ DataProvider, Test }
 
 import scala.collection.JavaConversions._
 
@@ -16,8 +16,6 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   val shivaGroup = SummaryGroup("shiva")
   val shivavariantcallingGroup = SummaryGroup("shivavariantcalling")
-
-  override def summarySchemaUrls = Seq("/schemas/shiva.json")
 
   if (dbsnpVcfFile.isEmpty && useBaseRecalibration != Some(false))
     logMustHave("""No Known site found, skipping base recalibration""".r)
@@ -69,7 +67,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   def addConcordanceChecks(group: SummaryGroup, sample: String, condition: Boolean): Unit = {
     addStatsTest(group, "genotypeSummary" :: sample :: "Overall_Genotype_Concordance" :: Nil, shouldExist = condition && referenceVcf.isDefined,
-      test = _ shouldBe >= (List(minPrecision, minRecall).sum / 2))
+      test = _ shouldBe >=(List(minPrecision, minRecall).sum / 2))
   }
 
   ("final" :: Shiva.validVariantcallers).foreach {

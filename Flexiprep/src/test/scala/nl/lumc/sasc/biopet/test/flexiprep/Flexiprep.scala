@@ -45,8 +45,6 @@ trait FlexiprepRun extends Pipeline {
 /** Trait representing a successful Flexiprep test group. */
 trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
-  override def summarySchemaUrls = Seq("/schemas/flexiprep.json")
-
   def md5SumInputR1: String
   def md5SumInputR2: Option[String] = None
 
@@ -76,8 +74,6 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
   else addNotHavingExecutable("sickle")
   if (skipClip == Some(true) || (!r1ContainAdapters && !r2ContainAdapters)) addNotHavingExecutable("cutadapt")
   else addExecutable(Executable("cutadapt", Some(""".+""".r)))
-
-  override def summaryRoot = summaryLibrary(sampleId, libId)
 
   def outputFileR1 = new File(outputDir, s"$sampleId-$libId.R1.qc${if (r2.isDefined) ".sync" else ""}.fq.gz")
   def outputFileR2 = r2.map(_ => new File(outputDir, s"$sampleId-$libId.R2.qc.sync.fq.gz"))

@@ -165,7 +165,8 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
     }
   }
 
-  case class FileTest(group: SummaryGroup, key: String,
+  case class FileTest(group: SummaryGroup,
+                      key: String,
                       summaryShouldContain: Boolean = true,
                       fileShouldExist: Option[Boolean] = None,
                       path: Option[File] = None,
@@ -173,6 +174,13 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
 
   private var filesTests: List[FileTest] = Nil
 
+  def addSummaryFileTest(group: SummaryGroup,
+                         key: String,
+                         summaryShouldContain: Boolean = true,
+                         fileShouldExist: Option[Boolean] = None,
+                         path: Option[File] = None,
+                         md5: Option[String] = None) =
+    filesTests :+= FileTest(group, key, summaryShouldContain, fileShouldExist, path, md5)
   def addSummaryFileTest(fileTest: FileTest) = filesTests :+= fileTest
 
   @DataProvider(name = "SummaryFiles")
@@ -196,44 +204,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   }
 
   ///////// OLD /////////
-  def summaryFile: File
-
-  /** URL to summary schema resource file, if defined. */
-  def summarySchemaUrls: Seq[String] = Seq.empty[String]
-
-  private lazy val summarySchemas = summarySchemaUrls.map { url => parse(getClass.getResourceAsStream(url)) }
-
-  final protected lazy val schemas: Seq[JsonSchema] = summarySchemas
-    .map { jv => SummaryPipeline.schemaFactory.getJsonSchema(asJsonNode(jv)) }
-
-  private var _summary: JValue = _
-
-  /** This will return the parsed summary, this method only work when the group "parseSummary" is done */
-  def summary = _summary
-
-  @Test(groups = Array("parseSummary"))
-  def parseSummary(): Unit = _summary = parse(summaryFile)
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def testSummarySchema(): Unit =
-    if (summarySchemaUrls.nonEmpty) {
-      schemas should not be empty
-      schemas.foreach { s => s.validate(asJsonNode(summary), true).iterator().asScala.toSeq shouldBe empty }
-    }
-
-  def validateSummaryFile(summaryFile: JValue,
-                          file: Option[File] = None,
-                          md5: Option[String] = None): Unit = {
-    summaryFile shouldBe a[JObject]
-    (summaryFile \ "path") shouldBe a[JString]
-    (summaryFile \ "md5") shouldBe a[JString]
-    file.foreach(x => (summaryFile \ "path") shouldBe JString(x.getAbsolutePath))
-    md5.foreach(x => (summaryFile \ "md5") shouldBe JString(x))
-  }
-
-  def summarySample(sampleId: String) = summary \ "samples" \ sampleId
-  def summaryLibrary(sampleId: String, libId: String) = summary \ "samples" \ sampleId \ "libraries" \ libId
-  def summaryRoot = summary
+  def summary: JValue = JNull
   ///////// OLD /////////
 
   private var executables: Set[Executable] = Set()
