@@ -11,7 +11,7 @@ class FlexiprepSingleClipTest extends FlexiprepSingle with FlexiprepSingleClipSu
 
 trait FlexiprepSingleClipSummaryValues extends FlexiprepSingle {
 
-  addSummaryTest(statsFastqcR1QcPath :+      "per_base_sequence_quality",
+  addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_quality",
     Seq(
       _.children.size should be <= 100,
       _ \ "1" \ "mean" should inInterval(32.23529411764706, 0.01),
