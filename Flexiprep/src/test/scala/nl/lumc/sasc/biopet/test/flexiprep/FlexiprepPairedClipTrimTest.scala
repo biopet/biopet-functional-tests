@@ -46,7 +46,7 @@ trait FlexiprepPairedClipTrimSummaryValues extends FlexiprepPaired {
     array(2) shouldBe 17
   })
 
-  addStatsTest(seqstatR1QcGroup, "reads" :: "num_total" :: Nil, _ shouldBe 442)
+  addStatsTest(seqstatR1QcGroup, "reads" :: "num_total" :: Nil, _ shouldBe 418)
   addStatsTest(seqstatR1QcGroup, "reads" :: "num_with_n" :: Nil, _ shouldBe 0)
   addStatsTest(seqstatR1QcGroup, "reads" :: "len_min" :: Nil, _ shouldBe 28)
   addStatsTest(seqstatR1QcGroup, "reads" :: "len_max" :: Nil, _ shouldBe 100)
