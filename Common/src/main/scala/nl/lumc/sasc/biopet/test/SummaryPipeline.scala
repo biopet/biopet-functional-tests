@@ -204,7 +204,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   }
 
   ///////// OLD /////////
-  def summary: JValue = JNull
+  def summary: JValue = null // This is only there to not break the compiling for some pipelines still
   ///////// OLD /////////
 
   private var executables: Set[Executable] = Set()
