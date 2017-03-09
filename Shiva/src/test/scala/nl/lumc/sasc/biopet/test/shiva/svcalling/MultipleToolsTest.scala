@@ -2,7 +2,6 @@ package nl.lumc.sasc.biopet.test.shiva.svcalling
 
 import java.io.File
 
-import htsjdk.variant.variantcontext.VariantContext
 import htsjdk.variant.vcf.VCFFileReader
 import nl.lumc.sasc.biopet.test.shiva.svcallers._
 import org.testng.annotations.Test
