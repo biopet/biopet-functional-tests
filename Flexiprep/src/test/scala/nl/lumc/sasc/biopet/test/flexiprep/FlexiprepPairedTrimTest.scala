@@ -30,8 +30,9 @@ class FlexiprepPairedTrimTest extends FlexiprepPaired {
 
   addStatsTest(fastqcR1QcGroup, "adapters" :: Nil, _ shouldBe Map(
     "TruSeq Adapter, Index 18" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG",
-    "Illumina Multiplexing PCR Primer 2.01" -> "GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT",
-    "TruSeq Adapter, Index 1" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG"
+    "TruSeq Adapter, Index 1" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG",
+    "Illumina Universal Adapter" -> "AGATCGGAAGAG",
+    "Illumina Multiplexing PCR Primer 2.01" -> "GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT"
   ))
 
   addStatsTest(seqstatR1QcGroup, "bases" :: "num_total" :: Nil, _ shouldBe 43153)
@@ -83,6 +84,7 @@ class FlexiprepPairedTrimTest extends FlexiprepPaired {
   addStatsTest(fastqcR2QcGroup, "per_base_sequence_content" :: "100" :: "C" :: Nil, _ shouldBe 28.57142857142857)
 
   addStatsTest(fastqcR2QcGroup, "adapters" :: Nil, _ shouldBe Map(
+    "Illumina Universal Adapter" -> "AGATCGGAAGAG",
     "Illumina Single End PCR Primer 1" -> "AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT"
   ))
 

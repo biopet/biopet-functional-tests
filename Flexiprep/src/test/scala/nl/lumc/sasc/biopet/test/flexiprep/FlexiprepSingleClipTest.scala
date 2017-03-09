@@ -48,7 +48,7 @@ trait FlexiprepSingleClipSummaryValues extends FlexiprepSingle {
     x.isDefined shouldBe true
     val array = ConfigUtils.any2list(x.get).toArray
     array(41) shouldBe 15820
-    array(2) shouldBe 6007
+    array(2) shouldBe 5385
   })
 
   addStatsTest(seqstatR1QcGroup, "reads" :: "num_total" :: Nil, _ shouldBe 983)

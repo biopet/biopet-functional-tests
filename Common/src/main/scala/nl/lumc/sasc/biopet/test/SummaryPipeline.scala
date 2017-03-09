@@ -105,7 +105,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
           withClue(s"path: ${x._1}, error: ") {
             val value = results(x._1.mkString("->"))
             if (test.shouldExist) {
-              value should not be empty
+              require(value.isDefined, "Value does not exist")
               test.test(value.get)
             } else value shouldBe empty
           }
@@ -147,7 +147,7 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
         try {
           withClue(s"group: $summaryGroup, path: ${x._1}") {
             val value = results(x._1.mkString("->"))
-            value should not be empty
+            require(value.isDefined, "Value does not exist")
             f(value.get)
           }
         } catch {

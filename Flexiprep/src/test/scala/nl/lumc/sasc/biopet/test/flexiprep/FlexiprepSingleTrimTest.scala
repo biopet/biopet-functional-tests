@@ -31,7 +31,8 @@ class FlexiprepSingleTrimTest extends FlexiprepSingle {
 
   addStatsTest(fastqcR1QcGroup, "adapters" :: Nil, _ shouldBe Map(
     "TruSeq Adapter, Index 18" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG",
-    "TruSeq Adapter, Index 1" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG"
+    "TruSeq Adapter, Index 1" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG",
+    "Illumina Universal Adapter" -> "AGATCGGAAGAG"
   ))
 
   addStatsTest(seqstatR1QcGroup, "bases" :: "num_total" :: Nil, _ shouldBe 90659)
