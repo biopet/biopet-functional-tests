@@ -21,9 +21,9 @@ trait FlexiprepRun extends Pipeline {
 
   def r2: Option[File] = None
 
-  def skipClip = Option(false)
+  def skipClip: Option[Boolean] = Option(false)
 
-  def skipTrim = Option(false)
+  def skipTrim: Option[Boolean] = Option(false)
 
   def r1ContainAdapters = false
 

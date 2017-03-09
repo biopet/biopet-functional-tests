@@ -3,8 +3,8 @@ package nl.lumc.sasc.biopet.test.flexiprep
 import nl.lumc.sasc.biopet.utils.ConfigUtils
 
 class FlexiprepSingleClipTrimTest extends FlexiprepSingle {
-  override def skipClip = Some(false)
-  override def skipTrim = Some(false)
+  override def skipClip: Option[Boolean] = Some(false)
+  override def skipTrim: Option[Boolean] = Some(false)
 
   addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "1" :: "mean" :: Nil, _ shouldBe 32.23529411764706)
   addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "1" :: "median" :: Nil, _ shouldBe 33)
