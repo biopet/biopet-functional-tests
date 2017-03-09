@@ -249,7 +249,6 @@ trait FlexiprepPaired extends FlexiprepSingle {
     map("0") shouldBe 1000
     map("60") shouldBe 0
   })
-  addStatsTest(seqstatR2Group, "reads" :: "qual_encoding" :: Nil, _ shouldBe inputEncodingR2)
 
   /** JSON paths for summary. */
   protected val statsFastqcR2QcPath = statsPath :+ "fastqc_R2_qc"
