@@ -18,58 +18,33 @@ trait MappingPaired extends MappingSingle {
 
   override def r2 = Some(Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R2.fq.gz"))
 
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def seqstatR2: Unit = {
-    val seqstat = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep" \ "stats" \ "seqstat_R2"
-    if (skipFlexiprep == Some(true)) seqstat shouldBe JNothing
-    else {
-      seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
-      seqstat \ "bases" \ "num_total" shouldBe JInt(BigInt(1000000))
-    }
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def seqstatR2Qc: Unit = {
-    val seqstat = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep" \ "stats" \ "seqstat_R2_qc"
-    if (skipFlexiprep == Some(true)) seqstat shouldBe JNothing
-    else {
-      seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
-      seqstat \ "bases" \ "num_total" shouldBe JInt(BigInt(1000000))
-    }
-  }
-
-  /** JSON paths for summary. */
-  protected val bamMetricsPath = (sampleId, libId) match {
-    case (Some(sid), Some(lid)) => Seq("samples", sid, "libraries", lid, "bammetrics")
-    case otherwise              => Seq()
-  }
-  protected val statsPath = bamMetricsPath :+ "stats"
+  addStatsTest(flexiprepGroup.copy(module = "seqstat_R2"), "reads" :: "num_total" :: Nil, _ shouldBe 10000, skipFlexiprep != Some(true))
+  addStatsTest(flexiprepGroup.copy(module = "seqstat_R2"), "bases" :: "num_total" :: Nil, _ shouldBe 1000000, skipFlexiprep != Some(true))
+  addStatsTest(flexiprepGroup.copy(module = "seqstat_R2_qc"), "reads" :: "num_total" :: Nil, _ shouldBe 10000, skipFlexiprep != Some(true))
+  addStatsTest(flexiprepGroup.copy(module = "seqstat_R2_qc"), "bases" :: "num_total" :: Nil, _ shouldBe 1000000, skipFlexiprep != Some(true))
 }
 
 trait MappingStatsBwaMem extends MappingPaired with BwaMem {
   // add metrics test only when this is turned on in the pipeline
-  if (skipMetrics != Some(true)) {
-    addStatsTest(wgsGroup, "metrics" :: "MEDIAN_COVERAGE" :: Nil, _ shouldEqual 63 +- 2)
-    addStatsTest(wgsGroup, "metrics" :: "MEAN_COVERAGE" :: Nil, _ shouldEqual 63.0 +- 2.0)
-    addStatsTest(wgsGroup, "metrics" :: "SD_COVERAGE" :: Nil, _ shouldEqual 11.0 +- 2.0)
+  addStatsTest(wgsGroup, "metrics" :: "MEDIAN_COVERAGE" :: Nil, _ shouldEqual 63 +- 2, skipMetrics != Some(true))
+  addStatsTest(wgsGroup, "metrics" :: "MEAN_COVERAGE" :: Nil, _ shouldEqual 63.0 +- 2.0, skipMetrics != Some(true))
+  addStatsTest(wgsGroup, "metrics" :: "SD_COVERAGE" :: Nil, _ shouldEqual 11.0 +- 2.0, skipMetrics != Some(true))
 
-    addStatsTest(bamstatsGroup, "flagstats" :: "All" :: Nil, _ shouldEqual 20000)
-    addStatsTest(bamstatsGroup, "flagstats" :: "Mapped" :: Nil, _ shouldEqual 19800 +- 200)
-    addStatsTest(bamstatsGroup, "flagstats" :: "ProperPair" :: Nil, _ shouldEqual 20000 +- 100)
-    addStatsTest(bamstatsGroup, "flagstats" :: "ReadPaired" :: Nil, _ shouldEqual 20000)
-    addStatsTest(bamstatsGroup, "flagstats" :: "FirstOfPair" :: Nil, _ shouldEqual 10000)
-    addStatsTest(bamstatsGroup, "flagstats" :: "SecondOfPair" :: Nil, _ shouldEqual 10000)
-    addStatsTest(bamstatsGroup, "flagstats" :: "Duplicates" :: Nil, _.asInstanceOf[Int] should be <= 10)
-    addStatsTest(bamstatsGroup, "flagstats" :: "MAPQ>30" :: Nil, _ shouldEqual 19750 +- 250)
-    addStatsTest(bamstatsGroup, "flagstats" :: "MAPQ>40" :: Nil, _ shouldEqual 19750 +- 250)
-    addStatsTest(bamstatsGroup, "flagstats" :: "MAPQ>50" :: Nil, _ shouldEqual 19750 +- 250)
+  addStatsTest(bamstatsGroup, "flagstats" :: "All" :: Nil, _ shouldEqual 20000, skipMetrics != Some(true))
+  addStatsTest(bamstatsGroup, "flagstats" :: "Mapped" :: Nil, _ shouldEqual 19800 +- 200, skipMetrics != Some(true))
+  addStatsTest(bamstatsGroup, "flagstats" :: "ProperPair" :: Nil, _ shouldEqual 20000 +- 100, skipMetrics != Some(true))
+  addStatsTest(bamstatsGroup, "flagstats" :: "ReadPaired" :: Nil, _ shouldEqual 20000, skipMetrics != Some(true))
+  addStatsTest(bamstatsGroup, "flagstats" :: "FirstOfPair" :: Nil, _ shouldEqual 10000, skipMetrics != Some(true))
+  addStatsTest(bamstatsGroup, "flagstats" :: "SecondOfPair" :: Nil, _ shouldEqual 10000, skipMetrics != Some(true))
+  addStatsTest(bamstatsGroup, "flagstats" :: "Duplicates" :: Nil, _.asInstanceOf[Int] should be <= 10, skipMetrics != Some(true))
+  addStatsTest(bamstatsGroup, "flagstats" :: "MAPQ>30" :: Nil, _ shouldEqual 19750 +- 250, skipMetrics != Some(true))
+  addStatsTest(bamstatsGroup, "flagstats" :: "MAPQ>40" :: Nil, _ shouldEqual 19750 +- 250, skipMetrics != Some(true))
+  addStatsTest(bamstatsGroup, "flagstats" :: "MAPQ>50" :: Nil, _ shouldEqual 19750 +- 250, skipMetrics != Some(true))
 
-    addSettingsTest(insertsizeGroup, "metrics" :: "READ_PAIRS" :: Nil, _ shouldEqual 10000 +- 50)
-    addSettingsTest(insertsizeGroup, "metrics" :: "MEDIAN_INSERT_SIZE" :: Nil, _ shouldEqual 500 +- 15)
-    addSettingsTest(insertsizeGroup, "metrics" :: "MEAN_INSERT_SIZE" :: Nil, _ shouldEqual 500.0 +- 15.0)
-    addSettingsTest(insertsizeGroup, "metrics" :: "PAIR_ORIENTATION" :: Nil, _ shouldBe "FR")
-  }
-
+  addStatsTest(insertsizeGroup, "metrics" :: "READ_PAIRS" :: Nil, _ shouldEqual 10000 +- 50, skipMetrics != Some(true))
+  addStatsTest(insertsizeGroup, "metrics" :: "MEDIAN_INSERT_SIZE" :: Nil, _ shouldEqual 500 +- 15, skipMetrics != Some(true))
+  addStatsTest(insertsizeGroup, "metrics" :: "MEAN_INSERT_SIZE" :: Nil, _ shouldEqual 500.0 +- 15.0, skipMetrics != Some(true))
+  addStatsTest(insertsizeGroup, "metrics" :: "PAIR_ORIENTATION" :: Nil, _ shouldBe "FR", skipMetrics != Some(true))
 }
 
 class MappingPairedDefaultTest extends MappingPaired with MappingStatsBwaMem

@@ -14,25 +14,10 @@ import org.testng.annotations.Test
 trait MappingSingle extends MappingSuccess with TestReference {
   override def r1 = Some(Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R1.fq.gz"))
 
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def seqstatR1: Unit = {
-    val seqstat = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep" \ "stats" \ "seqstat_R1"
-    if (skipFlexiprep == Some(true)) seqstat shouldBe JNothing
-    else {
-      seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
-      seqstat \ "bases" \ "num_total" shouldBe JInt(BigInt(1000000))
-    }
-  }
-
-  @Test(dependsOnGroups = Array("parseSummary"))
-  def seqstatR1Qc: Unit = {
-    val seqstat = summary \ "samples" \ sampleId.get \ "libraries" \ libId.get \ "flexiprep" \ "stats" \ "seqstat_R1_qc"
-    if (skipFlexiprep == Some(true)) seqstat shouldBe JNothing
-    else {
-      seqstat \ "reads" \ "num_total" shouldBe JInt(BigInt(10000))
-      seqstat \ "bases" \ "num_total" shouldBe JInt(BigInt(1000000))
-    }
-  }
+  addStatsTest(flexiprepGroup.copy(module = "seqstat_R1"), "reads" :: "num_total" :: Nil, _ shouldBe 10000, skipFlexiprep != Some(true))
+  addStatsTest(flexiprepGroup.copy(module = "seqstat_R1"), "bases" :: "num_total" :: Nil, _ shouldBe 1000000, skipFlexiprep != Some(true))
+  addStatsTest(flexiprepGroup.copy(module = "seqstat_R1_qc"), "reads" :: "num_total" :: Nil, _ shouldBe 10000, skipFlexiprep != Some(true))
+  addStatsTest(flexiprepGroup.copy(module = "seqstat_R1_qc"), "bases" :: "num_total" :: Nil, _ shouldBe 1000000, skipFlexiprep != Some(true))
 }
 
 class MappingSingleDefaultTest extends MappingSingle with BwaMem
