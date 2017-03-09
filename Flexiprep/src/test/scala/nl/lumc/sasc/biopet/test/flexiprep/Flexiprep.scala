@@ -4,10 +4,7 @@ import java.io.File
 
 import nl.lumc.sasc.biopet.test.Pipeline._
 import nl.lumc.sasc.biopet.test._
-import nl.lumc.sasc.biopet.test.utils._
 import nl.lumc.sasc.biopet.utils.ConfigUtils
-import org.json4s._
-import org.testng.annotations.Test
 
 /** Base trait for Flexiprep pipeline run tests. */
 trait FlexiprepRun extends Pipeline {
@@ -181,13 +178,6 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
     map("0") shouldBe 1000
     map("60") shouldBe 0
   })
-
-  /** JSON paths for summary. */
-  protected val flexiprepPath = Seq("samples", sampleId, "libraries", libId, "flexiprep")
-  protected val statsPath = flexiprepPath :+ "stats"
-  protected val statsFastqcR1QcPath = statsPath :+ "fastqc_R1_qc"
-  protected val statsSeqstatR1QcPath = statsPath :+ "seqstat_R1_qc"
-
 }
 
 /** Trait for Flexiprep runs with paired-end inputs. */
@@ -250,10 +240,5 @@ trait FlexiprepPaired extends FlexiprepSingle {
     map("0") shouldBe 1000
     map("60") shouldBe 0
   })
-
-  /** JSON paths for summary. */
-  protected val statsFastqcR2QcPath = statsPath :+ "fastqc_R2_qc"
-  protected val statsSeqstatR2QcPath = statsPath :+ "seqstat_R2_qc"
-
 }
 
