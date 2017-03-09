@@ -62,8 +62,8 @@ trait FlexiprepSuccessful extends FlexiprepRun with SummaryPipeline {
 
   val fastqcR2Group = flexiprepGroup.copy(module = Some("fastqc_R2"))
   val seqstatR2Group = flexiprepGroup.copy(module = Some("seqstat_R2"))
-  val fastqcR2QcGroup = flexiprepGroup.copy(module = Some("fastqc_R1_qc"))
-  val seqstatR2QcGroup = flexiprepGroup.copy(module = Some("seqstat_R1_qc"))
+  val fastqcR2QcGroup = flexiprepGroup.copy(module = Some("fastqc_R2_qc"))
+  val seqstatR2QcGroup = flexiprepGroup.copy(module = Some("seqstat_R2_qc"))
 
   val clippingR1Group = flexiprepGroup.copy(module = Some("clipping_R1"))
   val clippingR2Group = flexiprepGroup.copy(module = Some("clipping_R2"))
