@@ -18,7 +18,7 @@ node('local') {
         }
 
         stage('Check git on changes') {
-            sh 'if [ $(git diff | wc -l) -eq 0 ]; then true; else false; fi'
+            sh 'if [ $(git diff | wc -l) -eq 0 ]; then true; else echo "[ERROR] Git is not clean anymore after build"; false; fi'
         }
 
         if(currentBuild.result == null || "SUCCESS".equals(currentBuild.result)) {
