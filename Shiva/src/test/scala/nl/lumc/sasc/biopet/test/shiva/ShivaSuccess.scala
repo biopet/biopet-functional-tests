@@ -3,10 +3,9 @@ package nl.lumc.sasc.biopet.test.shiva
 import java.io.File
 
 import htsjdk.samtools.SamReaderFactory
-import nl.lumc.sasc.biopet.test.MultisampleMappingSuccess
-import nl.lumc.sasc.biopet.test.Executable
+import nl.lumc.sasc.biopet.test.{Executable, MultisampleMappingSuccess, SummaryGroup}
 import org.json4s._
-import org.testng.annotations.{ DataProvider, Test }
+import org.testng.annotations.{DataProvider, Test}
 
 import scala.collection.JavaConversions._
 
@@ -14,6 +13,9 @@ import scala.collection.JavaConversions._
  * Created by pjvan_thof on 9/17/15.
  */
 trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
+
+  val shivaGroup = SummaryGroup("shiva")
+  val shivavariantcallingGroup = SummaryGroup("shivavariantcalling")
 
   override def summarySchemaUrls = Seq("/schemas/shiva.json")
 
@@ -39,25 +41,19 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   samples.foreach {
     case (sampleName, libs) =>
-      addSummaryTest(Seq("samples", sampleName, "shiva", "settings"), Seq(
-        _ \ "single_sample_variantcalling" shouldBe JBool(singleSampleVariantcalling.getOrElse(false))
-      ))
+      val sampleGroup = shivaGroup.copy(sample = sampleName)
+      addSettingsTest(sampleGroup, "single_sample_variantcalling" :: Nil, _ shouldBe singleSampleVariantcalling.getOrElse(false))
       libs.foreach {
         case lib =>
-          addSummaryTest(Seq("samples", sampleName, "libraries", lib, "shiva", "settings"), Seq(
-            _ \ "library_variantcalling" shouldBe JBool(libraryVariantcalling.getOrElse(false))
-          ))
+          val libraryGroup = sampleGroup.copy(library = lib)
+          addSettingsTest(libraryGroup, "library_variantcalling" :: Nil, _ shouldBe libraryVariantcalling.getOrElse(false))
       }
   }
 
-  addSummaryTest(Seq("shiva", "settings"), Seq(
-    _ \ "multisample_variantcalling" shouldBe JBool(multisampleVariantcalling.getOrElse(true)),
-    _ \ "sv_calling" shouldBe JBool(svCalling.getOrElse(false)),
-    _ \ "annotation" shouldBe JBool(annotation.getOrElse(false)),
-    _ \ "reference" shouldBe a[JObject],
-    _ \ "regions_of_interest" should not be JNothing,
-    _ \ "amplicon_bed" should not be JNothing
-  ))
+  addSettingsTest(shivaGroup, "multisample_variantcalling" :: Nil, _ shouldBe multisampleVariantcalling.getOrElse(true))
+  addSettingsTest(shivaGroup, "sv_calling" :: Nil, _ shouldBe svCalling.getOrElse(false))
+  addSettingsTest(shivaGroup, "annotation" :: Nil, _ shouldBe annotation.getOrElse(false))
+  addSettingsTest(shivaGroup, "reference" :: Nil, _ shouldBe a[Map[_, _]])
 
   def minPrecision = 0.95
   def minRecall = 0.95
@@ -71,54 +67,36 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
       (if (useIndelRealigner.getOrElse(true)) ".realign" else "") +
       (if (useBaseRecalibration.getOrElse(true) && dbsnpVcfFile.isDefined) ".baserecal.bam" else ".bam"))
 
-  def addConcordanceChecks(path: Seq[String], condition: Boolean): Unit = {
-    addSummaryTest(path,
-      if (condition && referenceVcf.isDefined)
-        Seq(
-        v => {
-          v \ "Overall_Genotype_Concordance" should not be JNothing
-          (v \ "Overall_Genotype_Concordance").extract[Double] should be >= (List(minPrecision, minRecall).sum / 2)
-        },
-        _ \ "Non-Reference_Sensitivity" should not be JNothing,
-        _ \ "Non-Reference_Discrepancy" should not be JNothing
-      )
-      else Seq(_ shouldBe JNothing)
-    )
+  def addConcordanceChecks(group: SummaryGroup, sample: String, condition: Boolean): Unit = {
+    addStatsTest(group, "genotypeSummary" :: sample :: "Overall_Genotype_Concordance" :: Nil, shouldExist = condition && referenceVcf.isDefined,
+      test = _ shouldBe >= (List(minPrecision, minRecall).sum / 2))
   }
 
   ("final" :: Shiva.validVariantcallers).foreach {
     case variantcaller =>
       (samples.keySet + "ALL").foreach {
         case sample =>
-          addConcordanceChecks(
-            Seq("shivavariantcalling", "stats", s"multisample-genotype_concordance-$variantcaller", "genotypeSummary", sample),
-            multisampleVariantcalling != Some(false) && (variantcallers.contains(variantcaller) || variantcaller == "final")
-          )
+          val group = shivavariantcallingGroup.copy(module = s"multisample-genotype_concordance-$variantcaller")
+          val condition = multisampleVariantcalling != Some(false) && (variantcallers.contains(variantcaller) || variantcaller == "final")
+          addConcordanceChecks(group, sample, condition)
       }
 
       samples.keySet.foreach {
         case sample =>
-          addConcordanceChecks(
-            Seq("samples", sample, "shivavariantcalling", "stats", s"$sample-genotype_concordance-$variantcaller", "genotypeSummary", sample),
-            singleSampleVariantcalling == Some(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
-          )
-          addConcordanceChecks(
-            Seq("samples", sample, "shivavariantcalling", "stats", s"$sample-genotype_concordance-$variantcaller", "genotypeSummary", "ALL"),
-            singleSampleVariantcalling == Some(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
-          )
+          val group = shivavariantcallingGroup.copy(module = s"$sample-genotype_concordance-$variantcaller", sample = sample)
+          val condition = singleSampleVariantcalling == Some(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
+          addConcordanceChecks(group, sample, condition)
+          addConcordanceChecks(group, "ALL", condition)
+
       }
 
       samples.foreach {
         case (sample, libs) => libs.foreach {
           case lib =>
-            addConcordanceChecks(
-              Seq("samples", sample, "libraries", lib, "shivavariantcalling", "stats", s"$sample-$lib-genotype_concordance-$variantcaller", "genotypeSummary", sample),
-              libraryVariantcalling == Some(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
-            )
-            addConcordanceChecks(
-              Seq("samples", sample, "libraries", lib, "shivavariantcalling", "stats", s"$sample-$lib-genotype_concordance-$variantcaller", "genotypeSummary", "ALL"),
-              libraryVariantcalling == Some(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
-            )
+            val group = shivavariantcallingGroup.copy(module = s"$sample-$lib-genotype_concordance-$variantcaller", sample = sample, library = lib)
+            val condition = libraryVariantcalling == Some(true) && (variantcallers.contains(variantcaller) || variantcaller == "final")
+            addConcordanceChecks(group, sample, condition)
+            addConcordanceChecks(group, "ALL", condition)
         }
       }
   }

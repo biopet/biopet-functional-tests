@@ -3,8 +3,7 @@ package nl.lumc.sasc.biopet.test.mapping
 import java.io.File
 
 import htsjdk.samtools.SamReaderFactory
-import nl.lumc.sasc.biopet.test.SummaryPipeline
-import nl.lumc.sasc.biopet.test.Executable
+import nl.lumc.sasc.biopet.test.{Executable, SummaryGroup, SummaryPipeline}
 import org.json4s._
 import org.testng.annotations.Test
 
@@ -18,6 +17,12 @@ import scala.math._
 trait MappingSuccess extends Mapping with SummaryPipeline {
 
   def summaryFile = new File(outputDir, s"${sampleId.get}-${libId.get}.summary.json")
+
+  val mappingGroup = SummaryGroup("mapping", sample = sampleId, library = libId)
+  val bamMetricsGroup = SummaryGroup("bammetrics", sample = sampleId, library = libId)
+  val wgsGroup = bamMetricsGroup.copy(module = "wgs")
+  val bamstatsGroup = bamMetricsGroup.copy(module = "bamstats")
+  val insertsizeGroup = bamMetricsGroup.copy(module = "CollectInsertSizeMetrics")
 
   override def summarySchemaUrls = {
     if (skipMetrics == Some(false)) Seq("/schemas/bammetrics.json") else Seq()

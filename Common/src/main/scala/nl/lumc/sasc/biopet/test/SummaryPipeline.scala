@@ -211,13 +211,6 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
   /** This will return the parsed summary, this method only work when the group "parseSummary" is done */
   def summary = _summary
 
-  type SummaryTestFunc = JValue => Unit
-
-  private val summaryTests: MutMap[Seq[String], Seq[SummaryTestFunc]] = MutMap()
-
-  def addSummaryTest(pathTokens: Seq[String], testFuncs: Seq[JValue => Unit]): Unit =
-    summaryTests(pathTokens) = summaryTests.getOrElse(pathTokens, Seq()) ++ testFuncs
-
   @Test(groups = Array("parseSummary"))
   def parseSummary(): Unit = _summary = parse(summaryFile)
 
@@ -227,18 +220,6 @@ trait SummaryPipeline extends PipelineSuccess with JValueMatchers {
       schemas should not be empty
       schemas.foreach { s => s.validate(asJsonNode(summary), true).iterator().asScala.toSeq shouldBe empty }
     }
-
-  @DataProvider(name = "summaryTests")
-  def summaryTestsProvider() = {
-    (for {
-      (pathTokens, testFuncs) <- summaryTests
-      testFunc <- testFuncs
-    } yield Array(pathTokens, pathTokens.foldLeft(summary) { case (curjv, p) => curjv \ p }, testFunc)).toArray
-  }
-
-  @Test(dataProvider = "summaryTests", dependsOnGroups = Array("parseSummary"))
-  def testSummaryValue(pathTokens: Seq[String], json: JValue, testFunc: SummaryTestFunc) =
-    withClue(s"Summary test on path '${pathTokens.mkString(" -> ")}'") { testFunc(json) }
 
   def validateSummaryFile(summaryFile: JValue,
                           file: Option[File] = None,

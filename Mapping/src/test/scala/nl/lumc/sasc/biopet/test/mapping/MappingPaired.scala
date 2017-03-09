@@ -49,35 +49,25 @@ trait MappingPaired extends MappingSingle {
 trait MappingStatsBwaMem extends MappingPaired with BwaMem {
   // add metrics test only when this is turned on in the pipeline
   if (skipMetrics != Some(true)) {
+    addStatsTest(wgsGroup, "metrics" :: "MEDIAN_COVERAGE" :: Nil, _ shouldEqual 63 +- 2)
+    addStatsTest(wgsGroup, "metrics" :: "MEAN_COVERAGE" :: Nil, _ shouldEqual 63.0 +- 2.0)
+    addStatsTest(wgsGroup, "metrics" :: "SD_COVERAGE" :: Nil, _ shouldEqual 11.0 +- 2.0)
 
-    addSummaryTest(statsPath :+ "wgs" :+ "metrics",
-      Seq(
-        x => (x \ "MEDIAN_COVERAGE").extract[Int] shouldEqual 63 +- 2,
-        x => (x \ "MEAN_COVERAGE").extract[Double] shouldEqual 63.0 +- 2.0,
-        x => (x \ "SD_COVERAGE").extract[Double] shouldEqual 11.0 +- 2.0
-      ))
+    addStatsTest(bamstatsGroup, "flagstats" :: "All" :: Nil, _ shouldEqual 20000)
+    addStatsTest(bamstatsGroup, "flagstats" :: "Mapped" :: Nil, _ shouldEqual 19800 +- 200)
+    addStatsTest(bamstatsGroup, "flagstats" :: "ProperPair" :: Nil, _ shouldEqual 20000 +- 100)
+    addStatsTest(bamstatsGroup, "flagstats" :: "ReadPaired" :: Nil, _ shouldEqual 20000)
+    addStatsTest(bamstatsGroup, "flagstats" :: "FirstOfPair" :: Nil, _ shouldEqual 10000)
+    addStatsTest(bamstatsGroup, "flagstats" :: "SecondOfPair" :: Nil, _ shouldEqual 10000)
+    addStatsTest(bamstatsGroup, "flagstats" :: "Duplicates" :: Nil, _.asInstanceOf[Int] should be <= 10)
+    addStatsTest(bamstatsGroup, "flagstats" :: "MAPQ>30" :: Nil, _ shouldEqual 19750 +- 250)
+    addStatsTest(bamstatsGroup, "flagstats" :: "MAPQ>40" :: Nil, _ shouldEqual 19750 +- 250)
+    addStatsTest(bamstatsGroup, "flagstats" :: "MAPQ>50" :: Nil, _ shouldEqual 19750 +- 250)
 
-    addSummaryTest(statsPath :+ "bamstats" :+ "flagstats",
-      Seq(
-        _ \ "All" should haveValue(20000),
-        x => (x \ "Mapped").extract[Int] shouldEqual 19800 +- 200,
-        x => (x \ "ProperPair").extract[Int] shouldEqual 20000 +- 100,
-        _ \ "ReadPaired" should haveValue(20000),
-        _ \ "FirstOfPair" should haveValue(10000),
-        _ \ "SecondOfPair" should haveValue(10000),
-        x => (x \ "Duplicates").extract[Int] should be <= 10,
-        x => (x \ "MAPQ>30").extract[Int] shouldEqual 19750 +- 250,
-        x => (x \ "MAPQ>40").extract[Int] shouldEqual 19750 +- 250,
-        x => (x \ "MAPQ>50").extract[Int] shouldEqual 19750 +- 250
-      ))
-
-    addSummaryTest(statsPath :+ "CollectInsertSizeMetrics" :+ "metrics",
-      Seq(
-        x => (x \ "READ_PAIRS").extract[Int] shouldEqual 10000 +- 50,
-        x => (x \ "MEDIAN_INSERT_SIZE").extract[Int] shouldEqual 500 +- 15,
-        x => (x \ "MEAN_INSERT_SIZE").extract[Double] shouldEqual 500.0 +- 15.0,
-        _ \ "PAIR_ORIENTATION" should haveValue("FR")
-      ))
+    addSettingsTest(insertsizeGroup, "metrics" :: "READ_PAIRS" :: Nil, _ shouldEqual 10000 +- 50)
+    addSettingsTest(insertsizeGroup, "metrics" :: "MEDIAN_INSERT_SIZE" :: Nil, _ shouldEqual 500 +- 15)
+    addSettingsTest(insertsizeGroup, "metrics" :: "MEAN_INSERT_SIZE" :: Nil, _ shouldEqual 500.0 +- 15.0)
+    addSettingsTest(insertsizeGroup, "metrics" :: "PAIR_ORIENTATION" :: Nil, _ shouldBe "FR")
   }
 
 }
