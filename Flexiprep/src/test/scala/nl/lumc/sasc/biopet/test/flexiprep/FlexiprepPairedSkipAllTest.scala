@@ -29,7 +29,7 @@ class FlexiprepPairedSkipAllTest extends FlexiprepPaired with FlexiprepSingleSki
   addStatsTest(fastqcR2QcGroup, "per_base_sequence_content" :: "100" :: "G" :: Nil, _ shouldBe 30.79136690647482)
   addStatsTest(fastqcR2QcGroup, "per_base_sequence_content" :: "100" :: "C" :: Nil, _ shouldBe 21.8705035971223)
 
-  addStatsTest(fastqcR2QcGroup, "adapters" :: Nil, _ shouldBe Map())
+  addStatsTest(fastqcR2QcGroup, "adapters" :: Nil, _ shouldBe Map("Illumina Universal Adapter" -> "AGATCGGAAGAG"))
 
   addStatsTest(seqstatR2QcGroup, "bases" :: "num_total" :: Nil, _ shouldBe 100000)
   addStatsTest(seqstatR2QcGroup, "bases" :: "nucleotides" :: "A" :: Nil, _ shouldBe 13981)

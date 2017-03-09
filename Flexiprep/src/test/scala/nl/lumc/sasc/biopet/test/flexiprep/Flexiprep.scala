@@ -28,9 +28,9 @@ trait FlexiprepRun extends Pipeline {
 
   def skipTrim = Option(false)
 
-  def r1ContainAdapters = true
+  def r1ContainAdapters = false
 
-  def r2ContainAdapters = true
+  def r2ContainAdapters = false
 
   def inputEncodingR1 = "sanger"
 
@@ -151,8 +151,9 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
   addStatsTest(fastqcR1Group, "adapters" :: "TruSeq Adapter, Index 1" :: Nil, _ shouldBe "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG")
   addStatsTest(fastqcR1Group, "adapters" :: "TruSeq Adapter, Index 18" :: Nil, _ shouldBe "GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG")
   addStatsTest(fastqcR1Group, "adapters" :: Nil, _ shouldBe Map(
+    "TruSeq Adapter, Index 18" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG",
     "TruSeq Adapter, Index 1" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG",
-    "TruSeq Adapter, Index 18" -> "GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCCGCATCTCGTATGCCGTCTTCTGCTTG"
+    "Illumina Universal Adapter" -> "AGATCGGAAGAG"
   ))
 
   addStatsTest(seqstatR1Group, "bases" :: "num_total" :: Nil, _ shouldBe 100000)
@@ -195,7 +196,7 @@ trait FlexiprepPaired extends FlexiprepSingle {
   /** Input read pair 2 for this run. */
   override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
 
-  override def r2ContainAdapters = false
+  override def r2ContainAdapters = true
 
   /** MD5 checksum of input read pair 2. */
   override def md5SumInputR2 = Some("1560a4cdc87cc8c4b6701e1253d41f93")
@@ -222,7 +223,7 @@ trait FlexiprepPaired extends FlexiprepSingle {
   addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "100" :: "G" :: Nil, _ shouldBe 30.79136690647482)
   addStatsTest(fastqcR2Group, "per_base_sequence_content" :: "100" :: "C" :: Nil, _ shouldBe 21.8705035971223)
 
-  addStatsTest(fastqcR2Group, "adapters" :: Nil, _ shouldBe Map())
+  addStatsTest(fastqcR2Group, "adapters" :: Nil, _ shouldBe Map("Illumina Universal Adapter" -> "AGATCGGAAGAG"))
 
   addStatsTest(seqstatR2Group, "bases" :: "num_total" :: Nil, _ shouldBe 100000)
   addStatsTest(seqstatR2Group, "bases" :: "nucleotides" :: "A" :: Nil, _ shouldBe 13981)
