@@ -12,11 +12,11 @@ trait ShivaSvCalling extends Pipeline {
 
   def svCallers: List[SvCaller]
 
-  def bamFile: File
+  def bamFiles: List[File]
 
   override def configs = super.configs.::(createTempConfig(Map("sv_callers" -> getSvCallersAsStrList)))
 
-  override def args = super.args ++ Seq("-BAM", bamFile.getAbsolutePath)
+  override def args = super.args ++ bamFiles.flatMap(x => Seq("-BAM", x.getAbsolutePath))
 
   private def getSvCallersAsStrList(): List[String] = {
     var svCallersAsStr: List[String] = List()

@@ -5,63 +5,48 @@ import java.io.File
 import htsjdk.variant.vcf.VCFFileReader
 import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.shiva.svcallers._
-import nl.lumc.sasc.biopet.test.references.TestReference
 import org.testng.annotations.Test
 
-trait ShivaSvCallingTest extends ShivaSvCallingSuccess with TestReference {
+import scala.collection.JavaConverters._
 
-  override def retries = Option(1)
+class ShivaSvCallingTest extends ShivaSvCallingSingleMethod {
 
-  def bamFile = Biopet.fixtureFile(s"samples/sv/ref_sv-ref_sv.dedup.bam")
+  def svCallers = List(new Breakdancer, new Delly)
+
+  override def bamFiles = super.bamFiles.::(Biopet.fixtureFile(s"samples/wgs1/wgs1.bam"))
 
   @Test
-  def testSvCallers(): Unit = {
-    svCallers.foreach(testSvCaller(_))
-  }
+  def testMergedResult(): Unit = {
+    val iterator = new VCFFileReader(new File(outputDir, "ref_sv.merged.vcf"), false).iterator()
+    val predictedVariants = iterator.asScala.toList
 
-  def testSvCaller(svCaller: SvCaller): Unit = {
-    val resultVcfFileName = s"$svCaller/ref_sv/ref_sv.$svCaller.vcf.gz"
-    val reader = new VCFFileReader(new File(outputDir, resultVcfFileName), true)
+    val expectedVariants = List(("chr1", 2390, 2400, "ITX"), // delly's duplication has shifted the variant a bit to the right
+      ("chr1", 11400, 12000, "DEL"), ("chr1", 13501, 13620, "TRA"), ("chrM", 6000, 8000, "INV"))
 
-    assertContainsVariant(svCaller, reader, "chr1", 2040, 2041, "ITX")
-    assertContainsVariant(svCaller, reader, "chr1", 4020, 4021, "INS")
-    assertContainsVariant(svCaller, reader, "chr1", 11400, 12000, "DEL")
+    for (expected <- expectedVariants) {
+      val variantFound = predictedVariants.exists(predicted =>
+        expected._1 == predicted.getContig && expected._4 == predicted.getAttributeAsString("SVTYPE", null) &&
+          (expected._2 <= predicted.getStart && expected._3 > predicted.getStart || expected._2 > predicted.getStart && expected._2 < predicted.getEnd))
 
-    // validating the same translocation, breakdancer and delly differ in how they encode the variant
-    assertContainsVariant(svCaller, reader, "chr1", 13501, 13620, "CTX")
-    assertContainsVariant(svCaller, reader, "chrM", 11100, 11101, "TRA")
-
-    assertContainsVariant(svCaller, reader, "chrM", 6000, 8000, "INV")
-
-    reader.close()
-  }
-
-  def assertContainsVariant(svCaller: SvCaller, vcfFileReader: VCFFileReader, chr: String, startPos: Int, endPos: Int, variantType: String): Unit = {
-    if (!svCaller.supportedTypes.contains(variantType)) return
-
-    val predictedVariants = vcfFileReader.query(chr, startPos, endPos)
-
-    var variantFound = false
-    while (predictedVariants.hasNext) {
-      if (variantType == predictedVariants.next.getAttributeAsString("SVTYPE", null))
-        variantFound = true
+      assert(variantFound, s"Expected variant is missing from the merged result (${expected._1}:${expected._2}-${expected._3}, type: ${expected._4})")
     }
 
-    assert(variantFound, s"$svCaller did not detect the existing variant ($chr:$startPos-$endPos, type: $variantType)")
-
-    predictedVariants.close()
+    iterator.close()
   }
 
-}
+  @Test
+  def testReferenceDataHandling(svCaller: SvCaller): Unit = {
+    svCallers.foreach(assertNoVariantsFound(_))
+  }
 
-class BreakdancerTest extends ShivaSvCallingTest {
-  def svCallers = List(new Breakdancer)
-}
+  def assertNoVariantsFound(svCaller: SvCaller): Unit = {
+    val resultVcfFile = new File(outputDir, s"$svCaller/wgs1/wgs1.$svCaller.vcf.gz")
+    if (resultVcfFile.exists) {
+      val iterator = new VCFFileReader(resultVcfFile, false).iterator
+      val variantsFound = iterator.hasNext
+      assert(!variantsFound, s"$svCaller finds structural variants from a sample that doesn't have any.")
+      iterator.close()
+    }
+  }
 
-/*class CleverTest extends ShivaSvCallingTest {
-  def svCaller = List(new Clever)
-}*/
-
-class DellyTest extends ShivaSvCallingTest {
-  def svCallers = List(new Delly)
 }
