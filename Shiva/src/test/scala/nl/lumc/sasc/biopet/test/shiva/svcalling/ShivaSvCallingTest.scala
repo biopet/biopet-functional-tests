@@ -34,9 +34,9 @@ class ShivaSvCallingTest extends ShivaSvCallingSingleMethod {
     iterator.close()
   }
 
-  @Test
-  def testReferenceDataHandling(svCaller: SvCaller): Unit = {
-    svCallers.foreach(assertNoVariantsFound(_))
+  override def testSvCaller(svCaller: SvCaller): Unit = {
+    super.testSvCaller(svCaller)
+    assertNoVariantsFound(svCaller)
   }
 
   def assertNoVariantsFound(svCaller: SvCaller): Unit = {
