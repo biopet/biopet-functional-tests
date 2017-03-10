@@ -203,7 +203,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
     if (libraryVariantcalling == Some(true))
       testVariantcallerInfoTag(new File(libraryDir(sample, lib), "variantcalling" + File.separator + s"$sample-$lib.final.vcf.gz"))
 
-  @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
+  @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
   def testShivaLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     val replacejob = new File(libraryDir(sample, lib), s".$sample-$lib.final.bam.addorreplacereadgroups.out")
     if (replacejob.exists()) assert(!libraryBam(sample, lib).exists())
@@ -219,7 +219,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   }
 
-  @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
+  @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
   def testShivaLibraryPreprocessBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     if (samples(sample).size == 1) {
       assert(libraryPreprecoessBam(sample, lib).exists())
@@ -236,7 +236,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
     }
   }
 
-  @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
+  @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
   def testShivaSamplePrepreocessBam(sample: String): Unit = withClue(s"Sample: $sample") {
     if (samples(sample).size == 1) assert(java.nio.file.Files.isSymbolicLink(samplePreprocessBam(sample).toPath))
 
