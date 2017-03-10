@@ -2,16 +2,11 @@ package nl.lumc.sasc.biopet.test
 
 import java.io.File
 
-import com.github.fge.jsonschema.main._
-import org.json4s._
-import org.json4s.jackson.JsonMethods._
-import org.scalatest.matchers._
 import org.testng.annotations.{ DataProvider, Test }
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb.Implicts._
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb._
 
-import scala.collection.JavaConverters._
 import scala.collection.mutable.{ ListBuffer, Map => MutMap }
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -22,8 +17,6 @@ import scala.util.matching.Regex
  * Created by pjvanthof on 19/09/15.
  */
 trait SummaryPipeline extends PipelineSuccess {
-
-  implicit val formats = DefaultFormats
 
   def summaryDbFile = new File(outputDir, pipelineName + ".summary.db")
 

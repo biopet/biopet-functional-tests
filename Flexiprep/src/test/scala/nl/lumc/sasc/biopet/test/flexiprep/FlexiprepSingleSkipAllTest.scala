@@ -1,7 +1,6 @@
 package nl.lumc.sasc.biopet.test.flexiprep
 
 import nl.lumc.sasc.biopet.utils.ConfigUtils
-import org.json4s._
 
 class FlexiprepSingleSkipAllTest extends FlexiprepSingle with FlexiprepSingleSkipAllSummary {
   override def skipClip = Some(true)

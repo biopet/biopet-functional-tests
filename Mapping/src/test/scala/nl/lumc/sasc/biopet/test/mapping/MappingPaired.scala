@@ -5,7 +5,6 @@ import java.io.File
 import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.aligners._
 import nl.lumc.sasc.biopet.test.utils._
-import org.json4s._
 import org.testng.annotations.Test
 
 import scala.io.Source

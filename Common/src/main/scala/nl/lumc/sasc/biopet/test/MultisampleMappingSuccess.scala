@@ -2,7 +2,6 @@ package nl.lumc.sasc.biopet.test
 
 import java.io.File
 
-import org.json4s._
 import org.testng.annotations.Test
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb.Implicts._
 
