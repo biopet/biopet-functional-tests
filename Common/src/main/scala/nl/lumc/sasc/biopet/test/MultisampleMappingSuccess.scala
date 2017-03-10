@@ -58,7 +58,7 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
     file shouldBe sampleBam(sample)
   }
 
-  @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
+  @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
   def testSamplePrepreocessBam(sample: String): Unit = withClue(s"Sample: $sample") {
     val dbFile = Await.result(summaryDb.getFile(runId, pipelineName, sample = sample, key = "output_bam_preprocess"), Duration.Inf).headOption
     assert(dbFile.isDefined, s"output_bam for $sample should be in the summary")
