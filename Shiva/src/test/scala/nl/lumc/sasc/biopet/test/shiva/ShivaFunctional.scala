@@ -5,8 +5,12 @@ import java.io.File
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references._
 import nl.lumc.sasc.biopet.test.samples.NA12878Bioplanet30x
+import nl.lumc.sasc.biopet.test.samples.NA12878WGS
 import nl.lumc.sasc.biopet.test.shiva.variantcallers._
 import nl.lumc.sasc.biopet.test.Biopet
+import nl.lumc.sasc.biopet.test.shiva.svcallers._
+import nl.lumc.sasc.biopet.test.shiva.svcalling.ShivaSvCalling
+import nl.lumc.sasc.biopet.test.utils.createTempConfig
 
 /**
  * Created by pjvanthof on 01/11/15.
@@ -77,4 +81,16 @@ class ShivaBiopetplanet30xHg19Test extends ShivaSuccess with BwaMem with Hsapien
   override def annotation = Some(true)
   override def vepVersion = Some("86")
   override def memoryArg = "-Xmx1G"
+}
+
+class ShivaNA12878WGSGRCh38Test extends ShivaSuccess with BwaMem with HsapiensGRCh38 with NA12878WGS
+  with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
+
+  def paired = true
+  def shouldHaveKmerContent = Some(false) //TODO what is this
+
+  override def svCalling = Some(true)
+  val svCallers: List[String] = ShivaSvCalling.getSvCallersAsStrList(List(new Breakdancer, new Delly)) //TODO decide if these still should be traits
+
+  override def configs = super.configs.::(createTempConfig(Map("sv_callers" -> svCallers)))
 }
