@@ -16,7 +16,7 @@ object NA12878WGS {
         Map("GIAB_Illumina" ->
           Map(
             "R1" -> Biopet.fixtureFile("samples", "NA12878_wgs", "Sample_U0c", "tmp", "U0c_CAGATC_L002_R1_006.fastq.gz").getAbsolutePath,
-            "R1" -> Biopet.fixtureFile("samples", "NA12878_wgs", "Sample_U0c", "tmp", "U0c_CAGATC_L002_R2_006.fastq.gz").getAbsolutePath
+            "R2" -> Biopet.fixtureFile("samples", "NA12878_wgs", "Sample_U0c", "tmp", "U0c_CAGATC_L002_R2_006.fastq.gz").getAbsolutePath
           ) //TODO: remove tmp and use the correct file
         )
       )
