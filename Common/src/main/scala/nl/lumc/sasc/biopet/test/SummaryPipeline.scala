@@ -190,7 +190,7 @@ trait SummaryPipeline extends PipelineSuccess {
     if (fileTest.summaryShouldContain) {
       file should not be empty
       val f = if (file.get.path.startsWith("./"))
-        new File(outputDir, file.get.path).getAbsoluteFile
+        new File(outputDir, file.get.path.stripPrefix("./")).getAbsoluteFile
       else new File(file.get.path)
       fileTest.path.foreach(f shouldBe _)
       fileTest.md5.foreach(file.get.md5 shouldBe _)
