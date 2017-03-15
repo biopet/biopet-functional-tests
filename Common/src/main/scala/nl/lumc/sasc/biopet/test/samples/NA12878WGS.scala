@@ -7,7 +7,7 @@ trait NA12878WGS extends Samples {
 
   //TODO is this necessary: override def samples = addSampleLibrary(super.samples)
 
-  override def configs = super.configs.::(Biopet.fixtureFile("samples", "NA12878_wgs", "Sample_U0c", "tmp.yml"))
+  override def configs = super.configs.::(Biopet.fixtureFile("samples", "NA12878_wgs", "Sample_U0c", "test.yml"))
 
   //override def configs = super.configs.::(Biopet.fixtureFile("samples", "NA12878_wgs", "Sample_U0c", "sample_config.yml")) TODO: use this
 
