@@ -86,11 +86,21 @@ class ShivaBiopetplanet30xHg19Test extends ShivaSuccess with BwaMem with Hsapien
 class ShivaNA12878WGSGRCh38Test extends ShivaSuccess with BwaMem with HsapiensGRCh38 with NA12878WGS
   with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
 
+  override def disablescatter = false
+  override def memoryArg = "-Xmx1G"
+
   def paired = true
-  def shouldHaveKmerContent = Some(false) //TODO what is this
+  def shouldHaveKmerContent = Some(true)
+
+  override def annotation = Some(true)
+  override def vepVersion = Some("86")
+
+  override def referenceVcf = Some(Biopet.fixtureFile("samples", "NA12878_wgs", "snp_indel_calls", "GIAB_GRCh38_v3.3.2.vcf.gz"))
+  override def referenceVcfRegions = Some(Biopet.fixtureFile("samples", "NA12878_wgs", "snp_indel_calls", "GIAB_GRCh38_regions_v3.3.2.bed"))
 
   override def svCalling = Some(true)
-  val svCallers: List[String] = ShivaSvCalling.getSvCallersAsStrList(List(new Breakdancer, new Delly)) //TODO decide if these still should be traits
+  val svCallers: List[String] = ShivaSvCalling.getSvCallersAsStrList(List(new Breakdancer, new Delly))
 
   override def configs = super.configs.::(createTempConfig(Map("sv_callers" -> svCallers)))
+
 }
