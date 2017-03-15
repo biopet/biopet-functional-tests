@@ -189,7 +189,7 @@ trait SummaryPipeline extends PipelineSuccess {
       fileTest.group.library.map(LibraryName).getOrElse(NoLibrary), fileTest.key), Duration.Inf)
     if (fileTest.summaryShouldContain) {
       file should not be empty
-      val f = if (file.get.path.startsWith(outputDir.getAbsolutePath + File.separator))
+      val f = if (file.get.path.startsWith("./"))
         new File(outputDir, file.get.path).getAbsoluteFile
       else new File(file.get.path)
       fileTest.path.foreach(f shouldBe _)
