@@ -83,7 +83,7 @@ class ShivaBiopetplanet30xHg19Test extends ShivaSuccess with BwaMem with Hsapien
   override def memoryArg = "-Xmx1G"
 }
 
-class ShivaNA12878WGSGRCh38Test extends ShivaSuccess with BwaMem with HsapiensGRCh38 with NA12878WGS
+class ShivaNA12878WGSGRCh38Test extends ShivaSuccess with BwaMem with HsapiensGRCh38_no_alt_analysis_set with NA12878WGS
   with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
 
   override def disablescatter = false
