@@ -31,7 +31,7 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
   def testLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     val dbFile = Await.result(summaryDb.getFile(runId, pipelineName, sample = sample, library = lib, key = "output_bam"), Duration.Inf).headOption
     assert(dbFile.isDefined, s"output_bam for $sample -> $lib should be in the summary")
-    val file = new File(dbFile.get.path)
+    val file = new File(outputDir, dbFile.get.path)
     file shouldBe libraryBam(sample, lib)
     val replacejob = new File(libraryDir(sample, lib), s".$sample-$lib.final.bam.addorreplacereadgroups.out")
     if (samples(sample).size > 1 || libraryBam(sample, lib) != libraryPreprecoessBam(sample, lib))
@@ -43,7 +43,7 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
   def testLibraryPreprocessBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     val dbFile = Await.result(summaryDb.getFile(runId, pipelineName, sample = sample, library = lib, key = "output_bam_preprocess"), Duration.Inf).headOption
     assert(dbFile.isDefined, s"output_bam for $sample -> $lib should be in the summary")
-    val file = new File(dbFile.get.path)
+    val file = new File(outputDir, dbFile.get.path)
     file shouldBe libraryPreprecoessBam(sample, lib)
     if (samples(sample).size == 1) {
       assert(file.exists())
@@ -54,7 +54,7 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
   def testSampleBam(sample: String): Unit = withClue(s"Sample: $sample") {
     val dbFile = Await.result(summaryDb.getFile(runId, pipelineName, sample = sample, key = "output_bam"), Duration.Inf).headOption
     assert(dbFile.isDefined, s"output_bam for $sample should be in the summary")
-    val file = new File(dbFile.get.path)
+    val file = new File(outputDir, dbFile.get.path)
     file shouldBe sampleBam(sample)
   }
 
@@ -62,7 +62,7 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
   def testSamplePrepreocessBam(sample: String): Unit = withClue(s"Sample: $sample") {
     val dbFile = Await.result(summaryDb.getFile(runId, pipelineName, sample = sample, key = "output_bam_preprocess"), Duration.Inf).headOption
     assert(dbFile.isDefined, s"output_bam for $sample should be in the summary")
-    val file = new File(dbFile.get.path)
+    val file = new File(outputDir, dbFile.get.path)
     file shouldBe samplePreprocessBam(sample)
 
     if (samples(sample).size == 1 && sampleBam(sample) == file) assert(java.nio.file.Files.isSymbolicLink(file.toPath))
