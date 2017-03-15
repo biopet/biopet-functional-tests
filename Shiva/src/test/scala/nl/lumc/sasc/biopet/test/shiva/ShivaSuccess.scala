@@ -118,7 +118,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
   def testVariantcaller(variantcaller: String): Unit = withClue(s"Variantcaller: $variantcaller") {
     val dir = new File(outputDir, "variantcalling" + File.separator + variantcaller)
     val file = new File(dir, s"multisample.$variantcaller.vcf.gz")
-    val vcfstats = Await.result(summaryDb.getStat(runId, pipelineName, s"multisample-vcfstats-$variantcaller"), Duration.Inf)
+    val vcfstats = Await.result(summaryDb.getStat(runId, "shivavariantcalling", s"multisample-vcfstats-$variantcaller"), Duration.Inf)
 
     if (multisampleVariantcalling != Some(false) && variantcallers.contains(variantcaller)) {
       assert(dir.exists())
@@ -137,7 +137,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
     withClue(s"Variantcaller: $variantcaller, Sample: $sample") {
       val dir = new File(sampleDir(sample), "variantcalling" + File.separator + variantcaller)
       val file = new File(dir, s"$sample.$variantcaller.vcf.gz")
-      val vcfstats = Await.result(summaryDb.getStat(runId, pipelineName, s"multisample-vcfstats-$variantcaller", sample), Duration.Inf)
+      val vcfstats = Await.result(summaryDb.getStat(runId, "shivavariantcalling", s"multisample-vcfstats-$variantcaller", sample), Duration.Inf)
       if (singleSampleVariantcalling == Some(true) && variantcallers.contains(variantcaller)) {
         assert(dir.exists())
         assert(dir.isDirectory)
@@ -155,7 +155,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
     withClue(s"Variantcaller: $variantcaller, Sample: $sample, Lib: $lib") {
       val dir = new File(libraryDir(sample, lib), "variantcalling" + File.separator + variantcaller)
       val file = new File(dir, s"$sample-$lib.$variantcaller.vcf.gz")
-      val vcfstats = Await.result(summaryDb.getStat(runId, pipelineName, s"multisample-vcfstats-$variantcaller", sample, lib), Duration.Inf)
+      val vcfstats = Await.result(summaryDb.getStat(runId, "shivavariantcalling", s"multisample-vcfstats-$variantcaller", sample, lib), Duration.Inf)
       if (singleSampleVariantcalling == Some(true) && variantcallers.contains(variantcaller)) {
         assert(dir.exists())
         assert(dir.isDirectory)
