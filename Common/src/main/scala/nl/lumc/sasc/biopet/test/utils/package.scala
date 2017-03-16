@@ -1,6 +1,6 @@
 package nl.lumc.sasc.biopet.test
 
-import java.io.{ File, FileInputStream, PrintWriter }
+import java.io.{ File, FileInputStream, FileReader, PrintWriter }
 import java.util.zip.GZIPInputStream
 
 import org.apache.commons.codec.digest.DigestUtils
@@ -25,6 +25,13 @@ package object utils {
     writer.close()
     file.deleteOnExit()
     file
+  }
+
+  def readJsonFile(file: File): Map[String, Any] = {
+    val fileReader = new FileReader(file)
+    val contents = Serialization.read[Map[String, Any]](fileReader)
+    fileReader.close()
+    contents
   }
 
   /** Calculates the MD5 checksum of the given file. */
