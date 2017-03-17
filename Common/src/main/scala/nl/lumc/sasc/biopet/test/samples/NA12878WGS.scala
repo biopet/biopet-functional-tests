@@ -14,7 +14,7 @@ trait NA12878WGS extends Samples {
 
 object NA12878WGS {
 
-  val config = Biopet.fixtureFile("samples", "NA12878_wgs", "Sample_U0c", "test.json")
+  val config = Biopet.fixtureFile("samples", "NA12878_wgs", "Sample_U0c", "sample_config.json")
 
   val libraries = readJsonFile(config).get("samples")
     .asInstanceOf[Some[Map[String, Map[String, Map[String, Any]]]]].get.get("NA12878").get("libraries").keySet
