@@ -42,7 +42,7 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
   @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
   def testLibraryPreprocessBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     val dbFile = Await.result(summaryDb.getFile(runId, pipelineName, sample = sample, library = lib, key = "output_bam_preprocess"), Duration.Inf).headOption
-    assert(dbFile.isDefined, s"output_bam for $sample -> $lib should be in the summary")
+    assert(dbFile.isDefined, s"output_bam_preprocess for $sample -> $lib should be in the summary")
     val file = new File(outputDir, dbFile.get.path.stripPrefix("./"))
     file shouldBe libraryPreprecoessBam(sample, lib)
     if (samples(sample).size == 1) {

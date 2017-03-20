@@ -8,6 +8,8 @@ import nl.lumc.sasc.biopet.test.MultisampleSuccess
 trait GearsSuccess extends Gears with MultisampleSuccess {
   def paired: Boolean
 
+  override def shouldHaveLibs: Boolean = !skipFlexiprep.getOrElse(false)
+
   addMustHaveFile("report", "ext", "js", "krona-2.0.js")
   addMustHaveFile("report", "ext", "img")
   addMustHaveFile("report", "ext", "img", "krona")

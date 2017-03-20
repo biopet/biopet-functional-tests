@@ -12,11 +12,14 @@ import scala.concurrent.duration.Duration
  * Created by pjvan_thof on 10/19/15.
  */
 trait MultisampleSuccess extends SummaryPipeline with Samples with PipelineSuccess with Report {
+
+  def shouldHaveLibs: Boolean = true
+
   @DataProvider(name = "samples")
-  def sampleNames = samples.keySet.map(Array(_)).toArray
+  def sampleNames: Array[Array[String]] = samples.keySet.map(Array(_)).toArray
 
   @DataProvider(name = "libraries")
-  def libraryNames = samples.flatMap(sample => sample._2.map(Array(sample._1, _))).toArray
+  def libraryNames: Array[Array[String]] = samples.flatMap(sample => sample._2.map(Array(sample._1, _))).toArray
 
   def sampleDir(sampleId: String) = new File(outputDir, "samples" + File.separator + sampleId)
 
@@ -29,7 +32,8 @@ trait MultisampleSuccess extends SummaryPipeline with Samples with PipelineSucce
 
   @Test(dataProvider = "libraries")
   def testLibDir(sampleId: String, libId: String): Unit = withClue(s"sample = $sampleId; library = $libId") {
-    assert(libraryDir(sampleId, libId).exists())
+    if (shouldHaveLibs) libraryDir(sampleId, libId) should exist
+    else libraryDir(sampleId, libId) should not be exist
   }
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
@@ -53,7 +57,7 @@ trait MultisampleSuccess extends SummaryPipeline with Samples with PipelineSucce
       libraries.foreach { library =>
         addMustHaveFile("report", "Samples", sample, "Libraries", library)
         addMustHaveFile("report", "Samples", sample, "Libraries", library, "index.html")
-        addMustHaveFile("samples", sample, s"lib_$library")
+        addConditionalFile(shouldHaveLibs, "samples", sample, s"lib_$library")
       }
   }
 
