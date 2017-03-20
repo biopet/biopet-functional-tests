@@ -5,6 +5,13 @@ import nl.lumc.sasc.biopet.test.samples.{ Mgm4459735_3_050Lib2, Mgm4457768_3_050
 /**
  * Created by pjvan_thof on 2/2/16.
  */
+class GearsSingleSkipFlexiprepTest extends GearsSuccess with Mgm4457768_3_050Lib2 with Mgm4459735_3_050Lib2 {
+  override def skipFlexiprep = Some(true)
+  override def gearUseQiimeClosed = Some(true)
+  override def gearsUseCentrifuge = Some(false)
+  def paired = false
+}
+
 class GearsSingleQiimeClosedTest extends GearsSuccess with Mgm4457768_3_050Lib2 with Mgm4459735_3_050Lib2 {
   override def gearUseQiimeClosed = Some(true)
   override def gearsUseCentrifuge = Some(false)
