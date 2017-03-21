@@ -43,7 +43,8 @@ class FlexiprepSingleTrimTest extends FlexiprepSingle {
   addStatsTest(seqstatR1QcGroup, "bases" :: "num_qual" :: Nil, x => {
     x.isDefined shouldBe true
     val array = ConfigUtils.any2list(x.get).toArray
-    array(41) shouldBe 16497
+    if (inputEncodingR2 == "solexa") array(41) shouldBe 0
+    else array(41) shouldBe 16497
     array(2) shouldBe 62
   })
 

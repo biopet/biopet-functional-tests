@@ -159,7 +159,8 @@ trait FlexiprepSingle extends FlexiprepSuccessful {
   addStatsTest(seqstatR1Group, "bases" :: "num_qual" :: Nil, x => {
     x.isDefined shouldBe true
     val array = ConfigUtils.any2list(x.get).toArray
-    array(41) shouldBe 16497
+    if (inputEncodingR1 == "solexa") array(41) shouldBe 0
+    else array(41) shouldBe 16497
     array(2) shouldBe 7264
   })
 
@@ -221,7 +222,8 @@ trait FlexiprepPaired extends FlexiprepSingle {
   addStatsTest(seqstatR2Group, "bases" :: "num_qual" :: Nil, x => {
     x.isDefined shouldBe true
     val array = ConfigUtils.any2list(x.get).toArray
-    array(41) shouldBe 2288
+    if (inputEncodingR2 == "solexa") array(41) shouldBe 0
+    else array(41) shouldBe 2288
     array(2) shouldBe 60383
   })
 
