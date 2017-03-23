@@ -87,7 +87,7 @@ class ShivaNA12878WGSGRCh38Test extends ShivaSuccess with BwaMem with HsapiensGR
   with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
 
   override def disablescatter = false
-  override def memoryArg = "-Xmx1G"
+  override def memoryArg = "-Xmx4G"
 
   def paired = true
   def shouldHaveKmerContent = Some(true)
