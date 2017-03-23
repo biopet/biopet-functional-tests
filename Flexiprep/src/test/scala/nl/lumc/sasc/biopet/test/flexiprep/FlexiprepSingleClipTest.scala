@@ -48,7 +48,7 @@ trait FlexiprepSingleClipSummaryValues extends FlexiprepSingle {
     x.isDefined shouldBe true
     val array = ConfigUtils.any2list(x.get).toArray
     if (inputEncodingR1 == "solexa") array(41) shouldBe 0
-    else  array(41) shouldBe 15820
+    else array(41) shouldBe 15820
     array(2) shouldBe 5385
   })
 
