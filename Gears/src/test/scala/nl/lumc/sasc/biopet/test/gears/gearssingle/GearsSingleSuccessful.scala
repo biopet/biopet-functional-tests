@@ -9,6 +9,4 @@ import nl.lumc.sasc.biopet.test.SummaryPipeline
  */
 trait GearsSingleSuccessful extends GearsSingle with SummaryPipeline {
 
-  def summaryFile = new File(outputDir, s"${sampleId.getOrElse("sampleName_unknown")}.gears.summary.json")
-
 }

@@ -76,6 +76,9 @@ class FlexiprepNoEncodingTest extends FlexiprepSuccessful {
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.no_encoding.fq"))
   def md5SumInputR1: String = "1d160913e2d0402fc9ef352dd1d4d309"
 
+  override def r1ContainAdapters = true
+  override def r2ContainAdapters = true
+
   @Test
   def testValidateWarning(): Unit = {
     val validateLog = new File(outputDir, ".validate_fastq.log.out")

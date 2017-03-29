@@ -2,8 +2,11 @@ package nl.lumc.sasc.biopet.test
 
 import java.io.File
 
-import org.json4s._
 import org.testng.annotations.Test
+import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb.Implicts._
+
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 /**
  * Created by pjvanthof on 25/01/16.
@@ -21,15 +24,14 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
 
   def shouldHaveKmerContent: Option[Boolean]
 
-  override def summarySchemaUrls = super.summarySchemaUrls ++ Seq(
-    "/schemas/flexiprep.json",
-    "/schemas/bammetrics.json")
+  def rootPipelineGroup(sample: Option[String] = None, library: Option[String] = None) =
+    SummaryGroup(pipelineName, sample = sample, library = library)
 
-  @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
+  @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
   def testLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ pipelineName \ "files" \ "pipeline" \ "output_bam" \ "path"
-    summaryPath shouldBe a[JString]
-    val file = new File(summaryPath.extract[String])
+    val dbFile = Await.result(summaryDb.getFile(runId, pipelineName, sample = sample, library = lib, key = "output_bam"), Duration.Inf).headOption
+    assert(dbFile.isDefined, s"output_bam for $sample -> $lib should be in the summary")
+    val file = new File(outputDir, dbFile.get.path.stripPrefix("./"))
     file shouldBe libraryBam(sample, lib)
     val replacejob = new File(libraryDir(sample, lib), s".$sample-$lib.final.bam.addorreplacereadgroups.out")
     if (samples(sample).size > 1 || libraryBam(sample, lib) != libraryPreprecoessBam(sample, lib))
@@ -37,33 +39,30 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
     else file should exist
   }
 
-  @Test(dataProvider = "libraries", dependsOnGroups = Array("parseSummary"))
+  @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
   def testLibraryPreprocessBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    val summaryPath = summary \ "samples" \ sample \ "libraries" \ lib \ pipelineName \ "files" \ "pipeline" \ "output_bam_preprocess" \ "path"
-    summaryPath shouldBe a[JString]
-    val file = new File(summaryPath.extract[String])
+    val dbFile = Await.result(summaryDb.getFile(runId, pipelineName, sample = sample, library = lib, key = "output_bam_preprocess"), Duration.Inf).headOption
+    assert(dbFile.isDefined, s"output_bam_preprocess for $sample -> $lib should be in the summary")
+    val file = new File(outputDir, dbFile.get.path.stripPrefix("./"))
     file shouldBe libraryPreprecoessBam(sample, lib)
     if (samples(sample).size == 1) {
       assert(file.exists())
-    } else {
-      val mappingBam = summary \ "samples" \ sample \ "libraries" \ lib \ pipelineName \ "files" \ "pipeline" \ "output_bam" \ "path"
-      if (mappingBam != summaryPath) assert(!file.exists())
     }
   }
 
-  @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
+  @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
   def testSampleBam(sample: String): Unit = withClue(s"Sample: $sample") {
-    val summaryPath = summary \ "samples" \ sample \ pipelineName \ "files" \ "pipeline" \ "output_bam" \ "path"
-    summaryPath shouldBe a[JString]
-    val file = new File(summaryPath.extract[String])
+    val dbFile = Await.result(summaryDb.getFile(runId, pipelineName, sample = sample, key = "output_bam"), Duration.Inf).headOption
+    assert(dbFile.isDefined, s"output_bam for $sample should be in the summary")
+    val file = new File(outputDir, dbFile.get.path.stripPrefix("./"))
     file shouldBe sampleBam(sample)
   }
 
-  @Test(dataProvider = "samples", dependsOnGroups = Array("parseSummary"))
+  @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
   def testSamplePrepreocessBam(sample: String): Unit = withClue(s"Sample: $sample") {
-    val summaryPath = summary \ "samples" \ sample \ pipelineName \ "files" \ "pipeline" \ "output_bam_preprocess" \ "path"
-    summaryPath shouldBe a[JString]
-    val file = new File(summaryPath.extract[String])
+    val dbFile = Await.result(summaryDb.getFile(runId, pipelineName, sample = sample, key = "output_bam_preprocess"), Duration.Inf).headOption
+    assert(dbFile.isDefined, s"output_bam for $sample should be in the summary")
+    val file = new File(outputDir, dbFile.get.path.stripPrefix("./"))
     file shouldBe samplePreprocessBam(sample)
 
     if (samples(sample).size == 1 && sampleBam(sample) == file) assert(java.nio.file.Files.isSymbolicLink(file.toPath))

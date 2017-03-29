@@ -2,7 +2,7 @@ package nl.lumc.sasc.biopet.test.shiva
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.SummaryPipeline.Executable
+import nl.lumc.sasc.biopet.test.Executable
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references.TestReference
 import nl.lumc.sasc.biopet.test.samples.{ Wgs1WrongBam, Wgs1Bam }

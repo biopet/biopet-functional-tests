@@ -1,6 +1,6 @@
 package nl.lumc.sasc.biopet.test.flexiprep
 
-import org.json4s.JArray
+import nl.lumc.sasc.biopet.utils.ConfigUtils
 
 class FlexiprepPairedClipTrimTest extends FlexiprepPairedClipTrimSummaryValues {
   override def skipClip = Some(false)
@@ -9,117 +9,108 @@ class FlexiprepPairedClipTrimTest extends FlexiprepPairedClipTrimSummaryValues {
 
 trait FlexiprepPairedClipTrimSummaryValues extends FlexiprepPaired {
 
-  addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_quality",
-    Seq(
-      _.children.size should be <= 100,
-      _ \ "1" \ "mean" should haveValue(32.64253393665158),
-      _ \ "1" \ "median" should haveValue(34),
-      _ \ "1" \ "lower_quartile" should haveValue(31),
-      _ \ "1" \ "upper_quartile" should haveValue(34),
-      _ \ "1" \ "percentile_10th" should haveValue(31),
-      _ \ "1" \ "percentile_90th" should haveValue(34),
-      _ \ "100" \ "mean" should inInterval(30.315384615384616, 0.01),
-      _ \ "100" \ "median" should haveValue(32),
-      _ \ "100" \ "lower_quartile" should haveValue(29),
-      _ \ "100" \ "upper_quartile" should haveValue(34),
-      _ \ "100" \ "percentile_10th" should haveValue(24),
-      _ \ "100" \ "percentile_90th" should haveValue(35)))
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "1" :: "mean" :: Nil, _ shouldBe 32.65071770334928)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "1" :: "median" :: Nil, _ shouldBe 34)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "1" :: "lower_quartile" :: Nil, _ shouldBe 31)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "1" :: "upper_quartile" :: Nil, _ shouldBe 34)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "1" :: "percentile_10th" :: Nil, _ shouldBe 31)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "1" :: "percentile_90th" :: Nil, _ shouldBe 34)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "100" :: "mean" :: Nil, _ shouldBe 30.305019305019304)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "100" :: "median" :: Nil, _ shouldBe 32)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "100" :: "lower_quartile" :: Nil, _ shouldBe 29)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "100" :: "upper_quartile" :: Nil, _ shouldBe 34)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "100" :: "percentile_10th" :: Nil, _ shouldBe 24)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_quality" :: "100" :: "percentile_90th" :: Nil, _ shouldBe 35)
 
-  addSummaryTest(statsFastqcR1QcPath :+ "per_base_sequence_content",
-    Seq(
-      _.children.size should be <= 100,
-      _ \ "1" \ "A" should haveValue(15.610859728506787),
-      _ \ "1" \ "T" should haveValue(11.312217194570136),
-      _ \ "1" \ "G" should haveValue(51.80995475113123),
-      _ \ "1" \ "C" should haveValue(21.266968325791854),
-      _ \ "100" \ "A" should inInterval(28.40909090909091, 0.01),
-      _ \ "100" \ "T" should inInterval(20.075757575757574, 0.01),
-      _ \ "100" \ "G" should inInterval(28.030303030303028, 0.01),
-      _ \ "100" \ "C" should inInterval(23.484848484848484, 0.01)))
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_content" :: "1" :: "A" :: Nil, _ shouldBe 15.789473684210526)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_content" :: "1" :: "T" :: Nil, _ shouldBe 11.004784688995215)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_content" :: "1" :: "G" :: Nil, _ shouldBe 51.674641148325364)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_content" :: "1" :: "C" :: Nil, _ shouldBe 21.5311004784689)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_content" :: "100" :: "A" :: Nil, _ shouldBe 27.027027027027028)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_content" :: "100" :: "T" :: Nil, _ shouldBe 20.463320463320464)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_content" :: "100" :: "G" :: Nil, _ shouldBe 28.57142857142857)
+  addStatsTest(fastqcR1QcGroup, "per_base_sequence_content" :: "100" :: "C" :: Nil, _ shouldBe 23.93822393822394)
 
-  addSummaryTest(statsFastqcR1QcPath :+ "adapters", Seq(_.children.size shouldBe 0))
+  addStatsTest(fastqcR1QcGroup, "adapters" :: Nil, _ shouldBe Map())
 
-  addSummaryTest(statsSeqstatR1QcPath :+ "bases",
-    Seq(
-      _ \ "num_total" should inInterval(38862, 0.01),
-      _ \ "nucleotides" \ "A" should inInterval(8396, 0.01),
-      _ \ "nucleotides" \ "T" should inInterval(9720, 0.01),
-      _ \ "nucleotides" \ "G" should inInterval(10384, 0.01),
-      _ \ "nucleotides" \ "C" should inInterval(10362, 0.01),
-      _ \ "nucleotides" \ "N" should inInterval(0, 0.01),
-      _ \ "num_qual" shouldBe a[JArray],
-      jv => (jv \ "num_qual").extract[List[Int]].apply(41) shouldBe 8028,
-      jv => (jv \ "num_qual").extract[List[Int]].apply(2) shouldBe 17))
+  addStatsTest(seqstatR1QcGroup, "bases" :: "num_total" :: Nil, _ shouldBe 37473)
+  addStatsTest(seqstatR1QcGroup, "bases" :: "nucleotides" :: "A" :: Nil, _ shouldBe 8096)
+  addStatsTest(seqstatR1QcGroup, "bases" :: "nucleotides" :: "T" :: Nil, _ shouldBe 9376)
+  addStatsTest(seqstatR1QcGroup, "bases" :: "nucleotides" :: "G" :: Nil, _ shouldBe 10039)
+  addStatsTest(seqstatR1QcGroup, "bases" :: "nucleotides" :: "C" :: Nil, _ shouldBe 9962)
+  addStatsTest(seqstatR1QcGroup, "bases" :: "nucleotides" :: "N" :: Nil, _ shouldBe 0)
+  addStatsTest(seqstatR1QcGroup, "bases" :: "num_qual" :: Nil, x => {
+    x.isDefined shouldBe true
+    val array = ConfigUtils.any2list(x.get).toArray
+    if (inputEncodingR1 == "solexa") array(41) shouldBe 0
+    else array(41) shouldBe 7614
+    array(2) shouldBe 17
+  })
 
-  addSummaryTest(statsSeqstatR1QcPath :+ "reads",
-    Seq(
-      _ \ "num_total" should haveValue(442),
-      _ \ "num_with_n" should haveValue(0),
-      _ \ "len_min" should haveValue(20),
-      _ \ "len_max" should haveValue(100),
-      _ \ "qual_encoding" should haveValue("sanger"),
-      jv => (jv \ "num_avg_qual_gte").children.size shouldBe 61,
-      _ \ "num_avg_qual_gte" \ "0" should haveValue(442),
-      _ \ "num_avg_qual_gte" \ "60" should haveValue(0)))
+  addStatsTest(seqstatR1QcGroup, "reads" :: "num_total" :: Nil, _ shouldBe 418)
+  addStatsTest(seqstatR1QcGroup, "reads" :: "num_with_n" :: Nil, _ shouldBe 0)
+  addStatsTest(seqstatR1QcGroup, "reads" :: "len_min" :: Nil, _ shouldBe 28)
+  addStatsTest(seqstatR1QcGroup, "reads" :: "len_max" :: Nil, _ shouldBe 100)
+  addStatsTest(seqstatR1QcGroup, "reads" :: "qual_encoding" :: Nil, _ shouldBe "sanger")
+  addStatsTest(seqstatR1QcGroup, "reads" :: "num_avg_qual_gte" :: Nil, x => {
+    x.isDefined shouldBe true
+    val map = ConfigUtils.any2map(x.get)
+    map.size shouldBe 61
+    map("0") shouldBe 418
+    map("60") shouldBe 0
+  })
 
-  addSummaryTest(flexiprepPath :+ "files",
-    Seq(_ \ "fastqc_R1_qc" \ "fastqc_data" \ "path" should existAsFile))
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_quality" :: "1" :: "mean" :: Nil, _ shouldBe 30.533492822966508)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_quality" :: "1" :: "median" :: Nil, _ shouldBe 31)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_quality" :: "1" :: "lower_quartile" :: Nil, _ shouldBe 30)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_quality" :: "1" :: "upper_quartile" :: Nil, _ shouldBe 32)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_quality" :: "1" :: "percentile_10th" :: Nil, _ shouldBe 27)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_quality" :: "1" :: "percentile_90th" :: Nil, _ shouldBe 34)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_quality" :: "100" :: "mean" :: Nil, _ shouldBe 26.528301886792452)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_quality" :: "100" :: "median" :: Nil, _ shouldBe 0)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_quality" :: "100" :: "lower_quartile" :: Nil, _ shouldBe 0)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_quality" :: "100" :: "upper_quartile" :: Nil, _ shouldBe 0)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_quality" :: "100" :: "percentile_10th" :: Nil, _ shouldBe 0)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_quality" :: "100" :: "percentile_90th" :: Nil, _ shouldBe 0)
 
-  addSummaryTest(statsFastqcR2QcPath :+ "per_base_sequence_quality",
-    Seq(
-      _.children.size should be <= 100,
-      _ \ "1" \ "mean" should haveValue(30.479638009049772),
-      _ \ "1" \ "median" should haveValue(31),
-      _ \ "1" \ "lower_quartile" should haveValue(30),
-      _ \ "1" \ "upper_quartile" should haveValue(32),
-      _ \ "1" \ "percentile_10th" should haveValue(27),
-      _ \ "1" \ "percentile_90th" should haveValue(34),
-      _ \ "100" \ "mean" should haveValue(26.396825396825395),
-      _ \ "100" \ "median" should haveValue(0),
-      _ \ "100" \ "lower_quartile" should haveValue(0),
-      _ \ "100" \ "upper_quartile" should haveValue(0),
-      _ \ "100" \ "percentile_10th" should haveValue(0),
-      _ \ "100" \ "percentile_90th" should haveValue(0)))
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_content" :: "1" :: "A" :: Nil, _ shouldBe 26.794258373205743)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_content" :: "1" :: "T" :: Nil, _ shouldBe 12.200956937799043)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_content" :: "1" :: "G" :: Nil, _ shouldBe 37.08133971291866)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_content" :: "1" :: "C" :: Nil, _ shouldBe 23.923444976076556)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_content" :: "100" :: "A" :: Nil, _ shouldBe 33.9622641509434)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_content" :: "100" :: "T" :: Nil, _ shouldBe 16.9811320754717)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_content" :: "100" :: "G" :: Nil, _ shouldBe 18.867924528301888)
+  addStatsTest(fastqcR2QcGroup, "per_base_sequence_content" :: "100" :: "C" :: Nil, _ shouldBe 30.18867924528302)
 
-  addSummaryTest(statsFastqcR2QcPath :+ "per_base_sequence_content",
-    Seq(
-      _.children.size should be <= 100,
-      _ \ "1" \ "A" should haveValue(27.149321266968325),
-      _ \ "1" \ "T" should haveValue(13.122171945701359),
-      _ \ "1" \ "G" should haveValue(36.425339366515836),
-      _ \ "1" \ "C" should haveValue(23.30316742081448),
-      _ \ "100" \ "A" should haveValue(31.746031746031743),
-      _ \ "100" \ "T" should haveValue(15.873015873015872),
-      _ \ "100" \ "G" should haveValue(23.809523809523807),
-      _ \ "100" \ "C" should haveValue(28.57142857142857)))
+  addStatsTest(fastqcR2QcGroup, "adapters" :: Nil, _ shouldBe Map(
+    "Illumina Single End PCR Primer 1" -> "AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT"
+  ))
 
-  addSummaryTest(statsFastqcR2QcPath :+ "adapters",
-    Seq(
-      _ \ "Illumina Single End PCR Primer 1" should haveValue("AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT")))
+  addStatsTest(seqstatR2QcGroup, "bases" :: "num_total" :: Nil, _ shouldBe 26682)
+  addStatsTest(seqstatR2QcGroup, "bases" :: "nucleotides" :: "A" :: Nil, _ shouldBe 6608)
+  addStatsTest(seqstatR2QcGroup, "bases" :: "nucleotides" :: "T" :: Nil, _ shouldBe 5756)
+  addStatsTest(seqstatR2QcGroup, "bases" :: "nucleotides" :: "G" :: Nil, _ shouldBe 7164)
+  addStatsTest(seqstatR2QcGroup, "bases" :: "nucleotides" :: "C" :: Nil, _ shouldBe 7123)
+  addStatsTest(seqstatR2QcGroup, "bases" :: "nucleotides" :: "N" :: Nil, _ shouldBe 31)
+  addStatsTest(seqstatR2QcGroup, "bases" :: "num_qual" :: Nil, x => {
+    x.isDefined shouldBe true
+    val array = ConfigUtils.any2list(x.get).toArray
+    if (inputEncodingR2 == "solexa") array(41) shouldBe 0
+    else array(41) shouldBe 2008
+    array(2) shouldBe 50
+  })
 
-  addSummaryTest(statsSeqstatR2QcPath :+ "bases",
-    Seq(
-      _ \ "num_total" should haveValue(29166),
-      _ \ "nucleotides" \ "A" should haveValue(7342),
-      _ \ "nucleotides" \ "T" should haveValue(6196),
-      _ \ "nucleotides" \ "G" should haveValue(8046),
-      _ \ "nucleotides" \ "C" should haveValue(7545),
-      _ \ "nucleotides" \ "N" should haveValue(37),
-      _ \ "num_qual" shouldBe a[JArray],
-      jv => (jv \ "num_qual").extract[List[Int]].apply(41) shouldBe 2089,
-      jv => (jv \ "num_qual").extract[List[Int]].apply(2) shouldBe 63))
+  addStatsTest(seqstatR2QcGroup, "reads" :: "num_total" :: Nil, _ shouldBe 418)
+  addStatsTest(seqstatR2QcGroup, "reads" :: "num_with_n" :: Nil, _ shouldBe 27)
+  addStatsTest(seqstatR2QcGroup, "reads" :: "len_min" :: Nil, _ shouldBe 20)
+  addStatsTest(seqstatR2QcGroup, "reads" :: "len_max" :: Nil, _ shouldBe 100)
+  addStatsTest(seqstatR2QcGroup, "reads" :: "qual_encoding" :: Nil, _ shouldBe "sanger")
+  addStatsTest(seqstatR2QcGroup, "reads" :: "num_avg_qual_gte" :: Nil, x => {
+    x.isDefined shouldBe true
+    val map = ConfigUtils.any2map(x.get)
+    map.size shouldBe 61
+    map("0") shouldBe 418
+    map("60") shouldBe 0
+  })
 
-  addSummaryTest(statsSeqstatR2QcPath :+ "reads",
-    Seq(
-      _ \ "num_total" should haveValue(442),
-      _ \ "num_with_n" should haveValue(31),
-      _ \ "len_min" should haveValue(20),
-      _ \ "len_max" should haveValue(100),
-      _ \ "qual_encoding" should haveValue("sanger"),
-      jv => (jv \ "num_avg_qual_gte").children.size shouldBe 61,
-      _ \ "num_avg_qual_gte" \ "0" should haveValue(442),
-      _ \ "num_avg_qual_gte" \ "60" should haveValue(0)))
-
-  addSummaryTest(flexiprepPath :+ "files",
-    Seq(_ \ "fastqc_R2_qc" \ "fastqc_data" \ "path" should existAsFile))
 }
