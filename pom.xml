@@ -24,13 +24,9 @@
         <module>DownloadGenomes</module>
     </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.github.samtools</groupId>
-            <artifactId>htsjdk</artifactId>
-            <version>1.138</version>
-        </dependency>
-    </dependencies>
+    <properties>
+        <scalaVersion>2.11.4</scalaVersion>
+    </properties>
 
     <build>
         <sourceDirectory>${basedir}/src/main/scala</sourceDirectory>
@@ -82,6 +78,7 @@
                                 <arg>-deprecation</arg>
                                 <arg>-feature</arg>
                             </args>
+                            <!--<scalaVersion>2.11.4</scalaVersion>-->
                         </configuration>
                     </execution>
                 </executions>

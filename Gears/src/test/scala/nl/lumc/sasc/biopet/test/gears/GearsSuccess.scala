@@ -8,6 +8,8 @@ import nl.lumc.sasc.biopet.test.MultisampleSuccess
 trait GearsSuccess extends Gears with MultisampleSuccess {
   def paired: Boolean
 
+  override def shouldHaveLibs: Boolean = !skipFlexiprep.getOrElse(false)
+
   addMustHaveFile("report", "ext", "js", "krona-2.0.js")
   addMustHaveFile("report", "ext", "img")
   addMustHaveFile("report", "ext", "img", "krona")
@@ -42,7 +44,6 @@ trait GearsSuccess extends Gears with MultisampleSuccess {
       addMustNotHaveFile("samples", sample, "combine_reads", "flash", "out.notCombined_1.fastq.gz")
       addMustNotHaveFile("samples", sample, "combine_reads", "flash", "out.notCombined_2.fastq.gz")
       addConditionalFile((gearUseQiimeOpen.getOrElse(false) || gearUseQiimeClosed.getOrElse(false)) && paired, "samples", sample, "combine_reads", "flash", ".out.extendedFrags.fastq.gz.Flash.out")
-      addConditionalFile((gearUseQiimeOpen.getOrElse(false) || gearUseQiimeClosed.getOrElse(false)) && paired, "samples", sample, "combine_reads", "combine_reads.summary.json")
 
       addMustNotHaveFile("samples", sample, "qiime_open", "split_libraries_fastq", "seqs.fna")
       addMustNotHaveFile("samples", sample, "qiime_closed", "split_libraries_fastq", "seqs.fna")

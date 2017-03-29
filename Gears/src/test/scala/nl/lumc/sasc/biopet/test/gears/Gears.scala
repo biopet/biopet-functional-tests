@@ -15,6 +15,7 @@ trait Gears extends Pipeline {
 
   override def functionalTest = gearsUseKraken.getOrElse(false) || gearsUseCentrifuge.getOrElse(true)
 
+  def skipFlexiprep: Option[Boolean] = None
   def gearsUseKraken: Option[Boolean] = None
   def gearsUseCentrifuge: Option[Boolean] = None
   def gearUseQiimeRtax: Option[Boolean] = None
@@ -23,6 +24,7 @@ trait Gears extends Pipeline {
   def gearUseSeqCount: Option[Boolean] = None
 
   override def args = super.args ++
+    cmdConfig("skip_flexiprep", skipFlexiprep) ++
     cmdConfig("gears_use_kraken", gearsUseKraken) ++
     cmdConfig("gears_use_centrifuge", gearsUseCentrifuge) ++
     cmdConfig("gears_use_qiime_rtax", gearUseQiimeRtax) ++

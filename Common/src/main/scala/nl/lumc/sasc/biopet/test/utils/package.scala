@@ -3,14 +3,13 @@ package nl.lumc.sasc.biopet.test
 import java.io.{ File, FileInputStream, PrintWriter }
 import java.util.zip.GZIPInputStream
 
+import nl.lumc.sasc.biopet.utils.ConfigUtils
 import org.apache.commons.codec.digest.DigestUtils
-import org.json4s.jackson.Serialization
 
 /**
  * Created by pjvan_thof on 10/2/15.
  */
 package object utils {
-  implicit val formats = org.json4s.DefaultFormats
 
   /**
    * This method will create a temp config file to give as argument to Biopet
@@ -21,7 +20,8 @@ package object utils {
   def createTempConfig(map: Map[String, Any], name: String = "config"): File = {
     val file = File.createTempFile(s"$name.", ".json")
     val writer = new PrintWriter(file)
-    writer.println(Serialization.write(map))
+    ConfigUtils.mapToJson(map)
+    writer.println(ConfigUtils.mapToJson(map).spaces2)
     writer.close()
     file.deleteOnExit()
     file
