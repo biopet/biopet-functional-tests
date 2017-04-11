@@ -10,6 +10,7 @@ import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb._
 import scala.collection.mutable.{ ListBuffer, Map => MutMap }
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
 import scala.util.matching.Regex
 
