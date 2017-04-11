@@ -5,6 +5,7 @@ import java.io.File
 import nl.lumc.sasc.biopet.test.Pipeline
 import nl.lumc.sasc.biopet.test.shiva.svcallers.SvCaller
 import nl.lumc.sasc.biopet.test.utils.createTempConfig
+import org.testng.annotations.DataProvider
 
 trait ShivaSvCalling extends Pipeline {
 
@@ -13,6 +14,11 @@ trait ShivaSvCalling extends Pipeline {
   def svCallers: List[SvCaller]
 
   def bamFiles: List[File]
+
+  @DataProvider(name = "callers")
+  def callersProvider = {
+    svCallers.map(Array(_)).toArray
+  }
 
   override def configs = createTempConfig(Map("sv_callers" -> getSvCallersAsStrList)) :: super.configs
 
