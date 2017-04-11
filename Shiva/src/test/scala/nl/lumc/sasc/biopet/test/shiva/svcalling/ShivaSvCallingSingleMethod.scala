@@ -17,7 +17,7 @@ trait ShivaSvCallingSingleMethod extends ShivaSvCallingSuccess with TestReferenc
   def testSvCallers(): Array[Array[Any]] = {
     svCallers.toArray.flatMap(caller => Array(
       Array(caller, "chr1", 2040, 2041, "ITX"),
-      Array(caller, "chr1", 4020, 4021, "INS"),
+      Array(caller, "chr1", 4017, 4021, "INS"),
       Array(caller, "chr1", 11400, 12000, "DEL"),
       Array(caller, "chr1", 13501, 13620, "CTX"),
       Array(caller, "chr1", 13501, 13620, "CTX"),
