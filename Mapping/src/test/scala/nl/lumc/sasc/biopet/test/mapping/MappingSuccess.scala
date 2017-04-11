@@ -180,7 +180,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     readgroup.getSample shouldBe sampleId.get
     readgroup.getLibrary shouldBe libId.get
     Option(readgroup.getDescription) shouldBe readgroupDescription
-    readgroup.getPlatformUnit shouldBe platformUnit.getOrElse("na")
+    readgroup.getPlatformUnit shouldBe platformUnit.getOrElse(null)
     Option(readgroup.getPredictedMedianInsertSize) shouldBe predictedInsertsize
     Option(readgroup.getSequencingCenter) shouldBe readgroupSequencingCenter
     readgroup.getPlatform shouldBe platform.getOrElse("illumina")
