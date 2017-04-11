@@ -65,3 +65,7 @@ class BreakdancerTest extends ShivaSvCallingSingleMethod {
 class DellyTest extends ShivaSvCallingSingleMethod {
   def svCallers = List(new Delly)
 }
+
+class CleverTest extends ShivaSvCallingSingleMethod {
+  def svCallers = List(new Clever)
+}
