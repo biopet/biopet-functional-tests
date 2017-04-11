@@ -2,8 +2,8 @@ package nl.lumc.sasc.biopet.test.shiva.svcalling
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.{SummaryGroup, SummaryPipeline}
-import nl.lumc.sasc.biopet.test.shiva.svcallers.{Breakdancer, Clever, Delly}
+import nl.lumc.sasc.biopet.test.{ SummaryGroup, SummaryPipeline }
+import nl.lumc.sasc.biopet.test.shiva.svcallers.{ Breakdancer, Clever, Delly }
 import org.testng.annotations.Test
 
 trait ShivaSvCallingSuccess extends ShivaSvCalling with SummaryPipeline {
