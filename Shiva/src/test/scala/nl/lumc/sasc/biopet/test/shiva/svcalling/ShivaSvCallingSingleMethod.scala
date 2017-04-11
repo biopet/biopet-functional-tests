@@ -10,8 +10,6 @@ import org.testng.annotations.Test
 
 trait ShivaSvCallingSingleMethod extends ShivaSvCallingSuccess with TestReference {
 
-  override def retries = Option(1)
-
   def bamFiles = List(Biopet.fixtureFile(s"samples/sv/ref_sv-ref_sv.dedup.bam"))
 
   @Test
