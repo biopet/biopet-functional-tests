@@ -1,7 +1,7 @@
 package nl.lumc.sasc.biopet.test.shiva.svcalling
 
-import nl.lumc.sasc.biopet.test.PipelineSuccess
+import nl.lumc.sasc.biopet.test.SummaryPipeline
 
-trait ShivaSvCallingSuccess extends ShivaSvCalling with PipelineSuccess { //TODO: extend SummaryPipeline
+trait ShivaSvCallingSuccess extends ShivaSvCalling with SummaryPipeline {
 
 }
