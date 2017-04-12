@@ -99,7 +99,7 @@ class ShivaNA12878WGSGRCh38Test extends ShivaSuccess with BwaMem with HsapiensGR
   override def referenceVcfRegions = Some(Biopet.fixtureFile("samples", "NA12878_wgs", "snp_indel_calls", "GIAB_GRCh38_regions_v3.3.2.bed"))
 
   override def svCalling = Some(true)
-  val svCallers: List[String] = ShivaSvCalling.getSvCallersAsStrList(List(new Breakdancer, new Delly))
+  val svCallers: List[String] = ShivaSvCalling.getSvCallersAsStrList(List(new Breakdancer, new Clever, new Delly))
 
   override def configs = super.configs.::(createTempConfig(Map("sv_callers" -> svCallers)))
 
