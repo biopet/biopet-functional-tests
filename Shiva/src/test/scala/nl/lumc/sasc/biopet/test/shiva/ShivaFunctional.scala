@@ -87,13 +87,15 @@ class ShivaNA12878WGSGRCh38Test extends ShivaSuccess with BwaMem with HsapiensGR
   with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
 
   override def disablescatter = false
-  override def memoryArg = "-Xmx4G"
+  override def memoryArg = "-Xmx1G"
 
   def paired = true
   def shouldHaveKmerContent = Some(true)
 
   override def annotation = Some(true)
   override def vepVersion = Some("86")
+
+  override def dbsnpVcfFile = Some(Biopet.fixtureFile("shiva", "dbsnp-149.vcf.gz"))
 
   override def referenceVcf = Some(Biopet.fixtureFile("samples", "NA12878_wgs", "snp_indel_calls", "GIAB_GRCh38_v3.3.2.vcf.gz"))
   override def referenceVcfRegions = Some(Biopet.fixtureFile("samples", "NA12878_wgs", "snp_indel_calls", "GIAB_GRCh38_regions_v3.3.2.bed"))
