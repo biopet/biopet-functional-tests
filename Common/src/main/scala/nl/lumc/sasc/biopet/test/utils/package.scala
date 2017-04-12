@@ -27,13 +27,6 @@ package object utils {
     file
   }
 
-  def readJsonFile(file: File): Map[String, Any] = {
-    val fileReader = new FileReader(file)
-    val contents = Serialization.read[Map[String, Any]](fileReader)
-    fileReader.close()
-    contents
-  }
-
   /** Calculates the MD5 checksum of the given file. */
   def calcMd5(file: File): String = {
     val fis = new FileInputStream(file)
