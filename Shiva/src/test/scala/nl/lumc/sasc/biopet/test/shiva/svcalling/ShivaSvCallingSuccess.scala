@@ -3,29 +3,15 @@ package nl.lumc.sasc.biopet.test.shiva.svcalling
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.{ SummaryGroup, SummaryPipeline }
-import nl.lumc.sasc.biopet.test.shiva.svcallers.{ Breakdancer, Clever, Delly }
+import nl.lumc.sasc.biopet.test.shiva.svcallers.{ Breakdancer, Clever, Delly, SvCaller }
 import org.testng.annotations.Test
 
 trait ShivaSvCallingSuccess extends ShivaSvCalling with SummaryPipeline {
-  @Test
-  def cleverDir: Unit = {
-    val dir = new File(outputDir, "clever")
-    if (svCallers.exists(_.isInstanceOf[Clever])) dir should exist
-    else dir shouldNot exist
-  }
 
-  @Test
-  def BreakdancerDir: Unit = {
-    val dir = new File(outputDir, "breakdancer")
-    if (svCallers.exists(_.isInstanceOf[Breakdancer])) dir should exist
-    else dir shouldNot exist
-  }
-
-  @Test
-  def dellyDir: Unit = {
-    val dir = new File(outputDir, "delly")
-    if (svCallers.exists(_.isInstanceOf[Delly])) dir should exist
-    else dir shouldNot exist
+  @Test(dataProvider = "callers")
+  def assertOutputExists(svCaller: SvCaller): Unit = {
+    val dir = new File(outputDir, svCaller.svCallerName)
+    dir should exist
   }
 
   addSettingsTest(SummaryGroup("shivasvcalling"), "sv_callers" :: Nil, caller => {
