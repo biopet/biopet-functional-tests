@@ -17,12 +17,7 @@ trait ShivaSvCallingSuccess extends ShivaSvCalling with SummaryPipeline {
   addSettingsTest(SummaryGroup("shivasvcalling"), "sv_callers" :: Nil, caller => {
     caller match {
       case l: List[String] =>
-        if (svCallers.exists(_.isInstanceOf[Breakdancer])) require(l.contains("breakdancer"))
-        else require(!l.contains("breakdancer"))
-        if (svCallers.exists(_.isInstanceOf[Clever])) require(l.contains("clever"))
-        else require(!l.contains("clever"))
-        if (svCallers.exists(_.isInstanceOf[Delly])) require(l.contains("delly"))
-        else require(!l.contains("delly"))
+        svCallers.foreach(svCaller => require(l.size == svCallers.size && l.contains(svCaller.svCallerName)))
       case _ => throw new IllegalStateException("'sv_callers' should be a List[String]")
     }
   })
