@@ -12,6 +12,7 @@ import nl.lumc.sasc.biopet.test.shiva.variantcallers._
 trait ShivaWgs1 extends ShivaSuccess with BwaMem with TestReference with Wgs1 {
   def paired = true
   def shouldHaveKmerContent = Some(false)
+  override def dbsnpVcfFile = Some(Biopet.fixtureFile("samples", "wgs2", "wgs2.vcf.gz"))
 }
 
 class Wgs1HaplotypeCallerTest extends ShivaWgs1 with Haplotypecaller
