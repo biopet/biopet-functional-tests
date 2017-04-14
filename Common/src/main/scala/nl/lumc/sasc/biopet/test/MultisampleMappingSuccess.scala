@@ -44,9 +44,6 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
     assert(dbFile.isDefined, s"output_bam_preprocess for $sample -> $lib should be in the summary")
     val file = new File(outputDir, dbFile.get.path.stripPrefix("./"))
     file shouldBe libraryPreprecoessBam(sample, lib)
-    if (samples(sample).size == 1) {
-      assert(file.exists())
-    }
   }
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
