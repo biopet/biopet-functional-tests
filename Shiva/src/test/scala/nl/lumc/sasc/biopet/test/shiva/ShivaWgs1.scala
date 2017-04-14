@@ -45,6 +45,10 @@ class Wgs1NoIndelRealignTest extends ShivaWgs1 with Unifiedgenotyper {
   override def useIndelRealigner = Some(false)
 }
 
+class Wgs1NoPrintReadsTest extends ShivaWgs1 with Unifiedgenotyper {
+  override def usePrintReads = Some(false)
+}
+
 class Wgs1NoPreprocessTest extends ShivaWgs1 with Unifiedgenotyper {
   override def useIndelRealigner = Some(false)
   override def useBaseRecalibration = Some(false)

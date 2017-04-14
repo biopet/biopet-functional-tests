@@ -1,7 +1,5 @@
 package nl.lumc.sasc.biopet.test.shiva
 
-import java.io.File
-
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references.TestReference
 import nl.lumc.sasc.biopet.test.samples.Wgs2
@@ -45,6 +43,10 @@ class Wgs2NoBaserecalTest extends ShivaWgs2 with Unifiedgenotyper {
 
 class Wgs2NoIndelRealignTest extends ShivaWgs2 with Unifiedgenotyper {
   override def useIndelRealigner = Some(false)
+}
+
+class Wgs2NoPrintReadsTest extends ShivaWgs2 with Unifiedgenotyper {
+  override def usePrintReads = Some(false)
 }
 
 class Wgs2NoPreprocessTest extends ShivaWgs2 with Unifiedgenotyper {
