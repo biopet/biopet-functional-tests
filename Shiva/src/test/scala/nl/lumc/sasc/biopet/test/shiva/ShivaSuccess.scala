@@ -33,7 +33,8 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   if (useBaseRecalibration != Some(false) && dbsnpVcfFile.isDefined) {
     addExecutable(Executable("baserecalibrator", Some(""".+""".r)))
-    addExecutable(Executable("printreads", Some(""".+""".r)))
+    if (usePrintReads == Some(false)) addNotHavingExecutable("printreads")
+    else addExecutable(Executable("printreads", Some(""".+""".r)))
   } else {
     addNotHavingExecutable("baserecalibrator")
     addNotHavingExecutable("printreads")

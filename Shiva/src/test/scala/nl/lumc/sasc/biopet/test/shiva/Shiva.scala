@@ -61,7 +61,7 @@ trait Shiva extends MultisampleMapping with Reference with Aligner with Variantc
     cmdConfig("use_base_recalibration", useBaseRecalibration) ++
     cmdConfig("use_analyze_covariates", useAnalyzeCovariates) ++
     cmdConfig("annotation", annotation) ++
-    cmdConfig("dbsnp", dbsnpVcfFile) ++
+    cmdConfig("dbsnp_vcf", dbsnpVcfFile) ++
     cmdConfig("reference_vcf", referenceVcf) ++
     cmdConfig("reference_vcf_regions", referenceVcfRegions) ++
     cmdConfig("amplicon_bed", ampliconBed) ++
