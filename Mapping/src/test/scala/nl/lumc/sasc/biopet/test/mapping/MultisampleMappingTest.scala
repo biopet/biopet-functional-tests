@@ -21,4 +21,7 @@ trait TestMultisampleMapping extends MultisampleMappingSuccess
   def pipelineName: String = "multisamplemapping"
 }
 
-class MultisampleMappingDefaultTest extends TestMultisampleMapping
+class DefaultTest extends TestMultisampleMapping
+class PreProcessSambambaMarkdupTest extends TestMultisampleMapping {
+  override def mergeStrategy = Some("preprocesssambambamarkdup")
+}
