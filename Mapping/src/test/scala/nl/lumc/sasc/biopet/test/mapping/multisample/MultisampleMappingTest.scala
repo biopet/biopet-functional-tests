@@ -3,7 +3,7 @@ package nl.lumc.sasc.biopet.test.mapping.multisample
 import nl.lumc.sasc.biopet.test.MultisampleMappingSuccess
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references.TestReference
-import nl.lumc.sasc.biopet.test.samples.{Wgs1, Wgs2}
+import nl.lumc.sasc.biopet.test.samples.{ Wgs1, Wgs2 }
 
 /**
  * Created by pjvanthof on 14/04/2017.
