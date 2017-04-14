@@ -1,7 +1,24 @@
 package nl.lumc.sasc.biopet.test.shiva.svcalling
 
-import nl.lumc.sasc.biopet.test.PipelineSuccess
+import java.io.File
 
-trait ShivaSvCallingSuccess extends ShivaSvCalling with PipelineSuccess { //TODO: extend SummaryPipeline
+import nl.lumc.sasc.biopet.test.{ SummaryGroup, SummaryPipeline }
+import nl.lumc.sasc.biopet.test.shiva.svcallers.{ Breakdancer, Clever, Delly, SvCaller }
+import org.testng.annotations.Test
 
+trait ShivaSvCallingSuccess extends ShivaSvCalling with SummaryPipeline {
+
+  @Test(dataProvider = "callers")
+  def assertOutputExists(svCaller: SvCaller): Unit = {
+    val dir = new File(outputDir, svCaller.svCallerName)
+    dir should exist
+  }
+
+  addSettingsTest(SummaryGroup("shivasvcalling"), "sv_callers" :: Nil, caller => {
+    caller match {
+      case l: List[String] =>
+        svCallers.foreach(svCaller => require(l.size == svCallers.size && l.contains(svCaller.svCallerName)))
+      case _ => throw new IllegalStateException("'sv_callers' should be a List[String]")
+    }
+  })
 }
