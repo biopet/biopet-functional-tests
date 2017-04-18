@@ -20,11 +20,15 @@ trait ShivaSvCalling extends Pipeline {
     svCallers.map(Array(_)).toArray
   }
 
-  override def configs = createTempConfig(Map("sv_callers" -> getSvCallersAsStrList)) :: super.configs
+  override def configs = createTempConfig(Map("sv_callers" -> ShivaSvCalling.getSvCallersAsStrList(svCallers))) :: super.configs
 
   override def args = super.args ++ bamFiles.flatMap(x => Seq("-BAM", x.getAbsolutePath))
 
-  private def getSvCallersAsStrList(): List[String] = {
+}
+
+object ShivaSvCalling {
+
+  def getSvCallersAsStrList(svCallers: List[SvCaller]): List[String] = {
     var svCallersAsStr: List[String] = List()
     for (svCaller <- svCallers) svCallersAsStr = svCallersAsStr.::(svCaller.toString)
     svCallersAsStr
