@@ -1,7 +1,5 @@
 package nl.lumc.sasc.biopet.test.shiva
 
-import java.io.File
-
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references.TestReference
 import nl.lumc.sasc.biopet.test.samples.Wgs2
@@ -14,6 +12,7 @@ import nl.lumc.sasc.biopet.test.Biopet
 trait ShivaWgs2 extends ShivaSuccess with BwaMem with TestReference with Wgs2 {
   def paired = true
   def shouldHaveKmerContent = Some(false)
+  override def dbsnpVcfFile = Some(Biopet.fixtureFile("samples", "wgs2", "wgs2.vcf.gz"))
 }
 
 class Wgs2HaplotypeCallerTest extends ShivaWgs2 with Haplotypecaller
@@ -44,6 +43,10 @@ class Wgs2NoBaserecalTest extends ShivaWgs2 with Unifiedgenotyper {
 
 class Wgs2NoIndelRealignTest extends ShivaWgs2 with Unifiedgenotyper {
   override def useIndelRealigner = Some(false)
+}
+
+class Wgs2NoPrintReadsTest extends ShivaWgs2 with Unifiedgenotyper {
+  override def usePrintReads = Some(false)
 }
 
 class Wgs2NoPreprocessTest extends ShivaWgs2 with Unifiedgenotyper {
