@@ -30,6 +30,10 @@ class Wgs1Wgs2RawTest extends ShivaWgs1Wgs2 with Raw
 
 class Wgs1Wgs2VarscanCnsSinglesampleTest extends ShivaWgs1Wgs2 with VarscanCnsSinglesample
 
+class Wgs1Wgs2ScatterTest extends ShivaWgs1Wgs2 with HaplotypecallerGvcf {
+  override def disablescatter = false
+}
+
 class Wgs1Wgs2SampleLibraryCallingTest extends ShivaWgs1Wgs2 with Unifiedgenotyper {
   override def multisampleVariantcalling = Some(false)
   override def libraryVariantcalling = Some(true)
