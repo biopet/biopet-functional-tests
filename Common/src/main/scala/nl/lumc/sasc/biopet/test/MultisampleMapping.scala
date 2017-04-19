@@ -37,12 +37,15 @@ trait MultisampleMapping extends Pipeline {
 
   def mappingToGears: Option[String] = Some("none")
 
+  def mergeStrategy: Option[String] = None
+
   override def args = super.args ++
     cmdConfig("bam_to_fastq", bamToFastq) ++
     cmdConfig("correct_readgroups", correctReadgroups) ++
     cmdConfig("execute_bam2wig", executeBam2wig) ++
     cmdConfig("wgs_metrics", wgsMetrics) ++
     cmdConfig("rna_metrics", rnaMetrics) ++
-    cmdConfig("mapping_to_gears", mappingToGears)
+    cmdConfig("mapping_to_gears", mappingToGears) ++
+    cmdConfig("merge_strategy", mergeStrategy)
 
 }
