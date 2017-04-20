@@ -12,7 +12,8 @@ import scala.concurrent.duration.Duration
  * Created by pjvanthof on 25/01/16.
  */
 trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSuccess {
-  def libraryBam(sampleId: String, libId: String) = new File(libraryDir(sampleId, libId), s"$sampleId-$libId.dedup.bam")
+  def libraryBam(sampleId: String, libId: String) = new File(libraryDir(sampleId, libId), s"$sampleId-$libId.bam")
+  def libraryDebupBam(sampleId: String, libId: String) = new File(libraryDir(sampleId, libId), s"$sampleId-$libId.dedup.bam")
 
   def libraryPreprecoessBam(sampleId: String, libId: String) = libraryBam(sampleId, libId)
 
@@ -34,9 +35,7 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
     val file = new File(outputDir, dbFile.get.path.stripPrefix("./"))
     file shouldBe libraryBam(sample, lib)
     val replacejob = new File(libraryDir(sample, lib), s".$sample-$lib.final.bam.addorreplacereadgroups.out")
-    if (samples(sample).size > 1 || libraryBam(sample, lib) != libraryPreprecoessBam(sample, lib))
-      file should not be exist
-    else file should exist
+    file should not be exist
   }
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
@@ -45,9 +44,6 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
     assert(dbFile.isDefined, s"output_bam_preprocess for $sample -> $lib should be in the summary")
     val file = new File(outputDir, dbFile.get.path.stripPrefix("./"))
     file shouldBe libraryPreprecoessBam(sample, lib)
-    if (samples(sample).size == 1) {
-      assert(file.exists())
-    }
   }
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
@@ -65,7 +61,9 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
     val file = new File(outputDir, dbFile.get.path.stripPrefix("./"))
     file shouldBe samplePreprocessBam(sample)
 
-    if (samples(sample).size == 1 && sampleBam(sample) == file) assert(java.nio.file.Files.isSymbolicLink(file.toPath))
+    if (samples(sample).size == 1 && sampleBam(sample) == file &&
+      (mergeStrategy == Some("mergesam") || mergeStrategy == Some("preprocessmergesam")))
+      assert(java.nio.file.Files.isSymbolicLink(file.toPath))
 
     assert(file.getName.startsWith(s"$sample."))
     assert(file.exists())

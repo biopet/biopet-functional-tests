@@ -12,6 +12,7 @@ import nl.lumc.sasc.biopet.test.shiva.variantcallers._
 trait ShivaWgs1 extends ShivaSuccess with BwaMem with TestReference with Wgs1 {
   def paired = true
   def shouldHaveKmerContent = Some(false)
+  override def dbsnpVcfFile = Some(Biopet.fixtureFile("samples", "wgs2", "wgs2.vcf.gz"))
 }
 
 class Wgs1HaplotypeCallerTest extends ShivaWgs1 with Haplotypecaller
@@ -30,6 +31,10 @@ class Wgs1RawTest extends ShivaWgs1 with Raw
 
 class Wgs1VarscanCnsSinglesampleTest extends ShivaWgs1 with VarscanCnsSinglesample
 
+class Wgs1ScatterTest extends ShivaWgs1 with HaplotypecallerGvcf {
+  override def disablescatter = false
+}
+
 class Wgs1SampleLibraryCallingTest extends ShivaWgs1 with Unifiedgenotyper {
   override def multisampleVariantcalling = Some(false)
   override def libraryVariantcalling = Some(true)
@@ -42,6 +47,10 @@ class Wgs1NoBaserecalTest extends ShivaWgs1 with Unifiedgenotyper {
 
 class Wgs1NoIndelRealignTest extends ShivaWgs1 with Unifiedgenotyper {
   override def useIndelRealigner = Some(false)
+}
+
+class Wgs1NoPrintReadsTest extends ShivaWgs1 with Unifiedgenotyper {
+  override def usePrintReads = Some(false)
 }
 
 class Wgs1NoPreprocessTest extends ShivaWgs1 with Unifiedgenotyper {
