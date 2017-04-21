@@ -239,8 +239,6 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
   def testShivaSamplePrepreocessBam(sample: String): Unit = withClue(s"Sample: $sample") {
-    if (samples(sample).size == 1) assert(java.nio.file.Files.isSymbolicLink(samplePreprocessBam(sample).toPath))
-
     val reader = SamReaderFactory.makeDefault.open(samplePreprocessBam(sample))
     val header = reader.getFileHeader
 
