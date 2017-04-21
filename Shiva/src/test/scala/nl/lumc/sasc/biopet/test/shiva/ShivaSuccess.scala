@@ -222,19 +222,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
   def testShivaLibraryPreprocessBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    if (samples(sample).size == 1) {
-      assert(libraryPreprecoessBam(sample, lib).exists())
-      val reader = SamReaderFactory.makeDefault.open(libraryPreprecoessBam(sample, lib))
-      val header = reader.getFileHeader
-      if (useIndelRealigner != Some(false))
-        assert(header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
-      else assert(!header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
-
-      if (useBaseRecalibration != Some(false) && dbsnpVcfFile.isDefined)
-        assert(header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
-      else assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
-      reader.close()
-    }
+    assert(!libraryPreprecoessBam(sample, lib).exists())
   }
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
@@ -246,7 +234,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
       assert(header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
     else assert(!header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
 
-    if (useBaseRecalibration != Some(false) && dbsnpVcfFile.isDefined)
+    if (useBaseRecalibration != Some(false) && dbsnpVcfFile.isDefined && usePrintReads != Some(false))
       assert(header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
     else assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
 
