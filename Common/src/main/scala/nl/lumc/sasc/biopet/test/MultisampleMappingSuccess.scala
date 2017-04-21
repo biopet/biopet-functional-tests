@@ -61,10 +61,6 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
     val file = new File(outputDir, dbFile.get.path.stripPrefix("./"))
     file shouldBe samplePreprocessBam(sample)
 
-    if (samples(sample).size == 1 && sampleBam(sample) == file &&
-      (mergeStrategy == Some("mergesam") || mergeStrategy == Some("preprocessmergesam")))
-      assert(java.nio.file.Files.isSymbolicLink(file.toPath))
-
     assert(file.getName.startsWith(s"$sample."))
     assert(file.exists())
   }
