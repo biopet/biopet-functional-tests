@@ -66,7 +66,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
   override def libraryPreprecoessBam(sampleId: String, libId: String) =
     new File(super.libraryPreprecoessBam(sampleId, libId).getAbsolutePath.stripSuffix(".bam") +
       (if (useIndelRealigner.getOrElse(true)) ".realign" else "") +
-      (if (useBaseRecalibration.getOrElse(true) && dbsnpVcfFile.isDefined) ".baserecal.bam" else ".bam"))
+      (if (useBaseRecalibration.getOrElse(true) && dbsnpVcfFile.isDefined && usePrintReads != Some(false)) ".baserecal.bam" else ".bam"))
 
   def addConcordanceChecks(group: SummaryGroup, sample: String, condition: Boolean): Unit = {
     addStatsTest(group, "genotypeSummary" :: sample :: "Overall_Genotype_Concordance" :: Nil, shouldExist = condition && referenceVcf.isDefined,
@@ -222,25 +222,11 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
   def testShivaLibraryPreprocessBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    if (samples(sample).size == 1) {
-      assert(libraryPreprecoessBam(sample, lib).exists())
-      val reader = SamReaderFactory.makeDefault.open(libraryPreprecoessBam(sample, lib))
-      val header = reader.getFileHeader
-      if (useIndelRealigner != Some(false))
-        assert(header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
-      else assert(!header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
-
-      if (useBaseRecalibration != Some(false) && dbsnpVcfFile.isDefined)
-        assert(header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
-      else assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
-      reader.close()
-    }
+    assert(!libraryPreprecoessBam(sample, lib).exists())
   }
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
   def testShivaSamplePrepreocessBam(sample: String): Unit = withClue(s"Sample: $sample") {
-    if (samples(sample).size == 1) assert(java.nio.file.Files.isSymbolicLink(samplePreprocessBam(sample).toPath))
-
     val reader = SamReaderFactory.makeDefault.open(samplePreprocessBam(sample))
     val header = reader.getFileHeader
 
@@ -248,7 +234,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
       assert(header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
     else assert(!header.getProgramRecords.exists(_.getId == "GATK IndelRealigner"))
 
-    if (useBaseRecalibration != Some(false) && dbsnpVcfFile.isDefined)
+    if (useBaseRecalibration != Some(false) && dbsnpVcfFile.isDefined && usePrintReads != Some(false))
       assert(header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
     else assert(!header.getProgramRecords.exists(_.getId == "GATK PrintReads"))
 
