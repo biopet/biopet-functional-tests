@@ -66,7 +66,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
   override def libraryPreprecoessBam(sampleId: String, libId: String) =
     new File(super.libraryPreprecoessBam(sampleId, libId).getAbsolutePath.stripSuffix(".bam") +
       (if (useIndelRealigner.getOrElse(true)) ".realign" else "") +
-      (if (useBaseRecalibration.getOrElse(true) && dbsnpVcfFile.isDefined) ".baserecal.bam" else ".bam"))
+      (if (useBaseRecalibration.getOrElse(true) && dbsnpVcfFile.isDefined && usePrintReads != Some(false)) ".baserecal.bam" else ".bam"))
 
   def addConcordanceChecks(group: SummaryGroup, sample: String, condition: Boolean): Unit = {
     addStatsTest(group, "genotypeSummary" :: sample :: "Overall_Genotype_Concordance" :: Nil, shouldExist = condition && referenceVcf.isDefined,
