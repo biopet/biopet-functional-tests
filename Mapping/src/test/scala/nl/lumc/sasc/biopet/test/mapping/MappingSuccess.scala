@@ -178,7 +178,12 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     assert(readgroup != null, s"Readgroup '$id' does not exist in $finalBamFile")
 
     readgroup.getSample shouldBe sampleId.get
-    readgroup.getLibrary shouldBe readgroupLibrary.getOrElse(null)
+    readgroup.getLibrary match {
+      case l if l == readgroupLibrary.getOrElse(null) =>
+      case l if l == libId.get =>
+      case null =>
+      case l => throw new IllegalStateException(s"Readgroup lbrary is incorrect: '$l'")
+    }
     Option(readgroup.getDescription) shouldBe readgroupDescription
     require(readgroup.getPlatformUnit == null || readgroup.getPlatformUnit == s"${sampleId.get}-${libId.get}", "PU is incorrect")
     Option(readgroup.getPredictedMedianInsertSize) shouldBe predictedInsertsize
