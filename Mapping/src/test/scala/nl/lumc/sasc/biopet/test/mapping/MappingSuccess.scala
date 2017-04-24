@@ -74,7 +74,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   else addExecutable(Executable("markduplicates", Some(""".+""".r)))
 
   addSummaryFileTest(mappingGroup, "input_R1", true, true, path = r1)
-  addSummaryFileTest(mappingGroup, "input_R2", r2.isDefined, true, path = r2)
+  addSummaryFileTest(mappingGroup, "input_R2", paired, true, path = r2)
 
   addSettingsTest(mappingGroup, "skip_metrics" :: Nil, _ shouldBe skipMetrics.getOrElse(false))
   addSettingsTest(mappingGroup, "skip_flexiprep" :: Nil, _ shouldBe skipFlexiprep.getOrElse(false))
