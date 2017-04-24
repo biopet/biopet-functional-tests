@@ -57,6 +57,7 @@ trait Mapping extends Pipeline with Reference with Aligner {
   def predictedInsertsize: Option[Int] = None
   def readgroupSequencingCenter: Option[String] = None
   def platform: Option[String] = None
+  def readgroupLibrary: Option[String] = None
 
   def generateWig: Option[Boolean] = None
   def chunkMetrics: Option[Boolean] = None
@@ -72,5 +73,6 @@ trait Mapping extends Pipeline with Reference with Aligner {
     cmdConfig("generate_wig", generateWig) ++
     cmdConfig("chunk_metrics", chunkMetrics) ++
     cmdConfig("number_chunks", configNumberChunks) ++
-    cmdConfig("chunksize", configChunksize)
+    cmdConfig("chunksize", configChunksize) ++
+    cmdConfig("readgroup_library", readgroupLibrary)
 }
