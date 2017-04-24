@@ -24,53 +24,53 @@ trait ReferencePairedTemplate extends MappingSuccess {
 
 trait HsapiensGRCh38 extends Mapping with references.HsapiensGRCh38 {
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
-  override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
+  override def r2 = if (paired) Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz")) else None
 }
 
 trait HsapiensGRCh37 extends Mapping with references.HsapiensGRCh37 {
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
-  override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
+  override def r2 = if (paired) Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz")) else None
 }
 
 trait HsapiensHg19 extends Mapping with references.HsapiensHg19 {
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
-  override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
+  override def r2 = if (paired) Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz")) else None
 }
 
 trait MmusculusGRCm38 extends Mapping with references.MmusculusGRCm38 {
   //TODO: M.musculus specific files
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
-  override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
+  override def r2 = if (paired) Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz")) else None
 }
 
 trait RnorvegicusRnor_6 extends Mapping with references.RnorvegicusRnor_6 {
   //TODO: R.norvegicus specific files
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
-  override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
+  override def r2 = if (paired) Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz")) else None
 }
 
 trait CelegansWBcel235 extends Mapping with references.CelegansWBcel235 {
   //TODO: C.elegans specific files
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
-  override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
+  override def r2 = if (paired) Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz")) else None
 }
 
 trait ClfamiliarisCanFam3_1 extends Mapping with references.ClfamiliarisCanFam3_1 {
   //TODO: M.musculus specific files
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
-  override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
+  override def r2 = if (paired) Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz")) else None
 }
 
 trait DrerioGRCz10 extends Mapping with references.DrerioGRCz10 {
   //TODO: M.musculus specific files
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
-  override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
+  override def r2 = if (paired) Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz")) else None
 }
 
 trait DmelanogasterBDGP6 extends Mapping with references.DmelanogasterBDGP6 {
   //TODO: M.musculus specific files
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r1.fq.gz"))
-  override def r2 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz"))
+  override def r2 = if (paired) Some(Biopet.fixtureFile("flexiprep" + File.separator + "ct_r2.fq.gz")) else None
 }
 
 class SingleBwamemHsapiensGRCh38Test extends ReferenceSingleTemplate with BwaMem with HsapiensGRCh38
