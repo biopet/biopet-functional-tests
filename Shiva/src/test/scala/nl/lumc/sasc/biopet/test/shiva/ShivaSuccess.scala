@@ -61,11 +61,10 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   override def samplePreprocessBam(sampleId: String) =
     new File(super.samplePreprocessBam(sampleId).getAbsolutePath.stripSuffix(".bam") +
-      (if (useIndelRealigner.getOrElse(true) && samples(sampleId).size > 1) ".realign.bam" else ".bam"))
+      (if (useIndelRealigner.getOrElse(true)) ".realign.bam" else ".bam"))
 
   override def libraryPreprecoessBam(sampleId: String, libId: String) =
     new File(super.libraryPreprecoessBam(sampleId, libId).getAbsolutePath.stripSuffix(".bam") +
-      (if (useIndelRealigner.getOrElse(true)) ".realign" else "") +
       (if (useBaseRecalibration.getOrElse(true) && dbsnpVcfFile.isDefined && usePrintReads != Some(false)) ".baserecal.bam" else ".bam"))
 
   def addConcordanceChecks(group: SummaryGroup, sample: String, condition: Boolean): Unit = {
@@ -226,7 +225,7 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
   }
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
-  def testShivaSamplePrepreocessBam(sample: String): Unit = withClue(s"Sample: $sample") {
+  def testShivaSamplePreprocessBam(sample: String): Unit = withClue(s"Sample: $sample") {
     val reader = SamReaderFactory.makeDefault.open(samplePreprocessBam(sample))
     val header = reader.getFileHeader
 
