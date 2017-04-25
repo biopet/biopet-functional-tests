@@ -120,6 +120,7 @@ class GentrapFunctGsnapNonspecificTest extends GentrapFunctional
   with Rna1 with Rna2
   with HsapiensGRCh38_no_alt_analysis_set {
 
+  override def disablescatter = false
   def shouldHaveKmerContent = Some(true)
   def paired = true
 
