@@ -93,12 +93,17 @@ class MappingPairedWigTest extends MappingPaired with MappingStatsBwaMem {
 
 class MappingPairedSkipTest extends MappingPaired with MappingStatsBwaMem {
   override def skipFlexiprep = Some(true)
-
   override def skipMetrics = Some(true)
-
   override def skipMarkDuplicates = Some(true)
-
   override def generateWig = Some(true)
+}
+
+class MappingPairedReadgroupTest extends MappingPaired with MappingStatsBwaMem {
+  override def skipFlexiprep = Some(true)
+  override def skipMetrics = Some(true)
+  override def skipMarkDuplicates = Some(true)
+  override def generateWig = Some(true)
+  override def readgroupLibrary = Some("random_lib")
 }
 
 class MappingPairedAutoChunkTest extends MappingPaired with MappingStatsBwaMem {

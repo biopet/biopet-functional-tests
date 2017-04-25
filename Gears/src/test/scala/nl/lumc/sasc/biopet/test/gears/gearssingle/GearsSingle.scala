@@ -15,7 +15,7 @@ trait GearsSingle extends Pipeline {
 
   def sampleId = Option("sampleName")
 
-  def libId = None
+  def libId = Option("libraryName")
 
   def r1: Option[File] = None
 

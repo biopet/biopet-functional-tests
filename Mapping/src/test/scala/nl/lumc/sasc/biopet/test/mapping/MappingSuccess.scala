@@ -74,7 +74,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   else addExecutable(Executable("markduplicates", Some(""".+""".r)))
 
   addSummaryFileTest(mappingGroup, "input_R1", true, true, path = r1)
-  addSummaryFileTest(mappingGroup, "input_R2", r2.isDefined, true, path = r2)
+  addSummaryFileTest(mappingGroup, "input_R2", paired, true, path = r2)
 
   addSettingsTest(mappingGroup, "skip_metrics" :: Nil, _ shouldBe skipMetrics.getOrElse(false))
   addSettingsTest(mappingGroup, "skip_flexiprep" :: Nil, _ shouldBe skipFlexiprep.getOrElse(false))
@@ -178,7 +178,12 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     assert(readgroup != null, s"Readgroup '$id' does not exist in $finalBamFile")
 
     readgroup.getSample shouldBe sampleId.get
-    readgroup.getLibrary shouldBe libId.get
+    readgroup.getLibrary match {
+      case l if l == readgroupLibrary.getOrElse(null) =>
+      case l if l == libId.get =>
+      case null =>
+      case l => throw new IllegalStateException(s"Readgroup lbrary is incorrect: '$l'")
+    }
     Option(readgroup.getDescription) shouldBe readgroupDescription
     require(readgroup.getPlatformUnit == null || readgroup.getPlatformUnit == s"${sampleId.get}-${libId.get}", "PU is incorrect")
     Option(readgroup.getPredictedMedianInsertSize) shouldBe predictedInsertsize
