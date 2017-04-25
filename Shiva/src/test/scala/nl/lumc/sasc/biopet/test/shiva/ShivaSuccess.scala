@@ -221,7 +221,8 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
   def testShivaLibraryPreprocessBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
-    assert(!libraryPreprecoessBam(sample, lib).exists())
+    if (useBaseRecalibration.getOrElse(true) && usePrintReads.getOrElse(true))
+      assert(!libraryPreprecoessBam(sample, lib).exists())
   }
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
