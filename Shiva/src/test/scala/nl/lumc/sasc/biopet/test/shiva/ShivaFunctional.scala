@@ -46,6 +46,8 @@ class ShivaBiopetplanet30xGRCh37AnalysisTest extends ShivaSuccess with BwaMem wi
 class ShivaBiopetplanet30xGRCh38AnalysisTest extends ShivaSuccess with BwaMem with HsapiensGRCh38_no_alt_analysis_set with NA12878Bioplanet30x
   with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
   override def disablescatter = false
+  override def dbsnpVcfFile = Some(Biopet.fixtureFile("shiva", "dbsnp-149.vcf.gz"))
+  override def usePrintReads = Some(false)
   def paired = true
   def shouldHaveKmerContent = Some(false)
   override def annotation = Some(true)
@@ -56,6 +58,7 @@ class ShivaBiopetplanet30xGRCh38AnalysisTest extends ShivaSuccess with BwaMem wi
 class ShivaBiopetplanet30xGRCh38Test extends ShivaSuccess with BwaMem with HsapiensGRCh38 with NA12878Bioplanet30x
   with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
   override def disablescatter = false
+  override def usePrintReads = Some(false)
   def paired = true
   def shouldHaveKmerContent = Some(false)
   override def annotation = Some(true)
@@ -67,6 +70,7 @@ class ShivaBiopetplanet30xGRCh37Test extends ShivaSuccess with BwaMem with Hsapi
   with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
   override def disablescatter = false
   def paired = true
+  override def usePrintReads = Some(false)
   def shouldHaveKmerContent = Some(false)
   override def annotation = Some(true)
   override def vepVersion = Some("86")
@@ -77,6 +81,7 @@ class ShivaBiopetplanet30xHg19Test extends ShivaSuccess with BwaMem with Hsapien
   with Haplotypecaller with HaplotypecallerGvcf with Unifiedgenotyper {
   override def disablescatter = false
   def paired = true
+  override def usePrintReads = Some(false)
   def shouldHaveKmerContent = Some(false)
   override def annotation = Some(true)
   override def vepVersion = Some("86")
@@ -91,6 +96,7 @@ class ShivaNA12878WGSGRCh38Test extends ShivaSuccess with BwaMem with HsapiensGR
 
   def paired = true
   def shouldHaveKmerContent = Some(true)
+  override def usePrintReads = Some(false)
 
   override def annotation = Some(true)
   override def vepVersion = Some("86")
