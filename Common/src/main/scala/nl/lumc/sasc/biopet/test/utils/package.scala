@@ -1,6 +1,6 @@
 package nl.lumc.sasc.biopet.test
 
-import java.io.{ File, FileInputStream, PrintWriter }
+import java.io.{ File, FileInputStream, FileReader, PrintWriter }
 import java.util.zip.GZIPInputStream
 
 import nl.lumc.sasc.biopet.utils.ConfigUtils
