@@ -246,7 +246,14 @@ trait SummaryPipeline extends PipelineSuccess {
   @DataProvider(name = "moduleSchemas")
   def moduleSchemasProvider() = {
     val modulesUsed = Await.result(summaryDb.getModules(runId = Some(this.runId)), Duration.Inf)
-    (for ((moduleName, schema) <- SummaryPipeline.moduleSchemas; if modulesUsed.exists(m => (m.name == moduleName))) yield Array(moduleName, schema)).toArray
+    var moduleSchemas: Array[Array[Object]] = Array()
+    for (module <- modulesUsed) {
+      SummaryPipeline.statisticsSchemas.find(schema => module.name.startsWith(schema._1)) match {
+        case Some(schema) => moduleSchemas :+= Array(module.name, schema._2)
+        case _            => println(s"No schema defined in conf for module ${module.name}") //logger.info(s"No schema defined in conf for module ${module.name}")
+      }
+    }
+    moduleSchemas
   }
 
   @Test(dataProvider = "moduleSchemas", dependsOnGroups = Array("summary"))
