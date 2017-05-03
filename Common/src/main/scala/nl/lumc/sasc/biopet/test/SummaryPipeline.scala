@@ -248,7 +248,7 @@ trait SummaryPipeline extends PipelineSuccess {
     val modulesUsed = Await.result(summaryDb.getModules(runId = Some(this.runId)), Duration.Inf)
     var moduleSchemas: Array[Array[Object]] = Array()
     for (module <- modulesUsed) {
-      SummaryPipeline.moduleSchemas.find(schema => module.name.contains(schema._1)) match {
+      SummaryPipeline.moduleSchemas.find(schema => schema._1.findFirstIn(module.name).nonEmpty) match {
         case Some(schema) => moduleSchemas :+= Array(module.name, schema._2)
         case _            => println(s"No schema defined in conf for module ${module.name}") //logger.info(s"No schema defined in conf for module ${module.name}")
       }
@@ -273,9 +273,11 @@ case class Executable(name: String, version: Option[Regex] = None)
 
 object SummaryPipeline {
 
-  val moduleSchemas: Map[String, JsonSchema] = {
+  val moduleSchemas: Map[Regex, JsonSchema] = {
     val schemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
-    ConfigUtils.fileToConfigMap(Biopet.fixtureFile("schemas", "statistics_schemas.yml")).mapValues(schemaFile => schemaFactory.getJsonSchema("file:" + schemaFile))
+    ConfigUtils.fileToConfigMap(Biopet.fixtureFile("schemas", "statistics_schemas.yml")).map({
+      case (moduleName, schemaFile) => s"^$moduleName$$".r -> schemaFactory.getJsonSchema("file:" + schemaFile)
+    })
   }
 
 }
