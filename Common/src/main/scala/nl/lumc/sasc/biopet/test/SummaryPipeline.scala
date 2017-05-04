@@ -250,10 +250,21 @@ trait SummaryPipeline extends PipelineSuccess {
     for (module <- modulesUsed) {
       SummaryPipeline.moduleSchemas.find(schema => schema._1.findFirstIn(module.name).nonEmpty) match {
         case Some(schema) => moduleSchemas :+= Array(module.name, schema._2)
-        case _            => println(s"No schema defined in conf for module ${module.name}") //logger.info(s"No schema defined in conf for module ${module.name}")
+        case _            =>
       }
     }
     moduleSchemas
+  }
+
+  // the test is needed as errors in data provider methods are ignored and don't get reported as failures in test results,
+  // the next test, 'testModuleStats()', would otherwise be simply skipped when it's data provider fails
+  @Test(dependsOnGroups = Array("summary"))
+  def testModuleSchemas(): Unit = {
+    try {
+      moduleSchemasProvider()
+    } catch {
+      case e: Throwable => fail("Error loading Json schemas for validating summary's Stats table", e)
+    }
   }
 
   @Test(dataProvider = "moduleSchemas", dependsOnGroups = Array("summary"))
