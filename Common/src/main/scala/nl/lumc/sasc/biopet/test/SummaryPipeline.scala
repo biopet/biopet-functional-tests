@@ -285,9 +285,15 @@ case class Executable(name: String, version: Option[Regex] = None)
 object SummaryPipeline {
 
   val moduleSchemas: Map[Regex, JsonSchema] = {
+
     val schemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
-    ConfigUtils.fileToConfigMap(Biopet.fixtureFile("schemas", "statistics_schemas.yml")).map({
-      case (moduleName, schemaFile) => s"^$moduleName$$".r -> schemaFactory.getJsonSchema("file:" + schemaFile)
+    val moduleSchemas = ClassLoader.getSystemResource("nl/lumc/sasc/biopet/test/schemas/module_schemas.yml").toURI()
+
+    ConfigUtils.fileToConfigMap(new File(moduleSchemas)).map({
+      case (moduleName, schemaFile) => {
+        val schemaURI = ClassLoader.getSystemResource(schemaFile.toString).toURI().toString
+        s"^$moduleName$$".r -> schemaFactory.getJsonSchema(schemaURI)
+      }
     })
   }
 
