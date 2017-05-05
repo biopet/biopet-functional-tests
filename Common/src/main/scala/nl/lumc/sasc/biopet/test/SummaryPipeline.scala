@@ -287,7 +287,7 @@ object SummaryPipeline {
   val moduleSchemas: Map[Regex, JsonSchema] = {
 
     val schemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
-    val moduleSchemas = ClassLoader.getSystemResource("nl/lumc/sasc/biopet/test/schemas/module_schemas.yml").toURI()
+    val moduleSchemas = ClassLoader.getSystemResource("nl/lumc/sasc/biopet/test/module_schemas.yml").toURI()
 
     ConfigUtils.fileToConfigMap(new File(moduleSchemas)).map({
       case (moduleName, schemaFile) => {
