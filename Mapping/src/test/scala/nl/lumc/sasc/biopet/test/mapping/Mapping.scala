@@ -10,8 +10,8 @@ import nl.lumc.sasc.biopet.test.references.Reference
 import scala.math._
 
 /**
- * Created by pjvan_thof on 5/26/15.
- */
+  * Created by pjvan_thof on 5/26/15.
+  */
 trait Mapping extends Pipeline with Reference with Aligner {
 
   def pipelineName = "mapping"
@@ -36,7 +36,7 @@ trait Mapping extends Pipeline with Reference with Aligner {
 
   def chunking = configChunking match {
     case Some(c) => c
-    case _       => configNumberChunks.exists(_ > 1)
+    case _ => configNumberChunks.exists(_ > 1)
   }
 
   def numberChunks: Option[Int] = {
@@ -45,7 +45,9 @@ trait Mapping extends Pipeline with Reference with Aligner {
         case Some(_) => configNumberChunks
         case _ =>
           val fileSize = r1.get.length()
-          val size = if (r1.get.getName.endsWith(".gz") || r1.get.getName.endsWith(".gzip")) fileSize * 3 else fileSize
+          val size =
+            if (r1.get.getName.endsWith(".gz") || r1.get.getName.endsWith(".gzip")) fileSize * 3
+            else fileSize
           Some(ceil(size.toDouble / configChunksize.getOrElse(1 << 30)).toInt)
       }
     } else None
@@ -62,17 +64,18 @@ trait Mapping extends Pipeline with Reference with Aligner {
   def generateWig: Option[Boolean] = None
   def chunkMetrics: Option[Boolean] = None
 
-  override def args = super.args ++
-    cmdArg("-sample", sampleId) ++ cmdArg("-library", libId) ++
-    cmdArg("-R1", r1) ++
-    cmdArg("-R2", (if (paired) r2 else None)) ++
-    cmdConfig("skip_markduplicates", skipMarkDuplicates) ++
-    cmdConfig("skip_flexiprep", skipFlexiprep) ++
-    cmdConfig("skip_metrics", skipMetrics) ++
-    cmdConfig("chunking", configChunking) ++
-    cmdConfig("generate_wig", generateWig) ++
-    cmdConfig("chunk_metrics", chunkMetrics) ++
-    cmdConfig("number_chunks", configNumberChunks) ++
-    cmdConfig("chunksize", configChunksize) ++
-    cmdConfig("readgroup_library", readgroupLibrary)
+  override def args =
+    super.args ++
+      cmdArg("-sample", sampleId) ++ cmdArg("-library", libId) ++
+      cmdArg("-R1", r1) ++
+      cmdArg("-R2", (if (paired) r2 else None)) ++
+      cmdConfig("skip_markduplicates", skipMarkDuplicates) ++
+      cmdConfig("skip_flexiprep", skipFlexiprep) ++
+      cmdConfig("skip_metrics", skipMetrics) ++
+      cmdConfig("chunking", configChunking) ++
+      cmdConfig("generate_wig", generateWig) ++
+      cmdConfig("chunk_metrics", chunkMetrics) ++
+      cmdConfig("number_chunks", configNumberChunks) ++
+      cmdConfig("chunksize", configChunksize) ++
+      cmdConfig("readgroup_library", readgroupLibrary)
 }

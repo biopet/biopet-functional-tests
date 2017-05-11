@@ -3,8 +3,8 @@ package nl.lumc.sasc.biopet.test.references
 import java.io.File
 
 /**
- * Created by pjvan_thof on 27-10-16.
- */
+  * Created by pjvan_thof on 27-10-16.
+  */
 trait GlobalReference extends Reference {
   override def functionalTest = true
 

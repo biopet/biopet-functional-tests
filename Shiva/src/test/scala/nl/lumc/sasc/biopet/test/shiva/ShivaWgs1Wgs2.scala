@@ -2,13 +2,13 @@ package nl.lumc.sasc.biopet.test.shiva
 
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
 import nl.lumc.sasc.biopet.test.references.TestReference
-import nl.lumc.sasc.biopet.test.samples.{ Wgs1, Wgs2 }
+import nl.lumc.sasc.biopet.test.samples.{Wgs1, Wgs2}
 import nl.lumc.sasc.biopet.test.shiva.variantcallers._
 import nl.lumc.sasc.biopet.test.Biopet
 
 /**
- * Created by pjvan_thof on 10/23/15.
- */
+  * Created by pjvan_thof on 10/23/15.
+  */
 trait ShivaWgs1Wgs2 extends ShivaSuccess with BwaMem with TestReference with Wgs1 with Wgs2 {
   def paired = true
   def shouldHaveKmerContent = Some(false)

@@ -3,6 +3,7 @@ package nl.lumc.sasc.biopet.test.shiva.svcallers
 trait SvCaller {
 
   def svCallerName: String
+
   /** Types of structural variants the method is designed to detect. */
   def supportedTypes: List[String]
 
@@ -27,6 +28,7 @@ class Clever extends SvCaller {
 class Delly extends SvCaller {
 
   def svCallerName = "delly"
-  def supportedTypes = List("DEL", "INV", "TRA") // delly doesn't report insertions nor intrachromosomal translocations
+  def supportedTypes =
+    List("DEL", "INV", "TRA") // delly doesn't report insertions nor intrachromosomal translocations
 
 }

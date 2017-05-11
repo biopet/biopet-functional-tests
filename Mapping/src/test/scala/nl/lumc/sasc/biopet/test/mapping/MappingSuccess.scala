@@ -3,17 +3,17 @@ package nl.lumc.sasc.biopet.test.mapping
 import java.io.File
 
 import htsjdk.samtools.SamReaderFactory
-import nl.lumc.sasc.biopet.test.{ Executable, SummaryGroup, SummaryPipeline }
+import nl.lumc.sasc.biopet.test.{Executable, SummaryGroup, SummaryPipeline}
 import org.testng.annotations.Test
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 /**
- * This is a general trait to test a successful run of mapping
- *
- * Created by pjvan_thof on 9/17/15.
- */
+  * This is a general trait to test a successful run of mapping
+  *
+  * Created by pjvan_thof on 9/17/15.
+  */
 trait MappingSuccess extends Mapping with SummaryPipeline {
 
   val mappingGroup = SummaryGroup("mapping", sample = sampleId, library = libId)
@@ -23,9 +23,10 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   val bamstatsGroup = bamMetricsGroup.copy(module = "bamstats")
   val insertsizeGroup = bamMetricsGroup.copy(module = "CollectInsertSizeMetrics")
 
-  def finalBamFile: File = if (skipMarkDuplicates.getOrElse(false))
-    new File(outputDir, s"${sampleId.get}-${libId.get}.bam")
-  else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bam")
+  def finalBamFile: File =
+    if (skipMarkDuplicates.getOrElse(false))
+      new File(outputDir, s"${sampleId.get}-${libId.get}.bam")
+    else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bam")
   def finalWigFile: File = new File(finalBamFile.getAbsolutePath + ".wig")
 
   if (skipFlexiprep != Some(true)) {
@@ -78,7 +79,9 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   addSettingsTest(mappingGroup, "skip_metrics" :: Nil, _ shouldBe skipMetrics.getOrElse(false))
   addSettingsTest(mappingGroup, "skip_flexiprep" :: Nil, _ shouldBe skipFlexiprep.getOrElse(false))
-  addSettingsTest(mappingGroup, "skip_markduplicates" :: Nil, _ shouldBe skipMarkDuplicates.getOrElse(false))
+  addSettingsTest(mappingGroup,
+                  "skip_markduplicates" :: Nil,
+                  _ shouldBe skipMarkDuplicates.getOrElse(false))
   addSettingsTest(mappingGroup, "aligner" :: Nil, _ shouldBe aligner.getOrElse("bwa-mem"))
 
   @Test(dependsOnGroups = Array("summary"))
@@ -96,13 +99,15 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test
   def testMarkduplicates(): Unit = {
-    val bamFile = if (skipMarkDuplicates == Some(true))
-      new File(outputDir, s"${sampleId.get}-${libId.get}.bam")
-    else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bam")
+    val bamFile =
+      if (skipMarkDuplicates == Some(true))
+        new File(outputDir, s"${sampleId.get}-${libId.get}.bam")
+      else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bam")
 
-    val baiFile = if (skipMarkDuplicates == Some(true))
-      new File(outputDir, s"${sampleId.get}-${libId.get}.bai")
-    else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bai")
+    val baiFile =
+      if (skipMarkDuplicates == Some(true))
+        new File(outputDir, s"${sampleId.get}-${libId.get}.bai")
+      else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bai")
 
     assert(bamFile.exists(), s"Bamfile does not exist: $bamFile")
     assert(baiFile.exists(), s"Bamfile index does not exist: $baiFile")
@@ -112,7 +117,8 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("summary"))
   def testSkipFlexiprep(): Unit = {
-    val summaryPipeline = Await.result(summaryDb.getPipelines(name = "flexiprep"), Duration.Inf).headOption
+    val summaryPipeline =
+      Await.result(summaryDb.getPipelines(name = "flexiprep"), Duration.Inf).headOption
     val flexiprepDir = new File(outputDir, "flexiprep")
     if (skipFlexiprep == Some(true)) {
       assert(!flexiprepDir.exists(), "Flexiprep is skipped but directory exist")
@@ -126,7 +132,8 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
   @Test(dependsOnGroups = Array("summary"))
   def testSkipMetrics(): Unit = {
-    val summaryPipeline = Await.result(summaryDb.getPipelines(name = "bammetrics"), Duration.Inf).headOption
+    val summaryPipeline =
+      Await.result(summaryDb.getPipelines(name = "bammetrics"), Duration.Inf).headOption
     val metricsDir = new File(outputDir, "metrics")
     if (skipMetrics == Some(true)) {
       assert(!metricsDir.exists(), "Metrics are skipped but directory exist")
@@ -139,7 +146,9 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   }
 
   addSettingsTest(mappingGroup, "chunking" :: Nil, _ shouldBe chunking)
-  addSettingsTest(mappingGroup, "number_of_chunks" :: Nil, _ shouldBe (if (chunking) numberChunks.getOrElse(1) else None))
+  addSettingsTest(mappingGroup,
+                  "number_of_chunks" :: Nil,
+                  _ shouldBe (if (chunking) numberChunks.getOrElse(1) else None))
 
   @Test
   def testChunkDirs(): Unit = {
@@ -150,7 +159,8 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
           val dir = new File(chunksDir, s"$i")
           assert(dir.exists(), s"'$dir' should exist")
           val metrcisDir = new File(dir, "metrics")
-          if (chunkMetrics == Some(true)) assert(metrcisDir.exists(), s"'$metrcisDir' should exist")
+          if (chunkMetrics == Some(true))
+            assert(metrcisDir.exists(), s"'$metrcisDir' should exist")
           else assert(!metrcisDir.exists(), s"'$metrcisDir' should not exist")
         }
       case _ => assert(!chunksDir.exists())
@@ -185,7 +195,9 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
       case l => throw new IllegalStateException(s"Readgroup lbrary is incorrect: '$l'")
     }
     Option(readgroup.getDescription) shouldBe readgroupDescription
-    require(readgroup.getPlatformUnit == null || readgroup.getPlatformUnit == s"${sampleId.get}-${libId.get}", "PU is incorrect")
+    require(
+      readgroup.getPlatformUnit == null || readgroup.getPlatformUnit == s"${sampleId.get}-${libId.get}",
+      "PU is incorrect")
     Option(readgroup.getPredictedMedianInsertSize) shouldBe predictedInsertsize
     Option(readgroup.getSequencingCenter) shouldBe readgroupSequencingCenter
     readgroup.getPlatform shouldBe platform.getOrElse("illumina")

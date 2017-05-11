@@ -7,15 +7,28 @@ import nl.lumc.sasc.biopet.test.references.TestReference
 import nl.lumc.sasc.biopet.test.Biopet
 
 /**
- * Created by pjvan_thof on 10/7/15.
- */
+  * Created by pjvan_thof on 10/7/15.
+  */
 trait MappingSingle extends MappingSuccess with TestReference {
-  override def r1 = Some(Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R1.fq.gz"))
+  override def r1 =
+    Some(Biopet.fixtureFile("samples" + File.separator + "wgs1" + File.separator + "R1.fq.gz"))
 
-  addStatsTest(flexiprepGroup.copy(module = "seqstat_R1"), "reads" :: "num_total" :: Nil, _ shouldBe 10000, skipFlexiprep != Some(true))
-  addStatsTest(flexiprepGroup.copy(module = "seqstat_R1"), "bases" :: "num_total" :: Nil, _ shouldBe 1000000, skipFlexiprep != Some(true))
-  addStatsTest(flexiprepGroup.copy(module = "seqstat_R1_qc"), "reads" :: "num_total" :: Nil, _ shouldBe 10000, skipFlexiprep != Some(true))
-  addStatsTest(flexiprepGroup.copy(module = "seqstat_R1_qc"), "bases" :: "num_total" :: Nil, _ shouldBe 1000000, skipFlexiprep != Some(true))
+  addStatsTest(flexiprepGroup.copy(module = "seqstat_R1"),
+               "reads" :: "num_total" :: Nil,
+               _ shouldBe 10000,
+               skipFlexiprep != Some(true))
+  addStatsTest(flexiprepGroup.copy(module = "seqstat_R1"),
+               "bases" :: "num_total" :: Nil,
+               _ shouldBe 1000000,
+               skipFlexiprep != Some(true))
+  addStatsTest(flexiprepGroup.copy(module = "seqstat_R1_qc"),
+               "reads" :: "num_total" :: Nil,
+               _ shouldBe 10000,
+               skipFlexiprep != Some(true))
+  addStatsTest(flexiprepGroup.copy(module = "seqstat_R1_qc"),
+               "bases" :: "num_total" :: Nil,
+               _ shouldBe 1000000,
+               skipFlexiprep != Some(true))
 }
 
 class MappingSingleDefaultTest extends MappingSingle with BwaMem

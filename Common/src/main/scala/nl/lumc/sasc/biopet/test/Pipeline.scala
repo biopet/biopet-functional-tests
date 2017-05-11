@@ -1,12 +1,12 @@
 package nl.lumc.sasc.biopet.test
 
-import java.io.{ File, PrintWriter }
+import java.io.{File, PrintWriter}
 import java.nio.file.Paths
 
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
 import org.testng.SkipException
-import org.testng.annotations.{ BeforeClass, DataProvider, Test }
+import org.testng.annotations.{BeforeClass, DataProvider, Test}
 
 import scala.io.Source
 import scala.sys.process._
@@ -14,15 +14,15 @@ import scala.util.matching.Regex
 import scala.language.implicitConversions
 
 /**
- * Created by pjvan_thof on 6/30/15.
- */
-
+  * Created by pjvan_thof on 6/30/15.
+  */
 trait Pipeline extends TestNGSuite with Matchers {
 
   implicit def autoToOption[T](x: T): Option[T] = Option(x)
 
   /** Output dir of pipeline */
-  def outputDir = new File(Biopet.getOutputDir, this.getClass.getName.stripPrefix("nl.lumc.sasc.biopet.test."))
+  def outputDir =
+    new File(Biopet.getOutputDir, this.getClass.getName.stripPrefix("nl.lumc.sasc.biopet.test."))
 
   /** The argument to queue for outputDir, default uses `outputDir` */
   def outputDirArg = Option(outputDir)
@@ -37,6 +37,7 @@ trait Pipeline extends TestNGSuite with Matchers {
   def args: Seq[String] = Seq()
 
   private var _exitValue = -1
+
   /** exitvalue of the pipeline, if this is -1 the pipeline is not executed yet */
   def exitValue = _exitValue
 
@@ -47,9 +48,9 @@ trait Pipeline extends TestNGSuite with Matchers {
   def retries = Option(6)
 
   /**
-   * Allowed retries, test will be generated from `allowRetries` until `retries`
-   * Default is 0 so no retries are allowed
-   */
+    * Allowed retries, test will be generated from `allowRetries` until `retries`
+    * Default is 0 so no retries are allowed
+    */
   def allowRetries = 1
 
   /** This enabled the "--disablescatter" option on the commandline, default enabled */
@@ -62,9 +63,9 @@ trait Pipeline extends TestNGSuite with Matchers {
   def configs: List[File] = Nil
 
   /**
-   * When override this to true the pipeline is marked as functional.
-   * This is only executed when property "biopet.functionalTests" is set true
-   */
+    * When override this to true the pipeline is marked as functional.
+    * This is only executed when property "biopet.functionalTests" is set true
+    */
   def functionalTest = false
 
   /** This is default true, when override to false the pipeline will only execute a dry run */
@@ -74,8 +75,10 @@ trait Pipeline extends TestNGSuite with Matchers {
 
   @BeforeClass
   def runPipeline(): Unit = {
-    if (run && functionalTest && !Biopet.functionalTests) throw new SkipException("Functional tests are disabled")
-    if (!Biopet.integrationTests && !functionalTest) throw new SkipException("Integration tests are disabled")
+    if (run && functionalTest && !Biopet.functionalTests)
+      throw new SkipException("Functional tests are disabled")
+    if (!Biopet.integrationTests && !functionalTest)
+      throw new SkipException("Integration tests are disabled")
     // Running pipeline
     _exitValue = Pipeline.runPipeline(this)
   }
@@ -141,7 +144,8 @@ trait Pipeline extends TestNGSuite with Matchers {
   }
 
   private var mustHaveFiles: List[File] = Nil
-  def addMustHaveFile(path: String*) = mustHaveFiles ::= new File(outputDir, path.mkString(File.separator))
+  def addMustHaveFile(path: String*) =
+    mustHaveFiles ::= new File(outputDir, path.mkString(File.separator))
 
   @DataProvider(name = "_must_have_files")
   def MustHaveFiles = mustHaveFiles.map(Array(_)).toArray
@@ -152,7 +156,8 @@ trait Pipeline extends TestNGSuite with Matchers {
   }
 
   private var mustNotHaveFiles: List[File] = Nil
-  def addMustNotHaveFile(path: String*) = mustNotHaveFiles ::= new File(outputDir, path.mkString(File.separator))
+  def addMustNotHaveFile(path: String*) =
+    mustNotHaveFiles ::= new File(outputDir, path.mkString(File.separator))
 
   @DataProvider(name = "_must_not_have_files")
   def MustNotHaveFiles = mustNotHaveFiles.map(Array(_)).toArray
@@ -171,7 +176,12 @@ trait Pipeline extends TestNGSuite with Matchers {
 
 object Pipeline {
   def runPipeline(pipeline: Pipeline) = {
-    val cmd = Seq("java", pipeline.memoryArg, "-jar", Biopet.getBiopetJar.toString, "pipeline", pipeline.pipelineName) ++
+    val cmd = Seq("java",
+                  pipeline.memoryArg,
+                  "-jar",
+                  Biopet.getBiopetJar.toString,
+                  "pipeline",
+                  pipeline.pipelineName) ++
       Biopet.queueArgs ++
       (if (pipeline.disablescatter) Seq("--disablescatter") else Seq()) ++
       cmdArg("-retry", pipeline.retries) ++
@@ -199,8 +209,8 @@ object Pipeline {
   def cmdArg(argName: String, value: Any): Seq[String] = {
     value match {
       case Some(v) => Seq(argName, v.toString)
-      case None    => Seq()
-      case _       => Seq(argName, value.toString)
+      case None => Seq()
+      case _ => Seq(argName, value.toString)
     }
   }
 
@@ -211,8 +221,8 @@ object Pipeline {
   def cmdConfig(configKey: String, value: Any): Seq[String] = {
     value match {
       case Some(v) => Seq("-cv", s"$configKey=$v")
-      case None    => Seq()
-      case _       => Seq("-cv", s"$configKey=$value")
+      case None => Seq()
+      case _ => Seq("-cv", s"$configKey=$value")
     }
   }
 }
