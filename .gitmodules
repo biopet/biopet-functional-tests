@@ -1,3 +1,4 @@
 [submodule "Common/src/main/resources/nl/lumc/sasc/biopet/test/schemas"]
 	path = Common/src/main/resources/nl/lumc/sasc/biopet/test/schemas
 	url = https://github.com/biopet/biopet-schemas
+	branch = master
