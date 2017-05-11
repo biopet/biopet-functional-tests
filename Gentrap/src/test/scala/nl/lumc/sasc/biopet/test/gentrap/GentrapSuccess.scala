@@ -6,8 +6,8 @@ import nl.lumc.sasc.biopet.test.MultisampleMappingSuccess
 import org.testng.annotations.Test
 
 /**
- * Created by pjvanthof on 05/11/15.
- */
+  * Created by pjvanthof on 05/11/15.
+  */
 trait GentrapSuccess extends Gentrap with MultisampleMappingSuccess {
 
   @Test

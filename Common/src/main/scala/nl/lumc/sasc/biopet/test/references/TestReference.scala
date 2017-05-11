@@ -5,8 +5,8 @@ import java.io.File
 import nl.lumc.sasc.biopet.test.Biopet
 
 /**
- * Created by pjvanthof on 14/11/15.
- */
+  * Created by pjvanthof on 14/11/15.
+  */
 trait TestReference extends Reference {
   def referenceSpecies = Some("test")
   def referenceName = Some("test")
@@ -17,7 +17,8 @@ trait TestReference extends Reference {
 
   def bowtie2Index: Option[File] = Some(new File(Biopet.fixtureDir, "reference/bowtie2/reference"))
 
-  def tophatIndex: Option[String] = Some(Biopet.fixtureDir + File.separator + "reference/bowtie2/reference")
+  def tophatIndex: Option[String] =
+    Some(Biopet.fixtureDir + File.separator + "reference/bowtie2/reference")
 
   def gsnapDir: Option[File] = Some(new File(Biopet.fixtureDir, "reference/gmap"))
 
@@ -25,5 +26,6 @@ trait TestReference extends Reference {
 
   def starGenomeDir: Option[File] = Some(Biopet.fixtureFile("reference/star"))
 
-  def hisat2Index: Option[String] = Some(Biopet.fixtureDir + File.separator + "reference/hisat2/reference")
+  def hisat2Index: Option[String] =
+    Some(Biopet.fixtureDir + File.separator + "reference/hisat2/reference")
 }

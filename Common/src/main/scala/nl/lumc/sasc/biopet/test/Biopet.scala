@@ -3,47 +3,52 @@ package nl.lumc.sasc.biopet.test
 import java.io.File
 
 /**
- * Created by pjvan_thof on 5/26/15.
- */
+  * Created by pjvan_thof on 5/26/15.
+  */
 object Biopet {
   lazy val getBiopetJar: File = {
     System.getProperties.getProperty("biopet.jar") match {
       case s: String => {
         val file = new File(s)
-        if (!file.exists()) throw new IllegalArgumentException("Biopet jar '" + file + "' does not exist")
+        if (!file.exists())
+          throw new IllegalArgumentException("Biopet jar '" + file + "' does not exist")
         file
       }
-      case _ => throw new IllegalArgumentException("No biopet jar found, please set the 'biopet.jar' property")
+      case _ =>
+        throw new IllegalArgumentException(
+          "No biopet jar found, please set the 'biopet.jar' property")
     }
   }
 
   lazy val getOutputDir: File = {
     System.getProperties.getProperty("biopet.output_dir") match {
       case s: String => new File(s)
-      case _         => throw new IllegalArgumentException("No output_dir found, please set the 'biopet.output_dir' property")
+      case _ =>
+        throw new IllegalArgumentException(
+          "No output_dir found, please set the 'biopet.output_dir' property")
     }
   }
 
   lazy val queueArgs: Seq[String] = {
     System.getProperties.getProperty("biopet.queueArgs") match {
       case s: String => s.split(" ").toSeq
-      case _         => Nil
+      case _ => Nil
     }
   }
 
   lazy val functionalTests: Boolean = {
     System.getProperties.getProperty("biopet.functionalTests") match {
       case "false" => false
-      case null    => false
-      case _       => true
+      case null => false
+      case _ => true
     }
   }
 
   lazy val integrationTests: Boolean = {
     System.getProperties.getProperty("biopet.integrationTests") match {
       case "false" => false
-      case null    => true
-      case _       => true
+      case null => true
+      case _ => true
     }
   }
 
@@ -55,7 +60,9 @@ object Biopet {
         require(dir.isDirectory, "Fixture directory is not a directory: " + s)
         dir
       }
-      case _ => throw new IllegalArgumentException("No output_dir found, please set the 'biopet.fixture_dir' property")
+      case _ =>
+        throw new IllegalArgumentException(
+          "No output_dir found, please set the 'biopet.fixture_dir' property")
     }
   }
 

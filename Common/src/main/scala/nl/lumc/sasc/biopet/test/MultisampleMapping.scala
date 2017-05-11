@@ -3,8 +3,8 @@ package nl.lumc.sasc.biopet.test
 import nl.lumc.sasc.biopet.test.Pipeline._
 
 /**
- * Created by pjvan_thof on 2/5/16.
- */
+  * Created by pjvan_thof on 2/5/16.
+  */
 trait MultisampleMapping extends Pipeline {
 
   def bamToFastq: Option[Boolean] = None
@@ -39,13 +39,14 @@ trait MultisampleMapping extends Pipeline {
 
   def mergeStrategy: Option[String] = None
 
-  override def args = super.args ++
-    cmdConfig("bam_to_fastq", bamToFastq) ++
-    cmdConfig("correct_readgroups", correctReadgroups) ++
-    cmdConfig("execute_bam2wig", executeBam2wig) ++
-    cmdConfig("wgs_metrics", wgsMetrics) ++
-    cmdConfig("rna_metrics", rnaMetrics) ++
-    cmdConfig("mapping_to_gears", mappingToGears) ++
-    cmdConfig("merge_strategy", mergeStrategy)
+  override def args =
+    super.args ++
+      cmdConfig("bam_to_fastq", bamToFastq) ++
+      cmdConfig("correct_readgroups", correctReadgroups) ++
+      cmdConfig("execute_bam2wig", executeBam2wig) ++
+      cmdConfig("wgs_metrics", wgsMetrics) ++
+      cmdConfig("rna_metrics", rnaMetrics) ++
+      cmdConfig("mapping_to_gears", mappingToGears) ++
+      cmdConfig("merge_strategy", mergeStrategy)
 
 }

@@ -4,25 +4,29 @@ import java.io.File
 
 import htsjdk.variant.vcf.VCFFileReader
 import nl.lumc.sasc.biopet.test.Executable
-import nl.lumc.sasc.biopet.test.{ Pipeline, SummaryPipeline }
+import nl.lumc.sasc.biopet.test.{Pipeline, SummaryPipeline}
 import nl.lumc.sasc.biopet.test.utils._
 
 import scala.collection.JavaConversions._
 
 /**
- * Created by pjvanthof on 16/11/15.
- */
+  * Created by pjvanthof on 16/11/15.
+  */
 trait Variantcallers extends Pipeline {
   def variantcallers: List[String] = Nil
 
-  val variantcallersConfig = if (variantcallers.nonEmpty) Some(createTempConfig(Map("variantcallers" -> variantcallers))) else None
+  val variantcallersConfig =
+    if (variantcallers.nonEmpty) Some(createTempConfig(Map("variantcallers" -> variantcallers)))
+    else None
 
   override def configs = super.configs ::: variantcallersConfig.map(_ :: Nil).getOrElse(Nil)
 
   this match {
     case s: SummaryPipeline =>
-      if (variantcallers.exists(!_.contains("haplotypecaller"))) s.addNotHavingExecutable("haplotypecaller")
-      if (variantcallers.exists(!_.contains("unifiedgenotyper"))) s.addNotHavingExecutable("unifiedgenotyper")
+      if (variantcallers.exists(!_.contains("haplotypecaller")))
+        s.addNotHavingExecutable("haplotypecaller")
+      if (variantcallers.exists(!_.contains("unifiedgenotyper")))
+        s.addNotHavingExecutable("unifiedgenotyper")
       if (!variantcallers.contains("freebayes")) s.addNotHavingExecutable("freebayes")
       if (variantcallers.exists(!_.contains("bcftools"))) s.addNotHavingExecutable("bcftools")
       if (!variantcallers.contains("raw")) s.addNotHavingExecutable("mpileuptovcf")
@@ -33,7 +37,8 @@ trait Variantcallers extends Pipeline {
     val reader = new VCFFileReader(file, false)
     val lines = reader.getFileHeader.toString.split("\n").toList
     variantcallers foreach { caller =>
-      assert(lines.exists(_.contains(s"RodBinding name=$caller")), s"Final vcf file is missing '$caller' in header for CombineVariants")
+      assert(lines.exists(_.contains(s"RodBinding name=$caller")),
+             s"Final vcf file is missing '$caller' in header for CombineVariants")
     }
     reader.close()
   }
@@ -44,7 +49,7 @@ trait Haplotypecaller extends Variantcallers {
 
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("haplotypecaller", Some(""".+""".r)))
-    case _                  =>
+    case _ =>
   }
 }
 
@@ -53,7 +58,7 @@ trait HaplotypecallerGvcf extends Variantcallers {
 
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("haplotypecaller", Some(""".+""".r)))
-    case _                  =>
+    case _ =>
   }
 }
 
@@ -62,7 +67,7 @@ trait HaplotypecallerAllele extends Variantcallers {
 
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("haplotypecaller", Some(""".+""".r)))
-    case _                  =>
+    case _ =>
   }
 }
 
@@ -71,7 +76,7 @@ trait Unifiedgenotyper extends Variantcallers {
 
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("unifiedgenotyper", Some(""".+""".r)))
-    case _                  =>
+    case _ =>
   }
 }
 
@@ -80,7 +85,7 @@ trait UnifiedgenotyperAllele extends Variantcallers {
 
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("unifiedgenotyper", Some(""".+""".r)))
-    case _                  =>
+    case _ =>
   }
 }
 
@@ -89,7 +94,7 @@ trait Freebayes extends Variantcallers {
 
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("freebayes", Some(""".+""".r)))
-    case _                  =>
+    case _ =>
   }
 }
 

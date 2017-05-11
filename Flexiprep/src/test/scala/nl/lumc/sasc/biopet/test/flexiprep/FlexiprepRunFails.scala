@@ -2,7 +2,7 @@ package nl.lumc.sasc.biopet.test.flexiprep
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.{ Biopet, PipelineFail }
+import nl.lumc.sasc.biopet.test.{Biopet, PipelineFail}
 import org.testng.annotations.Test
 
 import scala.io.Source
@@ -83,6 +83,9 @@ class FlexiprepNoEncodingTest extends FlexiprepSuccessful {
   def testValidateWarning(): Unit = {
     val validateLog = new File(outputDir, ".validate_fastq.log.out")
     validateLog should exist
-    Source.fromFile(validateLog).getLines().exists(_.contains("- No possible quality encodings found")) shouldBe true
+    Source
+      .fromFile(validateLog)
+      .getLines()
+      .exists(_.contains("- No possible quality encodings found")) shouldBe true
   }
 }

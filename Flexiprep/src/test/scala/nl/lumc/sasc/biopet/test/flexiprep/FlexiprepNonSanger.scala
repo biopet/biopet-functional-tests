@@ -5,9 +5,10 @@ import java.io.File
 import nl.lumc.sasc.biopet.test.Biopet
 
 /**
- * Created by pjvanthof on 04/10/15.
- */
+  * Created by pjvanthof on 04/10/15.
+  */
 class FlexiprepSingleNonSangerTest extends FlexiprepSingleDefaultTest {
+
   /** Input file of this run. */
   override def r1 = Some(Biopet.fixtureFile("flexiprep" + File.separator + "cti_r1.fq"))
 

@@ -3,11 +3,11 @@ package nl.lumc.sasc.biopet.test.shiva.variantcalling
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.shiva.variantcallers._
-import nl.lumc.sasc.biopet.test.{ TestReference, Biopet }
+import nl.lumc.sasc.biopet.test.{TestReference, Biopet}
 
 /**
- * Created by pjvan_thof on 10/22/15.
- */
+  * Created by pjvan_thof on 10/22/15.
+  */
 trait ShivaVariantcallingWgs1 extends ShivaVariantcallingSuccess with TestReference {
   override def bamFiles = List(Biopet.fixtureFile("samples", "wgs1", "wgs1.bam"))
 }

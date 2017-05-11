@@ -19,20 +19,27 @@ class ShivaSvCallingTest extends ShivaSvCallingSingleMethod {
   def testMergedResult(): Unit = {
     val reader = new VCFFileReader(new File(outputDir, "ref_sv.merged.vcf"), false)
 
-    val expectedVariants = List(("chr1", 2390, 2400, "ITX"), // delly's duplication has shifted the variant a bit to the right
-      ("chr1", 11400, 12000, "DEL"), ("chr1", 13501, 13620, "TRA"), ("chrM", 6000, 8000, "INV"))
+    val expectedVariants = List(
+      ("chr1", 2390, 2400, "ITX"), // delly's duplication has shifted the variant a bit to the right
+      ("chr1", 11400, 12000, "DEL"),
+      ("chr1", 13501, 13620, "TRA"),
+      ("chrM", 6000, 8000, "INV")
+    )
 
     for (expected <- expectedVariants) {
-      val variantFound = reader.exists(predicted =>
-        expected._1 == predicted.getContig &&
-          expected._4 == predicted.getAttributeAsString("SVTYPE", null) && (
+      val variantFound = reader.exists(
+        predicted =>
+          expected._1 == predicted.getContig &&
+            expected._4 == predicted.getAttributeAsString("SVTYPE", null) && (
             expected._2 <= predicted.getStart &&
-            expected._3 > predicted.getStart ||
-            expected._2 > predicted.getStart &&
-            expected._2 < predicted.getEnd
-          ))
+              expected._3 > predicted.getStart ||
+              expected._2 > predicted.getStart &&
+                expected._2 < predicted.getEnd
+        ))
 
-      assert(variantFound, s"Expected variant is missing from the merged result (${expected._1}:${expected._2}-${expected._3}, type: ${expected._4})")
+      assert(
+        variantFound,
+        s"Expected variant is missing from the merged result (${expected._1}:${expected._2}-${expected._3}, type: ${expected._4})")
     }
 
     reader.close()
@@ -43,7 +50,8 @@ class ShivaSvCallingTest extends ShivaSvCallingSingleMethod {
     val resultVcfFile = new File(outputDir, s"$svCaller/wgs1/wgs1.$svCaller.vcf.gz")
     if (resultVcfFile.exists) {
       val reader = new VCFFileReader(resultVcfFile, false)
-      assert(!reader.nonEmpty, s"$svCaller finds structural variants from a sample that doesn't have any.")
+      assert(!reader.nonEmpty,
+             s"$svCaller finds structural variants from a sample that doesn't have any.")
       reader.close()
     }
   }
