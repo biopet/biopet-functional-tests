@@ -2,11 +2,15 @@ package nl.lumc.sasc.biopet.test
 
 import java.io.File
 
-import org.testng.annotations.{ DataProvider, Test }
+import com.github.fge.jsonschema.main.{ JsonSchema, JsonSchemaFactory }
+import nl.lumc.sasc.biopet.utils.ConfigUtils
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb.Implicts._
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb._
+import org.json4s.jackson.JsonMethods.{ asJsonNode, parse }
+import org.testng.annotations.{ DataProvider, Test }
 
+import scala.collection.JavaConverters._
 import scala.collection.mutable.{ ListBuffer, Map => MutMap }
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -238,6 +242,39 @@ trait SummaryPipeline extends PipelineSuccess {
     val exesDb = Await.result(summaryDb.getExecutables(runId = Some(runId), toolName = Some(exe)), Duration.Inf)
     exesDb shouldBe empty
   }
+
+  @DataProvider(name = "moduleSchemas")
+  def moduleSchemasProvider() = {
+    val modulesUsed = Await.result(summaryDb.getModules(runId = Some(this.runId)), Duration.Inf)
+    var moduleSchemas: Array[Array[Object]] = Array()
+    for (module <- modulesUsed) {
+      SummaryPipeline.moduleSchemas.find(schema => schema._1.findFirstIn(module.name).nonEmpty) match {
+        case Some(schema) => moduleSchemas :+= Array(module.name, schema._2)
+        case _            =>
+      }
+    }
+    moduleSchemas
+  }
+
+  // the test is needed as errors in data provider methods are ignored and don't get reported as failures in test results,
+  // the next test, 'testModuleStats()', would otherwise be simply skipped when it's data provider fails
+  @Test(dependsOnGroups = Array("summary"))
+  def testModuleSchemas(): Unit = {
+    try {
+      moduleSchemasProvider()
+    } catch {
+      case e: Throwable => fail("Error loading Json schemas for validating summary's Stats table", e)
+    }
+  }
+
+  @Test(dataProvider = "moduleSchemas", dependsOnGroups = Array("summary"))
+  def testModuleStats(moduleName: String, schema: JsonSchema): Unit = {
+    val stats = Await.result(summaryDb.getStats(runId = Some(this.runId), module = Some(ModuleName(moduleName))), Duration.Inf)
+    for (record <- stats) {
+      assert(schema.validate(asJsonNode(parse(record.content)), true).iterator().asScala.toSeq.isEmpty, s"Json schema check failed for statistics from module '$moduleName' (sampleId-${record.sampleId}, libraryId-${record.library})")
+    }
+  }
+
 }
 
 case class SummaryGroup(pipeline: String, module: Option[String] = None,
@@ -247,7 +284,17 @@ case class Executable(name: String, version: Option[Regex] = None)
 
 object SummaryPipeline {
 
-  //  /** Factory for JSON schemas */
-  //  protected val schemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
-  // TODO: This will be reused when we start work on the module schema checks
+  val moduleSchemas: Map[Regex, JsonSchema] = {
+
+    val schemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
+    val moduleSchemas = ClassLoader.getSystemResource("nl/lumc/sasc/biopet/test/module_schemas.yml").toURI()
+
+    ConfigUtils.fileToConfigMap(new File(moduleSchemas)).map({
+      case (moduleName, schemaFile) => {
+        val schemaURI = ClassLoader.getSystemResource(schemaFile.toString).toURI().toString
+        s"^$moduleName$$".r -> schemaFactory.getJsonSchema(schemaURI)
+      }
+    })
+  }
+
 }
