@@ -20,35 +20,39 @@ trait Mgm4459735_3_050Lib2 extends Samples {
 
 object Mgm4459735_3_050 {
   val sampleName = "Mgm4459735_3_050"
-  val lib1ConfigMap = Map("samples" ->
-    Map(s"$sampleName" ->
-      Map("libraries" ->
-        Map("lib1" ->
+  val lib1ConfigMap = Map(
+    "samples" ->
+      Map(
+        s"$sampleName" ->
           Map(
-            "R1" -> Biopet.fixtureFile("samples", sampleName, "mgm4459735.3.050.R1.fq.gz").getAbsolutePath,
-            "R1_md5" -> "2cae13e5013a9ed3d832d9b996ae36cd",
-            "R2" -> Biopet.fixtureFile("samples", sampleName, "mgm4459735.3.050.R2.fq.gz").getAbsolutePath,
-            "R2_md5" -> "f2b539f5c8a967c8028df88c9d010f3e"
-          )
-        )
-      )
-    )
-  )
+            "libraries" ->
+              Map("lib1" ->
+                Map(
+                  "R1" -> Biopet
+                    .fixtureFile("samples", sampleName, "mgm4459735.3.050.R1.fq.gz")
+                    .getAbsolutePath,
+                  "R1_md5" -> "2cae13e5013a9ed3d832d9b996ae36cd",
+                  "R2" -> Biopet
+                    .fixtureFile("samples", sampleName, "mgm4459735.3.050.R2.fq.gz")
+                    .getAbsolutePath,
+                  "R2_md5" -> "f2b539f5c8a967c8028df88c9d010f3e"
+                )))))
   val lib1ConfigFile = createTempConfig(lib1ConfigMap, s"$sampleName-lib1")
 
-  val lib2ConfigMap = Map("samples" ->
-    Map(s"$sampleName" ->
-      Map("libraries" ->
-        Map("lib2" ->
+  val lib2ConfigMap = Map(
+    "samples" ->
+      Map(
+        s"$sampleName" ->
           Map(
-            "R1" -> Biopet.fixtureFile("samples", sampleName, "mgm4459735.3.050.R1.fq.gz").getAbsolutePath,
-            "R1_md5" -> "2cae13e5013a9ed3d832d9b996ae36cd"
-          )
-        )
-      )
-    )
-  )
+            "libraries" ->
+              Map(
+                "lib2" ->
+                  Map(
+                    "R1" -> Biopet
+                      .fixtureFile("samples", sampleName, "mgm4459735.3.050.R1.fq.gz")
+                      .getAbsolutePath,
+                    "R1_md5" -> "2cae13e5013a9ed3d832d9b996ae36cd"
+                  )))))
   val lib2ConfigFile = createTempConfig(lib2ConfigMap, s"$sampleName-lib2")
 
 }
-

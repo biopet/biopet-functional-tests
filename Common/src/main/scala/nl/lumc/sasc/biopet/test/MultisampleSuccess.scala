@@ -3,14 +3,14 @@ package nl.lumc.sasc.biopet.test
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.samples.Samples
-import org.testng.annotations.{ DataProvider, Test }
+import org.testng.annotations.{DataProvider, Test}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 /**
- * Created by pjvan_thof on 10/19/15.
- */
+  * Created by pjvan_thof on 10/19/15.
+  */
 trait MultisampleSuccess extends SummaryPipeline with Samples with PipelineSuccess with Report {
 
   def shouldHaveLibs: Boolean = true
@@ -19,7 +19,8 @@ trait MultisampleSuccess extends SummaryPipeline with Samples with PipelineSucce
   def sampleNames: Array[Array[String]] = samples.keySet.map(Array(_)).toArray
 
   @DataProvider(name = "libraries")
-  def libraryNames: Array[Array[String]] = samples.flatMap(sample => sample._2.map(Array(sample._1, _))).toArray
+  def libraryNames: Array[Array[String]] =
+    samples.flatMap(sample => sample._2.map(Array(sample._1, _))).toArray
 
   def sampleDir(sampleId: String) = new File(outputDir, "samples" + File.separator + sampleId)
 
@@ -31,10 +32,11 @@ trait MultisampleSuccess extends SummaryPipeline with Samples with PipelineSucce
   }
 
   @Test(dataProvider = "libraries")
-  def testLibDir(sampleId: String, libId: String): Unit = withClue(s"sample = $sampleId; library = $libId") {
-    if (shouldHaveLibs) libraryDir(sampleId, libId) should exist
-    else libraryDir(sampleId, libId) should not be exist
-  }
+  def testLibDir(sampleId: String, libId: String): Unit =
+    withClue(s"sample = $sampleId; library = $libId") {
+      if (shouldHaveLibs) libraryDir(sampleId, libId) should exist
+      else libraryDir(sampleId, libId) should not be exist
+    }
 
   @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
   def testSampleSummary(sampleId: String): Unit = withClue(s"sample = $sampleId") {
@@ -43,10 +45,11 @@ trait MultisampleSuccess extends SummaryPipeline with Samples with PipelineSucce
   }
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
-  def testLibrarySummary(sampleId: String, libId: String): Unit = withClue(s"sample = $sampleId; library = $libId") {
-    val lib = Await.result(summaryDb.getLibraries(name = libId), Duration.Inf).headOption
-    assert(lib.isDefined, s"Library $sampleId -> $libId does not exist in summary")
-  }
+  def testLibrarySummary(sampleId: String, libId: String): Unit =
+    withClue(s"sample = $sampleId; library = $libId") {
+      val lib = Await.result(summaryDb.getLibraries(name = libId), Duration.Inf).headOption
+      assert(lib.isDefined, s"Library $sampleId -> $libId does not exist in summary")
+    }
 
   samples.foreach {
     case (sample, libraries) =>

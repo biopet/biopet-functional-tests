@@ -1,22 +1,22 @@
 package nl.lumc.sasc.biopet.test
 
-import java.io.{ File, FileInputStream, FileReader, PrintWriter }
+import java.io.{File, FileInputStream, FileReader, PrintWriter}
 import java.util.zip.GZIPInputStream
 
 import nl.lumc.sasc.biopet.utils.ConfigUtils
 import org.apache.commons.codec.digest.DigestUtils
 
 /**
- * Created by pjvan_thof on 10/2/15.
- */
+  * Created by pjvan_thof on 10/2/15.
+  */
 package object utils {
 
   /**
-   * This method will create a temp config file to give as argument to Biopet
-   * @param map Content of config file
-   * @param name name prefix of temp file, defaults to "config"
-   * @return
-   */
+    * This method will create a temp config file to give as argument to Biopet
+    * @param map Content of config file
+    * @param name name prefix of temp file, defaults to "config"
+    * @return
+    */
   def createTempConfig(map: Map[String, Any], name: String = "config"): File = {
     val file = File.createTempFile(s"$name.", ".json")
     val writer = new PrintWriter(file)
@@ -60,12 +60,12 @@ package object utils {
   }
 
   /**
-   *
-   * Taken from http://alvinalexander.com/scala/scala-pearson-correlation-score-algorithm-programming-collective-intelligence
-   * @param a List containing Doubles
-   * @param b List containing Doubles
-   * @return
-   */
+    *
+    * Taken from http://alvinalexander.com/scala/scala-pearson-correlation-score-algorithm-programming-collective-intelligence
+    * @param a List containing Doubles
+    * @param b List containing Doubles
+    * @return
+    */
   def pearsonScore(a: Iterator[Double], b: Iterator[Double]): Option[Double] = {
 
     var n = 0
@@ -89,7 +89,8 @@ package object utils {
     //  // calculate the pearson score
     val numerator = pSum - (aSum * bSum / n)
     val denominator = Math.sqrt((aSumSq - (aSum * aSum) / n) * (bSumSq - (bSum * bSum) / n))
-    if (denominator == 0 || denominator.isInfinity || denominator.isNaN) None else Some(numerator / denominator)
+    if (denominator == 0 || denominator.isInfinity || denominator.isNaN) None
+    else Some(numerator / denominator)
   }
 
 }

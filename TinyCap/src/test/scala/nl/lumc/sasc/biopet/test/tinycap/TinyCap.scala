@@ -5,16 +5,17 @@ import java.io.File
 import nl.lumc.sasc.biopet.test.MultisampleMapping
 import nl.lumc.sasc.biopet.test.Pipeline._
 import nl.lumc.sasc.biopet.test.aligners.Aligner
-import nl.lumc.sasc.biopet.test.annotations.{ GffAnnotation, RefflatAnnotation, GtfAnnotation }
+import nl.lumc.sasc.biopet.test.annotations.{GffAnnotation, RefflatAnnotation, GtfAnnotation}
 import nl.lumc.sasc.biopet.test.references.Reference
 
-trait TinyCap extends MultisampleMapping
-  with GtfAnnotation
-  with GffAnnotation
-  with RefflatAnnotation
-  with Reference
-  with Aligner
-  with ExpressionMeasures {
+trait TinyCap
+    extends MultisampleMapping
+    with GtfAnnotation
+    with GffAnnotation
+    with RefflatAnnotation
+    with Reference
+    with Aligner
+    with ExpressionMeasures {
 
   override def defaultWgsMetrics = false
 
@@ -26,7 +27,8 @@ trait TinyCap extends MultisampleMapping
 
   override def configs = super.configs ++ expressionMeasuresConfig.toList
 
-  override def args = super.args ++ cmdConfig("species", referenceSpecies) ++
-    cmdConfig("reference_fasta", referenceFasta) ++
-    cmdConfig("reference_name", referenceName)
+  override def args =
+    super.args ++ cmdConfig("species", referenceSpecies) ++
+      cmdConfig("reference_fasta", referenceFasta) ++
+      cmdConfig("reference_name", referenceName)
 }

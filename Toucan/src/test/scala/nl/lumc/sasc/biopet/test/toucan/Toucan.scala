@@ -7,8 +7,8 @@ import nl.lumc.sasc.biopet.test.Pipeline._
 import nl.lumc.sasc.biopet.test.references.Reference
 
 /**
- * Created by ahbbollen on 22-10-15.
- */
+  * Created by ahbbollen on 22-10-15.
+  */
 trait Toucan extends Pipeline with Reference {
 
   def pipelineName = "toucan"
@@ -27,11 +27,12 @@ trait Toucan extends Pipeline with Reference {
 
   def vepVersion: Option[String] = None
 
-  override def args = super.args ++
-    cmdArg("-Input", inputVcf) ++
-    cmdConfig("enable_scatter", enableScatter) ++
-    cmdConfig("gonl_vcf", goNLFile) ++
-    cmdConfig("exac_vcf", exacFile) ++
-    cmdConfig("mode", normalizerMode) ++
-    cmdConfig("vep_version", vepVersion)
+  override def args =
+    super.args ++
+      cmdArg("-Input", inputVcf) ++
+      cmdConfig("enable_scatter", enableScatter) ++
+      cmdConfig("gonl_vcf", goNLFile) ++
+      cmdConfig("exac_vcf", exacFile) ++
+      cmdConfig("mode", normalizerMode) ++
+      cmdConfig("vep_version", vepVersion)
 }

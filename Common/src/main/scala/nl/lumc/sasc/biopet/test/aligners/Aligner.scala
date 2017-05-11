@@ -7,8 +7,8 @@ import nl.lumc.sasc.biopet.test.Pipeline._
 import nl.lumc.sasc.biopet.test.references.Reference
 
 /**
- * Created by pjvanthof on 14/11/15.
- */
+  * Created by pjvanthof on 14/11/15.
+  */
 trait Aligner extends Pipeline with Reference {
   def aligner: Option[String]
   override def args = super.args ++ cmdConfig("aligner", aligner)
@@ -48,7 +48,8 @@ trait Gsnap extends Aligner {
   def aligner = Some("gsnap")
   def gsnapDir: Option[File]
   def gsnapDb: Option[String]
-  override def args = super.args ++ cmdConfig("gsnap:dir", gsnapDir) ++ cmdConfig("gsnap:db", gsnapDb)
+  override def args =
+    super.args ++ cmdConfig("gsnap:dir", gsnapDir) ++ cmdConfig("gsnap:db", gsnapDb)
 }
 
 trait Tophat extends Aligner {

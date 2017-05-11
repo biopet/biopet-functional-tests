@@ -17,36 +17,41 @@ trait Rna1Lib2 extends Samples {
 
 object Rna1 {
   val sampleName = "rna1"
-  val lib1ConfigMap = Map("samples" ->
-    Map(s"$sampleName" ->
-      Map("libraries" ->
-        Map("lib1" ->
+  val lib1ConfigMap = Map(
+    "samples" ->
+      Map(
+        s"$sampleName" ->
           Map(
-            "R1" -> Biopet.fixtureFile("samples", sampleName, "S17_L1_1.fq.gz").getAbsolutePath,
-            "R1_md5" -> "c91000229c5847ee794d715b632c4d58",
-            "R2" -> Biopet.fixtureFile("samples", sampleName, "S17_L1_2.fq.gz").getAbsolutePath,
-            "R2_md5" -> "504bd3a1ba828ce0485cd6b2a7ed2051"
-          )
-        )
-      )
-    )
-  )
+            "libraries" ->
+              Map("lib1" ->
+                Map(
+                  "R1" -> Biopet
+                    .fixtureFile("samples", sampleName, "S17_L1_1.fq.gz")
+                    .getAbsolutePath,
+                  "R1_md5" -> "c91000229c5847ee794d715b632c4d58",
+                  "R2" -> Biopet
+                    .fixtureFile("samples", sampleName, "S17_L1_2.fq.gz")
+                    .getAbsolutePath,
+                  "R2_md5" -> "504bd3a1ba828ce0485cd6b2a7ed2051"
+                )))))
   val lib1ConfigFile = createTempConfig(lib1ConfigMap, s"$sampleName-lib1")
 
-  val lib2ConfigMap = Map("samples" ->
-    Map(s"$sampleName" ->
-      Map("libraries" ->
-        Map("lib2" ->
+  val lib2ConfigMap = Map(
+    "samples" ->
+      Map(
+        s"$sampleName" ->
           Map(
-            "R1" -> Biopet.fixtureFile("samples", s"$sampleName", "S27_L1_1.fq.gz").getAbsolutePath,
-            "R1_md5" -> "6e35b3f17daefec92cd439423bc3d3d8",
-            "R2" -> Biopet.fixtureFile("samples", s"$sampleName", "S27_L1_2.fq.gz").getAbsolutePath,
-            "R2_md5" -> "f2b34fc0b9a0157741a37eb5c81ce0ba"
-          )
-        )
-      )
-    )
-  )
+            "libraries" ->
+              Map("lib2" ->
+                Map(
+                  "R1" -> Biopet
+                    .fixtureFile("samples", s"$sampleName", "S27_L1_1.fq.gz")
+                    .getAbsolutePath,
+                  "R1_md5" -> "6e35b3f17daefec92cd439423bc3d3d8",
+                  "R2" -> Biopet
+                    .fixtureFile("samples", s"$sampleName", "S27_L1_2.fq.gz")
+                    .getAbsolutePath,
+                  "R2_md5" -> "f2b34fc0b9a0157741a37eb5c81ce0ba"
+                )))))
   val lib2ConfigFile = createTempConfig(lib2ConfigMap, s"$sampleName-lib2")
 }
-

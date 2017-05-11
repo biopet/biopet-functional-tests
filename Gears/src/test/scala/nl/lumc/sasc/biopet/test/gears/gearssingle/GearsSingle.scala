@@ -6,8 +6,8 @@ import nl.lumc.sasc.biopet.test.Pipeline
 import nl.lumc.sasc.biopet.test.Pipeline._
 
 /**
- * Created by waiyileung on 05-10-15.
- */
+  * Created by waiyileung on 05-10-15.
+  */
 trait GearsSingle extends Pipeline {
   def pipelineName = "gearssingle"
 
@@ -25,8 +25,9 @@ trait GearsSingle extends Pipeline {
 
   def outputName: Option[String] = None
 
-  override def args = cmdArg("-sample", sampleId) ++ cmdArg("-library", libId) ++
-    cmdArg("-R1", r1) ++ cmdArg("-R2", r2) ++
-    cmdArg("-bam", bam) ++ cmdArg("--outputName", outputName)
+  override def args =
+    cmdArg("-sample", sampleId) ++ cmdArg("-library", libId) ++
+      cmdArg("-R1", r1) ++ cmdArg("-R2", r2) ++
+      cmdArg("-bam", bam) ++ cmdArg("--outputName", outputName)
 
 }
