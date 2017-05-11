@@ -16,7 +16,7 @@ import scala.collection.JavaConversions._
   */
 trait Shiva extends MultisampleMapping with Reference with Aligner with Variantcallers {
 
-  override def pipeline.maxThreads = Some(8)
+  override def maxThreads = Some(6)
 
   def pipelineName = "shiva"
 
