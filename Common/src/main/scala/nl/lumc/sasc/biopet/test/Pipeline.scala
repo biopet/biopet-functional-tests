@@ -70,6 +70,8 @@ trait Pipeline extends TestNGSuite with Matchers {
   /** This is default true, when override to false the pipeline will only execute a dry run */
   def run = true
 
+  def maxThreads: Option[Int] = if (functionalTest) None else Some(1)
+
   @BeforeClass
   def runPipeline(): Unit = {
     if (run && functionalTest && !Biopet.functionalTests) throw new SkipException("Functional tests are disabled")
@@ -176,6 +178,7 @@ object Pipeline {
       cmdCondition("-keepIntermediates", pipeline.keepIntermediates) ++
       cmdCondition("-run", pipeline.run) ++
       cmdConfig("output_dir", pipeline.outputDirArg) ++
+      cmdConfig("max_threads", pipeline.maxThreads) ++
       pipeline.configs.flatMap(x => Seq("-config", x.getAbsolutePath)) ++
       pipeline.args
     if (!pipeline.outputDir.exists()) pipeline.outputDir.mkdirs()
