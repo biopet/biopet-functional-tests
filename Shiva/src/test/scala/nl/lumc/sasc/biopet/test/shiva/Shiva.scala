@@ -16,6 +16,8 @@ import scala.collection.JavaConversions._
   */
 trait Shiva extends MultisampleMapping with Reference with Aligner with Variantcallers {
 
+  override def pipeline.maxThreads = Some(8)
+
   def pipelineName = "shiva"
 
   def summaryFile = new File(outputDir, s"Shiva.summary.json")
