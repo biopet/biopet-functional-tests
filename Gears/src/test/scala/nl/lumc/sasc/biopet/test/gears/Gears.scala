@@ -11,6 +11,8 @@ import nl.lumc.sasc.biopet.test.Pipeline._
 trait Gears extends Pipeline {
   def pipelineName = "gears"
 
+  override def maxThreads = Some(3)
+
   def summaryFile = new File(outputDir, s"gears.summary.json")
 
   override def functionalTest =
