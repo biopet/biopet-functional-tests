@@ -14,6 +14,7 @@ import scala.math._
   */
 trait Mapping extends Pipeline with Reference with Aligner {
 
+  override def maxThreads = Some(6)
   def pipelineName = "mapping"
 
   def sampleId = Option("sampleName")
