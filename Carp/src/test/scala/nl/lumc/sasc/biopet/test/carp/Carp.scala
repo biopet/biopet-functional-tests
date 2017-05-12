@@ -12,6 +12,8 @@ import nl.lumc.sasc.biopet.test.utils._
   */
 trait Carp extends MultisampleMapping with Reference with Aligner {
 
+  override def maxThreads = Some(2)
+
   def pipelineName = "carp"
 
   def summaryFile = new File(outputDir, s"Carp.summary.json")
