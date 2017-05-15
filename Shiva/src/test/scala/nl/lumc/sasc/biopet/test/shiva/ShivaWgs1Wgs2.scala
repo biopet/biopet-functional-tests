@@ -74,3 +74,7 @@ class Wgs1Wgs2NormalizeDecomposeTest extends ShivaWgs1Wgs2 with Unifiedgenotyper
   override def executeVtNormalize = Some(true)
   override def executeVtDecompose = Some(true)
 }
+
+class Wgs1Wgs2SvCallingTest extends ShivaWgs1Wgs2 with Unifiedgenotyper {
+  override def svCalling = Some(true)
+}
