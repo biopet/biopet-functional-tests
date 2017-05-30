@@ -69,3 +69,10 @@ class ToucanDmelanogasterBDGP6Test extends ToucanSuccess with DmelanogasterBDGP6
     Some(Biopet.fixtureFile("toucan", "two_vars_each_chrom_human.vcf.gz"))
   override def functionalTest = false
 }
+
+class ToucanPabeliiP_pygmaeus_2_0_2Test extends ToucanSuccess with PabeliiP_pygmaeus_2_0_2 {
+  override def vepVersion = Some("88")
+  override def inputVcf =
+    Some(Biopet.fixtureFile("toucan", "two_vars_each_chrom_human.vcf.gz"))
+  override def functionalTest = false
+}
