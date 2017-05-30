@@ -31,7 +31,7 @@ class ToucanHsapiensGRCh37ScatterTest extends ToucanSuccess with HsapiensGRCh37 
 }
 
 class ToucanHsapiensGRCh38Test extends ToucanSuccess with HsapiensGRCh38 {
-  override def vepVersion = Some("86")
+  override def vepVersion = Some("88")
   override def inputVcf =
     Some(Biopet.fixtureFile("toucan" + File.separator + "two_vars_each_chrom_human.vcf.gz"))
   override def functionalTest = false
