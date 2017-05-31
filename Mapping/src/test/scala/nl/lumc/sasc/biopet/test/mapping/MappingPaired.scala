@@ -202,7 +202,10 @@ class MappingPairedChunkMetricsTest extends MappingPaired with MappingStatsBwaMe
 
 class MappingPairedBwaMemTest extends MappingPaired with MappingStatsBwaMem
 
-class MappingPairedBowtieTest extends MappingPaired with Bowtie
+class MappingPairedBowtieTest extends MappingPaired with Bowtie {
+
+  override def args = super.args ++ cmdConfig("maxins", 700)
+}
 
 class MappingPairedBowtie2Test extends MappingPaired with Bowtie2
 
