@@ -8,7 +8,7 @@ node('local') {
 
         stage('Checkout') {
             checkout scm
-            sh 'git submodule update --init --recursive'
+            sh 'git submodule update --init --remote'
         }
 
         stage('Build (no testing)') {
