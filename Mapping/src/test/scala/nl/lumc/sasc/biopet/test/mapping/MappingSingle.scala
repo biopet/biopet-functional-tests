@@ -34,7 +34,7 @@ trait MappingSingle extends MappingSuccess with TestReference {
 
   override def configs = {
     val programs: List[String] = CollectMultipleMetrics.Programs.values.toList.collect({
-      case p if (p.toString != CollectMultipleMetrics.Programs.CollectInsertSizeMetrics) => p.toString
+      case p if (p != CollectMultipleMetrics.Programs.CollectInsertSizeMetrics) => p.toString
     })
 
     super.configs.::(createTempConfig(Map("metrics_programs" -> programs), "configForSE"))
