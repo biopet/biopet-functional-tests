@@ -17,6 +17,11 @@
             <artifactId>Common</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <artifactId>BiopetExtensions</artifactId>
+            <groupId>nl.lumc.sasc</groupId>
+            <version>0.9.0</version>
+        </dependency>
     </dependencies>
 
 </project>

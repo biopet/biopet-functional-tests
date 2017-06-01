@@ -2,9 +2,11 @@ package nl.lumc.sasc.biopet.test.mapping
 
 import java.io.File
 
+import nl.lumc.sasc.biopet.extensions.picard.CollectMultipleMetrics
 import nl.lumc.sasc.biopet.test.aligners._
 import nl.lumc.sasc.biopet.test.references.TestReference
 import nl.lumc.sasc.biopet.test.Biopet
+import nl.lumc.sasc.biopet.test.utils.createTempConfig
 
 /**
   * Created by pjvan_thof on 10/7/15.
@@ -29,6 +31,14 @@ trait MappingSingle extends MappingSuccess with TestReference {
                "bases" :: "num_total" :: Nil,
                _ shouldBe 1000000,
                skipFlexiprep != Some(true))
+
+  override def configs = {
+    val programs: List[String] = CollectMultipleMetrics.Programs.values.toList.collect({
+      case p if (p.toString != CollectMultipleMetrics.Programs.CollectInsertSizeMetrics) => p.toString
+    })
+
+    super.configs.::(createTempConfig(Map("metrics_programs" -> programs), "configForSE"))
+  }
 }
 
 class MappingSingleDefaultTest extends MappingSingle with BwaMem
