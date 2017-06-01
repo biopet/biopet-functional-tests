@@ -2,6 +2,7 @@ package nl.lumc.sasc.biopet.test.mapping
 
 import java.io.File
 
+import nl.lumc.sasc.biopet.extensions.picard.CollectMultipleMetrics
 import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.Pipeline.cmdConfig
 import nl.lumc.sasc.biopet.test.aligners._
@@ -36,6 +37,9 @@ trait MappingPaired extends MappingSingle {
                "bases" :: "num_total" :: Nil,
                _ shouldBe 1000000,
                skipFlexiprep != Some(true))
+
+  override def configs = super.configs.filterNot(file => file.getName.startsWith("configForSE"))
+
 }
 
 trait MappingStatsBwaMem extends MappingPaired with BwaMem {
