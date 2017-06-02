@@ -141,3 +141,13 @@ trait VarscanCnsSinglesample extends Variantcallers {
     case _ =>
   }
 }
+
+trait MuTect2 extends Variantcallers {
+
+  override def variantcallers = "mutect2" :: super.variantcallers
+
+  this match {
+    case s: SummaryPipeline => s.addExecutable(Executable("mutect2", Some(""".+""".r)))
+    case _ =>
+  }
+}
