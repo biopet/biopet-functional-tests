@@ -13,12 +13,16 @@ import org.testng.annotations.DataProvider
 trait ValidateAnnotations extends Pipeline {
 
   val genomes: Map[String, List[String]] = {
-    if (Biopet.speciesDir.isEmpty) throw new SkipException("species.dir is not defined, skipping this test")
+    if (Biopet.speciesDir.isEmpty)
+      throw new SkipException("species.dir is not defined, skipping this test")
     Biopet.speciesDir.get
       .list()
       .filter(!_.startsWith("."))
       .map { species =>
-        species -> new File(Biopet.speciesDir.get, species).list().filter(!_.startsWith(".")).toList
+        species -> new File(Biopet.speciesDir.get, species)
+          .list()
+          .filter(!_.startsWith("."))
+          .toList
       }
       .toMap
   }
