@@ -10,9 +10,9 @@ class FlexiprepSingleDownSampleTest extends FlexiprepSingle {
 
   addStatsTest(seqstatR1QcGroup,
                "bases" :: "num_total" :: Nil,
-               _.asInstanceOf[Int] should equal(40922 +- 4092))
+               _.asInstanceOf[Long].toInt should equal(40922 +- 4092))
   addStatsTest(seqstatR1QcGroup,
                "reads" :: "num_total" :: Nil,
-               _.asInstanceOf[Int] should equal(458 +- 45))
+               _.asInstanceOf[Long].toInt should equal(458 +- 45))
 
 }

@@ -8,15 +8,15 @@ class FlexiprepPairedDownSampleTest extends FlexiprepPaired {
 
   addStatsTest(seqstatR1QcGroup,
                "bases" :: "num_total" :: Nil,
-               _.asInstanceOf[Int] should equal(18736 +- 1873))
+               _.asInstanceOf[Long].toInt should equal(18736 +- 1873))
   addStatsTest(seqstatR1QcGroup,
                "reads" :: "num_total" :: Nil,
-               _.asInstanceOf[Int] should equal(209 +- 20))
+               _.asInstanceOf[Long].toInt should equal(209 +- 20))
   addStatsTest(seqstatR2QcGroup,
                "bases" :: "num_total" :: Nil,
-               _.asInstanceOf[Int] should equal(13341 +- 1334))
+               _.asInstanceOf[Long].toInt should equal(13341 +- 1334))
   addStatsTest(seqstatR2QcGroup,
                "reads" :: "num_total" :: Nil,
-               _.asInstanceOf[Int] should equal(209 +- 20))
+               _.asInstanceOf[Long].toInt should equal(209 +- 20))
 
 }
