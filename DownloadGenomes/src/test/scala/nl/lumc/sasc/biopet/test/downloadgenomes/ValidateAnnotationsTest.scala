@@ -31,4 +31,10 @@ class ValidateAnnotationsTest extends ValidateAnnotations with PipelineSuccess {
       testLogMustNotHave(s"Genome '$species-$genomeName is missing dbsnp files".r)
     }
 
+  @Test(dataProvider = "genomesProvider")
+  def testFeatureDir(species: String, genomeName: String): Unit =
+    withClue(s"$species-$genomeName") {
+      testLogMustNotHave(
+        s"For $species-$genomeName the feature dir does exist but is not accessible".r)
+    }
 }
