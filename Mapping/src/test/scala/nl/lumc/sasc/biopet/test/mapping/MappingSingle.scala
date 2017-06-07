@@ -2,11 +2,9 @@ package nl.lumc.sasc.biopet.test.mapping
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.extensions.picard.CollectMultipleMetrics
 import nl.lumc.sasc.biopet.test.aligners._
 import nl.lumc.sasc.biopet.test.references.TestReference
 import nl.lumc.sasc.biopet.test.Biopet
-import nl.lumc.sasc.biopet.test.utils.createTempConfig
 
 /**
   * Created by pjvan_thof on 10/7/15.

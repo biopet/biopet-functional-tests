@@ -2,7 +2,6 @@ package nl.lumc.sasc.biopet.test.mapping
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.extensions.picard.CollectMultipleMetrics
 import nl.lumc.sasc.biopet.test.Biopet
 import nl.lumc.sasc.biopet.test.Pipeline.cmdConfig
 import nl.lumc.sasc.biopet.test.aligners._
