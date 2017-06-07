@@ -35,12 +35,15 @@ trait FlexiprepRun extends Pipeline {
 
   def keepQcFastqFiles: Option[Boolean] = None
 
+  def downSampleFraction: Option[Double] = None
+
   override def args =
     super.args ++ Seq("-sample", sampleId, "-library", libId) ++
       cmdArg("-R1", r1) ++ cmdArg("-R2", r2) ++
       cmdConfig("keepQcFastqFiles", keepQcFastqFiles) ++
       cmdConfig("skip_clip", skipClip) ++
-      cmdConfig("skip_trim", skipTrim)
+      cmdConfig("skip_trim", skipTrim) ++
+      cmdConfig("downsample_fraction", downSampleFraction)
 }
 
 /** Trait representing a successful Flexiprep test group. */
