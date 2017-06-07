@@ -38,8 +38,6 @@ trait MappingPaired extends MappingSingle {
                _ shouldBe 1000000,
                skipFlexiprep != Some(true))
 
-  override def configs = super.configs.filterNot(file => file.getName.startsWith("configForSE"))
-
 }
 
 trait MappingStatsBwaMem extends MappingPaired with BwaMem {
