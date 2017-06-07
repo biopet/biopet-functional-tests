@@ -37,4 +37,11 @@ class ValidateAnnotationsTest extends ValidateAnnotations with PipelineSuccess {
       testLogMustNotHave(
         s"For $species-$genomeName the feature dir does exist but is not accessible".r)
     }
+
+  @Test(dataProvider = "genomesProvider")
+  def testSourceDir(species: String, genomeName: String): Unit =
+    withClue(s"$species-$genomeName") {
+      testLogMustNotHave(
+        s"For $species-$genomeName a source dir does exist but is not accessible".r)
+    }
 }
