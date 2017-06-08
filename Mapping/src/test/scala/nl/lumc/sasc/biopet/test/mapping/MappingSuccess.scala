@@ -80,8 +80,8 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   addSettingsTest(mappingGroup, "skip_metrics" :: Nil, _ shouldBe skipMetrics.getOrElse(false))
   addSettingsTest(mappingGroup, "skip_flexiprep" :: Nil, _ shouldBe skipFlexiprep.getOrElse(false))
   addSettingsTest(mappingGroup,
-                  "skip_markduplicates" :: Nil,
-                  _ shouldBe skipMarkDuplicates.getOrElse(false))
+                  "duplicate_method" :: Nil,
+                  _ shouldBe (if (skipMarkDuplicates.getOrElse(false)) "None" else "Picard"))
   addSettingsTest(mappingGroup, "aligner" :: Nil, _ shouldBe aligner.getOrElse("bwa-mem"))
 
   @Test(dependsOnGroups = Array("summary"))

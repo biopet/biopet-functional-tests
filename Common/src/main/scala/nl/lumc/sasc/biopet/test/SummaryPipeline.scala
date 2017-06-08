@@ -165,7 +165,7 @@ trait SummaryPipeline extends PipelineSuccess {
         try {
           withClue(s"group: $summaryGroup, path: ${x._1}") {
             val value = results(x._1.mkString("->"))
-            require(value.isDefined, "Value does not exist")
+            require(value.isDefined, s"Value does not exist, path: ${x._1}")
             f(value.get)
           }
         } catch {
