@@ -3,6 +3,7 @@ package nl.lumc.sasc.biopet.test.mapping
 import java.io.File
 
 import nl.lumc.sasc.biopet.test.Biopet
+import nl.lumc.sasc.biopet.test.Pipeline.cmdConfig
 import nl.lumc.sasc.biopet.test.aligners._
 import nl.lumc.sasc.biopet.test.utils._
 import org.testng.annotations.Test
@@ -35,6 +36,7 @@ trait MappingPaired extends MappingSingle {
                "bases" :: "num_total" :: Nil,
                _ shouldBe 1000000,
                skipFlexiprep != Some(true))
+
 }
 
 trait MappingStatsBwaMem extends MappingPaired with BwaMem {
@@ -201,12 +203,18 @@ class MappingPairedChunkMetricsTest extends MappingPaired with MappingStatsBwaMe
 
 class MappingPairedBwaMemTest extends MappingPaired with MappingStatsBwaMem
 
-class MappingPairedBowtieTest extends MappingPaired with Bowtie
+class MappingPairedBowtieTest extends MappingPaired with Bowtie {
+
+  override def args = super.args ++ cmdConfig("maxins", 700)
+}
 
 class MappingPairedBowtie2Test extends MappingPaired with Bowtie2
 
 class MappingPairedGsnapTest extends MappingPaired with Gsnap
 
-class MappingPairedTophatTest extends MappingPaired with Tophat
+class MappingPairedTophatTest extends MappingPaired with Tophat {
+
+  override def args = super.args ++ cmdConfig("mate_inner_dist", 300)
+}
 
 class MappingPairedHisat2Test extends MappingPaired with Hisat2
