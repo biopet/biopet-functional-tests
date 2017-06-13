@@ -37,7 +37,7 @@ trait FlexiprepRun extends Pipeline {
 
   def downSampleFraction: Option[Double] = None
 
-  override def args =
+  override def args: Seq[String] =
     super.args ++ Seq("-sample", sampleId, "-library", libId) ++
       cmdArg("-R1", r1) ++ cmdArg("-R2", r2) ++
       cmdConfig("keepQcFastqFiles", keepQcFastqFiles) ++

@@ -5,6 +5,7 @@ import nl.lumc.sasc.biopet.test.references.TestReference
 import nl.lumc.sasc.biopet.test.samples.{Wgs1, Wgs2}
 import nl.lumc.sasc.biopet.test.shiva.variantcallers._
 import nl.lumc.sasc.biopet.test.Biopet
+import nl.lumc.sasc.biopet.test.Pipeline.cmdConfig
 
 /**
   * Created by pjvan_thof on 10/23/15.
@@ -77,4 +78,7 @@ class Wgs1Wgs2NormalizeDecomposeTest extends ShivaWgs1Wgs2 with Unifiedgenotyper
 
 class Wgs1Wgs2SvCallingTest extends ShivaWgs1Wgs2 with Unifiedgenotyper {
   override def svCalling = Some(true)
+
+  override def args: Seq[String] =
+    super.args ++ cmdConfig("BreakdancerConfig:min_observations", 5000)
 }
