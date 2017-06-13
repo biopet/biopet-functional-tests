@@ -77,6 +77,9 @@ class Wgs1Wgs2NormalizeDecomposeTest extends ShivaWgs1Wgs2 with Unifiedgenotyper
 }
 
 class Wgs1Wgs2SvCallingTest extends ShivaWgs1Wgs2 with Unifiedgenotyper {
+  override def useIndelRealigner = Some(false)
+  override def useBaseRecalibration = Some(false)
+
   override def svCalling = Some(true)
 
   override def args: Seq[String] =
