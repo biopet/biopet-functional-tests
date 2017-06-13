@@ -80,5 +80,5 @@ class Wgs1Wgs2SvCallingTest extends ShivaWgs1Wgs2 with Unifiedgenotyper {
   override def svCalling = Some(true)
 
   override def args: Seq[String] =
-    super.args ++ cmdConfig("BreakdancerConfig:min_observations", 5000)
+    super.args ++ cmdConfig("breakdancerconfig:min_observations", 5000)
 }
