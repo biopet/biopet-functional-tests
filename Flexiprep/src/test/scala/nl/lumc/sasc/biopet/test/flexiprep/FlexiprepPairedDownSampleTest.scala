@@ -12,9 +12,9 @@ class FlexiprepPairedDownSampleTest extends FlexiprepPaired {
 
   addStatsTest(seqstatR1QcGroup,
                "reads" :: "num_total" :: Nil,
-               _.asInstanceOf[Long].toInt shouldBe 50000)
+               _.asInstanceOf[Long].toInt shouldBe 500)
   addStatsTest(seqstatR2QcGroup,
                "reads" :: "num_total" :: Nil,
-               _.asInstanceOf[Long].toInt shouldBe 50000)
+               _.asInstanceOf[Long].toInt shouldBe 500)
 
 }
