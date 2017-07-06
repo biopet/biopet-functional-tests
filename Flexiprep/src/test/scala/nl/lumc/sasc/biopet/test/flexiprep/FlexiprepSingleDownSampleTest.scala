@@ -12,6 +12,6 @@ class FlexiprepSingleDownSampleTest extends FlexiprepSingle {
 
   addStatsTest(seqstatR1QcGroup,
                "reads" :: "num_total" :: Nil,
-               _.asInstanceOf[Long].toInt shouldBe 500)
+               _.asInstanceOf[Long].toInt should equal(500 +- 15))
 
 }
