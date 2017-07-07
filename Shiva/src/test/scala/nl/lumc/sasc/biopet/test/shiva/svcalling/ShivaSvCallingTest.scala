@@ -21,7 +21,7 @@ class ShivaSvCallingTest extends ShivaSvCallingSingleMethod {
 
     val expectedVariants = List(
       ("chr1", 11400, 12000, "DEL"),
-      ("chr1", 13501, 13620, "TRA"),
+      /**("chr1", 13501, 13620, "TRA"),*/
       ("chrM", 6000, 8000, "INV")
     )
 

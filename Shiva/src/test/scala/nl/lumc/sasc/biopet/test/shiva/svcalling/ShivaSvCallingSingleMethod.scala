@@ -23,7 +23,8 @@ trait ShivaSvCallingSingleMethod extends ShivaSvCallingSuccess with TestReferenc
           Array(caller, "chr1", 11385, 11988, "DEL"),
           Array(caller, "chr1", 13501, 13620, "CTX"),
           Array(caller, "chr1", 13501, 13620, "CTX"),
-          Array(caller, "chrM", 11100, 11101, "TRA"),
+          /**Array(caller, "chrM", 11100, 11101, "TRA"),*/
+          Array(caller, "chrM", 10865, 10866, "TRA"),
           Array(caller, "chrM", 6000, 8000, "INV")
       ))
   }
