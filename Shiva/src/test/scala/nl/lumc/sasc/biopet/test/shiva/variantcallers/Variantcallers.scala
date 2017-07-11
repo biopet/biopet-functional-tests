@@ -7,19 +7,18 @@ import nl.lumc.sasc.biopet.test.Executable
 import nl.lumc.sasc.biopet.test.{Pipeline, SummaryPipeline}
 import nl.lumc.sasc.biopet.test.utils._
 
-import scala.collection.JavaConversions._
-
 /**
   * Created by pjvanthof on 16/11/15.
   */
 trait Variantcallers extends Pipeline {
   def variantcallers: List[String] = Nil
 
-  val variantcallersConfig =
+  val variantcallersConfig: Option[File] =
     if (variantcallers.nonEmpty) Some(createTempConfig(Map("variantcallers" -> variantcallers)))
     else None
 
-  override def configs = super.configs ::: variantcallersConfig.map(_ :: Nil).getOrElse(Nil)
+  override def configs: List[File] =
+    super.configs ::: variantcallersConfig.map(_ :: Nil).getOrElse(Nil)
 
   this match {
     case s: SummaryPipeline =>
@@ -45,7 +44,7 @@ trait Variantcallers extends Pipeline {
 }
 
 trait Haplotypecaller extends Variantcallers {
-  override def variantcallers = "haplotypecaller" :: super.variantcallers
+  override def variantcallers: List[String] = "haplotypecaller" :: super.variantcallers
 
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("haplotypecaller", Some(""".+""".r)))
@@ -54,7 +53,7 @@ trait Haplotypecaller extends Variantcallers {
 }
 
 trait HaplotypecallerGvcf extends Variantcallers {
-  override def variantcallers = "haplotypecaller_gvcf" :: super.variantcallers
+  override def variantcallers: List[String] = "haplotypecaller_gvcf" :: super.variantcallers
 
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("haplotypecaller", Some(""".+""".r)))
@@ -63,7 +62,7 @@ trait HaplotypecallerGvcf extends Variantcallers {
 }
 
 trait HaplotypecallerAllele extends Variantcallers {
-  override def variantcallers = "haplotypecaller_allele" :: super.variantcallers
+  override def variantcallers: List[String] = "haplotypecaller_allele" :: super.variantcallers
 
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("haplotypecaller", Some(""".+""".r)))
@@ -72,7 +71,7 @@ trait HaplotypecallerAllele extends Variantcallers {
 }
 
 trait Unifiedgenotyper extends Variantcallers {
-  override def variantcallers = "unifiedgenotyper" :: super.variantcallers
+  override def variantcallers: List[String] = "unifiedgenotyper" :: super.variantcallers
 
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("unifiedgenotyper", Some(""".+""".r)))
@@ -81,7 +80,7 @@ trait Unifiedgenotyper extends Variantcallers {
 }
 
 trait UnifiedgenotyperAllele extends Variantcallers {
-  override def variantcallers = "unifiedgenotyper_allele" :: super.variantcallers
+  override def variantcallers: List[String] = "unifiedgenotyper_allele" :: super.variantcallers
 
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("unifiedgenotyper", Some(""".+""".r)))
@@ -90,7 +89,7 @@ trait UnifiedgenotyperAllele extends Variantcallers {
 }
 
 trait Freebayes extends Variantcallers {
-  override def variantcallers = "freebayes" :: super.variantcallers
+  override def variantcallers: List[String] = "freebayes" :: super.variantcallers
 
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("freebayes", Some(""".+""".r)))
@@ -99,7 +98,7 @@ trait Freebayes extends Variantcallers {
 }
 
 trait Bcftools extends Variantcallers {
-  override def variantcallers = "bcftools" :: super.variantcallers
+  override def variantcallers: List[String] = "bcftools" :: super.variantcallers
 
   this match {
     case s: SummaryPipeline =>
@@ -110,7 +109,7 @@ trait Bcftools extends Variantcallers {
 }
 
 trait BcftoolsSinglesample extends Variantcallers {
-  override def variantcallers = "bcftools_singlesample" :: super.variantcallers
+  override def variantcallers: List[String] = "bcftools_singlesample" :: super.variantcallers
 
   this match {
     case s: SummaryPipeline =>
@@ -121,7 +120,7 @@ trait BcftoolsSinglesample extends Variantcallers {
 }
 
 trait Raw extends Variantcallers {
-  override def variantcallers = "raw" :: super.variantcallers
+  override def variantcallers: List[String] = "raw" :: super.variantcallers
 
   this match {
     case s: SummaryPipeline =>
@@ -132,7 +131,7 @@ trait Raw extends Variantcallers {
 }
 
 trait VarscanCnsSinglesample extends Variantcallers {
-  override def variantcallers = "varscan_cns_singlesample" :: super.variantcallers
+  override def variantcallers: List[String] = "varscan_cns_singlesample" :: super.variantcallers
 
   this match {
     case s: SummaryPipeline =>
@@ -144,7 +143,7 @@ trait VarscanCnsSinglesample extends Variantcallers {
 
 trait MuTect2 extends Variantcallers {
 
-  override def variantcallers = "mutect2" :: super.variantcallers
+  override def variantcallers: List[String] = "mutect2" :: super.variantcallers
 
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("mutect2", Some(""".+""".r)))
