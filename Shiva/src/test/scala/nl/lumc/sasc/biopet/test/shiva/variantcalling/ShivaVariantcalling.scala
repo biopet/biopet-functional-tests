@@ -5,7 +5,6 @@ import java.io.File
 import nl.lumc.sasc.biopet.test.Pipeline
 import nl.lumc.sasc.biopet.test.Pipeline._
 import nl.lumc.sasc.biopet.test.shiva.variantcallers.Variantcallers
-import nl.lumc.sasc.biopet.test.utils._
 
 /**
   * Created by pjvan_thof on 5/26/15.
@@ -30,7 +29,7 @@ trait ShivaVariantcalling extends Pipeline with Variantcallers {
 
   def popFile: Option[File] = None
 
-  override def args: List[String] =
+  override def args: Seq[String] =
     bamFiles.flatMap(x => Seq("-BAM", x.getAbsolutePath)) ++
       cmdConfig("species", referenceSpecies) ++
       cmdConfig("reference_name", referenceName) ++
