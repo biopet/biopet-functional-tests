@@ -27,6 +27,8 @@ trait Toucan extends Pipeline with Reference {
 
   def vepVersion: Option[String] = None
 
+  def vepOffline: Option[Boolean] = Some(true)
+
   override def args =
     super.args ++
       cmdArg("-Input", inputVcf) ++
@@ -34,5 +36,6 @@ trait Toucan extends Pipeline with Reference {
       cmdConfig("gonl_vcf", goNLFile) ++
       cmdConfig("exac_vcf", exacFile) ++
       cmdConfig("mode", normalizerMode) ++
+      cmdConfig("varianteffectpredictor:offline", vepOffline) ++
       cmdConfig("vep_version", vepVersion)
 }

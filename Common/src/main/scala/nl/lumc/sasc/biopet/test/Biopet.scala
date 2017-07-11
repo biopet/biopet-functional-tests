@@ -20,6 +20,13 @@ object Biopet {
     }
   }
 
+  lazy val speciesDir: Option[File] = {
+    System.getProperties.getProperty("species.dir") match {
+      case path: String => Some(new File(path))
+      case _ => None
+    }
+  }
+
   lazy val getOutputDir: File = {
     System.getProperties.getProperty("biopet.output_dir") match {
       case s: String => new File(s)

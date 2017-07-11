@@ -52,6 +52,8 @@ trait Shiva extends MultisampleMapping with Reference with Aligner with Variantc
 
   def vepVersion: Option[String] = None
 
+  def vepOffline: Option[Boolean] = Some(true)
+
   override def args =
     super.args ++
       cmdConfig("library_variantcalling", libraryVariantcalling) ++
@@ -69,6 +71,7 @@ trait Shiva extends MultisampleMapping with Reference with Aligner with Variantc
       cmdConfig("execute_vt_normalize", executeVtNormalize) ++
       cmdConfig("execute_vt_decompose", executeVtDecompose) ++
       cmdConfig("vep_version", vepVersion) ++
+      cmdConfig("varianteffectpredictor:offline", vepOffline) ++
       cmdConfig("use_printreads", usePrintReads)
 }
 

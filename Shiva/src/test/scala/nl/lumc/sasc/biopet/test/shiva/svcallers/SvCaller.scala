@@ -29,6 +29,6 @@ class Delly extends SvCaller {
 
   def svCallerName = "delly"
   def supportedTypes =
-    List("DEL", "INV", "TRA") // delly doesn't report insertions nor intrachromosomal translocations
+    List("DEL", "INV", "BND") // delly doesn't report insertions nor intrachromosomal translocations
 
 }

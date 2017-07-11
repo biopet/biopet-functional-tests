@@ -19,11 +19,11 @@ trait ShivaSvCallingSingleMethod extends ShivaSvCallingSuccess with TestReferenc
       caller =>
         Array(
           Array(caller, "chr1", 2040, 2041, "ITX"),
-          Array(caller, "chr1", 4017, 4021, "INS"),
-          Array(caller, "chr1", 11400, 12000, "DEL"),
+          Array(caller, "chr1", 4003, 4017, "INS"),
+          Array(caller, "chr1", 11385, 11988, "DEL"),
           Array(caller, "chr1", 13501, 13620, "CTX"),
           Array(caller, "chr1", 13501, 13620, "CTX"),
-          Array(caller, "chrM", 11100, 11101, "TRA"),
+          Array(caller, "chrM", 10865, 10866, "BND"),
           Array(caller, "chrM", 6000, 8000, "INV")
       ))
   }
