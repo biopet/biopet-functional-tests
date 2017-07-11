@@ -13,6 +13,8 @@ import nl.lumc.sasc.biopet.test.utils._
 trait Variantcallers extends Pipeline {
   def variantcallers: List[String] = Nil
 
+  def mergeVariantcallers: List[String] = variantcallers.filter(_ != "mutect2")
+
   val variantcallersConfig: Option[File] =
     if (variantcallers.nonEmpty) Some(createTempConfig(Map("variantcallers" -> variantcallers)))
     else None
@@ -24,6 +26,8 @@ trait Variantcallers extends Pipeline {
     case s: SummaryPipeline =>
       if (variantcallers.exists(!_.contains("haplotypecaller")))
         s.addNotHavingExecutable("haplotypecaller")
+      if (variantcallers.exists(!_.contains("mutect2")))
+        s.addNotHavingExecutable("mutect2")
       if (variantcallers.exists(!_.contains("unifiedgenotyper")))
         s.addNotHavingExecutable("unifiedgenotyper")
       if (!variantcallers.contains("freebayes")) s.addNotHavingExecutable("freebayes")
@@ -35,7 +39,7 @@ trait Variantcallers extends Pipeline {
   def testVariantcallerInfoTag(file: File): Unit = {
     val reader = new VCFFileReader(file, false)
     val lines = reader.getFileHeader.toString.split("\n").toList
-    variantcallers foreach { caller =>
+    mergeVariantcallers foreach { caller =>
       assert(lines.exists(_.contains(s"RodBinding name=$caller")),
              s"Final vcf file is missing '$caller' in header for CombineVariants")
     }
