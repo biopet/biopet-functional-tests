@@ -20,7 +20,7 @@ trait ShivaVariantcallingMutect2
 
 class MuTect2Test extends ShivaVariantcallingMutect2
 
-class MuTect2TConTestest extends ShivaVariantcallingMutect2 {
+class MuTect2ConTestest extends ShivaVariantcallingMutect2 {
   override def runContest = Some(true)
   override def popFile = Some(Biopet.fixtureFile("samples", "wgs2", "wgs2.vcf.gz"))
 }
