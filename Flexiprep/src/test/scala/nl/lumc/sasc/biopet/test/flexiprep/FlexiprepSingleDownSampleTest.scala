@@ -1,7 +1,5 @@
 package nl.lumc.sasc.biopet.test.flexiprep
 
-import org.json4s._
-
 /**
   * Created by Sander Bollen on 1-6-17.
   */
