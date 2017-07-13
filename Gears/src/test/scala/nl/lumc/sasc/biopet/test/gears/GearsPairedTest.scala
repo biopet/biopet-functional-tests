@@ -1,6 +1,6 @@
 package nl.lumc.sasc.biopet.test.gears
 
-import nl.lumc.sasc.biopet.test.samples.{Mgm4459735_3_050Lib1, Mgm4457768_3_050Lib1}
+import nl.lumc.sasc.biopet.test.samples.{Mgm4457768_3_050Lib1, Mgm4457768_3_050Lib1Uncompressed, Mgm4459735_3_050Lib1}
 
 /**
   * Created by pjvan_thof on 2/2/16.
@@ -12,6 +12,15 @@ class GearsPairedSkipFlexiprepTest
   override def skipFlexiprep = Some(true)
   override def gearUseQiimeClosed = Some(true)
   override def gearsUseCentrifuge = Some(false)
+  def paired = true
+}
+
+class GearsPairedUncompressedTest
+  extends GearsSuccess
+    with Mgm4457768_3_050Lib1Uncompressed {
+  override def skipFlexiprep = Some(true)
+  override def gearUseQiimeOpen = Some(true)
+  override def gearsUseCentrifuge = Some(true)
   def paired = true
 }
 
