@@ -201,6 +201,14 @@ class MappingPairedChunkMetricsTest extends MappingPaired with MappingStatsBwaMe
   override def configNumberChunks = Some(4)
 }
 
+class MappingPairedSingleChunkMetricsTest extends MappingPaired with MappingStatsBwaMem {
+  override def chunkMetrics = Some(true)
+
+  override def configChunking = Some(true)
+
+  override def configNumberChunks = Some(1)
+}
+
 class MappingPairedBwaMemTest extends MappingPaired with MappingStatsBwaMem
 
 class MappingPairedBowtieTest extends MappingPaired with Bowtie {
