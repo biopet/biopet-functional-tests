@@ -6,17 +6,15 @@ package nl.lumc.sasc.biopet.test.flexiprep
 class FlexiprepPairedDownSampleTest extends FlexiprepPaired {
   override def downSampleFraction = Some(0.5)
 
-  addStatsTest(seqstatR1QcGroup,
-               "bases" :: "num_total" :: Nil,
-               _.asInstanceOf[Long].toInt should equal(18736 +- 1873))
+  override def skipClip: Option[Boolean] = Option(true)
+
+  override def skipTrim: Option[Boolean] = Option(true)
+
   addStatsTest(seqstatR1QcGroup,
                "reads" :: "num_total" :: Nil,
-               _.asInstanceOf[Long].toInt should equal(209 +- 20))
-  addStatsTest(seqstatR2QcGroup,
-               "bases" :: "num_total" :: Nil,
-               _.asInstanceOf[Long].toInt should equal(13341 +- 1334))
+               _.asInstanceOf[Long].toInt should equal(500 +- 15))
   addStatsTest(seqstatR2QcGroup,
                "reads" :: "num_total" :: Nil,
-               _.asInstanceOf[Long].toInt should equal(209 +- 20))
+               _.asInstanceOf[Long].toInt should equal(500 +- 15))
 
 }
