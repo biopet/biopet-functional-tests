@@ -23,6 +23,7 @@ trait Gears extends Pipeline {
   def gearUseQiimeClosed: Option[Boolean] = None
   def gearUseQiimeOpen: Option[Boolean] = None
   def gearUseSeqCount: Option[Boolean] = None
+  def qiimeMultisampleOpenReference: Option[Boolean] = None
 
   override def args =
     super.args ++
@@ -32,5 +33,6 @@ trait Gears extends Pipeline {
       cmdConfig("gears_use_qiime_rtax", gearUseQiimeRtax) ++
       cmdConfig("gears_use_qiime_closed", gearUseQiimeClosed) ++
       cmdConfig("gears_use_qiime_open", gearUseQiimeOpen) ++
-      cmdConfig("gears_use_seq_count", gearUseSeqCount)
+      cmdConfig("gears_use_seq_count", gearUseSeqCount) ++
+      cmdConfig("qiime_multisample_open_reference", qiimeMultisampleOpenReference)
 }
