@@ -34,7 +34,7 @@ class GearsSingleQiimeOpenTest
 }
 
 class GearsSingleQiimeOpenMultisampleTest
-  extends GearsSuccess
+    extends GearsSuccess
     with Mgm4457768_3_050Lib2
     with Mgm4459735_3_050Lib2 {
   override def gearUseQiimeOpen = Some(true)
