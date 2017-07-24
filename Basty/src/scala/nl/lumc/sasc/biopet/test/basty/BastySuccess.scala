@@ -1,9 +1,7 @@
-package nl.lumc.sasc.biopet.test.carp
+package nl.lumc.sasc.biopet.test.basty
 
-import java.io.File
 
 import nl.lumc.sasc.biopet.test.MultisampleMappingSuccess
-import org.testng.annotations.{DataProvider, Test}
 
 /**
   * Created by pjvan_thof on 27-5-16.

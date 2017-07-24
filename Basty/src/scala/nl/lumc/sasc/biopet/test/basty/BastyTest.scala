@@ -1,4 +1,4 @@
-package nl.lumc.sasc.biopet.test.carp
+package nl.lumc.sasc.biopet.test.basty
 
 import nl.lumc.sasc.biopet.test.references.TestReference
 import nl.lumc.sasc.biopet.test.aligners.BwaMem
