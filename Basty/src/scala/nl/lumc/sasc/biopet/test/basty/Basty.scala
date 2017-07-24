@@ -1,7 +1,5 @@
 package nl.lumc.sasc.biopet.test.basty
 
-import java.io.File
-
 import nl.lumc.sasc.biopet.test.MultisampleMapping
 import nl.lumc.sasc.biopet.test.aligners.Aligner
 import nl.lumc.sasc.biopet.test.references.Reference
