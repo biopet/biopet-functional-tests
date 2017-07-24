@@ -28,6 +28,8 @@ trait Basty extends MultisampleMapping with Reference with Aligner {
   // Default is 100 but to limit the number of jobs we set the default to 5 here
   def bootRuns: Option[Int] = Some(5)
 
+  def executeGubbins: Option[Boolean] = Some(false)
+
   override def args: Seq[String] =
     super.args ++
       cmdConfig("use_indel_realigner", useIndelRealigner) ++
@@ -35,6 +37,7 @@ trait Basty extends MultisampleMapping with Reference with Aligner {
       cmdConfig("dbsnp_vcf", dbsnpVcfFile) ++
       cmdConfig("use_printreads", usePrintReads) ++
       cmdConfig("raxml:no_bfgs", raxmlNoBfgs) ++
-      cmdConfig("boot_runs", bootRuns)
+      cmdConfig("boot_runs", bootRuns) ++
+      cmdConfig("execute_gubbins", executeGubbins)
 
 }
