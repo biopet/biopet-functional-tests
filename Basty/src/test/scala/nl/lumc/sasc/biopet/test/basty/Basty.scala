@@ -22,11 +22,15 @@ trait Basty extends MultisampleMapping with Reference with Aligner {
 
   def dbsnpVcfFile: Option[File] = None
 
+  // This is set on true because bgfs does not work on test data
+  def raxmlNoBfgs: Option[Boolean] = Some(true)
+
   override def args: Seq[String] =
     super.args ++
       cmdConfig("use_indel_realigner", useIndelRealigner) ++
       cmdConfig("use_base_recalibration", useBaseRecalibration) ++
       cmdConfig("dbsnp_vcf", dbsnpVcfFile) ++
-      cmdConfig("use_printreads", usePrintReads)
+      cmdConfig("use_printreads", usePrintReads) ++
+      cmdConfig("raxml:no_bfgs", raxmlNoBfgs)
 
 }
