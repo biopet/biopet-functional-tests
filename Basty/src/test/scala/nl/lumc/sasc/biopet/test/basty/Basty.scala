@@ -25,12 +25,16 @@ trait Basty extends MultisampleMapping with Reference with Aligner {
   // This is set on true because bgfs does not work on test data
   def raxmlNoBfgs: Option[Boolean] = Some(true)
 
+  // Default is 100 but to limit the number of jobs we set the default to 5 here
+  def bootRuns: Option[Int] = Some(5)
+
   override def args: Seq[String] =
     super.args ++
       cmdConfig("use_indel_realigner", useIndelRealigner) ++
       cmdConfig("use_base_recalibration", useBaseRecalibration) ++
       cmdConfig("dbsnp_vcf", dbsnpVcfFile) ++
       cmdConfig("use_printreads", usePrintReads) ++
-      cmdConfig("raxml:no_bfgs", raxmlNoBfgs)
+      cmdConfig("raxml:no_bfgs", raxmlNoBfgs) ++
+      cmdConfig("boot_runs", bootRuns)
 
 }
