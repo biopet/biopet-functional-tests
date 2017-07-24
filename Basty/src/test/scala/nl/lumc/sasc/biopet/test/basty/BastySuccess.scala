@@ -17,8 +17,8 @@ trait BastySuccess extends Basty with MultisampleMappingSuccess {
     new File(
       super.libraryPreprecoessBam(sampleId, libId).getAbsolutePath.stripSuffix(".bam") +
         (if (useBaseRecalibration
-          .getOrElse(true) && dbsnpVcfFile.isDefined && !usePrintReads.contains(false))
-          ".baserecal.bam"
-        else ".bam"))
+               .getOrElse(true) && dbsnpVcfFile.isDefined && !usePrintReads.contains(false))
+           ".baserecal.bam"
+         else ".bam"))
 
 }
