@@ -40,20 +40,6 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
     addNotHavingExecutable("printreads")
   }
 
-  samples.foreach {
-    case (sampleName, libs) =>
-      val sampleGroup = shivaGroup.copy(sample = sampleName)
-      addSettingsTest(sampleGroup,
-                      "single_sample_variantcalling" :: Nil,
-                      _ shouldBe singleSampleVariantcalling.getOrElse(false))
-      libs.foreach { lib =>
-        val libraryGroup = sampleGroup.copy(library = lib)
-        addSettingsTest(libraryGroup,
-                        "library_variantcalling" :: Nil,
-                        _ shouldBe libraryVariantcalling.getOrElse(false))
-      }
-  }
-
   addSettingsTest(shivaGroup,
                   "multisample_variantcalling" :: Nil,
                   _ shouldBe multisampleVariantcalling.getOrElse(true))
@@ -94,32 +80,6 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
         variantcaller) || variantcaller == "final")
       addConcordanceChecks(group, sample, condition)
     }
-
-    samples.keySet.foreach { sample =>
-      val group =
-        shivavariantcallingGroup.copy(module = s"$sample-genotype_concordance-$variantcaller",
-                                      sample = sample)
-      val condition = singleSampleVariantcalling.contains(true) && (variantcallers.contains(
-        variantcaller) || variantcaller == "final")
-      addConcordanceChecks(group, sample, condition)
-      addConcordanceChecks(group, "ALL", condition)
-
-    }
-
-    samples.foreach {
-      case (sample, libs) =>
-        libs.foreach { lib =>
-          val group =
-            shivavariantcallingGroup.copy(module =
-                                            s"$sample-$lib-genotype_concordance-$variantcaller",
-                                          sample = sample,
-                                          library = lib)
-          val condition = libraryVariantcalling.contains(true) && (variantcallers.contains(
-            variantcaller) || variantcaller == "final")
-          addConcordanceChecks(group, sample, condition)
-          addConcordanceChecks(group, "ALL", condition)
-        }
-    }
   }
 
   @DataProvider(name = "variantcallers")
@@ -158,54 +118,6 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
     }
   }
 
-  @Test(dataProvider = "sample-variantcallers", dependsOnGroups = Array("summary"))
-  def testSampleVariantcaller(sample: String, variantcaller: String): Unit =
-    withClue(s"Variantcaller: $variantcaller, Sample: $sample") {
-      val dir = new File(sampleDir(sample), "variantcalling" + File.separator + variantcaller)
-      val file = new File(dir, s"$sample.$variantcaller.vcf.gz")
-      val vcfstats = Await.result(summaryDb.getStat(runId,
-                                                    "shivavariantcalling",
-                                                    s"$sample-vcfstats-$variantcaller",
-                                                    sample),
-                                  Duration.Inf)
-      if (singleSampleVariantcalling.contains(true) && variantcallers.contains(variantcaller)) {
-        assert(dir.exists())
-        assert(dir.isDirectory)
-        assert(file.exists())
-        assert(vcfstats.isDefined, s"multisample-vcfstats-$variantcaller not found in summary")
-        Shiva.testSamplesVcfFile(file, List(sample))
-      } else {
-        assert(!dir.exists())
-        assert(vcfstats.isEmpty,
-               s"multisample-vcfstats-$variantcaller found in summary but should not exist")
-      }
-    }
-
-  @Test(dataProvider = "library-variantcallers", dependsOnGroups = Array("summary"))
-  def testLibraryVariantcaller(sample: String, lib: String, variantcaller: String): Unit =
-    withClue(s"Variantcaller: $variantcaller, Sample: $sample, Lib: $lib") {
-      val dir =
-        new File(libraryDir(sample, lib), "variantcalling" + File.separator + variantcaller)
-      val file = new File(dir, s"$sample-$lib.$variantcaller.vcf.gz")
-      val vcfstats = Await.result(summaryDb.getStat(runId,
-                                                    "shivavariantcalling",
-                                                    s"$sample-$lib-vcfstats-$variantcaller",
-                                                    sample,
-                                                    lib),
-                                  Duration.Inf)
-      if (singleSampleVariantcalling.contains(true) && variantcallers.contains(variantcaller)) {
-        assert(dir.exists())
-        assert(dir.isDirectory)
-        assert(file.exists())
-        assert(vcfstats.isDefined, s"multisample-vcfstats-$variantcaller not found in summary")
-        Shiva.testSamplesVcfFile(file, List(sample))
-      } else {
-        assert(!dir.exists())
-        assert(vcfstats.isEmpty,
-               s"multisample-vcfstats-$variantcaller found in summary but should not exist")
-      }
-    }
-
   @Test(dependsOnGroups = Array("summary"))
   def testMultisampleVcfFile(): Unit = {
     val file = new File(outputDir, "variantcalling" + File.separator + "multisample.final.vcf.gz")
@@ -225,44 +137,6 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
     if (!multisampleVariantcalling.contains(false))
       testVariantcallerInfoTag(
         new File(outputDir, "variantcalling" + File.separator + "multisample.final.vcf.gz"))
-
-  @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
-  def testSingleSampleVcfFile(sample: String): Unit = withClue(s"Sample: $sample") {
-    val file =
-      new File(sampleDir(sample), "variantcalling" + File.separator + s"$sample.final.vcf.gz")
-    testSummaryFiles(
-      FileTest(shivavariantcallingGroup.copy(sample = sample),
-               "final",
-               singleSampleVariantcalling.contains(true),
-               true,
-               path = file))
-  }
-
-  @Test(dataProvider = "samples")
-  def testSampleVariantcallerInfoTag(sample: String): Unit =
-    if (singleSampleVariantcalling.contains(true))
-      testVariantcallerInfoTag(
-        new File(sampleDir(sample), "variantcalling" + File.separator + s"$sample.final.vcf.gz"))
-
-  @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
-  def testLibraryVcfFile(sample: String, lib: String): Unit =
-    withClue(s"Sample: $sample, Lib: $lib") {
-      val file = new File(libraryDir(sample, lib),
-                          "variantcalling" + File.separator + s"$sample-$lib.final.vcf.gz")
-      testSummaryFiles(
-        FileTest(shivavariantcallingGroup.copy(sample = sample, library = lib),
-                 "final",
-                 libraryVariantcalling.contains(true),
-                 true,
-                 path = file))
-    }
-
-  @Test(dataProvider = "libraries")
-  def testLibraryVariantcallerInfoTag(sample: String, lib: String): Unit =
-    if (libraryVariantcalling.contains(true))
-      testVariantcallerInfoTag(
-        new File(libraryDir(sample, lib),
-                 "variantcalling" + File.separator + s"$sample-$lib.final.vcf.gz"))
 
   @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
   def testShivaLibraryBam(sample: String, lib: String): Unit =
