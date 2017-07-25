@@ -11,9 +11,9 @@ import org.testng.annotations.Test
 trait GentrapSuccess extends Gentrap with MultisampleMappingSuccess {
 
   @Test
-  def testVariantcalling: Unit = {
+  def testVariantcalling(): Unit = {
     val variantcallingDir = new File(outputDir, "variantcalling")
-    if (callVariants == Some(true)) {
+    if (callVariants.contains(true)) {
       assert(variantcallingDir.exists())
       assert(variantcallingDir.isDirectory)
     } else assert(!variantcallingDir.exists())
