@@ -8,7 +8,7 @@ import nl.lumc.sasc.biopet.test.utils._
 trait Rna3 extends Samples {
   override def samples: Map[String, Set[String]] =
     addSampleLibrary(super.samples, Rna3.sampleName, "lib1")
-  override def configs: List[File] = super.configs :+ Rna1.lib1ConfigFile
+  override def configs: List[File] = super.configs :+ Rna3.lib1ConfigFile
 }
 
 object Rna3 {

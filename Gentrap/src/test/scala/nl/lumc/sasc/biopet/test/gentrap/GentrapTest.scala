@@ -16,9 +16,9 @@ class GentrapTest
     with Star
     with TestReference
     with AllExpressionMeasures {
-  override def strandProtocol: Option[String] = Some("non_specific")
+  def strandProtocol: Option[String] = Some("non_specific")
 
-  override def annotationRefflat: Option[File] =
+  def annotationRefflat: Option[File] =
     Some(Biopet.fixtureFile("reference", "reference.refflat"))
 
   def ribosomalRefflat: Option[File] = None
