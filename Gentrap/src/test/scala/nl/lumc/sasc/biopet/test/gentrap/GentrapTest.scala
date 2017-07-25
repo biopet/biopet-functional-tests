@@ -10,7 +10,12 @@ import nl.lumc.sasc.biopet.test.samples.Rna3
 /**
   * Created by pjvan_thof on 25-7-17.
   */
-class GentrapTest extends GentrapSuccess with Rna3 with Star with TestReference {
+class GentrapTest
+    extends GentrapSuccess
+    with Rna3
+    with Star
+    with TestReference
+    with AllExpressionMeasures {
   override def strandProtocol: Option[String] = Some("none")
 
   override def annotationRefflat: Option[File] =
