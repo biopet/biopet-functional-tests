@@ -160,7 +160,8 @@ trait ShivaSuccess extends Shiva with MultisampleMappingSuccess {
   @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
   def testShivaLibraryPreprocessBam(sample: String, lib: String): Unit =
     withClue(s"Sample: $sample, Lib: $lib") {
-      if (useBaseRecalibration.getOrElse(true) && usePrintReads.getOrElse(true))
+      if (useBaseRecalibration.getOrElse(true) && dbsnpVcfFile.isDefined && usePrintReads
+            .getOrElse(true))
         assert(!libraryPreprecoessBam(sample, lib).exists())
     }
 

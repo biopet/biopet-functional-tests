@@ -20,9 +20,7 @@ class ShivaSvCallingTest extends ShivaSvCallingSingleMethod {
     val reader = new VCFFileReader(new File(outputDir, "ref_sv.merged.vcf"), false)
 
     val expectedVariants = List(
-      ("chr1", 2390, 2400, "ITX"), // delly's duplication has shifted the variant a bit to the right
       ("chr1", 11400, 12000, "DEL"),
-      ("chr1", 13501, 13620, "TRA"),
       ("chrM", 6000, 8000, "INV")
     )
 

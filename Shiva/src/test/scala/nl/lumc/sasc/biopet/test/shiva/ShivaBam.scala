@@ -23,7 +23,7 @@ class ShivaWgs1BamTest
   def paired = true
   def shouldHaveKmerContent = Some(false)
   override def flexiprepShouldRun = false
-  override def testLibraryBam(sampleid: String, libId: String) = {}
+  override def testLibraryBam(sampleid: String, libId: String): Unit = {}
 }
 
 class ShivaWgs1BamToFastqTest
@@ -53,8 +53,8 @@ class ShivaWgs1BamReplaceReadGroupTest
   override def flexiprepShouldRun = false
 
   /** This bam file should only in this conditions not exist, disabled test */
-  override def testLibraryBam(sampleid: String, libId: String) = {}
-  override def testShivaLibraryBam(sampleid: String, libId: String) = {}
+  override def testLibraryBam(sampleid: String, libId: String): Unit = {}
+  override def testShivaLibraryBam(sampleid: String, libId: String): Unit = {}
 
   addNotHavingExecutable("bwamem")
   addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))

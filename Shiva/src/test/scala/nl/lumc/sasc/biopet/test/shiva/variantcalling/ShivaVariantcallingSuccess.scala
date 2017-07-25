@@ -2,7 +2,7 @@ package nl.lumc.sasc.biopet.test.shiva.variantcalling
 
 import java.io.File
 
-import nl.lumc.sasc.biopet.test.SummaryPipeline
+import nl.lumc.sasc.biopet.test.{SummaryGroup, SummaryPipeline}
 import nl.lumc.sasc.biopet.test.shiva.Shiva
 import org.testng.annotations.{DataProvider, Test}
 import nl.lumc.sasc.biopet.utils.summary.db.SummaryDb.Implicts._
@@ -15,7 +15,7 @@ import scala.concurrent.duration.Duration
   */
 trait ShivaVariantcallingSuccess extends ShivaVariantcalling with SummaryPipeline {
   @DataProvider(name = "variantcallers")
-  def variantcallerProvider = Shiva.validVariantcallers.map(Array(_)).toArray
+  def variantcallerProvider: Array[Array[String]] = Shiva.validVariantcallers.map(Array(_)).toArray
 
   @Test(dataProvider = "variantcallers", dependsOnGroups = Array("summary"))
   def testVariantcaller(variantcaller: String): Unit = withClue(s"variantcaller: $variantcaller") {
@@ -35,7 +35,14 @@ trait ShivaVariantcallingSuccess extends ShivaVariantcalling with SummaryPipelin
   }
 
   @Test
-  def testFinalVariantcallerInfoTag() =
+  def testFinalVariantcallerInfoTag(): Unit =
     this.testVariantcallerInfoTag(new File(outputDir, s"${namePrefix.get}.final.vcf.gz"))
+
+  addSettingsTest(SummaryGroup("shivavariantcalling"),
+                  List("somatic_variant_calling"),
+                  _ shouldBe variantcallers.contains("mutect2"))
+  addSettingsTest(SummaryGroup("shivavariantcalling"),
+                  List("germline_variant_calling"),
+                  _ shouldBe variantcallers.exists(_ != "mutect2"))
 
 }
