@@ -29,7 +29,7 @@ object Rna3 {
                     "R2" -> Biopet
                       .fixtureFile("samples", sampleName, "R2.fq.gz")
                       .getAbsolutePath,
-                    "R2_md5" -> "2e53e727dad4cbbfedadeb29404ca0d3"
+                    "R2_md5" -> "f3e4227bb7ab4028f4f146b2f1ebe182"
                   )))))
   val lib1ConfigFile: File = createTempConfig(lib1ConfigMap, s"$sampleName-lib1")
 
