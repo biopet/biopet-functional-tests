@@ -14,14 +14,10 @@ trait Carp extends MultisampleMapping with Reference with Aligner {
 
   def pipelineName = "carp"
 
-  def summaryFile = new File(outputDir, s"Carp.summary.json")
-
   def controls: List[(String, String)] = Nil
 
   override def configs = super.configs ++ controls.map {
     case (sample, control) =>
       createTempConfig(Map("samples" -> Map(sample -> Map("control" -> control))))
   }
-
-  override def args = super.args
 }
