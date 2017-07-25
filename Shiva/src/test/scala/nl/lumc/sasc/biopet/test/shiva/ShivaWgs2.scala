@@ -35,12 +35,6 @@ class Wgs2ScatterTest extends ShivaWgs2 with HaplotypecallerGvcf {
   override def disablescatter = false
 }
 
-class Wgs2SampleLibraryCallingTest extends ShivaWgs2 with Unifiedgenotyper {
-  override def multisampleVariantcalling = Some(false)
-  override def libraryVariantcalling = Some(true)
-  override def singleSampleVariantcalling = Some(true)
-}
-
 class Wgs2NoBaserecalTest extends ShivaWgs2 with Unifiedgenotyper {
   override def useBaseRecalibration = Some(false)
 }
