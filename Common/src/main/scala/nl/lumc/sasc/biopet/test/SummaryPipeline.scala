@@ -27,13 +27,13 @@ trait SummaryPipeline extends PipelineSuccess {
 
   private var _summaryDb: SummaryDb = _
 
-  def summaryDb = _summaryDb
+  def summaryDb: SummaryDb = _summaryDb
 
   var _runId: Int = _
-  def runId = _runId
+  def runId: Int = _runId
 
   @Test(groups = Array("runId"))
-  def testRunId: Unit = {
+  def testRunId(): Unit = {
     val runIdFile = new File(outputDir, ".log" + File.separator + "summary.runid")
     runIdFile should exist
     val reader = Source.fromFile(runIdFile)
@@ -45,7 +45,7 @@ trait SummaryPipeline extends PipelineSuccess {
   def testSummaryFileExist(): Unit = assert(summaryDbFile.exists, "Summary file does not exist")
 
   @Test(groups = Array("summary"), dependsOnGroups = Array("runId"))
-  def testOpenSummaryDb: Unit = {
+  def testOpenSummaryDb(): Unit = {
     _summaryDb = SummaryDb.openSqliteSummary(summaryDbFile)
   }
 
@@ -82,13 +82,13 @@ trait SummaryPipeline extends PipelineSuccess {
                    path: List[String] = Nil,
                    test: Any => Unit = _ => {},
                    shouldExist: Boolean = true): Unit = {
-    if (!statsTests.contains(summaryGroup)) statsTests += (summaryGroup) -> MutMap()
+    if (!statsTests.contains(summaryGroup)) statsTests += summaryGroup -> MutMap()
     statsTests(summaryGroup) += path -> (SummaryTest(test, shouldExist) :: statsTests(summaryGroup)
       .getOrElse(path, Nil))
   }
 
   @DataProvider(name = "statsTests")
-  def summaryStatsProvider() = {
+  def summaryStatsProvider(): Array[Array[Equals]] = {
     (for ((group, functions) <- statsTests) yield Array(group, functions)).toArray
   }
 
@@ -137,13 +137,13 @@ trait SummaryPipeline extends PipelineSuccess {
   def addSettingsTest(summaryGroup: SummaryGroup,
                       path: List[String],
                       function: Any => Unit): Unit = {
-    if (!settingsTests.contains(summaryGroup)) settingsTests += (summaryGroup) -> MutMap()
+    if (!settingsTests.contains(summaryGroup)) settingsTests += summaryGroup -> MutMap()
     settingsTests(summaryGroup) += path -> (function :: settingsTests(summaryGroup).getOrElse(path,
                                                                                               Nil))
   }
 
   @DataProvider(name = "settingsTests")
-  def summarySettingsProvider() = {
+  def summarySettingsProvider(): Array[Array[Equals]] = {
     (for ((group, functions) <- settingsTests) yield Array(group, functions)).toArray
   }
 
@@ -198,12 +198,12 @@ trait SummaryPipeline extends PipelineSuccess {
                          summaryShouldContain: Boolean = true,
                          fileShouldExist: Option[Boolean] = None,
                          path: Option[File] = None,
-                         md5: Option[String] = None) =
+                         md5: Option[String] = None): Unit =
     filesTests :+= FileTest(group, key, summaryShouldContain, fileShouldExist, path, md5)
-  def addSummaryFileTest(fileTest: FileTest) = filesTests :+= fileTest
+  def addSummaryFileTest(fileTest: FileTest): Unit = filesTests :+= fileTest
 
   @DataProvider(name = "SummaryFiles")
-  def summaryFilesProvider = {
+  def summaryFilesProvider: Array[Array[FileTest]] = {
     filesTests.map(Array(_)).toArray
   }
 
@@ -238,7 +238,7 @@ trait SummaryPipeline extends PipelineSuccess {
   def addExecutable(exe: Executable): Unit = executables += exe
 
   @DataProvider(name = "executables")
-  def executablesProvider = executables.map(Array(_)).toArray
+  def executablesProvider: Array[Array[Executable]] = executables.map(Array(_)).toArray
 
   @Test(dataProvider = "executables", dependsOnGroups = Array("summary"))
   def testExecutables(exe: Executable): Unit = withClue(s"Executable: $exe") {
@@ -266,7 +266,7 @@ trait SummaryPipeline extends PipelineSuccess {
   }
 
   @DataProvider(name = "notExecutables")
-  def notExecutablesProvider = notExecutables.map(Array(_)).toArray
+  def notExecutablesProvider: Array[Array[String]] = notExecutables.map(Array(_)).toArray
 
   @Test(dataProvider = "notExecutables", dependsOnGroups = Array("summary"))
   def testNotExecutables(exe: String): Unit = withClue(s"Executable: $exe") {
@@ -276,7 +276,7 @@ trait SummaryPipeline extends PipelineSuccess {
   }
 
   @DataProvider(name = "moduleSchemas")
-  def moduleSchemasProvider() = {
+  def moduleSchemasProvider(): Array[Array[Object]] = {
     val modulesUsed = Await.result(summaryDb.getModules(runId = Some(this.runId)), Duration.Inf)
     var moduleSchemas: Array[Array[Object]] = Array()
     for (module <- modulesUsed) {
@@ -328,15 +328,14 @@ object SummaryPipeline {
 
     val schemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
     val moduleSchemas =
-      ClassLoader.getSystemResource("nl/lumc/sasc/biopet/test/module_schemas.yml").toURI()
+      ClassLoader.getSystemResource("nl/lumc/sasc/biopet/test/module_schemas.yml").toURI
 
     ConfigUtils
       .fileToConfigMap(new File(moduleSchemas))
       .map({
-        case (moduleName, schemaFile) => {
-          val schemaURI = ClassLoader.getSystemResource(schemaFile.toString).toURI().toString
+        case (moduleName, schemaFile) =>
+          val schemaURI = ClassLoader.getSystemResource(schemaFile.toString).toURI.toString
           s"^$moduleName$$".r -> schemaFactory.getJsonSchema(schemaURI)
-        }
       })
   }
 
