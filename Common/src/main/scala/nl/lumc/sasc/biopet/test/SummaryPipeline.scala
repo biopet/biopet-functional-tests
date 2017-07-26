@@ -88,7 +88,7 @@ trait SummaryPipeline extends PipelineSuccess {
   }
 
   @DataProvider(name = "statsTests")
-  def summaryStatsProvider(): Array[Array[Equals]] = {
+  def summaryStatsProvider() = {
     (for ((group, functions) <- statsTests) yield Array(group, functions)).toArray
   }
 
@@ -143,7 +143,7 @@ trait SummaryPipeline extends PipelineSuccess {
   }
 
   @DataProvider(name = "settingsTests")
-  def summarySettingsProvider(): Array[Array[Equals]] = {
+  def summarySettingsProvider() = {
     (for ((group, functions) <- settingsTests) yield Array(group, functions)).toArray
   }
 
