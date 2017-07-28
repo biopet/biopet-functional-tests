@@ -19,20 +19,20 @@ trait GearsSuccess extends Gears with MultisampleSuccess {
 
   addConditionalFile(gearsUseCentrifuge.getOrElse(true),
                      "report",
-                     "Centriguge analysis",
+                     "Centrifuge analysis",
                      "index.html")
   addConditionalFile(gearsUseCentrifuge.getOrElse(true),
                      "report",
-                     "Centriguge analysis",
+                     "Centrifuge analysis",
                      "gearscentrifuge-centrifuge_unique_report.html")
   addConditionalFile(gearsUseCentrifuge.getOrElse(true),
                      "report",
-                     "Centriguge analysis",
+                     "Centrifuge analysis",
                      "Non-unique",
                      "index.html")
   addConditionalFile(gearsUseCentrifuge.getOrElse(true),
                      "report",
-                     "Centriguge analysis",
+                     "Centrifuge analysis",
                      "Non-unique",
                      "gearscentrifuge-centrifuge_report.html")
 
@@ -53,7 +53,7 @@ trait GearsSuccess extends Gears with MultisampleSuccess {
                          "report",
                          "Samples",
                          sample,
-                         "Centriguge analysis",
+                         "Centrifuge analysis",
                          "index.html")
       addConditionalFile(gearsUseKraken.getOrElse(false),
                          "report",
