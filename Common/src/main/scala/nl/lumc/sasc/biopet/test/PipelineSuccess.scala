@@ -8,5 +8,5 @@ trait PipelineSuccess extends Pipeline {
   logMustHave("""Script completed successfully with \d+ total jobs""".r)
   logMustNotHave(""" - Input file does not exist:""".r)
   logMustNotHave("""File '.*' is found as output of multiple jobs""".r)
-  logMustNotHave("""getVersion give a exit code ? but no version was found, executable correct\?""".r)
+  logMustNotHave("""getVersion give a exit code [0-9] but no version was found, executable correct\?""".r)
 }
