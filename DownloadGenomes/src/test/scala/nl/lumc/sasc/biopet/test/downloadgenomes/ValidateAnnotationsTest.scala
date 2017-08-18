@@ -11,7 +11,7 @@ class ValidateAnnotationsTest extends ValidateAnnotations with PipelineSuccess {
   @Test(dataProvider = "genomesProvider")
   def testAnnotation(species: String, genomeName: String): Unit =
     withClue(s"$species-$genomeName") {
-      testLogMustNotHave(s"Corrupt annotations files found for $species-$genomeName${"$"}".r)
+      testLogMustNotHave(s"Corrupt annotations files found for $species-$genomeName\\W".r)
     }
 
   @Test(dataProvider = "genomesProvider")
@@ -22,7 +22,7 @@ class ValidateAnnotationsTest extends ValidateAnnotations with PipelineSuccess {
   @Test(dataProvider = "genomesProvider")
   def testMissingAnnotation(species: String, genomeName: String): Unit =
     withClue(s"$species-$genomeName") {
-      testLogMustNotHave(s"No features annotations found for $species-$genomeName${"$"}".r)
+      testLogMustNotHave(s"No features annotations found for $species-$genomeName\\W".r)
     }
 
   @Test(dataProvider = "genomesProvider")
