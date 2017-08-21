@@ -13,3 +13,4 @@ git.properties
 target/
 public/target/
 protected/target/
+*.sc
