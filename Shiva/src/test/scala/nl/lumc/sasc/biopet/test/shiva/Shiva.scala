@@ -20,10 +20,6 @@ trait Shiva extends MultisampleMapping with Reference with Aligner with Variantc
 
   def summaryFile = new File(outputDir, s"Shiva.summary.json")
 
-  def libraryVariantcalling: Option[Boolean] = None
-
-  def singleSampleVariantcalling: Option[Boolean] = None
-
   def multisampleVariantcalling: Option[Boolean] = None
 
   def svCalling: Option[Boolean] = None
@@ -52,10 +48,10 @@ trait Shiva extends MultisampleMapping with Reference with Aligner with Variantc
 
   def vepVersion: Option[String] = None
 
-  override def args =
+  def vepOffline: Option[Boolean] = Some(true)
+
+  override def args: Seq[String] =
     super.args ++
-      cmdConfig("library_variantcalling", libraryVariantcalling) ++
-      cmdConfig("single_sample_variantcalling", singleSampleVariantcalling) ++
       cmdConfig("multisample_variantcalling", multisampleVariantcalling) ++
       cmdConfig("sv_calling", svCalling) ++
       cmdConfig("use_indel_realigner", useIndelRealigner) ++
@@ -69,6 +65,7 @@ trait Shiva extends MultisampleMapping with Reference with Aligner with Variantc
       cmdConfig("execute_vt_normalize", executeVtNormalize) ++
       cmdConfig("execute_vt_decompose", executeVtDecompose) ++
       cmdConfig("vep_version", vepVersion) ++
+      cmdConfig("varianteffectpredictor:offline", vepOffline) ++
       cmdConfig("use_printreads", usePrintReads)
 }
 

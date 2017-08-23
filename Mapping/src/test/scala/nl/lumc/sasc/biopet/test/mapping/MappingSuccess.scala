@@ -19,9 +19,9 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   val mappingGroup = SummaryGroup("mapping", sample = sampleId, library = libId)
   val bamMetricsGroup = SummaryGroup("bammetrics", sample = sampleId, library = libId)
   val flexiprepGroup = SummaryGroup("flexiprep", sample = sampleId, library = libId)
-  val wgsGroup = bamMetricsGroup.copy(module = "wgs")
-  val bamstatsGroup = bamMetricsGroup.copy(module = "bamstats")
-  val insertsizeGroup = bamMetricsGroup.copy(module = "CollectInsertSizeMetrics")
+  val wgsGroup: SummaryGroup = bamMetricsGroup.copy(module = "wgs")
+  val bamstatsGroup: SummaryGroup = bamMetricsGroup.copy(module = "bamstats")
+  val insertsizeGroup: SummaryGroup = bamMetricsGroup.copy(module = "CollectInsertSizeMetrics")
 
   def finalBamFile: File =
     if (skipMarkDuplicates.getOrElse(false))
@@ -29,7 +29,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bam")
   def finalWigFile: File = new File(finalBamFile.getAbsolutePath + ".wig")
 
-  if (skipFlexiprep != Some(true)) {
+  if (!skipFlexiprep.contains(true)) {
     addExecutable(Executable("fastqc", Some(""".+""".r)))
     addExecutable(Executable("seqstat", Some(""".+""".r)))
     addExecutable(Executable("seqtkseq", Some(""".+""".r)))
@@ -44,49 +44,50 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     addNotHavingExecutable("fastqsync")
   }
 
-  if (aligner.isEmpty || aligner == Some("bwa-mem")) {
+  if (aligner.isEmpty || aligner.contains("bwa-mem")) {
     addExecutable(Executable("bwamem", Some(""".+""".r)))
     addExecutable(Executable("sortsam", Some(""".+""".r)))
   } else addNotHavingExecutable("bwamem")
 
-  if (aligner == Some("bowtie")) {
+  if (aligner.contains("bowtie")) {
     addExecutable(Executable("bowtie", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
   } else addNotHavingExecutable("bowtie")
 
-  if (aligner == Some("gsnap")) {
+  if (aligner.contains("gsnap")) {
     addExecutable(Executable("gsnap", Some(""".+""".r)))
     addExecutable(Executable("reordersam", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
   } else addNotHavingExecutable("gsnap")
 
-  if (aligner == Some("star") || aligner == Some("star-2pass")) {
+  if (aligner.contains("star") || aligner.contains("star-2pass")) {
     addExecutable(Executable("star", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
   } else addNotHavingExecutable("star")
 
-  if (aligner == Some("tophat")) {
+  if (aligner.contains("tophat")) {
     addExecutable(Executable("tophat", Some(""".+""".r)))
     addExecutable(Executable("reordersam", Some(""".+""".r)))
     addExecutable(Executable("addorreplacereadgroups", Some(""".+""".r)))
   } else addNotHavingExecutable("tophat")
 
-  if (skipMarkDuplicates == Some(true)) addNotHavingExecutable("markduplicates")
+  if (skipMarkDuplicates.contains(true)) addNotHavingExecutable("markduplicates")
   else addExecutable(Executable("markduplicates", Some(""".+""".r)))
 
-  addSummaryFileTest(mappingGroup, "input_R1", true, true, path = r1)
+  addSummaryFileTest(mappingGroup, "input_R1", summaryShouldContain = true, true, path = r1)
   addSummaryFileTest(mappingGroup, "input_R2", paired, true, path = r2)
 
   addSettingsTest(mappingGroup, "skip_metrics" :: Nil, _ shouldBe skipMetrics.getOrElse(false))
   addSettingsTest(mappingGroup, "skip_flexiprep" :: Nil, _ shouldBe skipFlexiprep.getOrElse(false))
   addSettingsTest(mappingGroup,
-                  "skip_markduplicates" :: Nil,
-                  _ shouldBe skipMarkDuplicates.getOrElse(false))
+                  "duplicate_method" :: Nil,
+                  _ shouldBe (if (skipMarkDuplicates.getOrElse(false)) "None" else "Picard"))
   addSettingsTest(mappingGroup, "aligner" :: Nil, _ shouldBe aligner.getOrElse("bwa-mem"))
 
   @Test(dependsOnGroups = Array("summary"))
   def testFinalBamFile(): Unit = {
-    testSummaryFiles(FileTest(mappingGroup, "output_bam", true, true, path = finalBamFile))
+    testSummaryFiles(
+      FileTest(mappingGroup, "output_bam", summaryShouldContain = true, true, path = finalBamFile))
     assert(finalBamFile.length() > 0, s"$finalBamFile has size of 0 bytes")
   }
 
@@ -100,12 +101,12 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
   @Test
   def testMarkduplicates(): Unit = {
     val bamFile =
-      if (skipMarkDuplicates == Some(true))
+      if (skipMarkDuplicates.contains(true))
         new File(outputDir, s"${sampleId.get}-${libId.get}.bam")
       else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bam")
 
     val baiFile =
-      if (skipMarkDuplicates == Some(true))
+      if (skipMarkDuplicates.contains(true))
         new File(outputDir, s"${sampleId.get}-${libId.get}.bai")
       else new File(outputDir, s"${sampleId.get}-${libId.get}.dedup.bai")
 
@@ -120,7 +121,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     val summaryPipeline =
       Await.result(summaryDb.getPipelines(name = "flexiprep"), Duration.Inf).headOption
     val flexiprepDir = new File(outputDir, "flexiprep")
-    if (skipFlexiprep == Some(true)) {
+    if (skipFlexiprep.contains(true)) {
       assert(!flexiprepDir.exists(), "Flexiprep is skipped but directory exist")
       assert(summaryPipeline.isEmpty, "Flexiprep should not be in the summary")
     } else {
@@ -135,7 +136,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     val summaryPipeline =
       Await.result(summaryDb.getPipelines(name = "bammetrics"), Duration.Inf).headOption
     val metricsDir = new File(outputDir, "metrics")
-    if (skipMetrics == Some(true)) {
+    if (skipMetrics.contains(true)) {
       assert(!metricsDir.exists(), "Metrics are skipped but directory exist")
       assert(summaryPipeline.isEmpty, "Bammetrics should not be in the summary")
     } else {
@@ -145,21 +146,24 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
     }
   }
 
-  addSettingsTest(mappingGroup, "chunking" :: Nil, _ shouldBe chunking)
   addSettingsTest(mappingGroup,
-                  "number_of_chunks" :: Nil,
-                  _ shouldBe (if (chunking) numberChunks.getOrElse(1) else None))
+                  "chunking" :: Nil,
+                  _ shouldBe chunking && !numberChunks.contains(1))
+  addSettingsTest(
+    mappingGroup,
+    "number_of_chunks" :: Nil,
+    _ shouldBe (if (chunking && !numberChunks.contains(1)) numberChunks.getOrElse(1) else None))
 
   @Test
   def testChunkDirs(): Unit = {
     val chunksDir = new File(outputDir, "chunks")
     numberChunks match {
-      case Some(n) if chunking =>
+      case Some(n) if chunking && n > 1 =>
         for (i <- 1 to n) {
           val dir = new File(chunksDir, s"$i")
           assert(dir.exists(), s"'$dir' should exist")
           val metrcisDir = new File(dir, "metrics")
-          if (chunkMetrics == Some(true))
+          if (chunkMetrics.contains(true))
             assert(metrcisDir.exists(), s"'$metrcisDir' should exist")
           else assert(!metrcisDir.exists(), s"'$metrcisDir' should not exist")
         }
@@ -189,7 +193,7 @@ trait MappingSuccess extends Mapping with SummaryPipeline {
 
     readgroup.getSample shouldBe sampleId.get
     readgroup.getLibrary match {
-      case l if l == readgroupLibrary.getOrElse(null) =>
+      case l if l == readgroupLibrary.orNull =>
       case l if l == libId.get =>
       case null =>
       case l => throw new IllegalStateException(s"Readgroup lbrary is incorrect: '$l'")

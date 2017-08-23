@@ -15,7 +15,8 @@ trait CarpSuccess extends Carp with MultisampleMappingSuccess {
 
   @Test(dataProvider = "samples")
   def testMacs2(sample: String): Unit = {
-    val dir = new File(sampleDir(sample), "macs2" + File.separator + sample)
+    val dir = new File(outputDir,
+                       s"peak_calling${File.separator}$sample${File.separator}single_sample_calls")
     new File(dir, s"${sample}_peaks.narrowPeak") should exist
     new File(dir, s"${sample}_peaks.xls") should exist
     new File(dir, s"${sample}_summits.bed") should exist
@@ -28,7 +29,9 @@ trait CarpSuccess extends Carp with MultisampleMappingSuccess {
 
   @Test(dataProvider = "controls")
   def testMacs2Controls(sample: String, control: String): Unit = {
-    val dir = new File(sampleDir(sample), "macs2" + File.separator + s"${sample}_VS_$control")
+    val dir = new File(
+      outputDir,
+      s"peak_calling${File.separator}$sample${File.separator}${sample}_VS_${control}")
     new File(dir, s"${sample}_VS_${control}_peaks.narrowPeak") should exist
     new File(dir, s"${sample}_VS_${control}_peaks.xls") should exist
     new File(dir, s"${sample}_VS_${control}_summits.bed") should exist

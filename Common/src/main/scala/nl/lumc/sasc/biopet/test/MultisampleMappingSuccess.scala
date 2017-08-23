@@ -30,12 +30,17 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
   def rootPipelineGroup(sample: Option[String] = None, library: Option[String] = None) =
     SummaryGroup(pipelineName, sample = sample, library = library)
 
+  def multiSampleMappingPipelineName = pipelineName
+
   @Test(dataProvider = "libraries", dependsOnGroups = Array("summary"))
   def testLibraryBam(sample: String, lib: String): Unit = withClue(s"Sample: $sample, Lib: $lib") {
     val dbFile = Await
-      .result(
-        summaryDb.getFile(runId, pipelineName, sample = sample, library = lib, key = "output_bam"),
-        Duration.Inf)
+      .result(summaryDb.getFile(runId,
+                                multiSampleMappingPipelineName,
+                                sample = sample,
+                                library = lib,
+                                key = "output_bam"),
+              Duration.Inf)
       .headOption
     assert(dbFile.isDefined, s"output_bam for $sample -> $lib should be in the summary")
     val file = new File(outputDir, dbFile.get.path.stripPrefix("./"))
@@ -50,7 +55,7 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
     withClue(s"Sample: $sample, Lib: $lib") {
       val dbFile = Await
         .result(summaryDb.getFile(runId,
-                                  pipelineName,
+                                  multiSampleMappingPipelineName,
                                   sample = sample,
                                   library = lib,
                                   key = "output_bam_preprocess"),
@@ -65,7 +70,10 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
   @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
   def testSampleBam(sample: String): Unit = withClue(s"Sample: $sample") {
     val dbFile = Await
-      .result(summaryDb.getFile(runId, pipelineName, sample = sample, key = "output_bam"),
+      .result(summaryDb.getFile(runId,
+                                multiSampleMappingPipelineName,
+                                sample = sample,
+                                key = "output_bam"),
               Duration.Inf)
       .headOption
     assert(dbFile.isDefined, s"output_bam for $sample should be in the summary")
@@ -76,9 +84,11 @@ trait MultisampleMappingSuccess extends MultisampleMapping with MultisampleSucce
   @Test(dataProvider = "samples", dependsOnGroups = Array("summary"))
   def testSamplePrepreocessBam(sample: String): Unit = withClue(s"Sample: $sample") {
     val dbFile = Await
-      .result(
-        summaryDb.getFile(runId, pipelineName, sample = sample, key = "output_bam_preprocess"),
-        Duration.Inf)
+      .result(summaryDb.getFile(runId,
+                                multiSampleMappingPipelineName,
+                                sample = sample,
+                                key = "output_bam_preprocess"),
+              Duration.Inf)
       .headOption
     assert(dbFile.isDefined, s"output_bam for $sample should be in the summary")
     val file = new File(outputDir, dbFile.get.path.stripPrefix("./"))

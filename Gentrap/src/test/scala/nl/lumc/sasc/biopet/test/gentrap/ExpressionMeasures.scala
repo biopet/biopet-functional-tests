@@ -1,5 +1,7 @@
 package nl.lumc.sasc.biopet.test.gentrap
 
+import java.io.File
+
 import nl.lumc.sasc.biopet.test.Executable
 import nl.lumc.sasc.biopet.test.{Pipeline, SummaryPipeline}
 import nl.lumc.sasc.biopet.test.utils._
@@ -13,16 +15,16 @@ trait ExpressionMeasures extends Pipeline {
 
   def expressionMeasures: List[String] = Nil
 
-  val expressionMeasuresConfig =
+  val expressionMeasuresConfig: Option[File] =
     if (expressionMeasures.nonEmpty)
       Some(createTempConfig(Map("expression_measures" -> expressionMeasures)))
     else None
 
-  override def configs = super.configs ++ expressionMeasuresConfig.toList
+  override def configs: List[File] = super.configs ++ expressionMeasuresConfig.toList
 }
 
 trait FragmentsPerGene extends ExpressionMeasures {
-  override def expressionMeasures = "fragments_per_gene" :: super.expressionMeasures
+  override def expressionMeasures: List[String] = "fragments_per_gene" :: super.expressionMeasures
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("htseqcount", Some(""".+""".r)))
     case _ =>
@@ -30,11 +32,20 @@ trait FragmentsPerGene extends ExpressionMeasures {
 }
 
 trait BaseCounts extends ExpressionMeasures {
-  override def expressionMeasures = "base_counts" :: super.expressionMeasures
+  override def expressionMeasures: List[String] = "base_counts" :: super.expressionMeasures
 }
 
+trait Stringtie extends ExpressionMeasures {
+  override def expressionMeasures: List[String] = "stringtie" :: super.expressionMeasures
+  this match {
+    case s: SummaryPipeline =>
+      s.addExecutable(Executable("stringtie", Some(""".+""".r)))
+      s.addExecutable(Executable("stringtiemerge", Some(""".+""".r)))
+    case _ =>
+  }
+}
 trait CufflinksStrict extends ExpressionMeasures {
-  override def expressionMeasures = "cufflinks_strict" :: super.expressionMeasures
+  override def expressionMeasures: List[String] = "cufflinks_strict" :: super.expressionMeasures
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("cufflinks", Some(""".+""".r)))
     case _ =>
@@ -42,7 +53,7 @@ trait CufflinksStrict extends ExpressionMeasures {
 }
 
 trait CufflinksGuided extends ExpressionMeasures {
-  override def expressionMeasures = "cufflinks_guided" :: super.expressionMeasures
+  override def expressionMeasures: List[String] = "cufflinks_guided" :: super.expressionMeasures
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("cufflinks", Some(""".+""".r)))
     case _ =>
@@ -50,7 +61,7 @@ trait CufflinksGuided extends ExpressionMeasures {
 }
 
 trait CufflinksBlind extends ExpressionMeasures {
-  override def expressionMeasures = "cufflinks_blind" :: super.expressionMeasures
+  override def expressionMeasures: List[String] = "cufflinks_blind" :: super.expressionMeasures
   this match {
     case s: SummaryPipeline => s.addExecutable(Executable("cufflinks", Some(""".+""".r)))
     case _ =>
@@ -63,3 +74,4 @@ trait AllExpressionMeasures
     with CufflinksStrict
     with CufflinksGuided
     with CufflinksBlind
+    with Stringtie

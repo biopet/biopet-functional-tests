@@ -33,6 +33,16 @@ class GearsPairedQiimeOpenTest
   def paired = true
 }
 
+class GearsPairedQiimeOpenMultisampleTest
+    extends GearsSuccess
+    with Mgm4457768_3_050Lib1
+    with Mgm4459735_3_050Lib1 {
+  override def gearUseQiimeOpen = Some(true)
+  override def gearsUseCentrifuge = Some(false)
+  override def qiimeMultisampleOpenReference = Some(true)
+  def paired = true
+}
+
 class GearsPairedKrakenTest
     extends GearsSuccess
     with Mgm4457768_3_050Lib1
