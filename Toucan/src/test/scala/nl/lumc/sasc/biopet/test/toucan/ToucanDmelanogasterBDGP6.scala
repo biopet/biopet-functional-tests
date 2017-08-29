@@ -20,8 +20,3 @@ class ToucanDmelanogasterBDGP6Vep88Test extends ToucanDmelanogasterBDGP6 {
 class ToucanDmelanogasterBDGP6Vep90Test extends ToucanDmelanogasterBDGP6 {
   override def vepVersion = Some("90")
 }
-
-class ToucanDmelanogasterBDGP6ScatterTest extends ToucanDmelanogasterBDGP6 {
-  override def vepVersion = Some("90")
-  override def enableScatter = true
-}

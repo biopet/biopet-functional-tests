@@ -20,8 +20,3 @@ class ToucanCelegansWBcel235Vep88Test extends ToucanCelegansWBcel235 {
 class ToucanCelegansWBcel235Vep90Test extends ToucanCelegansWBcel235 {
   override def vepVersion = Some("90")
 }
-
-class ToucanCelegansWBcel235ScatterTest extends ToucanCelegansWBcel235 {
-  override def vepVersion = Some("90")
-  override def enableScatter = true
-}

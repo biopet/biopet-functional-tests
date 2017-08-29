@@ -20,8 +20,3 @@ class ToucanRnorvegicusRnor_6Vep88Test extends ToucanRnorvegicusRnor_6 {
 class ToucanRnorvegicusRnor_6Vep90Test extends ToucanRnorvegicusRnor_6 {
   override def vepVersion = Some("90")
 }
-
-class ToucanRnorvegicusRnor_6ScatterTest extends ToucanRnorvegicusRnor_6 {
-  override def vepVersion = Some("90")
-  override def enableScatter = true
-}

@@ -20,8 +20,3 @@ class ToucanMmusculusGRCm38Vep88Test extends ToucanMmusculusGRCm38 {
 class ToucanMmusculusGRCm38Vep90Test extends ToucanMmusculusGRCm38 {
   override def vepVersion = Some("90")
 }
-
-class ToucanMmusculusGRCm38ScatterTest extends ToucanMmusculusGRCm38 {
-  override def vepVersion = Some("90")
-  override def enableScatter = true
-}

@@ -21,7 +21,3 @@ class ToucanPabeliiP_pygmaeus_2_0_2Vep90Test extends ToucanPabeliiP_pygmaeus_2_0
   override def vepVersion = Some("90")
 }
 
-class ToucanPabeliiP_pygmaeus_2_0_2ScatterTest extends ToucanPabeliiP_pygmaeus_2_0_2 {
-  override def vepVersion = Some("90")
-  override def enableScatter = true
-}

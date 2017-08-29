@@ -22,6 +22,6 @@ class ToucanHsapiensGRCh37Vep90Test extends ToucanHsapiensGRCh37 {
 }
 
 class ToucanHsapiensGRCh37ScatterTest extends ToucanHsapiensGRCh37 {
-  override def vepVersion = Some("90")
+  override def vepVersion = Some("86")
   override def enableScatter = true
 }

@@ -16,7 +16,3 @@ class ToucanHsapiensHg19Vep86Test extends ToucanHsapiensHg19 {
 class ToucanHsapiensHg19Vep88Test extends ToucanHsapiensHg19 {
   override def vepVersion = Some("88")
 }
-
-class ToucanHsapiensHg19Vep90Test extends ToucanHsapiensHg19 {
-  override def vepVersion = Some("90")
-}

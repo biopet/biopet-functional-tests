@@ -20,8 +20,3 @@ class ToucanDrerioGRCz10Vep88Test extends ToucanDrerioGRCz10 {
 class ToucanDrerioGRCz10Vep90Test extends ToucanDrerioGRCz10 {
   override def vepVersion = Some("90")
 }
-
-class ToucanDrerioGRCz10ScatterTest extends ToucanDrerioGRCz10 {
-  override def vepVersion = Some("90")
-  override def enableScatter = true
-}
