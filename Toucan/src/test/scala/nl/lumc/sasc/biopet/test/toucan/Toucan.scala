@@ -13,8 +13,6 @@ trait Toucan extends Pipeline with Reference {
 
   def pipelineName = "toucan"
 
-  def summaryFile = new File(outputDir, s"Toucan.summary.json")
-
   def inputVcf: Option[File] = None
 
   def goNLFile: Option[File] = None
