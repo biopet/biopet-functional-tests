@@ -7,6 +7,7 @@ trait ToucanPabeliiP_pygmaeus_2_0_2 extends ToucanSuccess with PabeliiP_pygmaeus
   override def inputVcf =
     Some(Biopet.fixtureFile("toucan", "two_vars_each_chrom_human.vcf.gz"))
   override def functionalTest = false
+  override def memoryArg = "-Xmx1G"
 }
 
 class ToucanPabeliiP_pygmaeus_2_0_2Vep86Test extends ToucanPabeliiP_pygmaeus_2_0_2 {
