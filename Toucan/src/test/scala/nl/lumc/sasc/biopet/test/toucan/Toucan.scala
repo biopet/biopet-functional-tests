@@ -13,8 +13,6 @@ trait Toucan extends Pipeline with Reference {
 
   def pipelineName = "toucan"
 
-  def summaryFile = new File(outputDir, s"Toucan.summary.json")
-
   def inputVcf: Option[File] = None
 
   def goNLFile: Option[File] = None
@@ -29,7 +27,7 @@ trait Toucan extends Pipeline with Reference {
 
   def vepOffline: Option[Boolean] = Some(true)
 
-  override def args =
+  override def args: Seq[String] =
     super.args ++
       cmdArg("-Input", inputVcf) ++
       cmdConfig("enable_scatter", enableScatter) ++

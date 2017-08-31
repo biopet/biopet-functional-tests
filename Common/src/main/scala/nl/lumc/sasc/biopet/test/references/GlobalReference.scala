@@ -90,3 +90,8 @@ trait DmelanogasterBDGP6 extends GlobalReference {
   def referenceSpecies = Some("D.melanogaster")
   def referenceName = Some("BDGP6")
 }
+
+trait PabeliiP_pygmaeus_2_0_2 extends GlobalReference {
+  def referenceSpecies = Some("P.abelii")
+  def referenceName = Some("P_pygmaeus_2_0_2")
+}
